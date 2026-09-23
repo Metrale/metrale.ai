@@ -706,6 +706,9 @@ test.describe('the verification deck', () => {
       return el.closest('.dk') ? 'the deck' : `${el.tagName.toLowerCase()}.${el.className}`;
     });
     expect(top).toBe('the deck');
+  });
+});
+
 test.describe('the roles on the careers page', () => {
   const positions = generated.positions;
   test('every role in the file is on the page, and the search and the team chips narrow them', async ({ page }) => {
