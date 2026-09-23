@@ -1,0 +1,43 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en-GB,en",
+  "dictionaryDefinitions": [
+    {
+      "name": "project-words",
+      "path": "./.cspell/project-words.txt",
+      "addWords": true
+    }
+  ],
+  "dictionaries": [
+    "project-words",
+    "html",
+    "css",
+    "typescript",
+    "node",
+    "npm",
+    "softwareTerms",
+    "fonts",
+    "companies",
+    "fullstack",
+    "bash"
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/build/**",
+    "**/.svelte-kit/**",
+    "**/*.generated.json",
+    "**/LICENSE",
+    "**/*.{png,jpg,jpeg,webp,avif,gif,svg,ico,mp4,webm,woff,woff2,wasm}"
+  ],
+  "ignoreRegExpList": [
+    "Urls",
+    "Email",
+    "Base64",
+    "/#[0-9a-fA-F]{3,8}\\b/g",
+    "/\\b0x[0-9a-fA-F]+\\b/g",
+    "/\\bd=\"[^\"]*\"/g",
+    "/\\bkey: ?\"[0-9a-z]{4,8}\"/g",
+    "/\\b[0-9a-f]{7,64}\\b/g"
+  ]
+}

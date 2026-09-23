@@ -465,6 +465,6 @@ Alt text: Indicator lamps blinking in sequence along datacenter switchgear.
 
 ## Sources
 
-- https://docs.x.ai/developers/model-capabilities/imagine
-- https://docs.x.ai/developers/model-capabilities/images/generation
-- https://www.jxp.com/grok-imagine/blog/grok-imagine-video-1-5-prompt-guide
+- <https://docs.x.ai/developers/model-capabilities/imagine>
+- <https://docs.x.ai/developers/model-capabilities/images/generation>
+- <https://www.jxp.com/grok-imagine/blog/grok-imagine-video-1-5-prompt-guide>

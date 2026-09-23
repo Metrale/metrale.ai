@@ -69,7 +69,7 @@ pitch them as "just looking".
 
 ## Where things live
 
-```
+```text
 site/src/lib/content/        every word, link and price. Edit here, not in components
   brand.js                   names, routes, sectors, nav tree, footer, contacts, form endpoint
   index.js                   the page registry: title and description for every page
@@ -476,7 +476,7 @@ gate green.
     (`contacts` in `brand.js`: sales, partnerships, engineering, community, press, careers),
     and the forms Worker sends the demo, waitlist and careers forms there (`TO_*` in its
     `wrangler.toml`; a test holds the two equal). None of those mailboxes exists yet, and the
-    Worker still sends from forms@atlascybernetics.ai, which is the domain Resend has verified.
+    Worker still sends from <forms@atlascybernetics.ai>, which is the domain Resend has verified.
     Before launch: create the six mailboxes, or point `contacts` back at people
     (`contactsDirect` in the same file keeps the founders' addresses), and verify metrale.com
     in Resend if the sending address moves too. The security address is the repository's own
@@ -496,7 +496,6 @@ gate green.
     `/pricing#metering` all carry "Proposed" in their note and date the brief. They are the
     products and features of the brief, not its internals. When the brief is published or
     revised, revisit each note; when a piece ships, move it out of "proposed".
-
 
 ## How to throw it away
 
