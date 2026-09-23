@@ -1,6 +1,6 @@
 # metrale.ai
 
-The source of [metrale.ai](https://metrale.ai), the Metrale website: the marketing pages and
+The source of [metrale.ai](https://metrale.ai), the Metrale website: the marketting pages and
 the developer pages for the engine. SvelteKit on Vite, prerendered to static files with
 `adapter-static`, built with [Bun](https://bun.sh) and served by Cloudflare Pages.
 
