@@ -166,6 +166,31 @@ if (existsSync(RECORDS_ROOT)) {
 }
 const committedCount = records.size;
 
+// A partial clone (CI checks the engine out with blob:none) fetches a missing blob
+// the first time it is read, one round trip per record: minutes across every
+// branch. List the record blobs from the trees, which the clone has, and fetch
+// them in one request before reading them. A full clone skips this.
+function prefetchRecordBlobs(remote, refs) {
+  if (gitSoft(['config', `remote.${remote}.promisor`]) !== 'true') return;
+  const ids = new Set();
+  for (const ref of refs) {
+    for (const line of gitSoft(['ls-tree', '-r', ref, '--', '.benchmarks']).split('\n')) {
+      const m = line.match(/^\d+ blob ([0-9a-f]+)\t.+\.json$/);
+      if (m) ids.add(m[1]);
+    }
+  }
+  if (ids.size === 0) return;
+  try {
+    git(['-c', 'fetch.negotiationAlgorithm=noop', 'fetch', '--quiet', '--no-tags', '--no-write-fetch-head', '--stdin', remote], {
+      input: [...ids].join('\n') + '\n',
+      stdio: ['pipe', 'pipe', 'pipe'],
+      timeout: 300_000,
+    });
+  } catch (err) {
+    console.error(`gen-gates: record prefetch degraded (${String(err.message || err).split('\n')[0]})`);
+  }
+}
+
 // --- leg 2: every remote head (best-effort) ----------------------------------
 let branchesScanned = 0;
 let fromBranches = 0;
@@ -183,6 +208,7 @@ try {
     const refs = gitSoft(['for-each-ref', '--format=%(refname:short)', `refs/remotes/${remote}`])
       .split('\n')
       .filter((r) => r && !r.endsWith('/HEAD'));
+    prefetchRecordBlobs(remote, refs);
     for (const ref of refs) {
       branchesScanned += 1;
       const paths = gitSoft(['ls-tree', '-r', '--name-only', ref, '--', '.benchmarks'])
