@@ -28,10 +28,10 @@ function routeFiles(dir = ROUTES, out = []) {
     const full = join(dir, e.name);
     if (e.isDirectory()) routeFiles(full, out);
     else if (e.name === '+page.svelte') {
-      const segs = relative(ROUTES, dir)
+      const segments = relative(ROUTES, dir)
         .split(sep)
         .filter((s) => s && !/^\(.*\)$/.test(s));
-      if (!segs.some((s) => s.startsWith('['))) out.push('/' + segs.join('/'));
+      if (!segments.some((s) => s.startsWith('['))) out.push('/' + segments.join('/'));
     }
   }
   return out;
