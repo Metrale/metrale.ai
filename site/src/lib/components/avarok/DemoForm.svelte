@@ -22,6 +22,7 @@
   its `source` to SOURCES in the Worker.
 -->
 <script>
+  import { untrack } from 'svelte';
   import { dev } from '$app/environment';
   import { demoPage } from '$lib/content/company.js';
   import { contacts, formEndpoint } from '$lib/content/brand.js';
@@ -39,13 +40,13 @@
   // address in brand.js, which is the one the site guide tracks.
   const endpoint = (dev && import.meta.env.VITE_FORM_ENDPOINT) || formEndpoint;
 
-  let values = $state(Object.fromEntries(f.fields.map((x) => [x.name, x.type === 'select' ? x.options[0] : ''])));
+  let values = $state(untrack(() => Object.fromEntries(f.fields.map((x) => [x.name, x.type === 'select' ? x.options[0] : '']))));
   // A door can arrive with the form already saying who is asking, for example
   // /demo?you=Research%20lab#book from the labs page. Only a value that is one
   // of the select's own options is taken; anything else is ignored.
   if (typeof location !== 'undefined') {
     const you = new URLSearchParams(location.search).get('you');
-    const seg = f.fields.find((x) => x.name === 'segment');
+    const seg = untrack(() => f.fields.find((x) => x.name === 'segment'));
     if (you && seg?.options?.includes(you)) values.segment = you;
   }
   let website = $state('');
