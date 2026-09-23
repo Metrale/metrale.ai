@@ -37,7 +37,7 @@ const svgSizingSelectors = (text, panelClass) =>
 
 describe.each([
   ['dashboard.css', '.gate-panel', '.gl-swatch'],
-  ['ladder.css', '.cl-panel', '.cl-swatch']
+  ['ladder.css', '.cl-panel', '.cl-swatch'],
 ])('%s', (file, panelClass, swatchClass) => {
   test('the panel-wide svg sizing rule exempts the legend swatch', () => {
     const rules = svgSizingSelectors(css(file), panelClass);

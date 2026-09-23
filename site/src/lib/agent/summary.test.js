@@ -65,21 +65,15 @@ describe('what a live fleet says', () => {
   test('a problem outranks whatever else is happening', () => {
     const s = U.summarize({
       mode: 'live',
-      nodes: [
-        node('a', { isLocal: true, running: 'x' }),
-        node('b', { alerts: [{ severity: 'warning' }] }),
-      ],
+      nodes: [node('a', { isLocal: true, running: 'x' }), node('b', { alerts: [{ severity: 'warning' }] })],
     });
     expect(s.tone).toBe('warning');
   });
 
   test('critical outranks warning', () => {
-    expect(
-      U.worstSeverity([
-        node('a', { alerts: [{ severity: 'warning' }] }),
-        node('b', { alerts: [{ severity: 'critical' }] }),
-      ]),
-    ).toBe('critical');
+    expect(U.worstSeverity([node('a', { alerts: [{ severity: 'warning' }] }), node('b', { alerts: [{ severity: 'critical' }] })])).toBe(
+      'critical'
+    );
     expect(U.worstSeverity([node('a', { alerts: [{ severity: 'info' }] })])).toBeNull();
     expect(U.worstSeverity([])).toBeNull();
   });
@@ -155,10 +149,7 @@ describe('a control-only machine says what it is', () => {
     // point of the mode, and it is the more useful thing to report.
     const s = U.summarize({
       mode: 'live',
-      nodes: [
-        node('a', { isLocal: true, canLaunch: false }),
-        node('b', { canLaunch: true, running: 'qwen3.6-35b' }),
-      ],
+      nodes: [node('a', { isLocal: true, canLaunch: false }), node('b', { canLaunch: true, running: 'qwen3.6-35b' })],
     });
     expect(s.detail).toBe('1 serving');
   });

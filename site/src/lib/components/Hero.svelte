@@ -51,10 +51,13 @@
 </script>
 
 <!-- The loaded dashboard handles Escape itself; this covers the skeleton phase. -->
-<svelte:window onkeydown={(e) => { if (e.key === 'Escape' && dashboardOpen && !Dashboard) closeDashboard(); }} />
+<svelte:window
+  onkeydown={(e) => {
+    if (e.key === 'Escape' && dashboardOpen && !Dashboard) closeDashboard();
+  }}
+/>
 
 <section class="hero">
-
   <div class="hero-inner">
     <div class="hero-copy">
       <span class="hero-badge"><span class="dot"></span> {hero.badge}</span>

@@ -26,7 +26,10 @@
   const many = $derived(records.length > 1);
 
   function onkeydown(e) {
-    if (e.key === 'Escape') { e.stopPropagation(); onclose(); }
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      onclose();
+    }
   }
   function ontabkey(e) {
     const to = moveTab(e.key, active, records.length);
@@ -81,7 +84,10 @@
       </div>
 
       <div class="receipt-foot">
-        <span>{shortModel(r.target_model)}{#if many} · run {active + 1} of {records.length}{/if}</span>
+        <span
+          >{shortModel(r.target_model)}{#if many}
+            · run {active + 1} of {records.length}{/if}</span
+        >
         <button type="button" class="gpc-close" onclick={onclose}>close</button>
       </div>
     </div>

@@ -29,7 +29,7 @@ export const ink = {
   violet: '#BE9DF8',
   cyan: '#49C3DB',
   green: '#12B981',
-  gold: '#EFB338'
+  gold: '#EFB338',
 };
 const HUES = [ink.violet, ink.cyan, ink.green, ink.gold];
 
@@ -116,7 +116,7 @@ const field = {
     const layers = [
       { period: 520, count: 44, size: 24, width: 3.5, alpha: 0.14 },
       { period: 900, count: 28, size: 44, width: 6.5, alpha: 0.26 },
-      { period: 1480, count: 15, size: 84, width: 12, alpha: 0.5 }
+      { period: 1480, count: 15, size: 84, width: 12, alpha: 0.5 },
     ].map((l) => ({
       ...l,
       items: Array.from({ length: l.count }, () => ({
@@ -126,8 +126,8 @@ const field = {
         bob: 4 + rng() * 10,
         m: 1 + Math.floor(rng() * 2),
         off: rng() * TAU,
-        breathe: rng() * TAU
-      }))
+        breathe: rng() * TAU,
+      })),
     }));
     return { layers };
   },
@@ -150,7 +150,7 @@ const field = {
       }
     }
     vignette(ctx, 0.5);
-  }
+  },
 };
 
 // --- tokens: a river of tokens through a grid of GPUs -------------------------
@@ -183,7 +183,7 @@ const tokens = {
           amp: 0.12 + rng() * 0.2,
           n: 1 + Math.floor(rng() * 3),
           off: rng() * TAU,
-          hue: u < 0.1 ? ink.violet : u < 0.24 ? ink.gold : u < 0.4 ? ink.cyan : ink.green
+          hue: u < 0.1 ? ink.violet : u < 0.24 ? ink.gold : u < 0.4 ? ink.cyan : ink.green,
         });
       }
     }
@@ -198,8 +198,8 @@ const tokens = {
           x: rng() * span,
           hue: [ink.cyan, ink.violet, ink.green][Math.floor(rng() * 3)],
           r: 2 + rng() * 2,
-          wob: rng() * TAU
-        }))
+          wob: rng() * TAU,
+        })),
       });
     }
     return { gpus, lanes, cols, rows, cw, ch, gx };
@@ -296,7 +296,7 @@ const tokens = {
       }
     }
     vignette(ctx, 0.45);
-  }
+  },
 };
 
 // --- rack: a datacenter aisle, pulsing with load -----------------------------
@@ -322,11 +322,15 @@ const rack = {
           hue: u < 0.7 ? ink.green : u < 0.88 ? ink.cyan : u < 0.95 ? ink.gold : ink.violet,
           n: 1 + Math.floor(rng() * 4),
           off: rng() * TAU,
-          zk: 0.5 + rng() * 0.9
+          zk: 0.5 + rng() * 0.9,
         });
       }
     }
-    const pulses = Array.from({ length: 6 }, () => ({ z0: rng() * ZMAX, hue: rng() < 0.55 ? ink.cyan : ink.violet, len: 0.5 + rng() * 0.7 }));
+    const pulses = Array.from({ length: 6 }, () => ({
+      z0: rng() * ZMAX,
+      hue: rng() < 0.55 ? ink.cyan : ink.violet,
+      len: 0.5 + rng() * 0.7,
+    }));
     return { leds, pulses, rowsPerBay, ledsPerRow };
   },
   draw(ctx, L, phase) {
@@ -430,7 +434,7 @@ const rack = {
       ctx.stroke();
     }
     vignette(ctx, 0.6);
-  }
+  },
 };
 
 export const scenes = { field, tokens, rack };

@@ -34,29 +34,42 @@ const clip = (name, alt, { loop = true, w = 1280, h = 720, posterAt, maxBytes } 
   // picks: late for a console scene, early for a loop.
   posterAt,
   // A size budget of its own, for the one clip that is a film and not a loop.
-  maxBytes
+  maxBytes,
 });
 
 export const media = {
   // The hero. The console "ask" scene. Its poster is the largest paint on the
   // front page, so app.html preloads it by this name.
-  hero: clip('console-ask', 'The Metrale Console answering a question from an air gapped fleet, with tokens per second and cost per request on screen.'),
+  hero: clip(
+    'console-ask',
+    'The Metrale Console answering a question from an air gapped fleet, with tokens per second and cost per request on screen.'
+  ),
   // The product tour on the front page and the demo page.
   tour: {
     console: clip('console-ask', 'Picking a model and a compute grid, then streaming an answer with live throughput and cost.'),
-    queue: clip('console-queue', 'Bringing up encrypted links to offsite grids, then queueing a large project across them and watching it run.'),
+    queue: clip(
+      'console-queue',
+      'Bringing up encrypted links to offsite grids, then queueing a large project across them and watching it run.'
+    ),
     fleet: clip('console-fleet', 'The fleet view. Nodes, kernel versions, a canary rollout climbing from five to one hundred percent.'),
     economics: clip('console-economics', 'The economics view. Cost per million tokens, chargeback by business unit and the payback clock.'),
-    governance: clip('console-governance', 'The governance view. Policies, provenance for one response and the audit log.')
+    governance: clip('console-governance', 'The governance view. Policies, provenance for one response and the audit log.'),
   },
   // The product film. Assembled by scripts/media/reel.mjs from the cut in
   // media-brief/reel.json: the generated footage, the recorded product clips
   // and captions taken from the site's own copy. Plays once, with controls.
-  reel: clip('reel', 'The Metrale product film. The problem, a machine being deployed with one command, then the console: asking a fleet, queueing a project over encrypted links, the fleet, the ledger, and governance.', { loop: false, maxBytes: 9_000_000 }),
+  reel: clip(
+    'reel',
+    'The Metrale product film. The problem, a machine being deployed with one command, then the console: asking a fleet, queueing a project over encrypted links, the fleet, the ledger, and governance.',
+    { loop: false, maxBytes: 9_000_000 }
+  ),
   // Product footage that is not a tour tab. The deployment clip is the answer
   // to "how does it get deployed": one command, and a machine becomes a node.
   product: {
-    deploy: clip('console-deploy', 'Enrolling a machine with one command. The signature is verified, kernels are chosen for the silicon, the recipe warms, the readiness gate passes and the node starts serving.')
+    deploy: clip(
+      'console-deploy',
+      'Enrolling a machine with one command. The signature is verified, kernels are chosen for the silicon, the recipe warms, the readiness gate passes and the node starts serving.'
+    ),
   },
   // Ambient loops. The three named in scenes.js can be re-recorded from
   // /broll. The rest are generated from media-brief/takes and have no
@@ -68,18 +81,27 @@ export const media = {
     enclave: clip('broll-enclave', 'A sealed server room behind glass, its lights pulsing.'),
     desk: clip('broll-desk-box', 'A small desktop compute box with a breathing lavender status light.'),
     hall: clip('broll-hall', 'A glide over a vast data hall with light travelling along the cable trays.'),
-    power: clip('broll-power', 'Indicator lamps blinking in sequence along datacenter switchgear.')
+    power: clip('broll-power', 'Indicator lamps blinking in sequence along datacenter switchgear.'),
   },
   // Stills from the prompt pack, keyed by slot name. art.json is written by
   // scripts/media/install.mjs when an image is approved, and is empty until
   // then. A page hero asks artFor(its path) and renders no picture when there
   // is none, so putting art on a page is a data change and nothing else.
   art: Object.fromEntries(
-    Object.entries(installed).map(([slot, a]) => [slot, { slot, src: `/media/art/${slot}.webp`, alt: a.alt, width: a.width, height: a.height, pages: a.pages ?? [] }])
-  )
+    Object.entries(installed).map(([slot, a]) => [
+      slot,
+      { slot, src: `/media/art/${slot}.webp`, alt: a.alt, width: a.width, height: a.height, pages: a.pages ?? [] },
+    ])
+  ),
 };
 
-export const allClips = [media.hero, media.reel, ...Object.values(media.tour), ...Object.values(media.product), ...Object.values(media.broll)];
+export const allClips = [
+  media.hero,
+  media.reel,
+  ...Object.values(media.tour),
+  ...Object.values(media.product),
+  ...Object.values(media.broll),
+];
 
 // Which clip belongs to which page. Product footage where the page is about a
 // part of the product, ambient footage where it is about an idea. A still
@@ -93,7 +115,7 @@ const heroClips = {
   '/platform/security': 'governance',
   '/platform/deployment': 'deploy',
   '/platform/engine': 'tokens',
-  '/solutions': 'hall'
+  '/solutions': 'hall',
 };
 const clipByKey = { ...media.tour, ...media.product, ...media.broll };
 

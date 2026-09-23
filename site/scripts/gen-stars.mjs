@@ -35,14 +35,14 @@ function gh(args) {
   return execFileSync('gh', args, {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
-    maxBuffer: 64 * 1024 * 1024
+    maxBuffer: 64 * 1024 * 1024,
   }).trim();
 }
 function git(args) {
   try {
     return execFileSync('git', ['-C', REPO_DIR, ...args], {
       encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore']
+      stdio: ['ignore', 'pipe', 'ignore'],
     }).trim();
   } catch {
     return '';
@@ -137,7 +137,7 @@ try {
       'Accept: application/vnd.github.star+json',
       '--paginate',
       '--jq',
-      '.[].starred_at'
+      '.[].starred_at',
     ]);
     history = buildHistory(iso.split('\n'), count);
   } catch (err) {

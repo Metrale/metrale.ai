@@ -30,8 +30,7 @@
 <Overlay label="Add a machine" wide {onclose}>
   {#if fleet.controlOnly}
     <p class="fl-co-why">
-      This machine drives the fleet; it does not run models itself. Pair a
-      machine that can and everything on the bridge applies to it.
+      This machine drives the fleet; it does not run models itself. Pair a machine that can and everything on the bridge applies to it.
     </p>
   {/if}
 
@@ -42,8 +41,7 @@
   </div>
 
   <p class="po-note">
-    A machine another peer told us about arrives as <strong>vouched</strong> —
-    second-hand identity, never shown as paired. Running the ceremony against
-    it directly is what upgrades it.
+    A machine another peer told us about arrives as <strong>vouched</strong> — second-hand identity, never shown as paired. Running the ceremony
+    against it directly is what upgrades it.
   </p>
 </Overlay>

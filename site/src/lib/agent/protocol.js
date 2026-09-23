@@ -139,9 +139,7 @@ export function describeError(error) {
       // This arrives over the socket, so `errors` is whatever the agent sent.
       // A non-array used to throw here — turning the one function whose job is
       // to explain a failure into a second failure.
-      const listed = Array.isArray(error.errors)
-        ? error.errors.map((e) => (typeof e?.key === 'string' ? e.key : 'setting'))
-        : [];
+      const listed = Array.isArray(error.errors) ? error.errors.map((e) => (typeof e?.key === 'string' ? e.key : 'setting')) : [];
       // An empty list rendered as an empty string: something was rejected and
       // the screen said nothing at all.
       return listed.length > 0
@@ -151,13 +149,9 @@ export function describeError(error) {
     case 'already_running':
       return 'That recipe is already running.';
     case 'docker_unavailable':
-      return said(error.detail)
-        ? `Docker is not available on that machine: ${error.detail}`
-        : 'Docker is not available on that machine.';
+      return said(error.detail) ? `Docker is not available on that machine: ${error.detail}` : 'Docker is not available on that machine.';
     case 'launch_failed':
-      return said(error.detail)
-        ? `The launch failed: ${error.detail}`
-        : 'The launch failed, and the agent did not say why.';
+      return said(error.detail) ? `The launch failed: ${error.detail}` : 'The launch failed, and the agent did not say why.';
     default:
       // A non-string code would otherwise be returned as-is and reach the UI
       // as "[object Object]".
@@ -209,7 +203,7 @@ export function versionAdvice(page, min, max, installCommand) {
     return {
       ok: false,
       side: 'agent',
-      message: `The agent did not say which protocol it speaks, so this page cannot tell whether it is compatible. Reinstall the agent: ${installCommand}`
+      message: `The agent did not say which protocol it speaks, so this page cannot tell whether it is compatible. Reinstall the agent: ${installCommand}`,
     };
   }
   if (page >= min && page <= max) return { ok: true };
@@ -218,19 +212,19 @@ export function versionAdvice(page, min, max, installCommand) {
     return {
       ok: false,
       side: 'agent',
-        // The closing sentence is a promise both callers keep. `client` hands
-        // this message to the launch dialog and to the fleet page, and each
-        // re-probes while showing it, so an agent that restarts on the new
-        // version is picked up without the visitor returning to the browser.
-        // Worth saying out loud: the remedy sends them to a terminal on another
-        // machine, and the reasonable assumption otherwise is that the page has
-        // given up and is waiting to be clicked.
-      message: `Your agent is out of date — it speaks protocol ${min === max ? min : `${min}–${max}`}, this page speaks ${page}. Update it on that machine: ${installCommand} — this page picks it up on its own once you have.`
+      // The closing sentence is a promise both callers keep. `client` hands
+      // this message to the launch dialog and to the fleet page, and each
+      // re-probes while showing it, so an agent that restarts on the new
+      // version is picked up without the visitor returning to the browser.
+      // Worth saying out loud: the remedy sends them to a terminal on another
+      // machine, and the reasonable assumption otherwise is that the page has
+      // given up and is waiting to be clicked.
+      message: `Your agent is out of date — it speaks protocol ${min === max ? min : `${min}–${max}`}, this page speaks ${page}. Update it on that machine: ${installCommand} — this page picks it up on its own once you have.`,
     };
   }
   return {
     ok: false,
     side: 'page',
-    message: `This page is out of date — it speaks protocol ${page}, your agent speaks ${min === max ? min : `${min}–${max}`}. Your browser is holding an old copy: reload with Ctrl-Shift-R (⌘-Shift-R on a Mac).`
+    message: `This page is out of date — it speaks protocol ${page}, your agent speaks ${min === max ? min : `${min}–${max}`}. Your browser is holding an old copy: reload with Ctrl-Shift-R (⌘-Shift-R on a Mac).`,
   };
 }

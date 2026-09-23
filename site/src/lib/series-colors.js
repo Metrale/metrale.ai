@@ -87,7 +87,7 @@ export const MODEL_COLORS = {
   'unsloth/Qwen3.8-27B-NVFP4': '#51cdb0',
   'bg-digitalservices/Gemma-4-26B-A4B-it-NVFP4A16': '#cd517a',
   'ig1/Qwen3-VL-30B-A3B-Instruct-NVFP4': '#d5e88a',
-  'nvidia/Qwen3.6-35B-A3B-NVFP4': '#a1e0f7'
+  'nvidia/Qwen3.6-35B-A3B-NVFP4': '#a1e0f7',
 };
 // The fallback is a series colour too: an unrecognised model still gets drawn.
 export const UNKNOWN_MODEL_COLOR = '#6f6a8d';

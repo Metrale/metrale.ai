@@ -37,7 +37,9 @@
         <div>
           <h3 class="av-h3">{p.surfaces.title}</h3>
           <p class="av-lede" style="font-size:1rem">{p.surfaces.body}</p>
-          <ul class="av-row" style="margin-top:1rem">{#each p.surfaces.items as s}<li class="av-chip">{s}</li>{/each}</ul>
+          <ul class="av-row" style="margin-top:1rem">
+            {#each p.surfaces.items as s}<li class="av-chip">{s}</li>{/each}
+          </ul>
         </div>
         <div class="av-bridge" style="margin-top:0">
           <h3>{p.band.title}</h3>
@@ -47,5 +49,10 @@
     </div>
   </section>
 
-  <CtaBand title="See the platform on your workload." body="A working session with the console, the ladder and the payback model, on demo data or yours." primary={{ text: 'Book a demo', href: routes.demoForm }} secondary={{ text: 'Run the payback model', href: `${routes.pricing}#payback` }} />
+  <CtaBand
+    title="See the platform on your workload."
+    body="A working session with the console, the ladder and the payback model, on demo data or yours."
+    primary={{ text: 'Book a demo', href: routes.demoForm }}
+    secondary={{ text: 'Run the payback model', href: `${routes.pricing}#payback` }}
+  />
 </PageShell>

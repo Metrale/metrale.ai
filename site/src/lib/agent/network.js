@@ -23,7 +23,7 @@ const CLASS_LABEL = {
   wireless: 'Wi-Fi',
   virtual: 'virtual',
   loopback: 'loopback',
-  unverified: 'unverified'
+  unverified: 'unverified',
 };
 
 /**
@@ -78,7 +78,7 @@ export function describeAddress(a) {
     addr: a?.addr ?? '',
     iface: a?.iface ?? '',
     subnet,
-    detail: bits.filter(Boolean).join(' · ')
+    detail: bits.filter(Boolean).join(' · '),
   };
 }
 

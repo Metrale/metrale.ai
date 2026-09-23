@@ -14,7 +14,12 @@
     <div class="av-container av-narrow">
       <p class="av-eyebrow">404</p>
       <h1 class="av-h1">That page is not here.</h1>
-      <p class="av-lede">It may have been renamed in the facelift, or it may never have existed. The <a class="av-link" href={routes.home}>front page</a> has the pitch, the <a class="av-link" href={routes.benchmarks}>benchmarks</a> have the numbers, and the <a class="av-link" href={routes.openSource}>open source page</a> has the install command. The source is on <a class="av-link" href={links.github}>GitHub</a>.</p>
+      <p class="av-lede">
+        It may have been renamed in the facelift, or it may never have existed. The <a class="av-link" href={routes.home}>front page</a> has
+        the pitch, the <a class="av-link" href={routes.benchmarks}>benchmarks</a> have the numbers, and the
+        <a class="av-link" href={routes.openSource}>open source page</a>
+        has the install command. The source is on <a class="av-link" href={links.github}>GitHub</a>.
+      </p>
     </div>
   </section>
 </PageShell>

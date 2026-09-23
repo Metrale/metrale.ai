@@ -9,11 +9,20 @@ function fakeTimers() {
   const pending = new Map();
   return {
     api: {
-      setTimeout: (fn, ms) => { const id = next++; pending.set(id, { fn, ms }); return id; },
-      clearTimeout: (id) => { pending.delete(id); }
+      setTimeout: (fn, ms) => {
+        const id = next++;
+        pending.set(id, { fn, ms });
+        return id;
+      },
+      clearTimeout: (id) => {
+        pending.delete(id);
+      },
     },
-    fire() { for (const { fn } of [...pending.values()]) fn(); pending.clear(); },
-    count: () => pending.size
+    fire() {
+      for (const { fn } of [...pending.values()]) fn();
+      pending.clear();
+    },
+    count: () => pending.size,
   };
 }
 

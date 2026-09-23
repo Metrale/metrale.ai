@@ -35,8 +35,7 @@
       if (group) {
         group.members.forEach((m) => done.add(m.bench));
         const records = groupRecords(group, recordsFor).filter(keep);
-        if (records.length > 0)
-          out.push({ benchId: group.primary, name: benchName(group.primary), records });
+        if (records.length > 0) out.push({ benchId: group.primary, name: benchName(group.primary), records });
       } else {
         done.add(b);
         const records = recordsFor(b).filter(keep);
@@ -49,12 +48,7 @@
   // group's section under the primary's id, so matching on benchId alone
   // would accuse the DFlash2 gate of being filtered out on every render.
   const hiddenByFilter = $derived(
-    (tab?.benches ?? []).filter(
-      (b) =>
-        recordsFor(b).length > 0 &&
-        !groupedBenches.has(b) &&
-        !sections.some((s) => s.benchId === b)
-    )
+    (tab?.benches ?? []).filter((b) => recordsFor(b).length > 0 && !groupedBenches.has(b) && !sections.some((s) => s.benchId === b))
   );
   const src = gateData.sources;
 
@@ -104,7 +98,8 @@
             aria-selected={t.id === activeTab}
             class="bd-tab"
             class:is-active={t.id === activeTab}
-            onclick={() => (activeTab = t.id)}>{t.label}</button>
+            onclick={() => (activeTab = t.id)}>{t.label}</button
+          >
         {/each}
       </div>
       <label class="bd-model">
@@ -137,8 +132,8 @@
       {/each}
       {#if activeTab === 'bfcl'}
         <p class="bd-footnote">
-          The two BFCL charts use different models AND different sample draws (see a point's run
-          parameters) — scores are comparable within a chart, not across them.
+          The two BFCL charts use different models AND different sample draws (see a point's run parameters) — scores are comparable within
+          a chart, not across them.
         </p>
       {/if}
     </div>

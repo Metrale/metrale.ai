@@ -44,10 +44,20 @@
       <p class="av-eyebrow av-reveal">{s.deploymentsTitle}</p>
       <div class="av-grid av-grid-4 av-reveal">
         {#each s.deployments as d}
-          <a class="av-card" href={d.href}><h3 style="font-size:1rem">{d.name}</h3><p>{d.body}</p><span class="av-link">Open <span class="av-arrow">→</span></span></a>
+          <a class="av-card" href={d.href}
+            ><h3 style="font-size:1rem">{d.name}</h3>
+            <p>{d.body}</p>
+            <span class="av-link">Open <span class="av-arrow">→</span></span></a
+          >
         {/each}
       </div>
     </div>
   </section>
-  <CtaBand eyebrow={solutionCta.eyebrow} title={solutionCta.title} body={solutionCta.body} primary={solutionCta.primary} secondary={solutionCta.secondary} />
+  <CtaBand
+    eyebrow={solutionCta.eyebrow}
+    title={solutionCta.title}
+    body={solutionCta.body}
+    primary={solutionCta.primary}
+    secondary={solutionCta.secondary}
+  />
 </PageShell>

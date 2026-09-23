@@ -22,7 +22,7 @@
     /** `{id, name, at, reading}[]` — one per node with a running launch. */
     entries = [],
     /** The operator paused polling: the line must stop short of now. */
-    paused = false
+    paused = false,
   } = $props();
 
   // Staleness exclusion is the passage of time, not an event.
@@ -55,8 +55,7 @@
     {#if path}
       <!-- Decorative: the Σ it encodes is printed beside it. -->
       <svg class="fa-spark" viewBox="0 0 220 22" preserveAspectRatio="none" aria-hidden="true">
-        <path d={path} fill="none" stroke="currentColor" stroke-width="1.2"
-              stroke-linejoin="round" stroke-linecap="round" />
+        <path d={path} fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" />
       </svg>
     {/if}
   </div>

@@ -42,7 +42,7 @@ export function headroom(rungs) {
     label: lower.label,
     atlas: change(from.atlas, to.atlas),
     baseline: change(lower.tok_s, upper.tok_s),
-    ratio: to.ratio_vs_best
+    ratio: to.ratio_vs_best,
   };
 }
 

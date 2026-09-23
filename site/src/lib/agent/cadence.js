@@ -24,7 +24,7 @@ export const CADENCES = [
   { id: 'pause', ms: null },
   { id: '1s', ms: 1000 },
   { id: '2s', ms: 2000 },
-  { id: '5s', ms: 5000 }
+  { id: '5s', ms: 5000 },
 ];
 
 /** How often an unselected running node is polled for the roster micro-columns. */
@@ -77,7 +77,7 @@ export function plan(nodes, cadenceMs) {
     out.push({
       id: n.id,
       periodMs: UNSELECTED_MS,
-      offsetMs: Math.round(((i + 1) * UNSELECTED_MS) / (rest.length + 1))
+      offsetMs: Math.round(((i + 1) * UNSELECTED_MS) / (rest.length + 1)),
     });
   });
   return out;
@@ -102,8 +102,7 @@ export function plan(nodes, cadenceMs) {
 export function nextDue(entry, state, epochMs) {
   if (!state || state.lastAt === null) return epochMs + entry.offsetMs;
   const failures = state.failures ?? 0;
-  const delay =
-    failures > 0 ? Math.min(entry.periodMs * 2 ** failures, BACKOFF_MAX_MS) : entry.periodMs;
+  const delay = failures > 0 ? Math.min(entry.periodMs * 2 ** failures, BACKOFF_MAX_MS) : entry.periodMs;
   return state.lastAt + delay;
 }
 

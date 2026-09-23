@@ -40,7 +40,7 @@
     wireless: 'Wi-Fi',
     virtual: 'virtual',
     loopback: 'loopback',
-    unverified: 'unverified'
+    unverified: 'unverified',
   };
 
   function speed(a) {
@@ -49,16 +49,7 @@
 </script>
 
 <div class="ld-backdrop" role="presentation" onclick={onclose}></div>
-<!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
-<div
-  class="ld nd"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="nd-title"
-  tabindex="-1"
-  bind:this={dialogEl}
-  use:modal
->
+<div class="ld nd" role="dialog" aria-modal="true" aria-labelledby="nd-title" tabindex="-1" bind:this={dialogEl} use:modal>
   <header class="ld-head">
     <h3 class="ld-title" id="nd-title">{node.name}</h3>
     <button type="button" class="ld-close" onclick={onclose} aria-label="Close">×</button>
@@ -107,7 +98,8 @@
               <td class="mono">{a.iface || '—'}</td>
               <td class="mono">{a.addr}</td>
               <td class:nd-warn={linkWarns(a.class)}>
-                {linkName[a.class] ?? a.class}{#if a.rdma} · RDMA{/if}
+                {linkName[a.class] ?? a.class}{#if a.rdma}
+                  · RDMA{/if}
               </td>
               <td class="mono">{speed(a)}</td>
             </tr>
@@ -115,8 +107,8 @@
         </tbody>
       </table>
       <p class="nd-note">
-        Multi-node decode is all-reduce bound, so the slowest link between two
-        machines decides the throughput — not the fastest one either of them has.
+        Multi-node decode is all-reduce bound, so the slowest link between two machines decides the throughput — not the fastest one either
+        of them has.
       </p>
     {/if}
   </div>

@@ -79,7 +79,7 @@ export async function createCorpusWriter(sha) {
       // Remove any pre-existing file the create:true call may have created
       // empty, so a later cache probe cannot see a zero-byte corpus.
       await dir.removeEntry(latticeFileName(sha)).catch(() => undefined);
-    }
+    },
   };
 }
 

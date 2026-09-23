@@ -15,7 +15,7 @@ function avarokGenerators() {
     execFileSync(process.execPath, [resolve(here, 'scripts', script)], {
       cwd: here,
       stdio: 'inherit',
-      env: process.env
+      env: process.env,
     });
   return {
     name: 'avarok-generators',
@@ -53,7 +53,7 @@ function avarokGenerators() {
       } catch (err) {
         this.warn(`gen-contributors failed (non-fatal): ${err && err.message ? err.message : err}`);
       }
-    }
+    },
   };
 }
 
@@ -96,17 +96,17 @@ export default defineConfig({
             {
               name: 'av-chrome',
               priority: 30,
-              test: /[\\/](src[\\/]lib[\\/]components[\\/]avarok[\\/](SiteNav|SiteFooter)\.svelte|src[\\/]lib[\\/]content[\\/](brand|index|faq)\.js|src[\\/]lib[\\/]route-groups\.js|src[\\/]lib[\\/]data\.js|src[\\/]lib[\\/]install[\\/]|src[\\/]lib[\\/](stars|ladder)\.generated\.json|web-shared[\\/]components[\\/](AtlasLockup|ThemeToggle)\.svelte|web-shared[\\/]theme\.js)/
+              test: /[\\/](src[\\/]lib[\\/]components[\\/]avarok[\\/](SiteNav|SiteFooter)\.svelte|src[\\/]lib[\\/]content[\\/](brand|index|faq)\.js|src[\\/]lib[\\/]route-groups\.js|src[\\/]lib[\\/]data\.js|src[\\/]lib[\\/]install[\\/]|src[\\/]lib[\\/](stars|ladder)\.generated\.json|web-shared[\\/]components[\\/](AtlasLockup|ThemeToggle)\.svelte|web-shared[\\/]theme\.js)/,
             },
             {
               name: 'av-ui',
               priority: 20,
-              test: /[\\/]src[\\/]lib[\\/](components[\\/]avarok[\\/]|reveal\.js)/
-            }
-          ]
-        }
-      }
-    }
+              test: /[\\/]src[\\/]lib[\\/](components[\\/]avarok[\\/]|reveal\.js)/,
+            },
+          ],
+        },
+      },
+    },
   },
   server: {
     // app.css and the field import from web-shared/, outside this app's root.
@@ -116,6 +116,6 @@ export default defineConfig({
     // Left watched, every `vite build` beside a running dev server deletes and
     // rewrites a few hundred watched files, and every open tab is told to reload
     // once per page written. Vite adds this to its own ignore list.
-    watch: { ignored: ['**/build/**'] }
-  }
+    watch: { ignored: ['**/build/**'] },
+  },
 });

@@ -71,7 +71,7 @@ export function announcement(prevSeverity, alerts) {
 export function makeAnnouncer(emit, timers) {
   const t = timers ?? {
     setTimeout: (fn, ms) => setTimeout(fn, ms),
-    clearTimeout: (h) => clearTimeout(h)
+    clearTimeout: (h) => clearTimeout(h),
   };
   let handle = null;
   let prevSeverity = null;
@@ -91,6 +91,6 @@ export function makeAnnouncer(emit, timers) {
     dispose() {
       t.clearTimeout(handle);
       handle = null;
-    }
+    },
   };
 }

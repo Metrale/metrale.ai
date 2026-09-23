@@ -26,7 +26,7 @@
 function browserTimers() {
   return {
     setInterval: (fn, ms) => setInterval(fn, ms),
-    clearInterval: (h) => clearInterval(h)
+    clearInterval: (h) => clearInterval(h),
   };
 }
 
@@ -78,6 +78,6 @@ export function makeTicker(onTick, ms, timers = browserTimers()) {
     /** How many consumers hold it. */
     users() {
       return users;
-    }
+    },
   };
 }

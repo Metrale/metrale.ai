@@ -80,10 +80,16 @@ describe('robustDomain', () => {
 
   test('a reference line is never clipped out of view', () => {
     // Values sit near 600; the budget cap is 1800. The axis must reach it.
-    const d = robustDomain(ramp(30, (i) => 600 + i), [{ value: 1800 }]);
+    const d = robustDomain(
+      ramp(30, (i) => 600 + i),
+      [{ value: 1800 }]
+    );
     expect(d.v1).toBeGreaterThan(1800);
     // and a floor below the data pulls the other end down
-    const f = robustDomain(ramp(30, (i) => 600 + i), [{ value: 90 }]);
+    const f = robustDomain(
+      ramp(30, (i) => 600 + i),
+      [{ value: 90 }]
+    );
     expect(f.v0).toBeLessThan(90);
   });
 

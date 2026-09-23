@@ -21,9 +21,7 @@
   $effect(() => useClock());
 
   const short = $derived(`${node.id.slice(0, 4)}·${node.id.slice(4, 8)}`);
-  const trusted = $derived(
-    node.isLocal || node.pairing === 'paired' || node.pairing === 'vouched' || node.pairing === 'unreachable'
-  );
+  const trusted = $derived(node.isLocal || node.pairing === 'paired' || node.pairing === 'vouched' || node.pairing === 'unreachable');
   const trustLabel = $derived(
     node.isLocal
       ? 'this machine'
@@ -64,20 +62,9 @@
 
 <header class="ih" class:ih-vouched={node.pairing === 'vouched'}>
   <h2 class="ih-name" title={node.name}>{node.name}</h2>
-  <button
-    type="button"
-    class="fp-chip mono"
-    onclick={copyFp}
-    aria-label={`Fingerprint ${short}. Copy the full fingerprint.`}
-  >
+  <button type="button" class="fp-chip mono" onclick={copyFp} aria-label={`Fingerprint ${short}. Copy the full fingerprint.`}>
     <svg viewBox="0 0 12 14" width="9" height="11" aria-hidden="true">
-      <path
-        d="M6 .8 11.2 3.9v6.2L6 13.2.8 10.1V3.9Z"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.4"
-        stroke-linejoin="round"
-      />
+      <path d="M6 .8 11.2 3.9v6.2L6 13.2.8 10.1V3.9Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
     </svg>
     <!-- Not "select it manually": the full fingerprint is not on screen to
          select. `ondetails` is where it lives. -->
@@ -114,12 +101,7 @@
     {:else if !node.isLocal}
       <button type="button" class="fl-unpair" onclick={() => onunpair?.(node)}>Unpair…</button>
     {/if}
-    <button
-      type="button"
-      class="ih-details"
-      onclick={() => ondetails?.(node)}
-      aria-label={`Full identity and interfaces of ${node.name}`}
-    >
+    <button type="button" class="ih-details" onclick={() => ondetails?.(node)} aria-label={`Full identity and interfaces of ${node.name}`}>
       details
     </button>
   </span>

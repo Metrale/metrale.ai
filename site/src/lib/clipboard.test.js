@@ -18,7 +18,13 @@ test('a refusal reports denied rather than throwing', async () => {
   // This is the case every previous copy of this code swallowed. A caller that
   // sees `denied` can show the text; one that sees an exception it never
   // catches shows a button that flashed nothing.
-  const nav = { clipboard: { writeText: async () => { throw new Error('NotAllowedError'); } } };
+  const nav = {
+    clipboard: {
+      writeText: async () => {
+        throw new Error('NotAllowedError');
+      },
+    },
+  };
   expect(await copyText('x', nav)).toBe('denied');
 });
 
@@ -33,7 +39,13 @@ test('no clipboard at all is denied, not a crash', async () => {
 
 test('a synchronous throw is caught too', async () => {
   // `writeText` is not required to return a promise before it fails.
-  const nav = { clipboard: { writeText: () => { throw new Error('boom'); } } };
+  const nav = {
+    clipboard: {
+      writeText: () => {
+        throw new Error('boom');
+      },
+    },
+  };
   expect(await copyText('x', nav)).toBe('denied');
 });
 
@@ -63,7 +75,7 @@ test('a refusal tells the operator what to do next, not just that it failed', ()
   expect(copyLabel('blocked').length).toBeGreaterThan(0);
 });
 
-test('the idle label is the caller\'s, so one component can say more', () => {
+test("the idle label is the caller's, so one component can say more", () => {
   expect(copyLabel('idle', 'Copy command')).toBe('Copy command');
   expect(copyLabel('copied', 'Copy command')).toBe('Copied');
 });

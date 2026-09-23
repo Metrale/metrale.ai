@@ -98,9 +98,7 @@ export function joinCommandPowerShell(join, grantControl = false) {
   // `'`, so nothing that reaches here can close the string. Quoting also
   // neutralises a code beginning with `-`, which would otherwise parse as an
   // unknown parameter and silently install without joining.
-  const base =
-    `& ([scriptblock]::Create((irm ${powershellInstallerUrl}))) ` +
-    `-Join '${operand}'`;
+  const base = `& ([scriptblock]::Create((irm ${powershellInstallerUrl}))) ` + `-Join '${operand}'`;
   return grantControl ? `${base} -GrantControl` : base;
 }
 

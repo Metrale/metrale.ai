@@ -64,20 +64,71 @@
 
 <style>
   .av-mailtoast {
-    position: fixed; z-index: 120; left: 50%; bottom: 20px; transform: translate(-50%, 24px);
+    position: fixed;
+    z-index: 120;
+    left: 50%;
+    bottom: 20px;
+    transform: translate(-50%, 24px);
     /* Closed means gone, not parked below the fold: an empty box slid 140% of its
        own small height still showed a sliver along the bottom of every page. */
-    visibility: hidden; opacity: 0;
-    width: min(440px, calc(100vw - 32px)); padding: 0.9rem 1rem;
-    background: var(--card); color: var(--t1); border: 1px solid var(--border-strong); border-radius: var(--av-radius-sm);
-    box-shadow: var(--av-shadow); font-size: 0.86rem; line-height: 1.5;
-    transition: transform 0.28s var(--av-ease), opacity 0.2s, visibility 0s linear 0.28s; pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    width: min(440px, calc(100vw - 32px));
+    padding: 0.9rem 1rem;
+    background: var(--card);
+    color: var(--t1);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--av-radius-sm);
+    box-shadow: var(--av-shadow);
+    font-size: 0.86rem;
+    line-height: 1.5;
+    transition:
+      transform 0.28s var(--av-ease),
+      opacity 0.2s,
+      visibility 0s linear 0.28s;
+    pointer-events: none;
   }
-  .av-mailtoast.is-open { transform: translate(-50%, 0); visibility: visible; opacity: 1; pointer-events: auto; transition: transform 0.28s var(--av-ease), opacity 0.2s, visibility 0s; }
-  .av-mailtoast p { margin: 0; color: var(--t2); }
-  .av-mailtoast strong { color: var(--t1); }
-  .av-mailtoast-row { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.55rem !important; }
-  .av-mailtoast-row .av-mono { flex: 1; min-width: 0; overflow-wrap: anywhere; color: var(--t1); font-size: 0.84rem; }
-  .av-mailtoast-x { border: 0; background: none; color: var(--t3); font-size: 1.2rem; line-height: 1; cursor: pointer; padding: 0.2rem 0.35rem; border-radius: 6px; }
-  .av-mailtoast-x:hover { color: var(--t1); }
+  .av-mailtoast.is-open {
+    transform: translate(-50%, 0);
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition:
+      transform 0.28s var(--av-ease),
+      opacity 0.2s,
+      visibility 0s;
+  }
+  .av-mailtoast p {
+    margin: 0;
+    color: var(--t2);
+  }
+  .av-mailtoast strong {
+    color: var(--t1);
+  }
+  .av-mailtoast-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.55rem !important;
+  }
+  .av-mailtoast-row .av-mono {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--t1);
+    font-size: 0.84rem;
+  }
+  .av-mailtoast-x {
+    border: 0;
+    background: none;
+    color: var(--t3);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.2rem 0.35rem;
+    border-radius: 6px;
+  }
+  .av-mailtoast-x:hover {
+    color: var(--t1);
+  }
 </style>

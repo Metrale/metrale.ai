@@ -41,25 +41,15 @@
 </script>
 
 <div class="ld-backdrop" role="presentation" onclick={() => onclose?.()}></div>
-<!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
-<div
-  class="ld"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="unpair-title"
-  tabindex="-1"
-  bind:this={el}
-  use:modal
->
+<div class="ld" role="dialog" aria-modal="true" aria-labelledby="unpair-title" tabindex="-1" bind:this={el} use:modal>
   <header class="ld-head">
     <h3 class="ld-title" id="unpair-title">Unpair {node.name}?</h3>
     <button type="button" class="ld-close" onclick={() => onclose?.()} aria-label="Close">×</button>
   </header>
   <div class="ld-body">
     <p>
-      {node.name} will stop trusting this machine, any cluster launch that
-      includes it will be stopped, and pairing again needs someone at that machine
-      to read a new code.
+      {node.name} will stop trusting this machine, any cluster launch that includes it will be stopped, and pairing again needs someone at that
+      machine to read a new code.
     </p>
     <p class="unpair-confirm-note">
       Type <code class="mono">{node.id.slice(0, 8)}</code> to confirm.
@@ -75,9 +65,7 @@
     {/if}
     <div class="ld-actions">
       <button type="button" class="btn btn-ghost" onclick={() => onclose?.()}>Cancel</button>
-      <button type="button" class="btn btn-danger" disabled={!ready} onclick={doUnpair}>
-        Unpair
-      </button>
+      <button type="button" class="btn btn-danger" disabled={!ready} onclick={doUnpair}> Unpair </button>
     </div>
   </div>
 </div>

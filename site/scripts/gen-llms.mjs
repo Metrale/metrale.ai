@@ -49,9 +49,7 @@ const home = await load('src/lib/content/home.js');
 const pricing = await load('src/lib/content/pricing.js');
 if (!pages?.length) throw new Error('gen-llms: the page registry is empty');
 
-const recipes = models.flatMap((v) =>
-  v.subfamilies.flatMap((f) => f.recipes.map((r) => ({ vendor: v.vendor, family: f.name, ...r })))
-);
+const recipes = models.flatMap((v) => v.subfamilies.flatMap((f) => f.recipes.map((r) => ({ vendor: v.vendor, family: f.name, ...r }))));
 if (recipes.length === 0) throw new Error('gen-llms: models.generated.json produced no recipes');
 if (!ladder.rows?.length) throw new Error('gen-llms: ladder.generated.json has no rungs');
 
@@ -84,13 +82,7 @@ push(
 for (const pg of pages.filter((x) => !x.noindex)) {
   push(`- [${pg.title}](${SITE}${pg.path === '/' ? '' : pg.path}): ${pg.description}`);
 }
-push(
-  '',
-  '## Pricing',
-  '',
-  'Proposed list prices, subject to contract. The pricing page carries the payback model.',
-  ''
-);
+push('', '## Pricing', '', 'Proposed list prices, subject to contract. The pricing page carries the payback model.', '');
 for (const t of pricing.tiers) {
   push(`- ${t.name}: ${t.price}${t.per ? ` ${t.per}` : ''}`);
 }
@@ -139,7 +131,21 @@ push(
   ''
 );
 
-push('### Install', '', '```sh', data.runCommand, '```', '', 'Or without piping to a shell:', '', '```sh', data.quickInstall, data.runCommandRaw, '```', '');
+push(
+  '### Install',
+  '',
+  '```sh',
+  data.runCommand,
+  '```',
+  '',
+  'Or without piping to a shell:',
+  '',
+  '```sh',
+  data.quickInstall,
+  data.runCommandRaw,
+  '```',
+  ''
+);
 
 push(
   `### Models (${recipes.length} recipes)`,

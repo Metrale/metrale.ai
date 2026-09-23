@@ -26,7 +26,7 @@ function fakeOpfs(names) {
     },
     removeEntry: async (n) => {
       removed.push(n);
-    }
+    },
   };
   globalThis.navigator = { storage: { getDirectory: async () => dir } };
   return removed;
@@ -41,12 +41,7 @@ test('a bad sha deletes nothing at all, rather than everything', async () => {
 });
 
 test('a real sha keeps its own corpus and drops the others', async () => {
-  const removed = fakeOpfs([
-    'lattice-db-keep.jsonl',
-    'lattice-db-old1.jsonl',
-    'lattice-db-old2.jsonl',
-    'unrelated.txt'
-  ]);
+  const removed = fakeOpfs(['lattice-db-keep.jsonl', 'lattice-db-old1.jsonl', 'lattice-db-old2.jsonl', 'unrelated.txt']);
   await pruneStale('keep');
   expect(removed.sort()).toEqual(['lattice-db-old1.jsonl', 'lattice-db-old2.jsonl']);
 });

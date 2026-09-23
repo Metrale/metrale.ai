@@ -43,7 +43,7 @@ export function entry(fields, atMs) {
     route: sanitize(fields.route, 140),
     outcome: sanitize(fields.outcome, DETAIL_MAX),
     ok: fields.ok,
-    at: atMs
+    at: atMs,
   };
 }
 

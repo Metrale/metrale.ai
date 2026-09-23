@@ -38,13 +38,25 @@ const SCALE = 2;
 
 const browser = await chromium.launch();
 for (const scheme of ['light', 'dark']) {
-  const ctx = await browser.newContext({ viewport: { width: 1012, height: 1400 }, deviceScaleFactor: SCALE, colorScheme: scheme, timezoneId: 'UTC', locale: 'en-US' });
+  const ctx = await browser.newContext({
+    viewport: { width: 1012, height: 1400 },
+    deviceScaleFactor: SCALE,
+    colorScheme: scheme,
+    timezoneId: 'UTC',
+    locale: 'en-US',
+  });
   const page = await ctx.newPage();
   await page.goto(THREAD, { waitUntil: 'domcontentloaded', timeout: 90_000 });
   await page.waitForTimeout(4000);
   const present = await page.evaluate((ids) => ids.every((id) => document.getElementById(id)), COMMENTS);
-  if (!present) throw new Error(`capture-thread: the comments were not found on ${THREAD}. GitHub may have changed its markup or paginated the thread.`);
-  await page.addStyleTag({ content: '.gh-header-sticky, .js-sticky, header[role="banner"] { visibility: hidden !important; } .js-notification-shelf, .flash { display: none !important; }' });
+  if (!present)
+    throw new Error(
+      `capture-thread: the comments were not found on ${THREAD}. GitHub may have changed its markup or paginated the thread.`
+    );
+  await page.addStyleTag({
+    content:
+      '.gh-header-sticky, .js-sticky, header[role="banner"] { visibility: hidden !important; } .js-notification-shelf, .flash { display: none !important; }',
+  });
   const box = await page.evaluate((ids) => {
     const items = ids.map((id) => document.getElementById(id).closest('.TimelineItem, .js-timeline-item') || document.getElementById(id));
     const avatars = items.flatMap((e) => [...e.querySelectorAll('.TimelineItem-avatar, img.avatar')]);
@@ -63,7 +75,23 @@ for (const scheme of ['light', 'dark']) {
   const w = Math.round(box.width * SCALE);
   const h = Math.round(box.height * SCALE);
   const cut = Math.round(box.split * SCALE);
-  const webp = (name, crop, q) => execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', png, '-vf', `crop=${crop}`, '-c:v', 'libwebp', '-q:v', String(q), '-compression_level', '6', join(out, name)]);
+  const webp = (name, crop, q) =>
+    execFileSync('ffmpeg', [
+      '-y',
+      '-loglevel',
+      'error',
+      '-i',
+      png,
+      '-vf',
+      `crop=${crop}`,
+      '-c:v',
+      'libwebp',
+      '-q:v',
+      String(q),
+      '-compression_level',
+      '6',
+      join(out, name),
+    ]);
   webp(`exchange-${scheme}.webp`, `${w}:${h - cut}:0:${cut}`, 86);
   webp(`exchange-before-${scheme}.webp`, `${w}:${cut}:0:0`, 84);
   console.log(`capture-thread: ${scheme}: exchange ${w}x${h - cut}, before ${w}x${cut}`);
@@ -71,4 +99,6 @@ for (const scheme of ['light', 'dark']) {
 }
 await browser.close();
 rmSync(tmp, { recursive: true, force: true });
-console.log('capture-thread: if the sizes changed, update `exchange.image` and `exchange.before.image` in src/lib/content/company.js, then `bun run guide`.');
+console.log(
+  'capture-thread: if the sizes changed, update `exchange.image` and `exchange.before.image` in src/lib/content/company.js, then `bun run guide`.'
+);

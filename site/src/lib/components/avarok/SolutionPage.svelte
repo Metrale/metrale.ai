@@ -10,7 +10,14 @@
 </script>
 
 <PageShell {path}>
-  <PageHero eyebrow={s.eyebrow} title={s.title} lede={s.lede} primary={{ text: s.cta, href: routes.demoForm }} secondary={{ text: 'See pricing', href: routes.pricing }} color="cyan" />
+  <PageHero
+    eyebrow={s.eyebrow}
+    title={s.title}
+    lede={s.lede}
+    primary={{ text: s.cta, href: routes.demoForm }}
+    secondary={{ text: 'See pricing', href: routes.pricing }}
+    color="cyan"
+  />
 
   <section class="av-section av-section-alt">
     <div class="av-container">
@@ -18,11 +25,15 @@
       <div class="av-grid av-grid-3 av-reveal">
         <div class="av-card av-sx-violet">
           <p class="av-card-tag">Why it fits</p>
-          <ul class="av-list-check">{#each s.fit as f}<li>{f}</li>{/each}</ul>
+          <ul class="av-list-check">
+            {#each s.fit as f}<li>{f}</li>{/each}
+          </ul>
         </div>
         <div class="av-card av-sx-cyan">
           <p class="av-card-tag">Workloads that move first</p>
-          <ul class="av-list-check">{#each s.workloads as w}<li>{w}</li>{/each}</ul>
+          <ul class="av-list-check">
+            {#each s.workloads as w}<li>{w}</li>{/each}
+          </ul>
         </div>
         <div class="av-card av-sx-green">
           <p class="av-card-tag">How it deploys</p>
@@ -45,5 +56,11 @@
     </div>
   </section>
 
-  <CtaBand eyebrow={solutionCta.eyebrow} title={solutionCta.title} body={solutionCta.body} primary={{ text: s.cta, href: routes.demoForm }} secondary={solutionCta.secondary} />
+  <CtaBand
+    eyebrow={solutionCta.eyebrow}
+    title={solutionCta.title}
+    body={solutionCta.body}
+    primary={{ text: s.cta, href: routes.demoForm }}
+    secondary={solutionCta.secondary}
+  />
 </PageShell>

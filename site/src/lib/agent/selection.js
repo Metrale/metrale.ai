@@ -21,9 +21,7 @@ const HASH_PREFIX = '#node=';
 
 /** The ordered, keyable node list: ids only, holes refused. */
 function roster(nodes) {
-  return (Array.isArray(nodes) ? nodes : []).filter(
-    (n) => n && typeof n.id === 'string' && n.id.length > 0
-  );
+  return (Array.isArray(nodes) ? nodes : []).filter((n) => n && typeof n.id === 'string' && n.id.length > 0);
 }
 
 /**
@@ -97,7 +95,7 @@ export function rosterVm(nodes, selectedId) {
     id: n.id,
     index,
     key: index < KEY_MAX ? String(index + 1) : null,
-    selected: n.id === selectedId
+    selected: n.id === selectedId,
   }));
 }
 

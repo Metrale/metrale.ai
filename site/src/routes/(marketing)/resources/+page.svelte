@@ -13,7 +13,12 @@
       <h2 class="av-sr">All resources</h2>
       <div class="av-grid av-grid-3 av-reveal">
         {#each r.cards as c, i}
-          <a class="av-card av-card-accent av-sx-{['violet', 'cyan', 'green', 'gold'][i % 4]}" href={c.href} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined}>
+          <a
+            class="av-card av-card-accent av-sx-{['violet', 'cyan', 'green', 'gold'][i % 4]}"
+            href={c.href}
+            target={c.external ? '_blank' : undefined}
+            rel={c.external ? 'noopener' : undefined}
+          >
             <h3>{c.title}</h3>
             <p>{c.body}</p>
             <span class="av-link">{c.cta} {c.external ? '↗' : '→'}</span>

@@ -92,14 +92,9 @@
     }
     // The agent could not even discard it. Nothing was trusted either way —
     // say that plainly rather than implying the operator must go clean up.
-    detail =
-      `The agent did not acknowledge the refusal: ${res.detail || 'no reason given'}. ` +
-      `${node.name} was not trusted.`;
+    detail = `The agent did not acknowledge the refusal: ${res.detail || 'no reason given'}. ` + `${node.name} was not trusted.`;
     phase = 'confirm';
   }
-
-  const short = (id, n = 4) =>
-    id ? `${id.slice(0, n)} ${id.slice(n, 8)} ${id.slice(8, 12)} ${id.slice(12, 16)}` : '';
 
   async function submit(e) {
     e?.preventDefault();
@@ -138,16 +133,7 @@
 </script>
 
 <div class="ld-backdrop" role="presentation" onclick={() => void reject()}></div>
-<!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
-<div
-  class="ld ld-wide"
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby="pair-title"
-  tabindex="-1"
-  bind:this={dialogEl}
-  use:modal
->
+<div class="ld ld-wide" role="dialog" aria-modal="true" aria-labelledby="pair-title" tabindex="-1" bind:this={dialogEl} use:modal>
   <header class="ld-head">
     <h3 class="ld-title" id="pair-title">
       {#if phase === 'confirm' || phase === 'rejecting' || phase === 'accepting'}Confirm you are joining the right machines
@@ -162,8 +148,7 @@
     {#if phase === 'code' || phase === 'verifying' || phase === 'failed'}
       <p>
         Pairing proves you control both machines. The code is shown on
-        <strong>{node.name}</strong>, so only someone who can reach that machine can
-        join it to your fleet.
+        <strong>{node.name}</strong>, so only someone who can reach that machine can join it to your fleet.
       </p>
 
       <ol class="ld-steps">
@@ -177,8 +162,7 @@
                  come from the running agent, and its control page is what asks
                  for one. -->
             <p class="pair-hint">
-              Use “Show me how” there, or the add-a-machine panel — either opens a
-              join window and shows the eight digits.
+              Use “Show me how” there, or the add-a-machine panel — either opens a join window and shows the eight digits.
             </p>
           </div>
         </li>
@@ -209,35 +193,27 @@
       {/if}
     {:else if phase === 'confirm' || phase === 'rejecting' || phase === 'accepting'}
       <p>
-        The code was accepted. <strong>{node.name}</strong> is <strong>not trusted
-        yet</strong> — check that it is showing the same words first.
+        The code was accepted. <strong>{node.name}</strong> is <strong>not trusted yet</strong> — check that it is showing the same words first.
       </p>
 
       <div class="pair-fps">
         <div class="pair-words mono">{verification || '—'}</div>
         <p class="pair-fp-note">
-          {node.name} logs these same words when it accepts. If they differ, something
-          is sitting between your machines. Cancel and nothing is trusted; no pairing
-          was written.
+          {node.name} logs these same words when it accepts. If they differ, something is sitting between your machines. Cancel and nothing is
+          trusted; no pairing was written.
         </p>
       </div>
 
       <p class="pair-consequence">
-        If you confirm, this machine will trust {node.name} and can launch on it
-        wherever it has granted control. You can undo it later with Unpair.
+        If you confirm, this machine will trust {node.name} and can launch on it wherever it has granted control. You can undo it later with Unpair.
       </p>
 
       <label class="jg-grant">
-        <input
-          type="checkbox"
-          bind:checked={allowControl}
-          disabled={phase === 'rejecting' || phase === 'accepting'}
-        />
+        <input type="checkbox" bind:checked={allowControl} disabled={phase === 'rejecting' || phase === 'accepting'} />
         <span>
           Let {node.name} control this machine.
           <span class="jg-grant-why">
-            Ticked, it can launch and stop models here. Unticked, control runs one
-            way — from here toward it.
+            Ticked, it can launch and stop models here. Unticked, control runs one way — from here toward it.
           </span>
         </span>
       </label>
@@ -247,16 +223,11 @@
       {/if}
 
       <div class="ld-actions">
-        <button
-          type="button"
-          class="btn btn-ghost"
-          disabled={phase === 'rejecting' || phase === 'accepting'}
-          onclick={() => void reject()}
-        >
+        <button type="button" class="btn btn-ghost" disabled={phase === 'rejecting' || phase === 'accepting'} onclick={() => void reject()}>
           <!-- Not "Removing…": nothing was written, so there is nothing to
                remove. Saying otherwise implies a pin existed, which is exactly
                the pre-protocol-2 behaviour this dialog stopped having. -->
-          {phase === 'rejecting' ? 'Discarding…' : "They differ — cancel"}
+          {phase === 'rejecting' ? 'Discarding…' : 'They differ — cancel'}
         </button>
         <button
           type="button"

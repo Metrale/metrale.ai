@@ -22,17 +22,13 @@
     /** Poller entry for this node: {reading, at, failure, via, decodeHist, promptHist}. */
     entry = null,
     paused = false,
-    nodes = []
+    nodes = [],
   } = $props();
 
-  const trusted = $derived(
-    node.isLocal || node.pairing === 'paired' || node.pairing === 'vouched' || node.pairing === 'unreachable'
-  );
+  const trusted = $derived(node.isLocal || node.pairing === 'paired' || node.pairing === 'vouched' || node.pairing === 'unreachable');
   const serving = $derived(Boolean(node.running));
   const reading = $derived(entry?.reading ?? null);
-  const mode = $derived(
-    trusted ? IO.mode({ serving, reading, failure: entry?.failure ?? null }) : 'off'
-  );
+  const mode = $derived(trusted ? IO.mode({ serving, reading, failure: entry?.failure ?? null }) : 'off');
 
   const viaId = $derived(entry?.via ?? node.reachedVia ?? null);
   const viaName = $derived(viaId ? nameOf(viaId, nodes) : null);
@@ -45,9 +41,7 @@
       return [base, `not answering${why}`].filter(Boolean).join(' · ');
     }
     if (mode === 'quiet') {
-      return [base, 'engine answered with no fields yet — loading, not idle']
-        .filter(Boolean)
-        .join(' · ');
+      return [base, 'engine answered with no fields yet — loading, not idle'].filter(Boolean).join(' · ');
     }
     return base;
   });
@@ -56,12 +50,8 @@
   const tiles = $derived(IO.tiles(reading, { paused }));
   const byId = $derived(Object.fromEntries(tiles.map((t) => [t.id, t])));
 
-  const decodePath = $derived(
-    S.sparkline(S.timeline(entry?.decodeHist ?? [], { held }), 220, 30)
-  );
-  const promptPath = $derived(
-    S.sparkline(S.timeline(entry?.promptHist ?? [], { held }), 220, 30)
-  );
+  const decodePath = $derived(S.sparkline(S.timeline(entry?.decodeHist ?? [], { held }), 220, 30));
+  const promptPath = $derived(S.sparkline(S.timeline(entry?.promptHist ?? [], { held }), 220, 30));
 </script>
 
 {#snippet tile(t)}
@@ -75,7 +65,9 @@
       <span class="io-note">{t.note}</span>
       <span class="visually-hidden">{t.label}: {t.note}</span>
     {:else}
-      <span class="io-val">{t.text}{#if t.unit}<span class="io-unit"> {t.unit}</span>{/if}</span>
+      <span class="io-val"
+        >{t.text}{#if t.unit}<span class="io-unit"> {t.unit}</span>{/if}</span
+      >
       {#if t.paused}<span class="io-note">paused</span>{/if}
     {/if}
   </div>
@@ -101,8 +93,7 @@
       {#if path}
         <!-- Decorative: every number it encodes is printed beside it. -->
         <svg class="io-spark" viewBox="0 0 220 30" preserveAspectRatio="none" aria-hidden="true">
-          <path d={path} fill="none" stroke="currentColor" stroke-width="1.5"
-                stroke-linejoin="round" stroke-linecap="round" />
+          <path d={path} fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
         </svg>
       {/if}
     </div>

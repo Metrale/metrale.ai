@@ -23,7 +23,7 @@
 // No third-party deps: Node builtins + `git` (via child_process) for the stamp.
 // =============================================================================
 
-import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { writeStable } from './lib/write-stable.mjs';
 import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -32,8 +32,7 @@ import { execFileSync } from 'node:child_process';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const REPO = engineRoot();
-const BASELINES_ROOT =
-  process.env.AVAROK_BASELINES_ROOT || resolve(REPO, 'tests', 'baselines');
+const BASELINES_ROOT = process.env.AVAROK_BASELINES_ROOT || resolve(REPO, 'tests', 'baselines');
 const OUT = resolve(here, '..', 'src', 'lib', 'benchmarks.generated.json');
 
 // --- git stamp (sha + committer date) ---------------------------------------
@@ -42,7 +41,7 @@ function git(args) {
   try {
     return execFileSync('git', ['-C', REPO, ...args], {
       encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore']
+      stdio: ['ignore', 'pipe', 'ignore'],
     }).trim();
   } catch {
     return '';
@@ -83,9 +82,7 @@ if (files.length === 0) {
       hardware: 'DGX Spark (GB10)',
       tps: obj.tps ?? null,
       source_path: 'tests/baselines/' + filename,
-      repro_cmd:
-        `python3 tests/single_gpu_suite.py --model ${model} ` +
-        `--output tests/all_models_results/${stem}.json`
+      repro_cmd: `python3 tests/single_gpu_suite.py --model ${model} ` + `--output tests/all_models_results/${stem}.json`,
     };
   });
 }
@@ -100,9 +97,8 @@ const obj = {
     'reliability), and holds throughput within 10% of its committed baseline.',
   gate_doc:
     'https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md#8-what-verified-means-so-you-can-trust-an-image',
-  repro_cmd:
-    'python3 tests/run_all_models.py && python3 tests/gate_results.py --update-baselines',
-  entries
+  repro_cmd: 'python3 tests/run_all_models.py && python3 tests/gate_results.py --update-baselines',
+  entries,
 };
 
 writeStable(OUT, obj, ['generated_sha', 'generated_date'], (o) => JSON.stringify(o, null, 2) + '\n');

@@ -6,7 +6,7 @@ import { assignTrendPredecessors, trendEdges } from './gate-lineage.js';
 const rec = (git_sha, recorded_at, target_model = 'model-a') => ({
   git_sha,
   recorded_at,
-  target_model
+  target_model,
 });
 
 test('connects each point to the nearest earlier comparable ancestor', () => {
@@ -17,7 +17,7 @@ test('connects each point to the nearest earlier comparable ancestor', () => {
 
   expect(trendEdges(records)).toEqual([
     [records[0], records[1]],
-    [records[1], records[2]]
+    [records[1], records[2]],
   ]);
 });
 
@@ -29,7 +29,7 @@ test('does not draw an edge between divergent branch receipts', () => {
 
   expect(trendEdges(records)).toEqual([
     [records[0], records[1]],
-    [records[0], records[2]]
+    [records[0], records[2]],
   ]);
 });
 
@@ -42,7 +42,7 @@ test('resumes an older branch instead of joining the most recent divergence', ()
   expect(trendEdges(records)).toEqual([
     [records[0], records[1]],
     [records[0], records[2]],
-    [records[1], records[3]]
+    [records[1], records[3]],
   ]);
 });
 
@@ -69,19 +69,19 @@ test('uses stable machine identity across changing Spark hostnames', () => {
     ...rec('a', 1),
     hardware: { gpu: 'GB10', driver: '580' },
     machine_id: 'machine-1',
-    perf_class: 'gb10@spark-256a'
+    perf_class: 'gb10@spark-256a',
   };
   const b = {
     ...rec('b', 2),
     hardware: { gpu: 'GB10', driver: '580' },
     machine_id: 'machine-1',
-    perf_class: 'gb10@spark-43fa'
+    perf_class: 'gb10@spark-43fa',
   };
   const otherMachine = {
     ...rec('c', 3),
     hardware: { gpu: 'GB10', driver: '580' },
     machine_id: 'machine-2',
-    perf_class: 'gb10@spark-43fa'
+    perf_class: 'gb10@spark-43fa',
   };
 
   assignTrendPredecessors([a, b, otherMachine], () => true);
@@ -94,7 +94,7 @@ test('fails closed between machine-id and legacy hostname identities', () => {
   const identified = {
     ...rec('b', 2),
     machine_id: 'machine-1',
-    perf_class: 'gb10@spark-256a'
+    perf_class: 'gb10@spark-256a',
   };
 
   assignTrendPredecessors([legacy, identified], () => true);

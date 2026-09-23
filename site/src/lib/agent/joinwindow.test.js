@@ -16,7 +16,7 @@ import {
   offerKind,
   remaining,
   shortForm,
-  stalled
+  stalled,
 } from './joinwindow.js';
 import { joinCommand, joinCommandPowerShell } from './joincommand.js';
 
@@ -162,7 +162,7 @@ test('shortForm is empty exactly when joinCommand is — never half a credential
     { code: '', addresses: ['10.10.10.1'] },
     { code: '84315907', addresses: [] },
     { code: '84315907', addresses: ['127.0.0.1', '::1', '127.9.9.9'] },
-    { addresses: ['10.10.10.1'] }
+    { addresses: ['10.10.10.1'] },
   ]) {
     expect(joinCommand(join)).toBe('');
     expect(shortForm(join)).toBe('');

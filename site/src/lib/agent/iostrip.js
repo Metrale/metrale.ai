@@ -52,8 +52,7 @@ export function gateRates(reading, opts) {
     throw new TypeError('gateRates must be told whether this is the first poll');
   }
   if (reading == null) return null;
-  const windowOk =
-    Number.isFinite(reading.window_s) && reading.window_s <= MAX_RATE_WINDOW_S;
+  const windowOk = Number.isFinite(reading.window_s) && reading.window_s <= MAX_RATE_WINDOW_S;
   if (!opts.firstPoll && windowOk) return reading;
   const out = { ...reading };
   for (const f of RATE_FIELDS) delete out[f];
@@ -100,7 +99,7 @@ const TILES = [
     fmt: S.percent,
     unit: '',
     // Absence has a specific, known meaning for this field.
-    absentNote: 'not speculating'
+    absentNote: 'not speculating',
   },
   { id: 'prefix', label: 'Prefix cache', field: 'prefix_hit_rate', fmt: S.percent, unit: '' },
   // Real as of the agent's `isl_mean`/`osl_mean`. They were placeholders while
@@ -117,7 +116,7 @@ const TILES = [
     field: 'isl_mean',
     fmt: S.tokens,
     unit: 'tok',
-    absentNote: 'no request finished'
+    absentNote: 'no request finished',
   },
   {
     id: 'osl',
@@ -125,8 +124,8 @@ const TILES = [
     field: 'osl_mean',
     fmt: S.tokens,
     unit: 'tok',
-    absentNote: 'no request finished'
-  }
+    absentNote: 'no request finished',
+  },
 ];
 
 /**
@@ -158,7 +157,7 @@ export function tiles(reading, opts) {
         kind: 'absent',
         text: '—',
         note: t.absentNote ?? 'not reported',
-        paused: opts.paused
+        paused: opts.paused,
       };
     }
     return {
@@ -167,7 +166,7 @@ export function tiles(reading, opts) {
       kind: 'reading',
       text: t.fmt(v),
       unit: t.unit,
-      paused: opts.paused
+      paused: opts.paused,
     };
   });
   return out;

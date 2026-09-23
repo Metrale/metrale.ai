@@ -15,7 +15,12 @@
         <div class="av-row av-band-actions">
           <a class="av-btn av-btn-primary av-btn-lg" href={primary.href}>{primary.text} <span class="av-arrow">→</span></a>
           {#if secondary}
-            <a class="av-btn av-btn-ghost av-btn-lg" href={secondary.href} target={secondary.external ? '_blank' : undefined} rel={secondary.external ? 'noopener' : undefined}>{secondary.text}</a>
+            <a
+              class="av-btn av-btn-ghost av-btn-lg"
+              href={secondary.href}
+              target={secondary.external ? '_blank' : undefined}
+              rel={secondary.external ? 'noopener' : undefined}>{secondary.text}</a
+            >
           {/if}
         </div>
       </div>
@@ -24,6 +29,12 @@
 </section>
 
 <style>
-  .av-band-actions { justify-content: flex-end; }
-  @media (max-width: 900px) { .av-band-actions { justify-content: flex-start; } }
+  .av-band-actions {
+    justify-content: flex-end;
+  }
+  @media (max-width: 900px) {
+    .av-band-actions {
+      justify-content: flex-start;
+    }
+  }
 </style>

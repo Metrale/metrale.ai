@@ -12,34 +12,97 @@ import { frame } from '../deploy/cloudflare/prime-worker/src/sse.js';
 
 const ENDPOINT = 'https://prime.test'; // playwright.config.js builds the site with this address
 const CHAT = `${ENDPOINT}/chat`;
-const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'POST, OPTIONS', 'access-control-allow-headers': 'content-type' };
+const CORS = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'POST, OPTIONS',
+  'access-control-allow-headers': 'content-type',
+};
 
 // The last line is a real hazard: an unbreakable URL longer than the panel, and
 // a long code span. Real answers carry both, and on 2026-09-21 they widened the
 // column and clipped every line at the panel's edge.
 const LONG_URL = 'https://atlascybernetics.ai/benchmarks#qwen38-27b-nvfp4-concurrency-ladder-eight-rungs-measured-on-one-gb10-round-eleven';
-const ANSWER = ['The ladder has **eight rungs** and Metrale wins every one [1].', '', '| C | Metrale | vLLM + MTP |', '|---|---:|---:|', '| 1 | 23.6 | 19.7 |', '| 128 | 478.1 | 358.6 |', '', 'Reproduce it from the [benchmarks page](/benchmarks) [2].', '', `Receipt: ${LONG_URL} and \`bench/ladder38/RESULTS-round-eleven-qwen38-27b-nvfp4-eight-rungs.md\`.`].join('\n');
+const ANSWER = [
+  'The ladder has **eight rungs** and Metrale wins every one [1].',
+  '',
+  '| C | Metrale | vLLM + MTP |',
+  '|---|---:|---:|',
+  '| 1 | 23.6 | 19.7 |',
+  '| 128 | 478.1 | 358.6 |',
+  '',
+  'Reproduce it from the [benchmarks page](/benchmarks) [2].',
+  '',
+  `Receipt: ${LONG_URL} and \`bench/ladder38/RESULTS-round-eleven-qwen38-27b-nvfp4-eight-rungs.md\`.`,
+].join('\n');
 
 /** The Worker's stream for one answer, as one body. */
 function answerBody({ text = ANSWER, partner = false } = {}) {
   const parts = [
-    frame('meta', { id: 'e2e-1', model: 'grok-4.7', effort: 'low', partner, corpus: { built: '2026-09-21', commit: 'abc', public: 700, partner: partner ? 37 : 0 } }),
+    frame('meta', {
+      id: 'e2e-1',
+      model: 'grok-4.7',
+      effort: 'low',
+      partner,
+      corpus: { built: '2026-09-21', commit: 'abc', public: 700, partner: partner ? 37 : 0 },
+    }),
     frame('phase', { phase: 'reading' }),
     frame('phase', { phase: 'reasoning' }),
     frame('reasoning', { text: 'The visitor wants the measured margin. ' }),
     frame('reasoning', { text: 'I will search the ladder.' }),
     frame('phase', { phase: 'searching', detail: 'concurrency ladder vllm' }),
-    frame('tool', { name: 'search_site', args: { query: 'concurrency ladder vllm' }, summary: '6 passages for "concurrency ladder vllm"', ms: 4 }),
-    frame('phase', { phase: 'writing' })
+    frame('tool', {
+      name: 'search_site',
+      args: { query: 'concurrency ladder vllm' },
+      summary: '6 passages for "concurrency ladder vllm"',
+      ms: 4,
+    }),
+    frame('phase', { phase: 'writing' }),
   ];
   for (const piece of text.match(/[\s\S]{1,24}/g)) parts.push(frame('delta', { text: piece }));
   parts.push(
     frame('sources', [
-      { n: 1, title: 'Benchmarks · Metrale', section: 'The ladder', url: 'http://127.0.0.1:4173/benchmarks', kind: 'page', tier: 'public', cited: true },
-      { n: 2, title: 'Verification walkthrough', section: '', url: 'http://127.0.0.1:4173/diligence', kind: 'page', tier: 'public', cited: true },
-      { n: 3, title: 'Concurrency ladder results log', section: 'Round 11', url: 'https://github.com/x/atlas/blob/main/bench/RESULTS.md', kind: 'doc', tier: 'public', cited: false }
+      {
+        n: 1,
+        title: 'Benchmarks · Metrale',
+        section: 'The ladder',
+        url: 'http://127.0.0.1:4173/benchmarks',
+        kind: 'page',
+        tier: 'public',
+        cited: true,
+      },
+      {
+        n: 2,
+        title: 'Verification walkthrough',
+        section: '',
+        url: 'http://127.0.0.1:4173/diligence',
+        kind: 'page',
+        tier: 'public',
+        cited: true,
+      },
+      {
+        n: 3,
+        title: 'Concurrency ladder results log',
+        section: 'Round 11',
+        url: 'https://github.com/x/atlas/blob/main/bench/RESULTS.md',
+        kind: 'doc',
+        tier: 'public',
+        cited: false,
+      },
     ]),
-    frame('usage', { model: 'grok-4.7', effort: 'low', rounds: 2, tools: ['search_site'], prompt_tokens: 3400, cached_tokens: 900, completion_tokens: 120, reasoning_tokens: 60, cost_usd: 0.0079, ttft_ms: 850, first_answer_ms: 1900, total_ms: 4200 }),
+    frame('usage', {
+      model: 'grok-4.7',
+      effort: 'low',
+      rounds: 2,
+      tools: ['search_site'],
+      prompt_tokens: 3400,
+      cached_tokens: 900,
+      completion_tokens: 120,
+      reasoning_tokens: 60,
+      cost_usd: 0.0079,
+      ttft_ms: 850,
+      first_answer_ms: 1900,
+      total_ms: 4200,
+    }),
     frame('done', {})
   );
   const total = parts.reduce((a, p) => a + p.length, 0);
@@ -59,8 +122,17 @@ async function stubWorker(page, { text, partner, status = 200, error } = {}) {
     const req = route.request();
     if (req.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS });
     sent.push(req.postDataJSON());
-    if (error) return route.fulfill({ status, headers: { ...CORS, 'content-type': 'application/json' }, body: JSON.stringify({ ok: false, error }) });
-    return route.fulfill({ status: 200, headers: { ...CORS, 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store' }, body: answerBody({ text, partner }) });
+    if (error)
+      return route.fulfill({
+        status,
+        headers: { ...CORS, 'content-type': 'application/json' },
+        body: JSON.stringify({ ok: false, error }),
+      });
+    return route.fulfill({
+      status: 200,
+      headers: { ...CORS, 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store' },
+      body: answerBody({ text, partner }),
+    });
   });
   return sent;
 }
@@ -120,21 +192,32 @@ test.describe('Metrale Prime', () => {
     const widths = await page.evaluate(() => {
       const log = document.querySelector('.pr-log');
       const print = [...document.querySelectorAll('.pr-print')].at(-1);
-      return { logScroll: log.scrollWidth, logClient: log.clientWidth, print: print.getBoundingClientRect().width, panel: document.querySelector('.pr-panel').getBoundingClientRect().width };
+      return {
+        logScroll: log.scrollWidth,
+        logClient: log.clientWidth,
+        print: print.getBoundingClientRect().width,
+        panel: document.querySelector('.pr-panel').getBoundingClientRect().width,
+      };
     });
     expect(widths.logScroll).toBeLessThanOrEqual(widths.logClient);
     expect(widths.print).toBeLessThanOrEqual(widths.panel);
     // The receipt, from the Worker's own figures, and the chart in the header.
     // 900 of 3,400 prompt tokens came from the cache (26%); 120 completion
     // tokens over the 3.35 s between the first token and the end is 36 tok/s.
-    await expect(print.locator('.pr-meta-line')).toContainText('grok-4.7 · low · first token 850ms · total 4.2s · 3,580 tokens · 26% cached · 36 tok/s · $0.0079');
+    await expect(print.locator('.pr-meta-line')).toContainText(
+      'grok-4.7 · low · first token 850ms · total 4.2s · 3,580 tokens · 26% cached · 36 tok/s · $0.0079'
+    );
     await expect(page.locator('.pr-tele-num')).toHaveText('4.2s');
     await page.locator('.pr-tele-btn').click();
     await expect(page.locator('.pr-tele-pop tbody tr')).toHaveCount(1);
     await expect(page.locator('.pr-tele-pop tfoot')).toContainText('$0.0079');
     // What the page sent: the visitor's turn, the page it was on, no audience.
     expect(sent).toHaveLength(1);
-    expect(sent[0]).toMatchObject({ messages: [{ role: 'user', content: 'How much faster is it than vLLM?' }], audience: '', page: '/benchmarks' });
+    expect(sent[0]).toMatchObject({
+      messages: [{ role: 'user', content: 'How much faster is it than vLLM?' }],
+      audience: '',
+      page: '/benchmarks',
+    });
     // The fine print names the model it ran on.
     await expect(page.locator('.pr-fine')).toContainText('Runs on grok-4.7 via xAI');
   });
@@ -182,7 +265,9 @@ test.describe('Metrale Prime', () => {
     await expect(page.locator('.pr-err')).toContainText('reached its budget');
   });
 
-  test('a phone gets a sheet that locks the page; a desk gets a dock beside it; Escape closes both and returns focus', async ({ page }, testInfo) => {
+  test('a phone gets a sheet that locks the page; a desk gets a dock beside it; Escape closes both and returns focus', async ({
+    page,
+  }, testInfo) => {
     // The mobile project is a phone viewport, not Playwright's isMobile emulation,
     // so the branch follows the project name, as the marketing suite does.
     const phone = testInfo.project.name === 'mobile';

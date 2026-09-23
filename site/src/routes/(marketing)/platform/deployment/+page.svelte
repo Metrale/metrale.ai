@@ -28,7 +28,10 @@
             <h2 class="av-h2">{p.onboarding.title}</h2>
             <ol class="av-steps" style="margin-top:1.5rem">
               {#each p.onboarding.steps as s, i}
-                <li class="av-step"><span class="av-step-n">0{i + 1}</span><p style="color:var(--t1);font-weight:500;align-self:center">{s}</p></li>
+                <li class="av-step">
+                  <span class="av-step-n">0{i + 1}</span>
+                  <p style="color:var(--t1);font-weight:500;align-self:center">{s}</p>
+                </li>
               {/each}
             </ol>
             <p class="av-lede" style="font-size:1rem">{p.onboarding.foot}</p>
@@ -38,7 +41,9 @@
             <h2 class="av-h2">{p.isolation.title}</h2>
             <table class="av-table" style="margin-top:1.5rem">
               <thead><tr><th>Tier</th><th>Isolation</th></tr></thead>
-              <tbody>{#each p.isolation.rows as [tier, iso]}<tr><td>{tier}</td><td>{iso}</td></tr>{/each}</tbody>
+              <tbody
+                >{#each p.isolation.rows as [tier, iso]}<tr><td>{tier}</td><td>{iso}</td></tr>{/each}</tbody
+              >
             </table>
           </div>
         </div>
@@ -53,10 +58,16 @@
         </div>
         <div class="av-reveal" style="overflow-x:auto">
           <table class="av-table" style="margin-top:1.5rem;min-width:640px">
-            <thead><tr><th>Capability</th>{#each p.parity.columns as c}<th>{c}</th>{/each}</tr></thead>
+            <thead
+              ><tr
+                ><th>Capability</th>{#each p.parity.columns as c}<th>{c}</th>{/each}</tr
+              ></thead
+            >
             <tbody>
               {#each p.parity.rows as [what, ...cells]}
-                <tr><td>{what}</td>{#each cells as c}<td>{c}</td>{/each}</tr>
+                <tr
+                  ><td>{what}</td>{#each cells as c}<td>{c}</td>{/each}</tr
+                >
               {/each}
             </tbody>
           </table>

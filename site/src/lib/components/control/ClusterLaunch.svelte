@@ -46,7 +46,10 @@
   let selectionRestored = false;
 
   const recipes = $derived(
-    (fleet.agent?.recipes ?? []).filter((r) => r.runnable).slice().sort((a, b) => a.id.localeCompare(b.id)),
+    (fleet.agent?.recipes ?? [])
+      .filter((r) => r.runnable)
+      .slice()
+      .sort((a, b) => a.id.localeCompare(b.id))
   );
   const recipe = $derived(recipes.find((r) => r.id === flow.recipe) ?? null);
   const candidates = $derived(fleet.launchable);
@@ -123,10 +126,6 @@
     remember({ recipe: id });
   }
 
-  function nameOf(id) {
-    return fleet.nodes.find((n) => n.id === id)?.name ?? id.slice(0, 12);
-  }
-
   // The client answers with an {ok, reply} envelope rather than the frame, and
   // reading the envelope as the frame produced an empty preview with no error —
   // the silent failure this whole surface exists to avoid. Unwrapped in one
@@ -145,11 +144,9 @@
     }
   }
 
-  const doPreview = () =>
-    run(L.beginPreview, () => fleet.agent.previewCluster(flow.recipe, flow.selected, flow.head, wire), L.previewed);
+  const doPreview = () => run(L.beginPreview, () => fleet.agent.previewCluster(flow.recipe, flow.selected, flow.head, wire), L.previewed);
 
-  const doPrepare = () =>
-    run(L.beginPrepare, () => fleet.agent.prepareCluster(flow.recipe, flow.selected, flow.head, wire), L.prepared);
+  const doPrepare = () => run(L.beginPrepare, () => fleet.agent.prepareCluster(flow.recipe, flow.selected, flow.head, wire), L.prepared);
 
   const doCommit = () => run(L.beginCommit, () => fleet.agent.commitCluster(flow.epoch), L.started);
 
@@ -211,11 +208,7 @@
   <div class="lc-pick">
     <label class="lc-field">
       <span>Recipe</span>
-      <select
-        value={flow.recipe ?? ''}
-        disabled={busy || held}
-        onchange={(e) => chooseRecipe(e.currentTarget.value || null)}
-      >
+      <select value={flow.recipe ?? ''} disabled={busy || held} onchange={(e) => chooseRecipe(e.currentTarget.value || null)}>
         <option value="">Choose a recipe…</option>
         {#each recipes as r (r.id)}
           <option value={r.id}>{r.id} · {r.nodes === 1 ? '1 machine' : `${r.nodes} machines`}</option>
@@ -234,8 +227,7 @@
       {#if candidates.length === 0}
         {#if fleet.controlOnly}
           <p class="lc-empty">
-            This machine is control only, so it cannot hold a rank itself. Pair a
-            machine that can run models and it will appear here.
+            This machine is control only, so it cannot hold a rank itself. Pair a machine that can run models and it will appear here.
           </p>
         {:else}
           <p class="lc-empty">No machine here can hold a rank yet. Pair one first.</p>
@@ -250,13 +242,7 @@
             <span class="lc-node-sub">{n.isLocal ? 'this machine' : (n.addresses[0]?.addr ?? '')}</span>
           </label>
           <label class="lc-head" class:lc-head-off={!on}>
-            <input
-              type="radio"
-              name="cluster-head"
-              checked={flow.head === n.id}
-              disabled={!on}
-              onchange={() => pickHead(n.id)}
-            />
+            <input type="radio" name="cluster-head" checked={flow.head === n.id} disabled={!on} onchange={() => pickHead(n.id)} />
             <span>serves the API</span>
           </label>
         </div>
@@ -307,8 +293,7 @@
     <div class="lc-preview">
       <h3>What each machine will run</h3>
       <p class="lc-note">
-        Each command below was rendered by the machine that will run it, from its own copy of the recipe — not
-        composed here.
+        Each command below was rendered by the machine that will run it, from its own copy of the recipe — not composed here.
       </p>
       {#each flow.ranks as r (r.node)}
         <article class="lc-rank">
@@ -327,11 +312,7 @@
               nothing on that machine.
             </p>
           {/if}
-          <button
-            class="lc-copy"
-            onclick={(ev) =>
-              copy(r.command, r.node, ev.currentTarget.closest('article')?.querySelector('pre'))}
-          >
+          <button class="lc-copy" onclick={(ev) => copy(r.command, r.node, ev.currentTarget.closest('article')?.querySelector('pre'))}>
             {copied === r.node ? copyLabel(copyState) : 'Copy'}
           </button>
         </article>
@@ -368,8 +349,8 @@
         <p class="lc-note">Changed your mind? Abort below releases every reservation.</p>
       {:else if held}
         <p class="lc-note">
-          Not every machine agreed, so nothing can start. The reservations that were taken have already been
-          released — Abort below returns to the plan.
+          Not every machine agreed, so nothing can start. The reservations that were taken have already been released — Abort below returns
+          to the plan.
         </p>
       {/if}
     </div>
@@ -398,8 +379,7 @@
         <button class="btn" onclick={() => (flow = L.initial())} disabled={busy}>Plan another launch</button>
       </div>
       <p class="lc-note">
-        Stopping reaches every machine, not just this one. Leaving a worker running would hold its GPU with
-        nothing to serve.
+        Stopping reaches every machine, not just this one. Leaving a worker running would hold its GPU with nothing to serve.
       </p>
     </div>
   {/if}

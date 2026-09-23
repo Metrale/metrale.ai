@@ -19,10 +19,10 @@ function fakes() {
         live.set(id, fn);
         return id;
       },
-      clearInterval: (id) => live.delete(id)
+      clearInterval: (id) => live.delete(id),
     },
     count: () => live.size,
-    fire: () => live.forEach((fn) => fn())
+    fire: () => live.forEach((fn) => fn()),
   };
 }
 
@@ -107,12 +107,12 @@ test('the default timers survive a this-sensitive global, as in every browser', 
     // browsers accept — so modelling it as "must be globalThis" would fail a
     // correct implementation.
     const illegal = (t) => t !== undefined && t !== globalThis;
-    globalThis.setInterval = function (fn, ms) {
+    globalThis.setInterval = function () {
       if (illegal(this)) throw new TypeError('Illegal invocation');
       started += 1;
       return 42;
     };
-    globalThis.clearInterval = function (h) {
+    globalThis.clearInterval = function () {
       if (illegal(this)) throw new TypeError('Illegal invocation');
     };
 

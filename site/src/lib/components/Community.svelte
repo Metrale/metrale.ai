@@ -13,13 +13,7 @@
 
 <section id="community" class="section-alt sx-gold">
   <div class="container">
-    <SectionHead
-      label={copy.label}
-      title={copy.title}
-      sub={copy.sub}
-      prov="live from the GitHub API"
-      provUrl={githubUrl}
-    />
+    <SectionHead label={copy.label} title={copy.title} sub={copy.sub} prov="live from the GitHub API" provUrl={githubUrl} />
 
     <div class="star-wrap">
       <div>
@@ -27,7 +21,8 @@
         <div class="star-cap">GitHub stars and climbing, live from the API.</div>
         <div class="star-cta-row">
           <a class="btn btn-primary" href={githubUrl} target="_blank" rel="noopener">
-            <GithubIcon size={16} /> {copy.cta}
+            <GithubIcon size={16} />
+            {copy.cta}
           </a>
         </div>
       </div>
@@ -42,7 +37,8 @@
       </div>
       <div class="community-cta">
         <a class="btn btn-discord btn-lg" href={discordUrl} target="_blank" rel="noopener">
-          <DiscordIcon size={20} /> {community.cta}
+          <DiscordIcon size={20} />
+          {community.cta}
         </a>
         <span class="community-sub">{community.sub}</span>
       </div>

@@ -4,12 +4,7 @@
 // ones where rendering *something* would be worse than rendering nothing.
 
 import { describe, expect, test } from 'bun:test';
-import {
-  bestAddress,
-  dialableAddresses,
-  joinCommand,
-  joinCommandPowerShell
-} from './joincommand.js';
+import { bestAddress, dialableAddresses, joinCommand, joinCommandPowerShell } from './joincommand.js';
 
 test('an ordinary invitation renders one pasteable line', () => {
   const cmd = joinCommand({ code: '12345678', addresses: ['10.10.10.1'] });
@@ -68,16 +63,13 @@ test('every network the inviter offered reaches the pasted line', () => {
   // Naming one means guessing which machine the operator walked to.
   const cmd = joinCommand({
     code: '71673005',
-    addresses: ['10.10.10.9', '10.10.10.13', '192.168.68.68']
+    addresses: ['10.10.10.9', '10.10.10.13', '192.168.68.68'],
   });
   expect(cmd).toContain("--join '71673005@10.10.10.9,10.10.10.13,192.168.68.68'");
 });
 
-test('order is preserved, because it is the inviter\'s link ranking', () => {
-  expect(dialableAddresses(['10.10.10.9', '192.168.68.68'])).toEqual([
-    '10.10.10.9',
-    '192.168.68.68'
-  ]);
+test("order is preserved, because it is the inviter's link ranking", () => {
+  expect(dialableAddresses(['10.10.10.9', '192.168.68.68'])).toEqual(['10.10.10.9', '192.168.68.68']);
 });
 
 test('loopback never reaches the command, at any position', () => {
@@ -85,7 +77,7 @@ test('loopback never reaches the command, at any position', () => {
   // entry is easier to miss than it was as the only one.
   const cmd = joinCommand({
     code: '12345678',
-    addresses: ['127.0.0.1', '10.0.0.9', '::1', '127.0.1.1']
+    addresses: ['127.0.0.1', '10.0.0.9', '::1', '127.0.1.1'],
   });
   expect(cmd).toContain("--join '12345678@10.0.0.9'");
   expect(cmd).not.toContain('127.');
@@ -95,10 +87,7 @@ test('loopback never reaches the command, at any position', () => {
 test('a repeated address is not pasted twice', () => {
   // Two interfaces can report the same address; a duplicate in the command
   // would make the joiner dial it twice while looking like a third option.
-  expect(dialableAddresses(['10.0.0.9', '10.0.0.9', '192.168.1.5'])).toEqual([
-    '10.0.0.9',
-    '192.168.1.5'
-  ]);
+  expect(dialableAddresses(['10.0.0.9', '10.0.0.9', '192.168.1.5'])).toEqual(['10.0.0.9', '192.168.1.5']);
 });
 
 test('the troubleshooting host is the first of the same list', () => {
@@ -133,15 +122,18 @@ test('a comma inside a host cannot forge a second host', () => {
 test('every spelling of loopback is refused, not just 127.0.0.1', () => {
   // Each installs cleanly and then fails to pair — the most confusing
   // failure available here, per this module's own header.
-  for (const a of ['localhost', 'localhost:8443', '[::1]:8443', '::1',
-                   '::ffff:127.0.0.1', '0:0:0:0:0:0:0:1', '127.0.1.1']) {
+  for (const a of ['localhost', 'localhost:8443', '[::1]:8443', '::1', '::ffff:127.0.0.1', '0:0:0:0:0:0:0:1', '127.0.1.1']) {
     expect(dialableAddresses([a])).toEqual([]);
   }
 });
 
 test('the forms an operator actually needs still render', () => {
-  expect(dialableAddresses(['10.10.10.9', '[fe80::1]:34334', 'spark-256a', 'host:9000']))
-    .toEqual(['10.10.10.9', '[fe80::1]:34334', 'spark-256a', 'host:9000']);
+  expect(dialableAddresses(['10.10.10.9', '[fe80::1]:34334', 'spark-256a', 'host:9000'])).toEqual([
+    '10.10.10.9',
+    '[fe80::1]:34334',
+    'spark-256a',
+    'host:9000',
+  ]);
 });
 
 // A Windows machine could be installed but never INVITED: the only line the UI

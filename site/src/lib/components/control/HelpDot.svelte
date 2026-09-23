@@ -25,12 +25,7 @@
   }
 </script>
 
-<span
-  class="hd"
-  onmouseenter={() => (open = true)}
-  onmouseleave={() => (open = false)}
-  role="presentation"
->
+<span class="hd" onmouseenter={() => (open = true)} onmouseleave={() => (open = false)} role="presentation">
   <button
     type="button"
     class="hd-btn"

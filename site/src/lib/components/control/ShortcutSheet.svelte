@@ -17,8 +17,5 @@
       <dd class="ks-what">{s.label}</dd>
     {/each}
   </dl>
-  <p class="ks-note">
-    Everything here is equally reachable by click and touch — the keys are a
-    faster door, never the only one.
-  </p>
+  <p class="ks-note">Everything here is equally reachable by click and touch — the keys are a faster door, never the only one.</p>
 </Overlay>

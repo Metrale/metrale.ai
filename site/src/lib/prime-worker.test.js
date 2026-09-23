@@ -26,31 +26,124 @@ const kv = () => {
       return type === 'json' ? JSON.parse(v) : v;
     },
     put: async (k, v) => void store.set(k, typeof v === 'string' ? v : JSON.stringify(v)),
-    list: async ({ prefix = '' } = {}) => ({ keys: [...store.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })), list_complete: true })
+    list: async ({ prefix = '' } = {}) => ({
+      keys: [...store.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })),
+      list_complete: true,
+    }),
   };
 };
 
 const DOCS = [
-  { id: 'page:1', tier: 'public', kind: 'page', title: 'Pricing · Metrale', section: 'Find your payback period', url: `${ORIGIN}/pricing#payback`, text: 'Three scenarios, every input editable, evidence class on every field. The license per GPU per year is proposed.' },
-  { id: 'page:2', tier: 'public', kind: 'page', title: 'Benchmarks · Metrale', section: 'The ladder', url: `${ORIGIN}/benchmarks`, text: 'The concurrency ladder against vLLM on the GB10 box. Every rung in the campaign log. Atlas wins every rung.' },
-  { id: 'doc:3', tier: 'public', kind: 'doc', title: 'Architecture', section: 'Kernels', url: 'https://github.com/x/atlas/blob/main/docs/ARCHITECTURE.md#kernels', text: 'NVFP4 GEMM kernels are hand tuned per hardware target. The avarok-kernels crate holds them.' },
-  { id: 'deck:4', tier: 'partner', kind: 'deck', title: 'The deck', section: 'page 5', url: '', text: 'Raising a seed round to scale engine performance into repeatable revenue.' }
+  {
+    id: 'page:1',
+    tier: 'public',
+    kind: 'page',
+    title: 'Pricing · Metrale',
+    section: 'Find your payback period',
+    url: `${ORIGIN}/pricing#payback`,
+    text: 'Three scenarios, every input editable, evidence class on every field. The license per GPU per year is proposed.',
+  },
+  {
+    id: 'page:2',
+    tier: 'public',
+    kind: 'page',
+    title: 'Benchmarks · Metrale',
+    section: 'The ladder',
+    url: `${ORIGIN}/benchmarks`,
+    text: 'The concurrency ladder against vLLM on the GB10 box. Every rung in the campaign log. Atlas wins every rung.',
+  },
+  {
+    id: 'doc:3',
+    tier: 'public',
+    kind: 'doc',
+    title: 'Architecture',
+    section: 'Kernels',
+    url: 'https://github.com/x/atlas/blob/main/docs/ARCHITECTURE.md#kernels',
+    text: 'NVFP4 GEMM kernels are hand tuned per hardware target. The avarok-kernels crate holds them.',
+  },
+  {
+    id: 'deck:4',
+    tier: 'partner',
+    kind: 'deck',
+    title: 'The deck',
+    section: 'page 5',
+    url: '',
+    text: 'Raising a seed round to scale engine performance into repeatable revenue.',
+  },
 ];
 const DATA = {
-  pages: [{ path: '/', title: 'Metrale, the inference economics platform', description: 'Faster inference.' }, { path: '/pricing', title: 'Pricing · Metrale', description: 'Priced against productive GPU capacity.' }],
-  routes: { pricing: '/pricing', benchmarks: '/benchmarks', demoForm: '/demo#book', why: '/why-metrale', company: '/company', openSource: '/engine', waitlist: '/waitlist', platform: '/platform', demo: '/demo', deployment: '/platform/deployment', diligence: '/diligence' },
-  links: { contributing: 'https://github.com/x/atlas/blob/main/CONTRIBUTING.md', issues: 'https://github.com/x/atlas/issues', discord: 'https://discord.gg/x', blog: 'https://blog.example' },
+  pages: [
+    { path: '/', title: 'Metrale, the inference economics platform', description: 'Faster inference.' },
+    { path: '/pricing', title: 'Pricing · Metrale', description: 'Priced against productive GPU capacity.' },
+  ],
+  routes: {
+    pricing: '/pricing',
+    benchmarks: '/benchmarks',
+    demoForm: '/demo#book',
+    why: '/why-metrale',
+    company: '/company',
+    openSource: '/engine',
+    waitlist: '/waitlist',
+    platform: '/platform',
+    demo: '/demo',
+    deployment: '/platform/deployment',
+    diligence: '/diligence',
+  },
+  links: {
+    contributing: 'https://github.com/x/atlas/blob/main/CONTRIBUTING.md',
+    issues: 'https://github.com/x/atlas/issues',
+    discord: 'https://discord.gg/x',
+    blog: 'https://blog.example',
+  },
   contacts: { sales: 'sales@example.test', press: 'press@example.test' },
-  ladder: { title: 'Ladder', subtitle: 'Atlas vs vLLM', aggregate: 'mean', workload: { isl_tokens: 128, osl_tokens: 1024 }, box: { gpu: 'NVIDIA GB10, 121.7 GB' }, results_doc_url: 'https://github.com/x/atlas/blob/main/bench/RESULTS.md', rows: [{ c: 1, atlas: 23.59, baseline: 'vLLM + MTP', baseline_tok_s: 19.72, ratio: 1.196 }, { c: 128, atlas: 478.11, baseline: 'vLLM + MTP', baseline_tok_s: 358.57, ratio: 1.333 }], summary: { won: 8, rungs: 8 } },
-  history: { as_of: '2026-09-21', summary: { stars: 701, forks: 106, license: 'AGPL-3.0' }, releases: [{ tag: 'b463', date: '2026-09-21', name: 'b463' }], commits: [{ sha: 'abc', date: '2026-09-21', author: 'tbraun96', message: 'fix' }], pulls: [], contributors: [{ login: 'tbraun96', contributions: 326 }] }
+  ladder: {
+    title: 'Ladder',
+    subtitle: 'Atlas vs vLLM',
+    aggregate: 'mean',
+    workload: { isl_tokens: 128, osl_tokens: 1024 },
+    box: { gpu: 'NVIDIA GB10, 121.7 GB' },
+    results_doc_url: 'https://github.com/x/atlas/blob/main/bench/RESULTS.md',
+    rows: [
+      { c: 1, atlas: 23.59, baseline: 'vLLM + MTP', baseline_tok_s: 19.72, ratio: 1.196 },
+      { c: 128, atlas: 478.11, baseline: 'vLLM + MTP', baseline_tok_s: 358.57, ratio: 1.333 },
+    ],
+    summary: { won: 8, rungs: 8 },
+  },
+  history: {
+    as_of: '2026-09-21',
+    summary: { stars: 701, forks: 106, license: 'AGPL-3.0' },
+    releases: [{ tag: 'b463', date: '2026-09-21', name: 'b463' }],
+    commits: [{ sha: 'abc', date: '2026-09-21', author: 'tbraun96', message: 'fix' }],
+    pulls: [],
+    contributors: [{ login: 'tbraun96', contributions: 326 }],
+  },
 };
 
 const baseEnv = (over = {}) => {
   const PRIME = kv();
-  PRIME.store.set('corpus:public', JSON.stringify({ built: '2026-09-21T00:00:00Z', site: ORIGIN, commit: 'abc123def', docs: DOCS.filter((d) => d.kind !== 'deck') }));
+  PRIME.store.set(
+    'corpus:public',
+    JSON.stringify({ built: '2026-09-21T00:00:00Z', site: ORIGIN, commit: 'abc123def', docs: DOCS.filter((d) => d.kind !== 'deck') })
+  );
   PRIME.store.set('corpus:partner', JSON.stringify({ built: '2026-09-21T00:00:00Z', docs: DOCS.filter((d) => d.kind === 'deck') }));
   PRIME.store.set('corpus:data', JSON.stringify(DATA));
-  return { ALLOWED_ORIGINS: `${ORIGIN},http://localhost:5173`, ALLOWED_ORIGIN_SUFFIXES: '.atlas-site.pages.dev', SITE: ORIGIN, PRIME_MODEL: 'grok-4.7', PRIME_EFFORT: 'low', PRIME_DAILY_BUDGET_USD: '5', PRIME_RATE_PER_MINUTE: '3', PRIME_RATE_PER_DAY: '50', PRIME_MAX_ROUNDS: '4', LOG_TTL_DAYS: '30', XAI_API_KEY: 'xai-test', PRIME_PARTNER_CODE: 'open-sesame', PRIME_ADMIN_CODE: 'admin', PRIME, ...over };
+  return {
+    ALLOWED_ORIGINS: `${ORIGIN},http://localhost:5173`,
+    ALLOWED_ORIGIN_SUFFIXES: '.atlas-site.pages.dev',
+    SITE: ORIGIN,
+    PRIME_MODEL: 'grok-4.7',
+    PRIME_EFFORT: 'low',
+    PRIME_DAILY_BUDGET_USD: '5',
+    PRIME_RATE_PER_MINUTE: '3',
+    PRIME_RATE_PER_DAY: '50',
+    PRIME_MAX_ROUNDS: '4',
+    LOG_TTL_DAYS: '30',
+    XAI_API_KEY: 'xai-test',
+    PRIME_PARTNER_CODE: 'open-sesame',
+    PRIME_ADMIN_CODE: 'admin',
+    PRIME,
+    ...over,
+  };
 };
 
 /** A streamed xAI response made of the given deltas, the way the real one looks. */
@@ -58,8 +151,26 @@ function sse(frames) {
   const body = frames.map((f) => (f === '[DONE]' ? 'data: [DONE]\n\n' : `data: ${JSON.stringify(f)}\n\n`)).join('');
   return new Response(body, { status: 200, headers: { 'content-type': 'text/event-stream' } });
 }
-const chunk = (delta, finish = null) => ({ id: 'x', object: 'chat.completion.chunk', model: 'grok-4.7', choices: [{ index: 0, delta, ...(finish ? { finish_reason: finish } : {}) }] });
-const usageChunk = (ticks, { prompt = 1000, cached = 800, completion = 40, reasoning = 20 } = {}) => ({ id: 'x', object: 'chat.completion.chunk', model: 'grok-4.7', choices: [], usage: { prompt_tokens: prompt, completion_tokens: completion, total_tokens: prompt + completion + reasoning, prompt_tokens_details: { cached_tokens: cached }, completion_tokens_details: { reasoning_tokens: reasoning }, cost_in_usd_ticks: ticks } });
+const chunk = (delta, finish = null) => ({
+  id: 'x',
+  object: 'chat.completion.chunk',
+  model: 'grok-4.7',
+  choices: [{ index: 0, delta, ...(finish ? { finish_reason: finish } : {}) }],
+});
+const usageChunk = (ticks, { prompt = 1000, cached = 800, completion = 40, reasoning = 20 } = {}) => ({
+  id: 'x',
+  object: 'chat.completion.chunk',
+  model: 'grok-4.7',
+  choices: [],
+  usage: {
+    prompt_tokens: prompt,
+    completion_tokens: completion,
+    total_tokens: prompt + completion + reasoning,
+    prompt_tokens_details: { cached_tokens: cached },
+    completion_tokens_details: { reasoning_tokens: reasoning },
+    cost_in_usd_ticks: ticks,
+  },
+});
 
 /** A fake xAI: the first call asks for a search, the second writes the answer. */
 function fakeXai(log) {
@@ -71,13 +182,20 @@ function fakeXai(log) {
       return sse([
         chunk({ role: 'assistant', reasoning_content: 'The visitor asks about ' }),
         chunk({ reasoning_content: 'pricing. I should search.' }),
-        chunk({ tool_calls: [{ index: 0, id: 'call-1', type: 'function', function: { name: 'search_site', arguments: '{"query":"pric' } }] }),
+        chunk({
+          tool_calls: [{ index: 0, id: 'call-1', type: 'function', function: { name: 'search_site', arguments: '{"query":"pric' } }],
+        }),
         chunk({ tool_calls: [{ index: 0, function: { arguments: 'ing payback"}' } }] }, 'tool_calls'),
         usageChunk(11800000),
-        '[DONE]'
+        '[DONE]',
       ]);
     }
-    return sse([chunk({ role: 'assistant', content: 'The payback model has ' }), chunk({ content: 'three scenarios [1].' }, 'stop'), usageChunk(20000000, { prompt: 2000, cached: 0, completion: 30, reasoning: 10 }), '[DONE]']);
+    return sse([
+      chunk({ role: 'assistant', content: 'The payback model has ' }),
+      chunk({ content: 'three scenarios [1].' }, 'stop'),
+      usageChunk(20000000, { prompt: 2000, cached: 0, completion: 30, reasoning: 10 }),
+      '[DONE]',
+    ]);
   };
 }
 
@@ -95,7 +213,12 @@ async function events(res) {
     });
 }
 
-const post = (body, { origin = ORIGIN } = {}) => new Request('https://prime.test/chat', { method: 'POST', headers: { origin, 'content-type': 'application/json', 'cf-connecting-ip': '203.0.113.9' }, body: JSON.stringify(body) });
+const post = (body, { origin = ORIGIN } = {}) =>
+  new Request('https://prime.test/chat', {
+    method: 'POST',
+    headers: { origin, 'content-type': 'application/json', 'cf-connecting-ip': '203.0.113.9' },
+    body: JSON.stringify(body),
+  });
 const ctx = () => {
   const waits = [];
   return { waitUntil: (p) => waits.push(p), waits };
@@ -133,7 +256,15 @@ test('a streamed answer with a fragmented tool call is assembled into one call',
   const log = [];
   const fetchImpl = fakeXai(log);
   const seen = [];
-  for await (const ev of streamChat({ apiKey: 'k', model: 'grok-4.7', effort: 'low', messages: [{ role: 'user', content: 'hi' }], tools: TOOLS, fetchImpl })) seen.push(ev);
+  for await (const ev of streamChat({
+    apiKey: 'k',
+    model: 'grok-4.7',
+    effort: 'low',
+    messages: [{ role: 'user', content: 'hi' }],
+    tools: TOOLS,
+    fetchImpl,
+  }))
+    seen.push(ev);
   const finish = seen.find((e) => e.type === 'finish');
   expect(finish.reason).toBe('tool_calls');
   expect(finish.toolCalls).toEqual([{ id: 'call-1', name: 'search_site', arguments: '{"query":"pricing payback"}' }]);
@@ -145,18 +276,30 @@ test('a streamed answer with a fragmented tool call is assembled into one call',
   expect(log[0].tools.map((t) => t.function.name)).toContain('search_site');
 });
 
-test('the cost is xAI\'s own figure when it is there, and the price table when it is not', () => {
+test("the cost is xAI's own figure when it is there, and the price table when it is not", () => {
   const u = usageChunk(11800000).usage;
   expect(costUsd(u, 'grok-4.7')).toBeCloseTo(0.00118, 6);
   // 200 uncached at $2, 800 cached at $0.50, 60 out at $6, per million.
   const noTicks = { ...u, cost_in_usd_ticks: 0 };
   expect(costUsd(noTicks, 'grok-4.7')).toBeCloseTo((200 * 2 + 800 * 0.5 + 60 * 6) / 1e6, 9);
   expect(costUsd(noTicks, 'grok-4.3')).toBeCloseTo((200 * 1.25 + 800 * 0.2 + 60 * 2.5) / 1e6, 9);
-  expect(addUsage(usageSummary(u), usageSummary(u))).toEqual({ prompt_tokens: 2000, cached_tokens: 1600, completion_tokens: 80, reasoning_tokens: 40 });
+  expect(addUsage(usageSummary(u), usageSummary(u))).toEqual({
+    prompt_tokens: 2000,
+    cached_tokens: 1600,
+    completion_tokens: 80,
+    reasoning_tokens: 40,
+  });
 });
 
 test('a plain JSON completion, not a stream, still yields the answer', async () => {
-  const fetchImpl = async () => new Response(JSON.stringify({ choices: [{ message: { role: 'assistant', content: 'Plain.' }, finish_reason: 'stop' }], usage: { prompt_tokens: 5, completion_tokens: 1 } }), { status: 200, headers: { 'content-type': 'application/json' } });
+  const fetchImpl = async () =>
+    new Response(
+      JSON.stringify({
+        choices: [{ message: { role: 'assistant', content: 'Plain.' }, finish_reason: 'stop' }],
+        usage: { prompt_tokens: 5, completion_tokens: 1 },
+      }),
+      { status: 200, headers: { 'content-type': 'application/json' } }
+    );
   const seen = [];
   for await (const ev of streamChat({ apiKey: 'k', model: 'grok-4.7', messages: [], fetchImpl })) seen.push(ev);
   expect(seen.map((e) => e.type)).toEqual(['content', 'usage', 'finish']);
@@ -186,16 +329,37 @@ test('search_site numbers its passages once per answer, and the numbers survive 
   expect(sources.map((s) => s.n)).toEqual([...new Set(sources.map((s) => s.n))]);
 });
 
-test('estimate_economics runs the page\'s own model and says so', async () => {
-  const r = await runTool('estimate_economics', JSON.stringify({ scenario: 'fleet', inputs: { gpus: 64, uplift: 1.3 } }), { index: new Index([]), tiers: ['public'], data: DATA, env: {}, site: ORIGIN, sources: [] });
+test("estimate_economics runs the page's own model and says so", async () => {
+  const r = await runTool('estimate_economics', JSON.stringify({ scenario: 'fleet', inputs: { gpus: 64, uplift: 1.3 } }), {
+    index: new Index([]),
+    tiers: ['public'],
+    data: DATA,
+    env: {},
+    site: ORIGIN,
+    sources: [],
+  });
   expect(r.modeled).toBe(true);
   expect(r.cite_as).toBe(1);
   expect(r.result).toEqual(fleetModel({ gpus: 64, uplift: 1.3 }));
   expect(r.evidence.licensePerGpuYear).toMatch(/PROPOSED/);
-  const api = await runTool('estimate_economics', JSON.stringify({ scenario: 'api' }), { index: new Index([]), tiers: ['public'], data: DATA, env: {}, site: ORIGIN, sources: [] });
+  const api = await runTool('estimate_economics', JSON.stringify({ scenario: 'api' }), {
+    index: new Index([]),
+    tiers: ['public'],
+    data: DATA,
+    env: {},
+    site: ORIGIN,
+    sources: [],
+  });
   expect(api.inputs_used.boxTokensPerSecond).toBe(478.11);
   expect(api.evidence.boxTokensPerSecond).toMatch(/MEASURED at C=128/);
-  const bad = await runTool('estimate_economics', JSON.stringify({ scenario: 'magic' }), { index: new Index([]), tiers: ['public'], data: DATA, env: {}, site: ORIGIN, sources: [] });
+  const bad = await runTool('estimate_economics', JSON.stringify({ scenario: 'magic' }), {
+    index: new Index([]),
+    tiers: ['public'],
+    data: DATA,
+    env: {},
+    site: ORIGIN,
+    sources: [],
+  });
   expect(bad.error).toBeDefined();
 });
 
@@ -207,7 +371,9 @@ test('get_benchmark, list_pages, next_steps and repo_activity read the structure
   expect(c.sources[0]).toMatchObject({ n: 1, title: 'The concurrency ladder', url: `${ORIGIN}/benchmarks` });
   expect(l.rows[1]).toMatchObject({ concurrency: 128, metrale_tok_s: 478.11, matched_baseline_tok_s: 358.57 });
   const p = await runTool('list_pages', JSON.stringify({ query: 'pricing' }), c);
-  expect(p.pages).toEqual([{ path: '/pricing', url: `${ORIGIN}/pricing`, title: 'Pricing · Metrale', description: 'Priced against productive GPU capacity.' }]);
+  expect(p.pages).toEqual([
+    { path: '/pricing', url: `${ORIGIN}/pricing`, title: 'Pricing · Metrale', description: 'Priced against productive GPU capacity.' },
+  ]);
   const n = await runTool('next_steps', JSON.stringify({ audience: 'contributor' }), c);
   expect(n.steps.some((s) => s.url.includes('CONTRIBUTING'))).toBe(true);
   expect(n.steps.some((s) => s.url.includes('good+first+issue'))).toBe(true);
@@ -221,8 +387,21 @@ test('capture_lead posts to the forms Worker as the prime source, once, and keep
     posted.push({ url, body: JSON.parse(init.body) });
     return new Response(JSON.stringify({ ok: true, id: 'prime-1' }), { status: 200 });
   };
-  const c = { index: new Index([]), tiers: ['public'], data: DATA, env: { FORMS_ENDPOINT: 'https://forms.test/lead' }, site: ORIGIN, sources: [], page: '/pricing', fetchImpl };
-  const ok = await runTool('capture_lead', JSON.stringify({ name: 'Ada', email: 'ada@buyer.test', company: 'Buyer', interest: 'a pilot', notes: '64 H100' }), c);
+  const c = {
+    index: new Index([]),
+    tiers: ['public'],
+    data: DATA,
+    env: { FORMS_ENDPOINT: 'https://forms.test/lead' },
+    site: ORIGIN,
+    sources: [],
+    page: '/pricing',
+    fetchImpl,
+  };
+  const ok = await runTool(
+    'capture_lead',
+    JSON.stringify({ name: 'Ada', email: 'ada@buyer.test', company: 'Buyer', interest: 'a pilot', notes: '64 H100' }),
+    c
+  );
   expect(ok).toMatchObject({ ok: true, id: 'prime-1' });
   expect(posted[0].body).toMatchObject({ source: 'prime', name: 'Ada', email: 'ada@buyer.test', page: '/pricing', website: '' });
   expect(posted[0].body.notes).toContain('64 H100');
@@ -231,7 +410,11 @@ test('capture_lead posts to the forms Worker as the prime source, once, and keep
   const bad = await runTool('capture_lead', JSON.stringify({ name: 'Ada', email: 'nope', interest: 'x' }), { ...c, leadCaptured: false });
   expect(bad.ok).toBe(false);
   const env = { PRIME: kv() };
-  const kept = await runTool('capture_lead', JSON.stringify({ name: 'Ada', email: 'ada@buyer.test', interest: 'the deck' }), { ...c, env, leadCaptured: false });
+  const kept = await runTool('capture_lead', JSON.stringify({ name: 'Ada', email: 'ada@buyer.test', interest: 'the deck' }), {
+    ...c,
+    env,
+    leadCaptured: false,
+  });
   expect(kept.ok).toBe(true);
   expect([...env.PRIME.store.keys()].some((k) => k.startsWith('lead:'))).toBe(true);
 });
@@ -248,7 +431,10 @@ test('a lead is not sent on the turn its details arrive in', async () => {
   const first = await runTool('capture_lead', JSON.stringify({ name: 'Ada', email: 'ada@buyer.test', interest: 'a pilot' }), c);
   expect(first.ok).toBe(false);
   expect(first.error).toMatch(/confirm/i);
-  const second = await runTool('capture_lead', JSON.stringify({ name: 'Ada', email: 'ada@buyer.test', interest: 'a pilot' }), { ...c, turns: 2 });
+  const second = await runTool('capture_lead', JSON.stringify({ name: 'Ada', email: 'ada@buyer.test', interest: 'a pilot' }), {
+    ...c,
+    turns: 2,
+  });
   expect(second.ok).toBe(true);
 });
 
@@ -264,12 +450,14 @@ test('a stream that sends nothing is dropped after the first-token timeout and a
   for await (const ev of streamChat({ apiKey: 'k', model: 'grok-4.7', messages: [], fetchImpl, firstTokenTimeoutMs: 50 })) seen.push(ev);
   expect(n).toBe(2);
   expect(seen.find((e) => e.type === 'content').text).toBe('Late but here.');
-  await expect(streamChat({ apiKey: 'k', model: 'grok-4.7', messages: [], fetchImpl: async () => silent(), firstTokenTimeoutMs: 30 }).next()).rejects.toMatchObject({ name: 'XaiError', transient: true });
+  await expect(
+    streamChat({ apiKey: 'k', model: 'grok-4.7', messages: [], fetchImpl: async () => silent(), firstTokenTimeoutMs: 30 }).next()
+  ).rejects.toMatchObject({ name: 'XaiError', transient: true });
 });
 
 // ---- the prompt ------------------------------------------------------------------------------
 
-test('the system prompt names the visitor\'s audience and page, and the partner tier only when unlocked', () => {
+test("the system prompt names the visitor's audience and page, and the partner tier only when unlocked", () => {
   const base = { site: ORIGIN, pages: DATA.pages, manifest: { built: '2026-09-21', commit: 'abc' }, today: '2026-09-21' };
   const s = systemPrompt({ ...base, audience: 'investor', page: DATA.pages[1], partner: false });
   expect(s).toContain('Metrale Prime');
@@ -285,9 +473,20 @@ test('the system prompt names the visitor\'s audience and page, and the partner 
 test('cleanConversation keeps the newest turns and the first, and rejects what it must', () => {
   expect(cleanConversation({}).error).toBeDefined();
   expect(cleanConversation({ messages: [{ role: 'assistant', content: 'hi' }] }).error).toBeDefined();
-  expect(cleanConversation({ messages: [{ role: 'system', content: 'x' }, { role: 'user', content: 'q' }] }).error).toBeDefined();
+  expect(
+    cleanConversation({
+      messages: [
+        { role: 'system', content: 'x' },
+        { role: 'user', content: 'q' },
+      ],
+    }).error
+  ).toBeDefined();
   const long = 'x'.repeat(5000);
-  const many = [{ role: 'user', content: 'I run a neocloud' }, ...Array.from({ length: 8 }, (_, i) => ({ role: i % 2 ? 'user' : 'assistant', content: long })), { role: 'user', content: 'final' }];
+  const many = [
+    { role: 'user', content: 'I run a neocloud' },
+    ...Array.from({ length: 8 }, (_, i) => ({ role: i % 2 ? 'user' : 'assistant', content: long })),
+    { role: 'user', content: 'final' },
+  ];
   const c = cleanConversation({ messages: many, audience: 'infra', page: '/pricing' });
   expect(c.error).toBeUndefined();
   expect(c.messages[0].content).toBe('I run a neocloud');
@@ -301,9 +500,18 @@ test('only our own pages may call, and the health check says what it runs', asyn
   const env = baseEnv();
   expect(corsFor('https://evil.test', env)).toBeNull();
   expect(corsFor('https://preview.atlas-site.pages.dev', env)).not.toBeNull();
-  expect((await worker.fetch(post({ messages: [{ role: 'user', content: 'hi' }] }, { origin: 'https://evil.test' }), env, ctx())).status).toBe(403);
+  expect(
+    (await worker.fetch(post({ messages: [{ role: 'user', content: 'hi' }] }, { origin: 'https://evil.test' }), env, ctx())).status
+  ).toBe(403);
   const health = await (await worker.fetch(new Request('https://prime.test/'), env, ctx())).json();
-  expect(health).toMatchObject({ ok: true, service: 'metrale-prime', model: 'grok-4.7', effort: 'low', corpus: { public: 3, partner: 1, commit: 'abc123def' }, budget_usd: 5 });
+  expect(health).toMatchObject({
+    ok: true,
+    service: 'metrale-prime',
+    model: 'grok-4.7',
+    effort: 'low',
+    corpus: { public: 3, partner: 1, commit: 'abc123def' },
+    budget_usd: 5,
+  });
 });
 
 test('an answer streams its phases, its tool, its sources, its cost and its timings, and is recorded', async () => {
@@ -311,7 +519,11 @@ test('an answer streams its phases, its tool, its sources, its cost and its timi
   const log = [];
   globalThis.fetch = fakeXai(log);
   const c = ctx();
-  const res = await worker.fetch(post({ messages: [{ role: 'user', content: 'How does the payback model work?' }], audience: 'infra', page: '/pricing' }), env, c);
+  const res = await worker.fetch(
+    post({ messages: [{ role: 'user', content: 'How does the payback model work?' }], audience: 'infra', page: '/pricing' }),
+    env,
+    c
+  );
   expect(res.status).toBe(200);
   const evs = await events(res);
   await Promise.all(c.waits);
@@ -328,11 +540,23 @@ test('an answer streams its phases, its tool, its sources, its cost and its timi
   const tool = tools[1];
   expect(tool).toMatchObject({ name: 'search_site', args: { query: 'pricing payback' } });
   expect(tool.summary).toMatch(/passages for "pricing payback"/);
-  expect(evs.filter((e) => e.event === 'delta').map((e) => e.data.text).join('')).toBe('The payback model has three scenarios [1].');
+  expect(
+    evs
+      .filter((e) => e.event === 'delta')
+      .map((e) => e.data.text)
+      .join('')
+  ).toBe('The payback model has three scenarios [1].');
   const sources = evs.find((e) => e.event === 'sources').data;
   expect(sources[0]).toMatchObject({ n: 1, url: `${ORIGIN}/pricing#payback`, cited: true });
   const usage = evs.find((e) => e.event === 'usage').data;
-  expect(usage).toMatchObject({ rounds: 2, tools: ['read_site', 'search_site'], prompt_tokens: 3000, cached_tokens: 800, completion_tokens: 70, reasoning_tokens: 30 });
+  expect(usage).toMatchObject({
+    rounds: 2,
+    tools: ['read_site', 'search_site'],
+    prompt_tokens: 3000,
+    cached_tokens: 800,
+    completion_tokens: 70,
+    reasoning_tokens: 30,
+  });
   expect(usage.cost_usd).toBeCloseTo(0.00118 + 0.002, 6);
   expect(usage.ttft_ms).toBeGreaterThanOrEqual(0);
   expect(usage.total_ms).toBeGreaterThanOrEqual(usage.ttft_ms);
@@ -343,7 +567,15 @@ test('an answer streams its phases, its tool, its sources, its cost and its timi
   const record = [...env.PRIME.store.entries()].find(([k]) => k.startsWith('log:'));
   expect(record).toBeDefined();
   const r = JSON.parse(record[1]);
-  expect(r).toMatchObject({ ok: true, model: 'grok-4.7', audience: 'infra', page: '/pricing', rounds: 2, tools: ['read_site', 'search_site'], question_chars: 32 });
+  expect(r).toMatchObject({
+    ok: true,
+    model: 'grok-4.7',
+    audience: 'infra',
+    page: '/pricing',
+    rounds: 2,
+    tools: ['read_site', 'search_site'],
+    question_chars: 32,
+  });
   // The passages read first were in the very first request to the model, numbered.
   expect(log[0].messages[0].content).toMatch(/Passages already retrieved[\s\S]*\[1\] Pricing · Metrale/);
   expect(JSON.stringify(r)).not.toContain('payback model work');
@@ -359,7 +591,11 @@ test('the partner code unlocks the partner tier, and nothing else does', async (
       seenTiers = body.messages.find((m) => m.role === 'tool').content;
       return sse([chunk({ content: 'Answer [1].' }, 'stop'), usageChunk(1000), '[DONE]']);
     }
-    return sse([chunk({ tool_calls: [{ index: 0, id: 'c', function: { name: 'search_site', arguments: '{"query":"seed round"}' } }] }, 'tool_calls'), usageChunk(1000), '[DONE]']);
+    return sse([
+      chunk({ tool_calls: [{ index: 0, id: 'c', function: { name: 'search_site', arguments: '{"query":"seed round"}' } }] }, 'tool_calls'),
+      usageChunk(1000),
+      '[DONE]',
+    ]);
   };
   const c1 = ctx();
   const a = await events(await worker.fetch(post({ messages: [{ role: 'user', content: 'the seed round?' }], access: 'wrong' }), env, c1));
@@ -367,7 +603,9 @@ test('the partner code unlocks the partner tier, and nothing else does', async (
   expect(a[0].data.partner).toBe(false);
   expect(seenTiers).not.toContain('seed round to scale');
   const c2 = ctx();
-  const b = await events(await worker.fetch(post({ messages: [{ role: 'user', content: 'the seed round?' }], access: 'open-sesame' }), env, c2));
+  const b = await events(
+    await worker.fetch(post({ messages: [{ role: 'user', content: 'the seed round?' }], access: 'open-sesame' }), env, c2)
+  );
   await Promise.all(c2.waits);
   expect(b[0].data.partner).toBe(true);
   expect(seenTiers).toContain('seed round to scale');
@@ -413,7 +651,9 @@ test('the stats endpoint needs the admin code and aggregates the records', async
   const env = baseEnv();
   globalThis.fetch = fakeXai([]);
   const c = ctx();
-  await (await worker.fetch(post({ messages: [{ role: 'user', content: 'What is the payback model?' }], audience: 'curious' }), env, c)).text();
+  await (
+    await worker.fetch(post({ messages: [{ role: 'user', content: 'What is the payback model?' }], audience: 'curious' }), env, c)
+  ).text();
   await Promise.all(c.waits);
   expect((await worker.fetch(new Request('https://prime.test/stats?code=wrong'), env, ctx())).status).toBe(403);
   const s = await (await worker.fetch(new Request('https://prime.test/stats?code=admin&days=1'), env, ctx())).json();

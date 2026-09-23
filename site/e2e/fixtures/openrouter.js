@@ -14,7 +14,7 @@ export const OR_CHAT = 'https://openrouter.ai/api/v1/chat/completions';
 export const CORS_HEADERS = {
   'access-control-allow-origin': '*',
   'access-control-allow-methods': 'GET, POST, OPTIONS',
-  'access-control-allow-headers': 'authorization, content-type, http-referer, x-title'
+  'access-control-allow-headers': 'authorization, content-type, http-referer, x-title',
 };
 
 /** Answer the OPTIONS preflight; returns true when the route was consumed. */
@@ -27,7 +27,7 @@ async function handlePreflight(route) {
 const json = (body, status = 200) => ({
   status,
   headers: { ...CORS_HEADERS, 'content-type': 'application/json' },
-  body: JSON.stringify(body)
+  body: JSON.stringify(body),
 });
 
 /**
@@ -45,7 +45,7 @@ export function embeddingsHandler({ dim = 8, log } = {}) {
       json({
         object: 'list',
         model: 'nvidia/llama-nemotron-embed-vl-1b-v2',
-        data: texts.map((t, index) => ({ object: 'embedding', index, embedding: embedText(String(t), dim) }))
+        data: texts.map((t, index) => ({ object: 'embedding', index, embedding: embedText(String(t), dim) })),
       })
     );
   };
@@ -77,7 +77,7 @@ export function chatHandler(answer, { log } = {}) {
     await route.fulfill(
       json({
         id: 'gen-e2e',
-        choices: [{ index: 0, message: { role: 'assistant', content: answer }, finish_reason: 'stop' }]
+        choices: [{ index: 0, message: { role: 'assistant', content: answer }, finish_reason: 'stop' }],
       })
     );
   };
@@ -93,16 +93,11 @@ export function chatHandler(answer, { log } = {}) {
 export function sseChatFrames(reasoningDeltas, contentDeltas) {
   const frames = [': OPENROUTER PROCESSING\n\n'];
   reasoningDeltas.forEach((text, i) => {
-    const delta =
-      i % 2 === 1
-        ? { content: '', reasoning_details: [{ type: 'reasoning.text', text }] }
-        : { content: '', reasoning: text };
+    const delta = i % 2 === 1 ? { content: '', reasoning_details: [{ type: 'reasoning.text', text }] } : { content: '', reasoning: text };
     frames.push(`data: ${JSON.stringify({ id: 'gen-e2e-sse', choices: [{ index: 0, delta }] })}\n\n`);
   });
   contentDeltas.forEach((text) => {
-    frames.push(
-      `data: ${JSON.stringify({ id: 'gen-e2e-sse', choices: [{ index: 0, delta: { content: text } }] })}\n\n`
-    );
+    frames.push(`data: ${JSON.stringify({ id: 'gen-e2e-sse', choices: [{ index: 0, delta: { content: text } }] })}\n\n`);
   });
   frames.push('data: [DONE]\n\n');
   return frames;
@@ -120,7 +115,7 @@ export function sseChatHandler(reasoningDeltas, contentDeltas, { log } = {}) {
     await route.fulfill({
       status: 200,
       headers: { ...CORS_HEADERS, 'content-type': 'text/event-stream' },
-      body: sseChatFrames(reasoningDeltas, contentDeltas).join('')
+      body: sseChatFrames(reasoningDeltas, contentDeltas).join(''),
     });
   };
 }
@@ -136,12 +131,12 @@ export function sseMidStreamErrorHandler({ log } = {}) {
     log?.push(route.request().method());
     const frames = [
       `data: ${JSON.stringify({ id: 'gen-e2e-sse', choices: [{ index: 0, delta: { reasoning: 'Considering the retrieved context ' } }] })}\n\n`,
-      `data: ${JSON.stringify({ error: { code: 429, message: 'Upstream error from Nvidia: ResourceExhausted mid stream' } })}\n\n`
+      `data: ${JSON.stringify({ error: { code: 429, message: 'Upstream error from Nvidia: ResourceExhausted mid stream' } })}\n\n`,
     ];
     await route.fulfill({
       status: 200,
       headers: { ...CORS_HEADERS, 'content-type': 'text/event-stream' },
-      body: frames.join('')
+      body: frames.join(''),
     });
   };
 }
@@ -173,11 +168,9 @@ export function installPacedChat(page, { reasoning, content, delayMs = 150 }) {
               controller.enqueue(encoder.encode(frame));
             }
             controller.close();
-          }
+          },
         });
-        return Promise.resolve(
-          new Response(stream, { status: 200, headers: { 'content-type': 'text/event-stream' } })
-        );
+        return Promise.resolve(new Response(stream, { status: 200, headers: { 'content-type': 'text/event-stream' } }));
       };
     },
     { url: OR_CHAT, frames: sseChatFrames(reasoning, content), delayMs }
@@ -213,12 +206,12 @@ export function dailyQuota429Handler({ log, resetAt = QUOTA_RESET_AT } = {}) {
               headers: {
                 'X-RateLimit-Limit': '1000',
                 'X-RateLimit-Remaining': '0',
-                'X-RateLimit-Reset': String(resetAt)
+                'X-RateLimit-Reset': String(resetAt),
               },
               limit_source: 'openrouter_free_tier_daily',
-              remedy_hint: 'Wait for the daily reset, or purchase credits.'
-            }
-          }
+              remedy_hint: 'Wait for the daily reset, or purchase credits.',
+            },
+          },
         },
         429
       )
@@ -247,8 +240,6 @@ export function ok200ErrorBodyHandler({ log } = {}) {
   return async (route) => {
     if (await handlePreflight(route)) return;
     log?.push(route.request().method());
-    await route.fulfill(
-      json({ error: { code: 429, message: 'Upstream error from Nvidia: ResourceExhausted — please retry' } })
-    );
+    await route.fulfill(json({ error: { code: 429, message: 'Upstream error from Nvidia: ResourceExhausted — please retry' } }));
   };
 }

@@ -50,6 +50,5 @@
   returning operator reads step 1 as "the page has not noticed".
 -->
 <p class="ld-steps-note">
-  Already installed? Run them anyway — the first keeps the version you have,
-  and the second starts an agent that is installed but stopped.
+  Already installed? Run them anyway — the first keeps the version you have, and the second starts an agent that is installed but stopped.
 </p>

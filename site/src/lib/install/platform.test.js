@@ -12,12 +12,9 @@ describe('detectOs', () => {
   // Real strings. A hand-written approximation of a user-agent proves the
   // regex matches the approximation.
   const REAL = {
-    windows:
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-    macos:
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15',
-    linux:
-      'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+    windows: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+    macos: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15',
+    linux: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
   };
 
   it('classifies each real user-agent', () => {
@@ -30,8 +27,7 @@ describe('detectOs', () => {
   // installer — but of the two answers, "linux" is the one whose command at
   // least exists. What must never happen is "windows".
   it('does not read Android as Windows', () => {
-    const android =
-      'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36';
+    const android = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36';
     expect(detectOs(android)).toBe('linux');
   });
 
@@ -76,9 +72,7 @@ describe('installCommandFor', () => {
   // An unclassified visitor must see exactly what the prerendered HTML holds,
   // or the page visibly rewrites itself on hydration for no reason.
   it('gives unknown the same command as linux', () => {
-    expect(installCommandFor('unknown', URLS).command).toBe(
-      installCommandFor('linux', URLS).command
-    );
+    expect(installCommandFor('unknown', URLS).command).toBe(installCommandFor('linux', URLS).command);
   });
 
   // The narration beside the command must describe the command that is there:

@@ -30,13 +30,13 @@ const ASSETS = [
   {
     name: 'lattice_server.js',
     sha256: 'a9f45e938d5483f7a0bf70044aa1610eddfaa0d9da5d8836e219ce1ebfaa1f9a',
-    bytes: 31783
+    bytes: 31783,
   },
   {
     name: 'lattice_server_bg.wasm',
     sha256: '75a7fc9a6e010cd17111be8bbe5d4d173cfffbdff9a72053d3128cfb0d21cd3b',
-    bytes: 763172
-  }
+    bytes: 763172,
+  },
 ];
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -65,10 +65,7 @@ function verify(buf, asset, origin) {
     process.exit(1);
   }
   if (buf.length !== asset.bytes) {
-    console.error(
-      `gen-lattice: size mismatch for ${asset.name} (${origin}): ` +
-        `expected ${asset.bytes} B, got ${buf.length} B`
-    );
+    console.error(`gen-lattice: size mismatch for ${asset.name} (${origin}): ` + `expected ${asset.bytes} B, got ${buf.length} B`);
     process.exit(1);
   }
 }

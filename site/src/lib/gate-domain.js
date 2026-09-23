@@ -116,8 +116,7 @@ export function clampValue(v, domain) {
  * @param {string} text already-formatted tick
  * @param {'high'|'low'|null} edge
  */
-export const tickLabel = (text, edge) =>
-  edge === 'high' ? `${text}+` : edge === 'low' ? `${text}−` : text;
+export const tickLabel = (text, edge) => (edge === 'high' ? `${text}+` : edge === 'low' ? `${text}−` : text);
 
 /**
  * Spread end-of-series labels apart so none overlaps another.

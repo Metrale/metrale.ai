@@ -12,12 +12,20 @@ const HINT = 'Run `bun x --bun vite build` then `bun run guide -- --note "what c
 
 test('every tracked fact matches the ledger', async () => {
   const diff = diffLedger(readLedger(), await collectFacts(), collectAssets());
-  expect({ changed: diff.changedFacts, removed: diff.removedFacts, hint: diff.changedFacts.length + diff.removedFacts.length ? HINT : '' }).toEqual({ changed: [], removed: [], hint: '' });
+  expect({
+    changed: diff.changedFacts,
+    removed: diff.removedFacts,
+    hint: diff.changedFacts.length + diff.removedFacts.length ? HINT : '',
+  }).toEqual({ changed: [], removed: [], hint: '' });
 });
 
 test('every tracked asset matches the ledger', async () => {
   const diff = diffLedger(readLedger(), await collectFacts(), collectAssets());
-  expect({ changed: diff.changedAssets, removed: diff.removedAssets, hint: diff.changedAssets.length + diff.removedAssets.length ? HINT : '' }).toEqual({ changed: [], removed: [], hint: '' });
+  expect({
+    changed: diff.changedAssets,
+    removed: diff.removedAssets,
+    hint: diff.changedAssets.length + diff.removedAssets.length ? HINT : '',
+  }).toEqual({ changed: [], removed: [], hint: '' });
 });
 
 test('the ledger has a revision, a date and a change log entry for everything in it', () => {

@@ -26,7 +26,7 @@ export default defineConfig({
   use: {
     baseURL: `http://127.0.0.1:${PORT}`,
     serviceWorkers: 'block',
-    trace: 'retain-on-failure'
+    trace: 'retain-on-failure',
   },
   webServer: {
     command: `bun x --bun vite build && bun x --bun vite preview --host 127.0.0.1 --port ${PORT} --strictPort`,
@@ -51,12 +51,12 @@ export default defineConfig({
     // The build names a stand-in address for Metrale Prime's Worker, so the
     // launcher renders and e2e/prime.spec.js can answer for the Worker with a
     // route. Nothing reaches this address: it is intercepted before the network.
-    env: { ...process.env, VITE_PRIME_ENDPOINT: 'https://prime.test' }
+    env: { ...process.env, VITE_PRIME_ENDPOINT: 'https://prime.test' },
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: { ...devices['Desktop Chrome'] },
     },
     {
       // The phone sheet: chromium engine, 390x844 viewport, touch on.
@@ -64,8 +64,8 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 390, height: 844 },
-        hasTouch: true
-      }
-    }
-  ]
+        hasTouch: true,
+      },
+    },
+  ],
 });

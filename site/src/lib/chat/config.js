@@ -4,10 +4,8 @@
 // =============================================================================
 
 // --- corpus (published by the AutoRepoRAG workflow to gh-pages) --------------
-export const CORPUS_GZ_URL =
-  'https://avarok-cybersecurity.github.io/atlas/coderag/atlas-coderag.jsonl.gz';
-export const CORPUS_META_URL =
-  'https://avarok-cybersecurity.github.io/atlas/coderag/atlas-coderag.jsonl.meta.json';
+export const CORPUS_GZ_URL = 'https://avarok-cybersecurity.github.io/atlas/coderag/atlas-coderag.jsonl.gz';
+export const CORPUS_META_URL = 'https://avarok-cybersecurity.github.io/atlas/coderag/atlas-coderag.jsonl.meta.json';
 
 // --- OpenRouter --------------------------------------------------------------
 export const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1';

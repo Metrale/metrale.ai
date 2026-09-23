@@ -18,7 +18,7 @@ function recorder() {
     const stops = [];
     return {
       addColorStop: (o, c) => stops.push(`${round(o)}:${c}`),
-      toString: () => `${kind}(${args.map(round).join(',')})[${stops.join('|')}]`
+      toString: () => `${kind}(${args.map(round).join(',')})[${stops.join('|')}]`,
     };
   };
   const ctx = new Proxy(
@@ -33,7 +33,7 @@ function recorder() {
       set(_, key, value) {
         log.push(`${String(key)}=${typeof value === 'object' ? String(value) : round(value)}`);
         return true;
-      }
+      },
     }
   );
   return { ctx, log };

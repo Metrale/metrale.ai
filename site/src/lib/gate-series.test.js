@@ -20,7 +20,7 @@ const rec = (over = {}) => {
     metrics: { median_ms: 100 + seq },
     trend_predecessor: '',
     generated_ancestry: 'unknown',
-    ...over
+    ...over,
   };
 };
 const panel = { metrics: [{ key: 'median_ms', label: 'median' }] };
@@ -29,9 +29,7 @@ describe('the per-model split (the bug this module fixes)', () => {
   test('two models on one metric become two series, never one', () => {
     // Against the previous implementation this is false by construction: it
     // built a single series and coloured all of it from its first point.
-    const records = [
-      rec(), rec({ target_model: GEMMA }), rec(), rec({ target_model: GEMMA })
-    ];
+    const records = [rec(), rec({ target_model: GEMMA }), rec(), rec({ target_model: GEMMA })];
     const series = buildSeries(panel, records);
     expect(series).toHaveLength(2);
     expect(new Set(series.map((s) => s.model))).toEqual(new Set([QWEN, GEMMA]));
@@ -64,18 +62,13 @@ describe('the per-model split (the bug this module fixes)', () => {
   test('labels name the model only when more than one is present', () => {
     expect(buildSeries(panel, [rec(), rec()])[0].label).toBe('median');
     const mixed = buildSeries(panel, [rec(), rec({ target_model: GEMMA })]);
-    expect(mixed.map((s) => s.label).sort()).toEqual([
-      'median · Gemma-4-26B-A4B-it-NVFP4A16',
-      'median · Qwen3.6-35B-A3B-FP8'
-    ]);
+    expect(mixed.map((s) => s.label).sort()).toEqual(['median · Gemma-4-26B-A4B-it-NVFP4A16', 'median · Qwen3.6-35B-A3B-FP8']);
   });
 
   test('the quant suffix survives shortening', () => {
     // FP8 vs NVFP4 of the same family is the comparison that must never be
     // ambiguous, so the label may not stop at `Qwen3.6-35B-A3B`.
-    const series = buildSeries(panel, [
-      rec(), rec({ target_model: 'nvidia/Qwen3.6-35B-A3B-NVFP4' })
-    ]);
+    const series = buildSeries(panel, [rec(), rec({ target_model: 'nvidia/Qwen3.6-35B-A3B-NVFP4' })]);
     const labels = series.map((s) => s.label).join(' ');
     expect(labels).toContain('FP8');
     expect(labels).toContain('NVFP4');
@@ -86,13 +79,13 @@ describe('metric and variant scoping', () => {
   test('a variant-scoped metric reads only its own benchmark id', () => {
     const records = [
       rec({ benchmark_id: 'concurrency-sweep', metrics: { peak_aggregate_tok_s: 100 } }),
-      rec({ benchmark_id: 'concurrency-sweep-dflash2', metrics: { peak_aggregate_tok_s: 62 } })
+      rec({ benchmark_id: 'concurrency-sweep-dflash2', metrics: { peak_aggregate_tok_s: 62 } }),
     ];
     const p = {
       metrics: [
         { key: 'peak_aggregate_tok_s', label: 'peak', variant: 'concurrency-sweep' },
-        { key: 'peak_aggregate_tok_s', label: 'peak (DFlash2)', variant: 'concurrency-sweep-dflash2', dashed: true }
-      ]
+        { key: 'peak_aggregate_tok_s', label: 'peak (DFlash2)', variant: 'concurrency-sweep-dflash2', dashed: true },
+      ],
     };
     const series = buildSeries(p, records);
     expect(series).toHaveLength(2);
@@ -105,8 +98,8 @@ describe('metric and variant scoping', () => {
     const p = {
       metrics: [
         { key: 'median_ms', label: 'median' },
-        { key: 'p90_ms', label: 'p90', dashed: true }
-      ]
+        { key: 'p90_ms', label: 'p90', dashed: true },
+      ],
     };
     const records = [rec({ metrics: { median_ms: 10, p90_ms: 20 } }), rec({ metrics: { median_ms: 11, p90_ms: 21 } })];
     expect(buildSeries(p, records)).toHaveLength(2);
@@ -164,12 +157,10 @@ describe('the chart-wide cap', () => {
     const p = {
       metrics: [
         { key: 'median_ms', label: 'median' },
-        { key: 'p90_ms', label: 'p90' }
-      ]
+        { key: 'p90_ms', label: 'p90' },
+      ],
     };
-    const records = Array.from({ length: 77 }, (_, i) =>
-      rec({ metrics: { median_ms: 100 + i, p90_ms: 200 + i } })
-    );
+    const records = Array.from({ length: 77 }, (_, i) => rec({ metrics: { median_ms: 100 + i, p90_ms: 200 + i } }));
     const series = buildSeries(p, records);
     expect(series).toHaveLength(2);
     for (const s of series) expect(s.nodes.length).toBeLessThanOrEqual(48);

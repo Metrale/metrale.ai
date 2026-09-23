@@ -1,0 +1,28 @@
+# Build output and dependencies
+build/
+.svelte-kit/
+node_modules/
+playwright-report/
+test-results/
+.lighthouseci/
+bun.lock
+
+# Static files are served as they are (vendored wasm, llms.txt, _headers, media)
+static/
+
+# Generated or machine-written: rewritten by scripts/gen-*.mjs, scripts/media/install.mjs and the build
+src/lib/**/*.json
+guide/
+SITE-GUIDE.md
+media-brief/*.json
+scripts/.cache/
+deploy/cloudflare/prime-worker/corpus/
+
+# The SvelteKit page template carries %sveltekit.*% placeholders and the pre-paint theme script
+src/app.html
+
+# Markdown is owned by markdownlint
+*.md
+
+# Test fixture data
+e2e/fixtures/corpus-small.*

@@ -101,9 +101,7 @@ export function blocker(state, recipe, available) {
   const need = required(recipe);
   if (available < need) {
     const missing = need - available;
-    return `This recipe needs ${need} machines and ${available} ${
-      available === 1 ? 'is' : 'are'
-    } available. Pair ${missing} more.`;
+    return `This recipe needs ${need} machines and ${available} ${available === 1 ? 'is' : 'are'} available. Pair ${missing} more.`;
   }
   const short = need - state.selected.length;
   if (short > 0) return `Select ${short} more machine${short === 1 ? '' : 's'}.`;
@@ -280,12 +278,7 @@ export function prepared(state, reply) {
  * @returns {boolean}
  */
 export function mayCommit(state) {
-  return (
-    state.phase === 'prepared' &&
-    state.epoch != null &&
-    state.answers.length > 0 &&
-    state.answers.every((r) => r.prepared === true)
-  );
+  return state.phase === 'prepared' && state.epoch != null && state.answers.length > 0 && state.answers.every((r) => r.prepared === true);
 }
 
 /**
@@ -303,10 +296,7 @@ export function started(state, reply) {
   // recipe running here) — so the operator gets a screen with no commands, no
   // error and no button, after the one action that actually spends machines.
   if (ranks.length === 0) {
-    return failed(
-      state,
-      'The agent reported the launch started but named no machine. Nothing is known to be running.'
-    );
+    return failed(state, 'The agent reported the launch started but named no machine. Nothing is known to be running.');
   }
   return {
     ...state,

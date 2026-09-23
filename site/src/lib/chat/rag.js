@@ -93,9 +93,7 @@ export async function askCodebase(question, history, { apiKey, corpus, onPhase, 
     // reinstated the exact TypeError it was written to remove.
     picked = ranked
       .slice(0, TOP_K)
-      .filter(
-        ({ index }) => Number.isInteger(index) && index >= 0 && index < candidates.length
-      )
+      .filter(({ index }) => Number.isInteger(index) && index >= 0 && index < candidates.length)
       .map(({ index }) => candidates[index]);
   } else {
     picked = candidates.slice(0, TOP_K);
@@ -112,7 +110,7 @@ export async function askCodebase(question, history, { apiKey, corpus, onPhase, 
       endLine,
       score: c.score,
       relevancePct: relevancePct(c.score),
-      url: sourceUrl(corpus.repo, corpus.commit, p.path, startLine, endLine)
+      url: sourceUrl(corpus.repo, corpus.commit, p.path, startLine, endLine),
     };
   });
 
@@ -125,19 +123,17 @@ export async function askCodebase(question, history, { apiKey, corpus, onPhase, 
               startLine: Number(c.payload.start_line),
               endLine: Number(c.payload.end_line),
               language: c.payload.language,
-              text: c.payload.text
+              text: c.payload.text,
             })
           )
           .join('\n\n')
       : 'No relevant code was found in the corpus for this question.';
 
   onPhase?.('thinking');
-  const answer = await chat(
-    [...history, { role: 'user', content: question }],
-    systemPrompt(corpus.repo, corpus.commit, context),
-    apiKey,
-    { onDelta, model: chatModel }
-  );
+  const answer = await chat([...history, { role: 'user', content: question }], systemPrompt(corpus.repo, corpus.commit, context), apiKey, {
+    onDelta,
+    model: chatModel,
+  });
 
   return { answer, sources };
 }

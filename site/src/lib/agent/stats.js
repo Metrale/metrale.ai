@@ -167,8 +167,7 @@ export function timeline(history, opts) {
   }
   const list = Array.isArray(history) ? history : [];
   const win = list.length > HISTORY ? list.slice(-HISTORY) : list;
-  const padded =
-    win.length < HISTORY ? [...win, ...new Array(HISTORY - win.length).fill(null)] : [...win];
+  const padded = win.length < HISTORY ? [...win, ...new Array(HISTORY - win.length).fill(null)] : [...win];
   if (!opts.held) return padded;
   let trailing = 0;
   for (let i = padded.length - 1; i >= 0 && padded[i] == null; i--) trailing++;

@@ -5,7 +5,6 @@
   import Chain from '$lib/components/avarok/home/Chain.svelte';
   import Deliveries from '$lib/components/avarok/home/Deliveries.svelte';
   import FaqList from '$lib/components/avarok/FaqList.svelte';
-  import CtaBand from '$lib/components/avarok/CtaBand.svelte';
   import { whyHero, pillars, pov } from '$lib/content/why.js';
   import { faqFor } from '$lib/content/faq.js';
   import { routes } from '$lib/content/brand.js';
@@ -60,7 +59,9 @@
             <p class="av-eyebrow">{pov.eyebrow}</p>
             <h2 class="av-h2">{pov.title}</h2>
             <p class="av-lede">{pov.body}</p>
-            <ul class="av-list-check" style="margin-top:1.2rem">{#each pov.bullets as b}<li>{b}</li>{/each}</ul>
+            <ul class="av-list-check" style="margin-top:1.2rem">
+              {#each pov.bullets as b}<li>{b}</li>{/each}
+            </ul>
           </div>
           <div class="av-row" style="justify-content:flex-end">
             <a class="av-btn av-btn-primary av-btn-lg" href={pov.primary.href}>{pov.primary.text} <span class="av-arrow">→</span></a>
@@ -73,5 +74,8 @@
 </PageShell>
 
 <style>
-  .av-why-pillars { margin-top: 2.25rem; max-width: 1180px; }
+  .av-why-pillars {
+    margin-top: 2.25rem;
+    max-width: 1180px;
+  }
 </style>

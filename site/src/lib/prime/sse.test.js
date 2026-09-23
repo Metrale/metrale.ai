@@ -8,7 +8,7 @@ const stream = (chunks) =>
     start(c) {
       for (const ch of chunks) c.enqueue(typeof ch === 'string' ? new TextEncoder().encode(ch) : ch);
       c.close();
-    }
+    },
   });
 
 test('the page reads what the Worker writes, frame by frame', async () => {
@@ -18,7 +18,7 @@ test('the page reads what the Worker writes, frame by frame', async () => {
   expect(seen).toEqual([
     ['meta', { model: 'grok-4.7' }],
     ['delta', { text: 'Hello' }],
-    ['done', {}]
+    ['done', {}],
   ]);
 });
 

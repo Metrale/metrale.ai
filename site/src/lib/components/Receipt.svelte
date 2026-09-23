@@ -27,8 +27,7 @@
   // rows would push the receipt past the fold on a laptop.
   const COMPACT_RUNGS = [1, 8, 32, 128];
   const shown = compact ? rungs.filter((r) => COMPACT_RUNGS.includes(r.c)) : rungs;
-  const bestLabel = (r) =>
-    r.baselines.find((b) => b.id === r.best_baseline_id)?.label ?? 'baseline';
+  const bestLabel = (r) => r.baselines.find((b) => b.id === r.best_baseline_id)?.label ?? 'baseline';
 </script>
 
 <div class="receipt receipt-print" role="figure" aria-label="Metrale release-gate receipt">

@@ -34,38 +34,33 @@ function runBootScript({ stored = null, prefersLight = false, pathname = '/', st
     attributes: {},
     setAttribute(name, value) {
       this.attributes[name] = value;
-    }
+    },
   };
   const document = {
     documentElement,
     head: {
       appendChild(node) {
         appended.push(node);
-      }
+      },
     },
     createElement(tag) {
       return {
         tag,
         setAttribute(name, value) {
           this[name] = value;
-        }
+        },
       };
-    }
+    },
   };
   const localStorage = {
     getItem() {
       if (storageThrows) throw new Error('storage unavailable');
       return stored;
-    }
+    },
   };
-  const matchMedia = query => ({ matches: query.includes('light') ? prefersLight : !prefersLight });
+  const matchMedia = (query) => ({ matches: query.includes('light') ? prefersLight : !prefersLight });
 
-  new Function('document', 'localStorage', 'matchMedia', 'location', source)(
-    document,
-    localStorage,
-    matchMedia,
-    { pathname }
-  );
+  new Function('document', 'localStorage', 'matchMedia', 'location', source)(document, localStorage, matchMedia, { pathname });
   return { theme: documentElement.attributes['data-theme'], preloads: appended };
 }
 

@@ -19,14 +19,7 @@
 <div class="ledger-rail">
   {#if index}<span class="ledger-no">{index}</span>{/if}
   <svg class="ledger-chev" viewBox="0 0 26 44" width="13" height="22" aria-hidden="true">
-    <path
-      d="M6 6L20 22L6 38"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="8"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
+    <path d="M6 6L20 22L6 38" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
   <span class="ledger-name">{name}</span>
   <span class="ledger-line"></span>

@@ -37,9 +37,7 @@
   let endpointEl = $state(null);
   $effect(() => () => clearTimeout(copyTimer));
 
-  const trusted = $derived(
-    Boolean(node && (node.isLocal || node.pairing === 'paired' || node.pairing === 'vouched'))
-  );
+  const trusted = $derived(Boolean(node && (node.isLocal || node.pairing === 'paired' || node.pairing === 'vouched')));
   const travel = $derived(travelWarning(node, nodes));
   const info = $derived(recipes?.find((r) => r.id === picked) ?? null);
   // Value-stable: `node` is a new object on every 1Hz vitals event; keying the
@@ -56,15 +54,12 @@
       ok,
       outcome,
       target: node?.isLocal ? 'this machine' : (node?.name ?? ''),
-      route: routeText
+      route: routeText,
     });
   }
 
   function fail(res, verb) {
-    const r = refusal(
-      { error: res.error ?? null, message: res.message ?? null },
-      { target: node ? onTarget(node) : null, nodes }
-    );
+    const r = refusal({ error: res.error ?? null, message: res.message ?? null }, { target: node ? onTarget(node) : null, nodes });
     problem = r.text;
     logIt(verb, false, r.text);
     return r.text;
@@ -92,10 +87,7 @@
         if (res.ok) {
           recipes = res.reply.recipes ?? [];
         } else {
-          const r = refusal(
-            { error: res.error ?? null, message: res.message ?? null },
-            { target, nodes }
-          );
+          const r = refusal({ error: res.error ?? null, message: res.message ?? null }, { target, nodes });
           listProblem = r.text;
         }
       })();
@@ -148,7 +140,7 @@
         container: res.reply.container,
         endpoint: res.reply.endpoint ?? null,
         on: res.reply.on ?? null,
-        via: res.reply.via ?? null
+        via: res.reply.via ?? null,
       };
       logIt('launch', true, `launched ${res.reply.recipe}`);
     } else {
@@ -172,15 +164,13 @@
     <p class="dt-quiet">No machine is selected.</p>
   {:else if !trusted}
     <p class="dt-quiet">
-      Launching needs a paired machine. Pair this one first — nothing can be
-      asked of a machine that has only been seen on the network.
+      Launching needs a paired machine. Pair this one first — nothing can be asked of a machine that has only been seen on the network.
     </p>
   {:else if node.canLaunch !== true}
     <p class="dt-quiet">
       <span class="fl-co-chip">Control only</span>
       {node.cannotLaunchReason || 'This machine reports it cannot run models.'}
-      It can still drive machines that can — select one in the roster and
-      launch there.
+      It can still drive machines that can — select one in the roster and launch there.
     </p>
   {:else}
     {#if listProblem}
@@ -252,9 +242,9 @@
           <pre class="dt-cmd mono">{preview}</pre>
           {#if unapplied.length > 0}
             <p class="dt-warn">
-              The target does not understand {unapplied.length} setting{unapplied.length === 1
-                ? ''
-                : 's'} this recipe carries, so they will <strong>not</strong> be applied:
+              The target does not understand {unapplied.length} setting{unapplied.length === 1 ? '' : 's'} this recipe carries, so they will
+              <strong>not</strong>
+              be applied:
               <code class="mono">{unapplied.join(', ')}</code>. Updating atlasctl may fix this.
             </p>
           {/if}
@@ -270,9 +260,7 @@
               <strong>{started.recipe}</strong> is starting in
               <code class="mono">{started.container}</code>
               <span class="dt-route-badge">
-                on {started.on ? nameOf(started.on, nodes) : 'this machine'}{started.via
-                  ? ` · via ${nameOf(started.via, nodes)}`
-                  : ''}
+                on {started.on ? nameOf(started.on, nodes) : 'this machine'}{started.via ? ` · via ${nameOf(started.via, nodes)}` : ''}
               </span>
             </p>
             {#if started.endpoint}

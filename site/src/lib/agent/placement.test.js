@@ -16,7 +16,7 @@ const node = (id, extra = {}) => ({
   os: '',
   accelerator: '',
   addresses: [],
-  ...extra
+  ...extra,
 });
 
 suite('who could hold a rank', () => {
@@ -151,10 +151,10 @@ suite('a machine that cannot launch says why', () => {
   const denied = node('me', {
     isLocal: true,
     canLaunch: false,
-    cannotLaunchReason: 'Docker refused this user: you are not in the `docker` group'
+    cannotLaunchReason: 'Docker refused this user: you are not in the `docker` group',
   });
 
-  test('the agent\'s reason reaches the operator instead of being discarded', () => {
+  test("the agent's reason reaches the operator instead of being discarded", () => {
     const d = P.decide([denied], { nodes: 1 }, false);
     expect(d.kind).toBe('none');
     expect(d.reason).toContain('docker` group');

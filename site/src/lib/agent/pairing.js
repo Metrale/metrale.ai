@@ -32,7 +32,7 @@ export function readExchange(reply) {
   return {
     ok: reply?.exchanged === true,
     verification: reply?.verification ?? null,
-    detail: sanitize(reply?.detail, DETAIL_MAX)
+    detail: sanitize(reply?.detail, DETAIL_MAX),
   };
 }
 
@@ -53,7 +53,7 @@ export function readDecision(reply, expectTrusted) {
   }
   return {
     ok: reply?.trusted === expectTrusted,
-    detail: sanitize(reply?.detail, DETAIL_MAX)
+    detail: sanitize(reply?.detail, DETAIL_MAX),
   };
 }
 
@@ -81,6 +81,6 @@ export function readExchangeAt(reply) {
     name: sanitize(reply?.name, 63),
     address: sanitize(reply?.address, 63),
     verification: reply?.verification ?? null,
-    detail: sanitize(reply?.detail, DETAIL_MAX)
+    detail: sanitize(reply?.detail, DETAIL_MAX),
   };
 }

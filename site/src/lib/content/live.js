@@ -47,7 +47,7 @@ export const live = {
   stars: String(stars.count),
   payback: paybackLabel(fleet.paybackMonths),
   apiSavings: `${Math.round(api.savingsPct)}%`,
-  stamp: `${ladder.series?.[0]?.build_public ?? ''} · ${ladder.generated_utc?.slice(0, 10) ?? ''}`.trim()
+  stamp: `${ladder.series?.[0]?.build_public ?? ''} · ${ladder.generated_utc?.slice(0, 10) ?? ''}`.trim(),
 };
 
 export const ladderData = ladder;

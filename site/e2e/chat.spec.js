@@ -16,7 +16,7 @@ import {
   rerankHandler,
   chatHandler,
   http429Handler,
-  ok200ErrorBodyHandler
+  ok200ErrorBodyHandler,
 } from './fixtures/openrouter.js';
 import {
   META,
@@ -32,7 +32,7 @@ import {
   statusText,
   waitReady,
   withKey,
-  askQuestion
+  askQuestion,
 } from './fixtures/chat-helpers.js';
 import { startSlowServer } from './fixtures/slow-server.mjs';
 
@@ -107,36 +107,22 @@ test.describe('nav trigger', () => {
 // =============================================================================
 
 test.describe('modal shell', () => {
-  test('opens with dialog aria, locks scroll, Escape closes and returns focus', async ({
-    page,
-    context
-  }) => {
+  test('opens with dialog aria, locks scroll, Escape closes and returns focus', async ({ page, context }) => {
     await routeCorpus(context);
     await page.goto('/engine');
     const dialog = await openChat(page);
 
     await expect(dialog).toHaveAttribute('aria-modal', 'true');
     await expect(dialog).toHaveAttribute('aria-label', 'Ask the codebase');
-    await expect
-      .poll(() => page.evaluate(() => document.body.style.overflow))
-      .toBe('hidden');
+    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
 
     await page.keyboard.press('Escape');
     await expect(dialog).toBeHidden();
-    await expect
-      .poll(() => page.evaluate(() => document.body.style.overflow))
-      .toBe('');
+    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
     // Focus returns to the opener — except on the phone, where the opener sits
     // in the (now hidden) drawer, so it lands on the drawer toggle instead.
     const focusClass = isMobile(page) ? 'nav-toggle' : 'nav-chat-btn';
-    await expect
-      .poll(() =>
-        page.evaluate(
-          (cls) => document.activeElement?.classList?.contains(cls) ?? false,
-          focusClass
-        )
-      )
-      .toBe(true);
+    await expect.poll(() => page.evaluate((cls) => document.activeElement?.classList?.contains(cls) ?? false, focusClass)).toBe(true);
   });
 
   test('close button and backdrop click both close', async ({ page, context }) => {
@@ -180,10 +166,7 @@ test('no corpus or manifest request before the modal opens', async ({ page, cont
 // init walk: manifest -> downloading (MB progress) -> indexing -> ready
 // =============================================================================
 
-test('first open walks download with MB progress to ready with fixture stats', async ({
-  page,
-  context
-}) => {
+test('first open walks download with MB progress to ready with fixture stats', async ({ page, context }) => {
   const hits = await routeCorpus(context);
   const slow = await routeSlowCorpus(context, hits, { chunkSize: 512, delayMs: 60 });
   try {
@@ -220,10 +203,7 @@ test('first open walks download with MB progress to ready with fixture stats', a
 // OPFS cache: second open = manifest only; stale corpora are pruned
 // =============================================================================
 
-test('second open serves the corpus from OPFS with only a manifest request', async ({
-  page,
-  context
-}) => {
+test('second open serves the corpus from OPFS with only a manifest request', async ({ page, context }) => {
   const hits = await routeCorpus(context);
   await page.goto('/engine');
   await openChat(page);
@@ -252,10 +232,7 @@ test('second open serves the corpus from OPFS with only a manifest request', asy
 // offline manifest -> cached fallback badge
 // =============================================================================
 
-test('manifest failure falls back to the cached corpus with the offline badge', async ({
-  page,
-  context
-}) => {
+test('manifest failure falls back to the cached corpus with the offline badge', async ({ page, context }) => {
   const hits = await routeCorpus(context);
   await page.goto('/engine');
   await openChat(page);
@@ -278,10 +255,7 @@ test('manifest failure falls back to the cached corpus with the offline badge', 
 // which returns early — so pruning is silently disabled and cached corpora
 // accumulate in OPFS with nothing reporting it. Treated as a bad manifest now,
 // which takes the same offline path as an unreachable one.
-test('a manifest whose commit_sha is not a string is refused, not coerced', async ({
-  page,
-  context
-}) => {
+test('a manifest whose commit_sha is not a string is refused, not coerced', async ({ page, context }) => {
   const hits = await routeCorpus(context);
   await page.goto('/engine');
   await openChat(page);
@@ -292,7 +266,7 @@ test('a manifest whose commit_sha is not a string is refused, not coerced', asyn
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ ...META, commit_sha: 12345 })
+      body: JSON.stringify({ ...META, commit_sha: 12345 }),
     });
   });
 
@@ -307,10 +281,7 @@ test('a manifest whose commit_sha is not a string is refused, not coerced', asyn
 // abort on close mid-download: no partial cache, clean re-run
 // =============================================================================
 
-test('closing mid-download aborts cleanly and leaves no partial corpus', async ({
-  page,
-  context
-}) => {
+test('closing mid-download aborts cleanly and leaves no partial corpus', async ({ page, context }) => {
   const hits = await routeCorpus(context);
   const slow = await routeSlowCorpus(context, hits, { chunkSize: 256, delayMs: 100 });
   try {
@@ -339,10 +310,7 @@ test('closing mid-download aborts cleanly and leaves no partial corpus', async (
 // key gate
 // =============================================================================
 
-test('asking is gated on an OpenRouter key that persists across visits', async ({
-  page,
-  context
-}) => {
+test('asking is gated on an OpenRouter key that persists across visits', async ({ page, context }) => {
   await routeCorpus(context);
   await page.goto('/engine');
   await openChat(page);
@@ -384,13 +352,10 @@ const ANSWER = [
   'let kept = draft.iter().zip(verified).take_while(|(d, v)| v.argmax() == **d).count();',
   '```',
   '',
-  'Probe: <img src=x onerror="window.__xss=1"> must print as text, never run.'
+  'Probe: <img src=x onerror="window.__xss=1"> must print as text, never run.',
 ].join('\n');
 
-test('mocked round-trip prints prompt, receipt, markdown, and real source links', async ({
-  page,
-  context
-}) => {
+test('mocked round-trip prints prompt, receipt, markdown, and real source links', async ({ page, context }) => {
   await routeCorpus(context);
   await routeOpenRouter(context, ANSWER);
   await withKey(page);
@@ -422,9 +387,7 @@ test('mocked round-trip prints prompt, receipt, markdown, and real source links'
   // Source receipts: path, line range, and a blob link pinned to the corpus commit.
   const sources = card.locator('.cm-src');
   await expect(sources).toHaveCount(3);
-  const hrefPattern = new RegExp(
-    `^https://github\\.com/Avarok-Cybersecurity/atlas/blob/${COMMIT}/.+#L\\d+-L\\d+$`
-  );
+  const hrefPattern = new RegExp(`^https://github\\.com/Avarok-Cybersecurity/atlas/blob/${COMMIT}/.+#L\\d+-L\\d+$`);
   for (const src of await sources.all()) {
     expect(await src.getAttribute('href')).toMatch(hrefPattern);
     await expect(src.locator('.cm-src-path')).not.toBeEmpty();
@@ -450,17 +413,10 @@ test('mocked round-trip prints prompt, receipt, markdown, and real source links'
 // =============================================================================
 
 test.describe('error states', () => {
-  test('corpus 404 shows the download-failed card and retry recovers', async ({
-    page,
-    context
-  }) => {
+  test('corpus 404 shows the download-failed card and retry recovers', async ({ page, context }) => {
     const hits = { meta: 0, gz: 0 };
-    await context.route(CORPUS_META_URL, (route) =>
-      route.fulfill({ status: 200, headers: JSON_HEADERS, body: JSON.stringify(META) })
-    );
-    await context.route(CORPUS_GZ_URL, (route) =>
-      route.fulfill({ status: 404, headers: JSON_HEADERS, body: 'not found' })
-    );
+    await context.route(CORPUS_META_URL, (route) => route.fulfill({ status: 200, headers: JSON_HEADERS, body: JSON.stringify(META) }));
+    await context.route(CORPUS_GZ_URL, (route) => route.fulfill({ status: 404, headers: JSON_HEADERS, body: 'not found' }));
     await page.goto('/engine');
     await openChat(page);
 
@@ -521,9 +477,7 @@ test.describe('error states', () => {
     await askQuestion(page, 'where is the kv pool?');
     const card = page.locator('.cc-error[role="alert"]');
     await expect(card).toBeVisible({ timeout: 20_000 });
-    await expect(card.locator('.cc-error-body')).toContainText(
-      `returned 16 dimensions but this corpus was built with ${META.dim}`
-    );
+    await expect(card.locator('.cc-error-body')).toContainText(`returned 16 dimensions but this corpus was built with ${META.dim}`);
     // A chat-time fault must not knock the corpus out of ready.
     await expect(statusText(page)).toContainText('ready ·');
   });
@@ -532,10 +486,7 @@ test.describe('error states', () => {
   // them to index `candidates` directly, so an index the response invented
   // produced `undefined` in `picked` and the next line read `.payload` off it —
   // a bare TypeError that took the whole answer down instead of degrading.
-  test('a rerank index that points nowhere does not take the answer down', async ({
-    page,
-    context
-  }) => {
+  test('a rerank index that points nowhere does not take the answer down', async ({ page, context }) => {
     await routeCorpus(context);
     await context.route(OR_EMBEDDINGS, embeddingsHandler({ dim: META.dim }));
     await context.route(OR_CHAT, chatHandler('The KV pool lives in `kv_pool.rs` [1].'));
@@ -557,9 +508,9 @@ test.describe('error states', () => {
             { index: body.documents.length + 5, relevance_score: 0.8 },
             { index: -1, relevance_score: 0.7 },
             { index: 1.5, relevance_score: 0.4 },
-            { index: null, relevance_score: 0.3 }
-          ]
-        })
+            { index: null, relevance_score: 0.3 },
+          ],
+        }),
       });
     });
     await withKey(page);

@@ -8,14 +8,7 @@
 // =============================================================================
 
 import { browser } from '$app/environment';
-import {
-  CORPUS_GZ_URL,
-  CORPUS_META_URL,
-  UPSERT_BATCH,
-  LS_OPENROUTER_KEY,
-  LS_CHAT_MODEL,
-  CHAT_MODEL
-} from './config.js';
+import { CORPUS_GZ_URL, CORPUS_META_URL, UPSERT_BATCH, LS_OPENROUTER_KEY, LS_CHAT_MODEL, CHAT_MODEL } from './config.js';
 import { initWasm, createCorpusCollection, upsertBatch, idleYield } from './lattice.js';
 import { getCachedCorpus, createCorpusWriter, pruneStale, listCached } from './opfs.js';
 import { askCodebase } from './rag.js';
@@ -32,7 +25,7 @@ export const chat = $state({
   // In-flight streamed message, non-null only while ask() runs. The UI renders
   // its growing texts per animation frame; reasoningMs is stamped when the
   // first answer token arrives (how long the model reasoned).
-  stream: null // null | { reasoningText, answerText, reasoningMs }
+  stream: null, // null | { reasoningText, answerText, reasoningMs }
 });
 
 if (browser) {
@@ -176,7 +169,7 @@ async function load(token) {
 
   // 2) manifest preflight (tiny meta.json: sha/size/dim)
   chat.status = 'manifest';
-  let meta = null;
+  let meta;
   try {
     const res = await fetch(CORPUS_META_URL, { cache: 'no-cache' });
     if (!res.ok) throw new Error(`manifest fetch failed: HTTP ${res.status}`);
@@ -230,7 +223,7 @@ async function loadFromFile(token, file, sha, meta) {
   const { header, repo } = await indexByteStream(token, file.stream(), {
     meta,
     countBytes: true,
-    onDrained: () => pruneStale(sha)
+    onDrained: () => pruneStale(sha),
   });
   throwIfAborted(token);
   finishReady(header, repo, sha, meta);
@@ -257,8 +250,7 @@ async function loadFromNetwork(token, meta) {
   // Determinate progress: Content-Length when the server provides it for the
   // gz transfer, else the manifest's recorded gz size.
   const contentLength = Number(res.headers.get('content-length'));
-  chat.progress.totalBytes =
-    Number.isFinite(contentLength) && contentLength > 0 ? contentLength : (meta.gz_bytes ?? 0);
+  chat.progress.totalBytes = Number.isFinite(contentLength) && contentLength > 0 ? contentLength : (meta.gz_bytes ?? 0);
 
   if (typeof DecompressionStream !== 'function') {
     fail('decompress', new Error('this browser lacks DecompressionStream (gzip) support'));
@@ -271,7 +263,7 @@ async function loadFromNetwork(token, meta) {
       transform(chunk, ctrl) {
         chat.progress.loadedBytes += chunk.byteLength;
         ctrl.enqueue(chunk);
-      }
+      },
     })
   );
 
@@ -315,7 +307,7 @@ async function loadFromNetwork(token, meta) {
       meta,
       tee: writer,
       countBytes: false,
-      onDrained: commitCache
+      onDrained: commitCache,
     }));
   } catch (err) {
     const w = writer;
@@ -368,8 +360,7 @@ async function indexByteStream(token, byteStream, { meta, tee, countBytes, onDra
       }
       if (meta && Number.isFinite(meta.dim) && h.dim !== meta.dim) {
         throw new Error(
-          `corpus header says ${h.dim} dimensions but the manifest says ${meta.dim} — ` +
-            `the published corpus and manifest disagree`
+          `corpus header says ${h.dim} dimensions but the manifest says ${meta.dim} — ` + `the published corpus and manifest disagree`
         );
       }
       header = h;
@@ -424,7 +415,7 @@ function finishReady(header, repo, sha, meta) {
     chunks: header.points ?? chat.progress.indexed,
     dim: header.dim,
     generatedAt: meta?.generated_at ?? null,
-    repo: repo ?? 'Avarok-Cybersecurity/atlas'
+    repo: repo ?? 'Avarok-Cybersecurity/atlas',
   };
   chat.status = 'ready';
 }
@@ -504,11 +495,10 @@ export async function ask(question, history = []) {
       onPhase: (phase) => {
         chat.msgPhase = phase;
       },
-      onDelta
+      onDelta,
     });
     if (['rate', 'quota', 'key'].includes(chat.error?.kind)) chat.error = null;
-    const reasoningMs =
-      chat.stream?.reasoningMs || (thinkStart ? performance.now() - thinkStart : 0);
+    const reasoningMs = chat.stream?.reasoningMs || (thinkStart ? performance.now() - thinkStart : 0);
     return { ...result, reasoning: reasoningAll, reasoningMs };
   } catch (err) {
     const msg = String(err?.message ?? err);
@@ -533,6 +523,6 @@ function failAsk(kind, err, extra = {}) {
   chat.error = {
     kind,
     message: err?.message ? String(err.message) : String(err),
-    ...extra
+    ...extra,
   };
 }

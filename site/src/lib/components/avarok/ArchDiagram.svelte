@@ -16,14 +16,17 @@
   const nodes = [
     { x: 160, hw: 'GB10 · NVFP4' },
     { x: 460, hw: 'H100 · FP8 · bring up' },
-    { x: 760, hw: 'gfx1151 · SCALE' }
+    { x: 760, hw: 'gfx1151 · SCALE' },
   ];
   const duties = ['rollout', 'canary', 'policy', 'repair', 'scale'];
 </script>
 
 <figure class="av-diagram" aria-label="Metrale platform architecture">
   <svg viewBox="0 0 1100 400" role="img">
-    <title>Requests flow from your applications through the router to Metrale Engine nodes on your GPUs. Metrale Control manages rollout, policy and repair out of band. Metrale Economics collects telemetry from every node into a ledger.</title>
+    <title
+      >Requests flow from your applications through the router to Metrale Engine nodes on your GPUs. Metrale Control manages rollout, policy
+      and repair out of band. Metrale Economics collects telemetry from every node into a ledger.</title
+    >
     <!-- request path -->
     <rect class="box" x="6" y="40" width="264" height="70" />
     <text class="lbl" x="138" y="70" text-anchor="middle">Your applications and agents</text>
@@ -64,5 +67,7 @@
     <text class="sub" x="1072" y="330" text-anchor="end">$ per million tokens · $ per workload at SLO · productive GPU hours</text>
     <text class="sub" x="1072" y="352" text-anchor="end">stranded capacity · chargeback by business unit · payback</text>
   </svg>
-  <figcaption class="av-small" style="margin-top:0.9rem">The request path never touches the control plane. The ledger reads what the engine measured at the source.</figcaption>
+  <figcaption class="av-small" style="margin-top:0.9rem">
+    The request path never touches the control plane. The ledger reads what the engine measured at the source.
+  </figcaption>
 </figure>

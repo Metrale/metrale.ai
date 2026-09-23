@@ -28,10 +28,10 @@ const instrumentKey = (record) =>
         // for older records that cannot prove it.
         machine: record.machine_id
           ? { kind: 'machine_id', value: record.machine_id }
-          : { kind: 'perf_class', value: record.perf_class ?? '' }
+          : { kind: 'perf_class', value: record.perf_class ?? '' },
       },
       params: record.params ?? {},
-      serve_overrides: record.serve_overrides ?? {}
+      serve_overrides: record.serve_overrides ?? {},
     })
   );
 
@@ -42,13 +42,7 @@ const instrumentKey = (record) =>
  * serializes this field into gates.generated.json.
  */
 const recordKey = (record) =>
-  JSON.stringify([
-    record.benchmark_id ?? '',
-    record.target_model ?? '',
-    record.served_by ?? '',
-    record.git_sha,
-    record.recorded_at
-  ]);
+  JSON.stringify([record.benchmark_id ?? '', record.target_model ?? '', record.served_by ?? '', record.git_sha, record.recorded_at]);
 
 export function assignTrendPredecessors(records, isAncestor) {
   const instruments = records.map(instrumentKey);
@@ -57,10 +51,7 @@ export function assignTrendPredecessors(records, isAncestor) {
     let predecessor;
     for (let prior = index - 1; prior >= 0; prior -= 1) {
       const candidate = records[prior];
-      if (
-        instruments[prior] === instruments[index] &&
-        isAncestor(candidate.git_sha, record.git_sha)
-      ) {
+      if (instruments[prior] === instruments[index] && isAncestor(candidate.git_sha, record.git_sha)) {
         predecessor = candidate;
         break;
       }

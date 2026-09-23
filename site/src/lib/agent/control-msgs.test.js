@@ -18,40 +18,25 @@ describe('wire shapes are byte-exact against protocol 4 serde output', () => {
     [M.listRecipes(2, NODE), `{"type":"list_recipes","id":2,"on":"${NODE}"}`],
     [
       M.preview(3, 'qwen3.6-27b-fp8', SETTINGS, NODE),
-      `{"type":"preview","id":3,"recipe":"qwen3.6-27b-fp8","settings":{"kv_dtype":"fp8","max_seq_len":4096},"on":"${NODE}"}`
+      `{"type":"preview","id":3,"recipe":"qwen3.6-27b-fp8","settings":{"kv_dtype":"fp8","max_seq_len":4096},"on":"${NODE}"}`,
     ],
-    [
-      M.preview(4, 'qwen3.6-27b-fp8', {}, null),
-      '{"type":"preview","id":4,"recipe":"qwen3.6-27b-fp8","settings":{},"on":null}'
-    ],
+    [M.preview(4, 'qwen3.6-27b-fp8', {}, null), '{"type":"preview","id":4,"recipe":"qwen3.6-27b-fp8","settings":{},"on":null}'],
     [
       M.launch(5, 'qwen3.6-27b-fp8', SETTINGS, NODE),
-      `{"type":"launch","id":5,"recipe":"qwen3.6-27b-fp8","settings":{"kv_dtype":"fp8","max_seq_len":4096},"on":"${NODE}"}`
+      `{"type":"launch","id":5,"recipe":"qwen3.6-27b-fp8","settings":{"kv_dtype":"fp8","max_seq_len":4096},"on":"${NODE}"}`,
     ],
-    [
-      M.stop(6, 'qwen3.6-27b-fp8', NODE),
-      `{"type":"stop","id":6,"recipe":"qwen3.6-27b-fp8","on":"${NODE}"}`
-    ],
+    [M.stop(6, 'qwen3.6-27b-fp8', NODE), `{"type":"stop","id":6,"recipe":"qwen3.6-27b-fp8","on":"${NODE}"}`],
     [M.status(7, null), '{"type":"status","id":7,"on":null}'],
     [M.status(8, NODE), `{"type":"status","id":8,"on":"${NODE}"}`],
-    [
-      M.launchStats(9, 'qwen3.6-27b-fp8', NODE),
-      `{"type":"launch_stats","id":9,"recipe":"qwen3.6-27b-fp8","on":"${NODE}"}`
-    ],
+    [M.launchStats(9, 'qwen3.6-27b-fp8', NODE), `{"type":"launch_stats","id":9,"recipe":"qwen3.6-27b-fp8","on":"${NODE}"}`],
     [
       M.launchLogs(10, 'qwen3.6-27b-fp8', 200, NODE),
-      `{"type":"launch_logs","id":10,"recipe":"qwen3.6-27b-fp8","lines":200,"on":"${NODE}"}`
+      `{"type":"launch_logs","id":10,"recipe":"qwen3.6-27b-fp8","lines":200,"on":"${NODE}"}`,
     ],
     [M.mintJoinCode(11, false), '{"type":"mint_join_code","id":11,"allow_control":false}'],
     [M.mintJoinCode(12, true), '{"type":"mint_join_code","id":12,"allow_control":true}'],
-    [
-      M.confirmPairing(13, NODE, true),
-      `{"type":"confirm_pairing","id":13,"node":"${NODE}","allow_control":true}`
-    ],
-    [
-      M.confirmPairing(14, NODE, false),
-      `{"type":"confirm_pairing","id":14,"node":"${NODE}","allow_control":false}`
-    ]
+    [M.confirmPairing(13, NODE, true), `{"type":"confirm_pairing","id":13,"node":"${NODE}","allow_control":true}`],
+    [M.confirmPairing(14, NODE, false), `{"type":"confirm_pairing","id":14,"node":"${NODE}","allow_control":false}`],
   ];
 
   test.each(CASES)('%#', (built, wire) => {

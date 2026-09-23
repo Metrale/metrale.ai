@@ -25,7 +25,7 @@
 // No third-party deps: Node builtins + `git` via child_process.
 // =============================================================================
 
-import { readdirSync, readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { writeStable } from './lib/write-stable.mjs';
 import { dirname, resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -44,7 +44,7 @@ function git(args, opts = {}) {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
     maxBuffer: 64 * 1024 * 1024,
-    ...opts
+    ...opts,
   }).trim();
 }
 function gitSoft(args) {
@@ -141,17 +141,14 @@ function slim(raw, branch) {
     atlas_version: raw.atlas_version,
     hardware: raw.hardware,
     perf_class: raw.hardware_state?.perf_class ?? '',
-    machine_id:
-      raw.hardware_state?.before?.machine?.machine_id ??
-      raw.hardware_state?.after?.machine?.machine_id ??
-      '',
+    machine_id: raw.hardware_state?.before?.machine?.machine_id ?? raw.hardware_state?.after?.machine?.machine_id ?? '',
     params: raw.params,
     serve_overrides: raw.serve_overrides,
     metrics: raw.metrics,
     frame_status: raw.frame_status,
     verdict: raw.verdict,
     verdict_reason: raw.verdict_reason,
-    branch
+    branch,
   };
 }
 
@@ -178,7 +175,7 @@ try {
     // Shallow-refresh all heads; tolerable if it fails (offline build).
     try {
       git(['fetch', '--quiet', '--depth=1', remote, `+refs/heads/*:refs/remotes/${remote}/*`], {
-        timeout: 120_000
+        timeout: 120_000,
       });
     } catch (err) {
       console.error(`gen-gates: fetch degraded (${String(err.message || err).split('\n')[0]})`);
@@ -218,11 +215,7 @@ for (const b of Object.values(benchmarks)) {
   b.records.sort((x, y) => x.recorded_at - y.recorded_at);
   assignTrendPredecessors(b.records, gitIsAncestor);
   for (const rec of b.records) {
-    rec.generated_ancestry = !gitCommitKnown(rec.git_sha)
-      ? 'unknown'
-      : gitIsAncestor(rec.git_sha, generatedHead)
-        ? 'yes'
-        : 'no';
+    rec.generated_ancestry = !gitCommitKnown(rec.git_sha) ? 'unknown' : gitIsAncestor(rec.git_sha, generatedHead) ? 'yes' : 'no';
   }
 }
 
@@ -231,7 +224,7 @@ const obj = {
   generated_date: gitSoft(['log', '-1', '--format=%cs']),
   registered: registeredBenchmarks(),
   sources: { committed: committedCount, branches_scanned: branchesScanned, from_branches: fromBranches },
-  benchmarks
+  benchmarks,
 };
 writeStable(OUT, obj, ['generated_sha', 'generated_date'], (o) => JSON.stringify(o) + '\n');
 console.log(
