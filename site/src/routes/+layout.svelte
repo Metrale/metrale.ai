@@ -68,7 +68,7 @@
         url: `${SITE}/`,
         logo: `${SITE}/icon-512.png`,
         description: company.short,
-        sameAs: [githubUrl, recipesUrl, discordUrl, xUrl, links.blog]
+        sameAs: [githubUrl, recipesUrl, discordUrl, xUrl, links.blog],
       },
       {
         '@type': 'WebSite',
@@ -77,7 +77,7 @@
         name: company.name,
         description: company.short,
         inLanguage: 'en',
-        publisher: { '@id': `${SITE}/#org` }
+        publisher: { '@id': `${SITE}/#org` },
       },
       {
         '@type': 'SoftwareApplication',
@@ -96,7 +96,7 @@
         license: 'https://spdx.org/licenses/AGPL-3.0-only.html',
         isAccessibleForFree: true,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-        publisher: { '@id': `${SITE}/#org` }
+        publisher: { '@id': `${SITE}/#org` },
       },
       ...(faqItems.length
         ? [
@@ -107,12 +107,12 @@
               mainEntity: faqItems.map((item) => ({
                 '@type': 'Question',
                 name: item.q,
-                acceptedAnswer: { '@type': 'Answer', text: item.a }
-              }))
-            }
+                acceptedAnswer: { '@type': 'Answer', text: item.a },
+              })),
+            },
           ]
-        : [])
-    ]
+        : []),
+    ],
   });
 
   // JSON.stringify does not escape the less-than character, so a closing
@@ -125,6 +125,7 @@
        head slot and the layout's wins. Every route owns its own title. -->
   <link rel="canonical" href={canonical} />
   <meta property="og:url" content={canonical} />
+  <!-- eslint-disable-next-line svelte/no-at-html-tags, no-useless-escape -- ldjson escapes every <, and the \/ keeps the literal from closing a script -->
   {@html `<script type="application/ld+json">${ldjson}<\/script>`}
 </svelte:head>
 

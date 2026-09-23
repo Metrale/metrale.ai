@@ -5,7 +5,8 @@ import { crossesGroup, groupOf } from './route-groups.js';
 const ORIGIN = 'https://atlascybernetics.ai';
 
 test('every developer page, in both spellings, is one group', () => {
-  for (const p of ['/engine', '/engine/', '/engine.html', '/control', '/diligence', '/diligence.html']) expect(groupOf(p)).toBe('developer');
+  for (const p of ['/engine', '/engine/', '/engine.html', '/control', '/diligence', '/diligence.html'])
+    expect(groupOf(p)).toBe('developer');
 });
 
 test('a marketing page that merely starts with the same letters is not a developer page', () => {

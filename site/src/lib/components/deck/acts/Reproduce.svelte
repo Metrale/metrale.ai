@@ -45,21 +45,17 @@
   <div class="two">
     <div class="at" style="--n: 1">
       <p class="lead">
-        The earlier reference in this campaign ran speculative decoding <em>off</em>. It understated
-        vLLM badly, so it was replaced and the old column kept in view rather than deleted.
+        The earlier reference in this campaign ran speculative decoding <em>off</em>. It understated vLLM badly, so it was replaced and the
+        old column kept in view rather than deleted.
       </p>
       <p class="lead">
-        The published table therefore carries two baselines: the matched MTP configuration we
-        claim against, and the unmatched no-speculation leg, labelled as such. At C=128 the
-        unmatched configuration is actually <em>faster</em> than the matched one (vLLM's
-        speculation costs it throughput at high concurrency), so it is plotted, not scored.
-        The headline ratio stays against the matched fingerprint.
+        The published table therefore carries two baselines: the matched MTP configuration we claim against, and the unmatched
+        no-speculation leg, labelled as such. At C=128 the unmatched configuration is actually <em>faster</em> than the matched one (vLLM's speculation
+        costs it throughput at high concurrency), so it is plotted, not scored. The headline ratio stays against the matched fingerprint.
       </p>
     </div>
     <aside class="quote at" style="--n: 2">
-      <p>
-        “Inadequate competitor tuning is scientific misconduct.”
-      </p>
+      <p>“Inadequate competitor tuning is scientific misconduct.”</p>
       <footer class="mono">Heiser, <em>Systems Benchmarking Crimes</em></footer>
     </aside>
   </div>
@@ -86,7 +82,7 @@
           ``,
           `docker run --rm --gpus all \\`,
           `  nvidia/cuda:13.0.0-base-ubuntu24.04 nvidia-smi`,
-          `df -h ~/.cache/huggingface       # weights land here, tens of GB`
+          `df -h ~/.cache/huggingface       # weights land here, tens of GB`,
         ]}
         note="Two GB10 particulars, both of which have cost this campaign time. nvidia-smi reports memory as `Not Supported` — the 121 GB is a unified LPDDR5X pool, so `free` is the instrument. And CUDA ships outside PATH: without that export, `nvcc --version` says command-not-found and the cargo build in Step 2 dies in cudarc's build script rather than anywhere informative. The docker line is the one people skip: it proves the NVIDIA Container Toolkit is wired up, not just installed."
       />
@@ -94,9 +90,8 @@
     <aside class="side at" style="--n: 2">
       <p class="side-h mono">What a shared box costs you</p>
       <p>
-        The gate refuses to self-start below 85% free host memory, and the hardware precheck
-        tolerates at most one foreign compute process. Measure on an idle box or the run will be
-        declined — which is the correct behaviour, and a surprise the first time.
+        The gate refuses to self-start below 85% free host memory, and the hardware precheck tolerates at most one foreign compute process.
+        Measure on an idle box or the run will be declined — which is the correct behaviour, and a surprise the first time.
       </p>
     </aside>
   </div>
@@ -122,7 +117,7 @@
           ``,
           `sudo apt-get install -y build-essential pkg-config \\`,
           `  cmake clang libclang-dev`,
-          `cargo build --release -p spark-server --bin spark`
+          `cargo build --release -p spark-server --bin spark`,
         ]}
         note={`Both builds run from the repository root, with CUDA still on PATH from Step 1. The multi-target image compiles PTX for every supported model; the first cargo build takes 15–30 minutes for the same reason and leaves 3–5 GB under target/. ${claim.buildPublic} is the certified sha rather than ${claim.build}, the tree the numbers were measured on: that one was a local merge and was never pushed, so it does not exist in your clone. The two differ only in doc comments and gate machinery — no executable change.`}
       />
@@ -133,14 +128,14 @@
         lines={[
           `./target/release/spark --version`,
           `./target/release/spark benchmark list`,
-          `./target/release/spark benchmark list concurrency-sweep`
+          `./target/release/spark benchmark list concurrency-sweep`,
         ]}
         note="The last line prints every parameter of the sweep with its default — the schema the next steps override. If it prints, the toolchain is sound and the rest of this deck will run."
       />
       <p class="after">
         The gate's self-start also reads a cached recipe index at
-        <code class="mono">~/.avarok/atlas-recipes/index.json</code>. Open the TUI library once to
-        populate it, or Step 6 stops with exactly that message.
+        <code class="mono">~/.avarok/atlas-recipes/index.json</code>. Open the TUI library once to populate it, or Step 6 stops with exactly
+        that message.
       </p>
     </div>
   </div>
@@ -156,7 +151,7 @@
       `  --max-model-len 2048 --max-num-seqs 128 \\`,
       `  --gpu-memory-utilization 0.85 \\`,
       `  --kv-cache-dtype fp8 --enable-prefix-caching \\`,
-      `  --speculative-config '{"method":"mtp","num_speculative_tokens":3}'`
+      `  --speculative-config '{"method":"mtp","num_speculative_tokens":3}'`,
     ]}
     note="num_speculative_tokens 3 is K=4 — the same draft width Atlas runs. Context 2048 and batch cap 128 are the pinned pair; changing either invalidates the comparison in both directions."
   />

@@ -104,8 +104,8 @@ export class StatsPoller {
             failure: null,
             via: res.reply.via ?? null,
             decodeHist: S.push(prev?.decodeHist ?? [], reading.decode_tokens_per_s),
-            promptHist: S.push(prev?.promptHist ?? [], reading.prompt_tokens_per_s)
-          }
+            promptHist: S.push(prev?.promptHist ?? [], reading.prompt_tokens_per_s),
+          },
         };
       } else {
         this.#states = failed(this.#states, id, now);
@@ -120,8 +120,8 @@ export class StatsPoller {
             failure: res?.message || 'no reply',
             via: prev?.via ?? null,
             decodeHist: S.push(prev?.decodeHist ?? [], null),
-            promptHist: S.push(prev?.promptHist ?? [], null)
-          }
+            promptHist: S.push(prev?.promptHist ?? [], null),
+          },
         };
       }
     } finally {

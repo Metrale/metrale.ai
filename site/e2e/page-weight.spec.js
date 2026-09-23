@@ -14,7 +14,8 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const BUILD = 'build';
-const preloads = (page) => [...readFileSync(join(BUILD, page), 'utf8').matchAll(/href="[^"]*?(_app\/immutable\/[^"]+\.js)" rel="modulepreload"/g)].map((m) => m[1]);
+const preloads = (page) =>
+  [...readFileSync(join(BUILD, page), 'utf8').matchAll(/href="[^"]*?(_app\/immutable\/[^"]+\.js)" rel="modulepreload"/g)].map((m) => m[1]);
 // A string only the marketing components contain.
 const isMarketingChunk = (file) => readFileSync(join(BUILD, file), 'utf8').includes('av-tourstack');
 
@@ -31,7 +32,15 @@ test.describe('page weight', () => {
   // Measured when this was written: marketing 8 or 9, /engine 13, /control and
   // /diligence 11. One spare each. Raising a number here is a decision to make
   // every visit to that page slower, so say why in the commit.
-  const BUDGET = { 'index.html': 10, 'why-metrale.html': 9, 'pricing.html': 9, 'company.html': 9, 'engine.html': 14, 'control.html': 12, 'diligence.html': 12 };
+  const BUDGET = {
+    'index.html': 10,
+    'why-metrale.html': 9,
+    'pricing.html': 9,
+    'company.html': 9,
+    'engine.html': 14,
+    'control.html': 12,
+    'diligence.html': 12,
+  };
   for (const [page, max] of Object.entries(BUDGET)) {
     test(`${page} preloads at most ${max} scripts`, () => {
       expect(preloads(page).length).toBeLessThanOrEqual(max);

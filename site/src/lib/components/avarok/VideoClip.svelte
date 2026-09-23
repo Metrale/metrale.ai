@@ -140,6 +140,12 @@
 </div>
 
 <style>
-  img { transition: opacity 0.4s; z-index: 1; }
-  img.is-hidden { opacity: 0; pointer-events: none; }
+  img {
+    transition: opacity 0.4s;
+    z-index: 1;
+  }
+  img.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
 </style>

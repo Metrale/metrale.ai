@@ -51,9 +51,7 @@ export function localReason(nodes) {
 }
 
 export function candidates(nodes) {
-  const usable = (Array.isArray(nodes) ? nodes : []).filter(
-    (n) => n?.canLaunch && (n.isLocal || n.pairing === 'paired')
-  );
+  const usable = (Array.isArray(nodes) ? nodes : []).filter((n) => n?.canLaunch && (n.isLocal || n.pairing === 'paired'));
   // Local first, then by name, so the list does not reorder as vitals arrive.
   return usable.slice().sort((a, b) => {
     if (a.isLocal !== b.isLocal) return a.isLocal ? -1 : 1;
@@ -116,7 +114,7 @@ export function decide(nodes, recipe, localCanLaunch = null) {
       // genuinely incapable. When the agent named a fixable cause, the fix is
       // here, and sending the operator to pair a laptop is a detour.
       canOnboard: !(localCanLaunch === false && Boolean(why)),
-      detail: localCanLaunch === false ? (why ?? null) : null
+      detail: localCanLaunch === false ? (why ?? null) : null,
     };
   }
 
@@ -128,10 +126,8 @@ export function decide(nodes, recipe, localCanLaunch = null) {
       ? { kind: 'cluster', need, options }
       : {
           kind: 'none',
-          reason: `This recipe needs ${need} machines and ${options.length} ${
-            options.length === 1 ? 'is' : 'are'
-          } available.`,
-          canOnboard: true
+          reason: `This recipe needs ${need} machines and ${options.length} ${options.length === 1 ? 'is' : 'are'} available.`,
+          canOnboard: true,
         };
   }
 

@@ -1,0 +1,19 @@
+# Bun, Node 22 and the site's dependencies from the lockfile. Every job that runs
+# anything under site/ starts here.
+
+name: Set up the site
+description: Install Bun and Node 22, then the site's dependencies from bun.lock.
+
+runs:
+  using: composite
+  steps:
+    - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+      with:
+        bun-version: latest
+    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      with:
+        node-version: '22'
+    - name: Install dependencies
+      shell: bash
+      working-directory: site
+      run: bun install --frozen-lockfile

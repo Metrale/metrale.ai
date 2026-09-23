@@ -11,15 +11,7 @@ export const gateData = gates;
 export const GH_COMMIT = 'https://github.com/Avarok-Cybersecurity/atlas/commit/';
 
 export { MODEL_COLORS, UNKNOWN_MODEL_COLOR, colorFor } from './series-colors.js';
-export {
-  dashFor,
-  groupFor,
-  groupRecords,
-  groupedBenches,
-  isLatestOfVariant,
-  splitByVariant,
-  variantLabel
-} from './gate-variants.js';
+export { dashFor, groupFor, groupRecords, groupedBenches, isLatestOfVariant, splitByVariant, variantLabel } from './gate-variants.js';
 
 export { shortModel } from './series-colors.js';
 
@@ -45,12 +37,10 @@ const TAB_DEFS = [
   {
     id: 'concurrency',
     label: 'Concurrency',
-    benches: ['concurrency-sweep', 'concurrency-sweep-dflash2']
-  }
+    benches: ['concurrency-sweep', 'concurrency-sweep-dflash2'],
+  },
 ];
-export const tabs = TAB_DEFS.filter((t) =>
-  t.benches.some((b) => (gates.benchmarks[b]?.records ?? []).length > 0)
-);
+export const tabs = TAB_DEFS.filter((t) => t.benches.some((b) => (gates.benchmarks[b]?.records ?? []).length > 0));
 
 // Registered in the suite (descriptor SSOT) but with zero published records —
 // named honestly in the footer instead of rendering empty tabs.
@@ -78,15 +68,15 @@ export function panelsFor(benchId, records) {
         metrics: [{ key: 'sum_wall_s', label: 'Σ wall (s)' }],
         caps: [...new Set(records.map((r) => +r.params?.wall_budget_s || 0).filter(Boolean))].map((v) => ({
           value: v,
-          label: `budget ${v}s`
-        }))
+          label: `budget ${v}s`,
+        })),
       },
       {
         title: 'webserver_ok per run',
         unit: `/ ${latest.metrics?.iterations ?? 10} iterations`,
         metrics: [{ key: 'webserver_ok', label: 'webserver_ok' }],
-        domain: [0, latest.metrics?.iterations ?? 10]
-      }
+        domain: [0, latest.metrics?.iterations ?? 10],
+      },
     ];
   }
   if (benchId.startsWith('bfcl')) {
@@ -98,9 +88,9 @@ export function panelsFor(benchId, records) {
         caps: [],
         floors: [...new Set(records.map(floorFromReason).filter(Boolean))].map((v) => ({
           value: v,
-          label: `floor ${v}`
-        }))
-      }
+          label: `floor ${v}`,
+        })),
+      },
     ];
   }
   if (benchId.startsWith('ttft')) {
@@ -110,9 +100,9 @@ export function panelsFor(benchId, records) {
         unit: 'ms',
         metrics: [
           { key: 'median_ms', label: 'median' },
-          { key: 'p90_ms', label: 'p90', dashed: true }
-        ]
-      }
+          { key: 'p90_ms', label: 'p90', dashed: true },
+        ],
+      },
     ];
   }
   if (benchId === 'decode-floor') {
@@ -146,7 +136,7 @@ export function panelsFor(benchId, records) {
         key: 'peak_aggregate_tok_s',
         label: v.label ? `peak (${v.label})` : 'peak',
         variant: v.bench,
-        dashed: v.dash !== null
+        dashed: v.dash !== null,
       }));
     if (peak.length > 0) {
       panels.push({ title: 'peak aggregate throughput', unit: 'tok/s', metrics: peak });

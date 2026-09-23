@@ -13,7 +13,7 @@ const node = (id, extra = {}) => ({
   isLocal: false,
   pairing: 'paired',
   addresses: [{ iface: 'eth0', addr: '10.0.0.1', class: 'ethernet', speedMbps: 1000, rdma: false }],
-  ...extra
+  ...extra,
 });
 
 const roce = (addr, speed = 200000) => ({
@@ -21,7 +21,7 @@ const roce = (addr, speed = 200000) => ({
   addr,
   class: 'roce',
   speedMbps: speed,
-  rdma: true
+  rdma: true,
 });
 
 suite('order does not depend on when a machine was discovered', () => {
@@ -33,11 +33,7 @@ suite('order does not depend on when a machine was discovered', () => {
   });
 
   test('this machine comes first, then trusted, then strangers', () => {
-    const got = T.ordered([
-      node('zzz', { pairing: 'discovered' }),
-      node('mmm'),
-      node('aaa', { isLocal: true })
-    ]);
+    const got = T.ordered([node('zzz', { pairing: 'discovered' }), node('mmm'), node('aaa', { isLocal: true })]);
     expect(got.map((n) => n.id)).toEqual(['aaa', 'mmm', 'zzz']);
   });
 

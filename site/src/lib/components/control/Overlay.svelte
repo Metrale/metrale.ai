@@ -19,7 +19,7 @@
     wide = false,
     onclose,
     children,
-    footer = undefined
+    footer = undefined,
   } = $props();
 
   function onKey(ev) {
@@ -35,22 +35,10 @@
 <svelte:window onkeydown={onKey} />
 
 <div class="ld-backdrop" role="presentation" onclick={() => onclose?.()}></div>
-<!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
-<div
-  class="ld ov"
-  class:ld-wide={wide}
-  role="dialog"
-  aria-modal="true"
-  aria-label={label}
-  tabindex="-1"
-  {id}
-  use:modal
->
+<div class="ld ov" class:ld-wide={wide} role="dialog" aria-modal="true" aria-label={label} tabindex="-1" {id} use:modal>
   <header class="ld-head">
     <h3 class="ld-title">{label}</h3>
-    <button type="button" class="ld-close" onclick={() => onclose?.()} aria-label="Close">
-      ×
-    </button>
+    <button type="button" class="ld-close" onclick={() => onclose?.()} aria-label="Close"> × </button>
   </header>
 
   <!-- The one scroll region; keyboard-reachable like every other one. -->

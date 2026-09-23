@@ -34,7 +34,7 @@
     /** A word the agent raised about this reading (e.g. 'clamped'). The page
         invents no thresholds: a badge renders only when an alert names it. */
     badge = null,
-    format = (v) => v.toFixed(0)
+    format = (v) => v.toFixed(0),
   } = $props();
 
   const unsupported = $derived(metric?.state === 'unsupported');
@@ -63,16 +63,13 @@
     <span class="visually-hidden">{label}: waiting for the first sample</span>
   {:else}
     <span class="vt-val">
-      {#if stale && !paused}<span class="vt-tilde" aria-hidden="true">~</span>{/if}{format(
-        value
-      )}<span class="vt-unit">{unit}</span>
+      {#if stale && !paused}<span class="vt-tilde" aria-hidden="true">~</span>{/if}{format(value)}<span class="vt-unit">{unit}</span>
     </span>
     {#if paused}
       <span class="vt-sub">paused</span>
     {:else if fraction !== null}
       <span class="vt-meter" aria-hidden="true">
-        <span class="vt-meter-fill" style="width: {Math.max(0, Math.min(1, fraction)) * 100}%"
-        ></span>
+        <span class="vt-meter-fill" style="width: {Math.max(0, Math.min(1, fraction)) * 100}%"></span>
       </span>
     {:else}
       <span class="vt-sub"></span>

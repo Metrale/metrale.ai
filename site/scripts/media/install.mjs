@@ -50,12 +50,16 @@ const die = (msg) => {
 
 const from = arg('from');
 const slot = arg('as');
-if (!from || !slot) die('usage: install.mjs --from <file> --as <slot> [--start s] [--length s] [--crossfade s] [--poster-at 0..1] [--alt "..."] [--pages /a,/b]');
+if (!from || !slot)
+  die(
+    'usage: install.mjs --from <file> --as <slot> [--start s] [--length s] [--crossfade s] [--poster-at 0..1] [--alt "..."] [--pages /a,/b]'
+  );
 const src = resolve(process.cwd(), from.replace(/^~(?=$|\/|\\)/, process.env.HOME ?? process.env.USERPROFILE ?? '~'));
 if (!existsSync(src)) die(`no such file: ${src}`);
 if (!/^[a-z0-9-]+$/.test(slot)) die(`a slot name is lowercase letters, digits and dashes, got "${slot}"`);
 
-const run = (args) => execFileSync(FFMPEG, ['-y', '-hide_banner', '-loglevel', 'error', ...args], { stdio: ['ignore', 'inherit', 'inherit'] });
+const run = (args) =>
+  execFileSync(FFMPEG, ['-y', '-hide_banner', '-loglevel', 'error', ...args], { stdio: ['ignore', 'inherit', 'inherit'] });
 const probe = (args) => execFileSync(FFPROBE, ['-v', 'error', ...args], { encoding: 'utf8' }).trim();
 const mb = (p) => (statSync(p).size / 1024 / 1024).toFixed(2);
 const isImage = ['.png', '.jpg', '.jpeg', '.webp', '.avif', '.tif', '.tiff'].includes(extname(src).toLowerCase());
@@ -66,8 +70,24 @@ if (isImage) {
   mkdirSync(outDir, { recursive: true });
   const out = resolve(outDir, `${slot}.webp`);
   // 1600 wide is twice the widest the hero frame renders at. Never upscale.
-  run(['-i', src, '-frames:v', '1', '-vf', "scale='min(1600,iw)':-2:flags=lanczos", '-c:v', 'libwebp', '-quality', '80', '-compression_level', '6', out]);
-  const [width, height] = probe(['-select_streams', 'v:0', '-show_entries', 'stream=width,height', '-of', 'csv=p=0:s=x', out]).split('x').map(Number);
+  run([
+    '-i',
+    src,
+    '-frames:v',
+    '1',
+    '-vf',
+    "scale='min(1600,iw)':-2:flags=lanczos",
+    '-c:v',
+    'libwebp',
+    '-quality',
+    '80',
+    '-compression_level',
+    '6',
+    out,
+  ]);
+  const [width, height] = probe(['-select_streams', 'v:0', '-show_entries', 'stream=width,height', '-of', 'csv=p=0:s=x', out])
+    .split('x')
+    .map(Number);
 
   const shots = JSON.parse(readFileSync(resolve(site, 'media-brief', 'shots.json'), 'utf8')).shots;
   const shot = shots.find((s) => s.slot === slot && s.pages) ?? shots.find((s) => s.slot === slot);
@@ -79,20 +99,27 @@ if (isImage) {
     .map((p) => {
       // Git Bash on Windows rewrites an argument that starts with a slash into
       // a path under its own install directory. Catch it rather than register it.
-      if (/^[A-Za-z]:[\\/]/.test(p)) die(`--pages got "${p}": the shell rewrote it. Write it without the leading slash (platform/deployment) or set MSYS_NO_PATHCONV=1`);
+      if (/^[A-Za-z]:[\\/]/.test(p))
+        die(`--pages got "${p}": the shell rewrote it. Write it without the leading slash (platform/deployment) or set MSYS_NO_PATHCONV=1`);
       return p.startsWith('/') ? p : `/${p}`;
     });
 
   const manifestPath = resolve(site, 'src', 'lib', 'content', 'art.json');
   const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
   manifest[slot] = { alt, width, height, pages };
-  writeFileSync(manifestPath, JSON.stringify(Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b))), null, 2) + '\n');
+  writeFileSync(
+    manifestPath,
+    JSON.stringify(Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b))), null, 2) + '\n'
+  );
   console.log(`install: ${slot} -> static/media/art/${slot}.webp (${width}x${height}, ${mb(out)} MB)`);
   console.log(`         registered in src/lib/content/art.json for ${pages.length ? pages.join(', ') : 'no page yet (pass --pages)'}`);
 } else {
   // --- a clip ----------------------------------------------------------------
   const clip = allClips.find((c) => c.name === slot);
-  if (!clip) die(`${slot} is not a clip in src/lib/content/media.js. Add the slot there first, so a page can reference it. Known: ${[...new Set(allClips.map((c) => c.name))].join(', ')}`);
+  if (!clip)
+    die(
+      `${slot} is not a clip in src/lib/content/media.js. Add the slot there first, so a page can reference it. Known: ${[...new Set(allClips.map((c) => c.name))].join(', ')}`
+    );
   const duration = Number(probe(['-show_entries', 'format=duration', '-of', 'csv=p=0', src]));
   if (!Number.isFinite(duration) || duration <= 0) die(`could not read a duration from ${src}`);
   const start = Number(arg('start') || 0);
@@ -116,10 +143,64 @@ if (isImage) {
     ? `[0:v]${fit},split[a][b];[a]trim=0:${fade},setpts=PTS-STARTPTS,fps=30,settb=AVTB[head];[b]trim=${fade}:${length},setpts=PTS-STARTPTS,fps=30,settb=AVTB[body];[body][head]xfade=transition=fade:duration=${fade}:offset=${(length - 2 * fade).toFixed(3)},format=yuv420p[v]`
     : `[0:v]${fit},format=yuv420p[v]`;
   const input = ['-ss', start.toFixed(3), '-t', length.toFixed(3), '-i', src];
-  run([...input, '-filter_complex', graph, '-map', '[v]', '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', '27', '-profile:v', 'high', '-level', '4.0', '-movflags', '+faststart', mp4]);
-  run([...input, '-filter_complex', graph, '-map', '[v]', '-an', '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', '36', '-row-mt', '1', '-deadline', 'good', '-cpu-used', '2', webm]);
+  run([
+    ...input,
+    '-filter_complex',
+    graph,
+    '-map',
+    '[v]',
+    '-an',
+    '-c:v',
+    'libx264',
+    '-preset',
+    'slow',
+    '-crf',
+    '27',
+    '-profile:v',
+    'high',
+    '-level',
+    '4.0',
+    '-movflags',
+    '+faststart',
+    mp4,
+  ]);
+  run([
+    ...input,
+    '-filter_complex',
+    graph,
+    '-map',
+    '[v]',
+    '-an',
+    '-c:v',
+    'libvpx-vp9',
+    '-b:v',
+    '0',
+    '-crf',
+    '36',
+    '-row-mt',
+    '1',
+    '-deadline',
+    'good',
+    '-cpu-used',
+    '2',
+    webm,
+  ]);
   const shipped = length - fade;
-  run(['-ss', (shipped * posterAt).toFixed(3), '-i', mp4, '-frames:v', '1', '-c:v', 'libwebp', '-quality', '82', '-compression_level', '6', webp]);
+  run([
+    '-ss',
+    (shipped * posterAt).toFixed(3),
+    '-i',
+    mp4,
+    '-frames:v',
+    '1',
+    '-c:v',
+    'libwebp',
+    '-quality',
+    '82',
+    '-compression_level',
+    '6',
+    webp,
+  ]);
   // Remember that this slot was filled by hand. encode.mjs reads this and will
   // not overwrite an installed clip with a procedural recording unless forced.
   const provPath = resolve(outDir, 'provenance.json');
@@ -127,6 +208,9 @@ if (isImage) {
   prov[slot] = { kind: 'installed', from: basename(src), at: new Date().toISOString().slice(0, 10) };
   const sorted = Object.fromEntries(Object.entries(prov).sort(([a], [b]) => a.localeCompare(b)));
   writeFileSync(provPath, `${JSON.stringify(sorted, null, 2)}${String.fromCharCode(10)}`);
-  console.log(`install: ${slot} -> ${shipped.toFixed(1)}s  mp4 ${mb(mp4)} MB  webm ${mb(webm)} MB  poster ${mb(webp)} MB${fade ? `  (crossfaded ${fade}s)` : ''}`);
-  if (statSync(mp4).size > 1.5 * 1024 * 1024) console.log('         the mp4 is over the 1.5 MB budget: shorten it with --length, or accept it knowingly');
+  console.log(
+    `install: ${slot} -> ${shipped.toFixed(1)}s  mp4 ${mb(mp4)} MB  webm ${mb(webm)} MB  poster ${mb(webp)} MB${fade ? `  (crossfaded ${fade}s)` : ''}`
+  );
+  if (statSync(mp4).size > 1.5 * 1024 * 1024)
+    console.log('         the mp4 is over the 1.5 MB budget: shorten it with --length, or accept it knowingly');
 }

@@ -15,8 +15,8 @@
       <p class="cover-kicker mono">Verification steps</p>
       <h1 class="cover-title">Reproduce the ladder<br />before you believe it.</h1>
       <p class="cover-sub">
-        Everything the front page claims about concurrency, batch sizing and vLLM, restated as
-        commands you can run on your own box. {claim.rungs} rungs, {claim.min} to {claim.max}.
+        Everything the front page claims about concurrency, batch sizing and vLLM, restated as commands you can run on your own box. {claim.rungs}
+        rungs, {claim.min} to {claim.max}.
       </p>
       <p class="cover-stamp mono">{stamp}</p>
     </div>
@@ -35,20 +35,23 @@
     <li class="at" style="--n: 1">
       <span class="q-n mono">01</span>
       <strong>Is the claim true?</strong>
-      <span>Not "is the chart real" — can a stranger produce the same numbers on their own
-      hardware, from the artifacts, without talking to us. Act II is that walkthrough.</span>
+      <span
+        >Not "is the chart real" — can a stranger produce the same numbers on their own hardware, from the artifacts, without talking to us.
+        Act II is that walkthrough.</span
+      >
     </li>
     <li class="at" style="--n: 2">
       <span class="q-n mono">02</span>
       <strong>Is it durable?</strong>
-      <span>A configuration gap closes in six weeks when upstream ships. A mechanism does not.
-      Act III separates the two and shows what defends the number between releases.</span>
+      <span
+        >A configuration gap closes in six weeks when upstream ships. A mechanism does not. Act III separates the two and shows what defends
+        the number between releases.</span
+      >
     </li>
     <li class="at" style="--n: 3">
       <span class="q-n mono">03</span>
       <strong>What does it cost to keep true?</strong>
-      <span>Gate machinery, licence posture, contributor provenance, and the bus factor on the
-      parts that produce the win.</span>
+      <span>Gate machinery, licence posture, contributor provenance, and the bus factor on the parts that produce the win.</span>
     </li>
   </ol>
 </Slide>
@@ -61,17 +64,16 @@
 >
   <blockquote class="claim">
     <p>
-      <strong>{claim.engine}</strong> (build <code class="mono">{claim.build}</code>) sustains higher
-      mean decode throughput than <strong>{claim.baseline}</strong> on
+      <strong>{claim.engine}</strong> (build <code class="mono">{claim.build}</code>) sustains higher mean decode throughput than
+      <strong>{claim.baseline}</strong>
+      on
       <code class="mono">{claim.checkpoint}</code>, served on one {claim.box}, at
       <strong>every</strong> concurrency C = {claim.concurrencies} — ISL {claim.isl}, OSL
-      {claim.osl}, temperature {claim.temperature}, seed {claim.seed}, {claim.aggregate}.
-      Margins run {claim.min} to {claim.max}.
+      {claim.osl}, temperature {claim.temperature}, seed {claim.seed}, {claim.aggregate}. Margins run {claim.min} to {claim.max}.
     </p>
   </blockquote>
   <p class="claim-note">
-    Every noun in that sentence is a knob someone could have turned to flatter us. The next act
-    hands you each of them.
+    Every noun in that sentence is a knob someone could have turned to flatter us. The next act hands you each of them.
   </p>
 </Slide>
 
@@ -87,15 +89,15 @@
       rows={[
         ['measured on', 'one GB10 box', 'DGX Spark. Every figure here was taken there, not extrapolated from it.'],
         ['not claimed', 'other model classes', 'One dense 27B hybrid at NVFP4. MoE and long-context behave differently.'],
-        ['not claimed', 'multi-node', 'Single box. No TP/PP/EP story is being told here.']
+        ['not claimed', 'multi-node', 'Single box. No TP/PP/EP story is being told here.'],
       ]}
     />
     <aside class="warn at" style="--n: 4">
       <p class="warn-h mono">Fragile rungs, named</p>
       <p>
         {fragile.count} rungs are won by margins inside plausible run-to-run drift — {fragile.rungs}
-        sit between {fragile.min} and {fragile.max}. We flag them rather than rounding them into the
-        headline, and they are the rungs we re-measure first when anything changes.
+        sit between {fragile.min} and {fragile.max}. We flag them rather than rounding them into the headline, and they are the rungs we
+        re-measure first when anything changes.
       </p>
     </aside>
   </div>
@@ -113,25 +115,22 @@
     <div class="at" style="--n: 1">
       <blockquote class="jhq">
         <p>
-          “AI has transformed every layer of the computing stack. It stands to reason a new class of
-          computers would emerge — designed for AI-native developers and to run AI-native
-          applications. With these new DGX personal AI computers, AI can span from cloud services to
-          desktop and edge applications.”
+          “AI has transformed every layer of the computing stack. It stands to reason a new class of computers would emerge — designed for
+          AI-native developers and to run AI-native applications. With these new DGX personal AI computers, AI can span from cloud services
+          to desktop and edge applications.”
         </p>
         <footer class="mono">Jensen Huang, NVIDIA — DGX Spark announcement, 18 March 2025</footer>
       </blockquote>
       <p class="jhn">
-        NVIDIA's own framing in the same release: the full-stack platform lets DGX Spark users
-        “seamlessly move their models from their desktops to DGX Cloud or any accelerated cloud or
-        data center infrastructure — with virtually no code changes.”
+        NVIDIA's own framing in the same release: the full-stack platform lets DGX Spark users “seamlessly move their models from their
+        desktops to DGX Cloud or any accelerated cloud or data center infrastructure — with virtually no code changes.”
       </p>
     </div>
     <aside class="warn at" style="--n: 2">
       <p class="warn-h mono">Where Atlas sits on that path</p>
       <p>
-        Same Blackwell architecture, same CUDA stack, same OpenAI-compatible surface — a workload
-        validated on GB10 moves up the line rather than starting over. Atlas ships its GB10 kernel
-        target today, and the kernel system is already three-dimensional (hardware × model ×
+        Same Blackwell architecture, same CUDA stack, same OpenAI-compatible surface — a workload validated on GB10 moves up the line rather
+        than starting over. Atlas ships its GB10 kernel target today, and the kernel system is already three-dimensional (hardware × model ×
         quant): another hardware arm is a target to add, not an engine to rewrite.
       </p>
     </aside>

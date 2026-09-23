@@ -10,12 +10,7 @@
 // =============================================================================
 
 function escapeHtml(s) {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 // Inline markup on an already-escaped, non-code text segment.
@@ -36,10 +31,7 @@ function renderSegment(escaped) {
   // untrue in the DOM. A URL containing them is now left as plain text, which
   // is the safe direction: a link that does not render is visibly wrong, an
   // anchor with its rel silently stripped is not.
-  out = out.replace(
-    /\[([^\]]+)\]\((https?:\/\/[^)\s*[\]]+)\)/g,
-    '<a href="$2" rel="noopener nofollow" target="_blank">$1</a>'
-  );
+  out = out.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s*[\]]+)\)/g, '<a href="$2" rel="noopener nofollow" target="_blank">$1</a>');
   out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   // [n] citations (not link openers — those were consumed above).
   out = out.replace(/\[(\d{1,3})\](?!\()/g, '<sup class="cc-cite">[$1]</sup>');

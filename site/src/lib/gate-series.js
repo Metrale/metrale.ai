@@ -83,7 +83,10 @@ export function buildSeries(panel, records, cap) {
 
   // One group size for the whole chart. Two series on one axis binned at
   // different resolutions would misstate their relative volatility.
-  const g = chartGroupSize(families.map((f) => f.pts), cap);
+  const g = chartGroupSize(
+    families.map((f) => f.pts),
+    cap
+  );
 
   // Only disambiguate labels by model when the panel actually shows more than
   // one — "median · Qwen3.6-35B-A3B-FP8" on a single-model panel is noise.
@@ -105,7 +108,7 @@ export function buildSeries(panel, records, cap) {
       dashed: Boolean(metric.dashed),
       sparse: nodes.length < MIN_POINTS_FOR_A_LINE,
       nodes,
-      edges: liftEdges(nodes, trendEdges(pts))
+      edges: liftEdges(nodes, trendEdges(pts)),
     };
   });
 }

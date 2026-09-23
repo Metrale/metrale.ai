@@ -39,10 +39,7 @@ describe('absent is never zero, and the kinds of absence stay distinct', () => {
   });
 
   test('ISL and OSL read from the agent, and absence means no request finished', () => {
-    const live = IO.tiles(
-      { isl_mean: 512, osl_mean: 128, window_s: 4 },
-      LIVE
-    );
+    const live = IO.tiles({ isl_mean: 512, osl_mean: 128, window_s: 4 }, LIVE);
     const isl = live.find((t) => t.id === 'isl');
     const osl = live.find((t) => t.id === 'osl');
     expect(isl.kind).toBe('reading');
@@ -76,7 +73,7 @@ describe('no rate on first poll, none across a gap', () => {
     prompt_tokens_per_s: 900,
     requests_total: 7,
     ttft_p50_s: 1.4,
-    window_s: 2
+    window_s: 2,
   };
 
   test('the first poll surrenders its rates — the window predates this page', () => {

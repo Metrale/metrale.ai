@@ -36,8 +36,7 @@
 
 import { AgentClient } from './client.svelte.js';
 
-/** Longest display string we will render. */
-import { DETAIL_MAX, MAX_NODES, alert, ingestNode, sanitize, vitals } from './ingest.js';
+import { MAX_NODES, alert, ingestNode, vitals } from './ingest.js';
 import { readDecision, readExchange, readExchangeAt } from './pairing.js';
 
 /** Poll cadence while waiting for an agent to appear, and its ceiling. */
@@ -335,9 +334,7 @@ export class FleetSession {
     // An agent too old to know the fleet verbs is not an error: it is a
     // single-node agent, and the page should show this machine and say so.
     const list = await this.agent.listNodes();
-    this.nodes = Array.isArray(list.reply?.nodes)
-      ? list.reply.nodes.map(ingestNode).filter(Boolean).slice(0, MAX_NODES)
-      : [];
+    this.nodes = Array.isArray(list.reply?.nodes) ? list.reply.nodes.map(ingestNode).filter(Boolean).slice(0, MAX_NODES) : [];
     this.watching = false;
   }
 

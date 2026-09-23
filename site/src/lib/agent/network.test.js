@@ -49,7 +49,7 @@ test('an address is described with what is known and nothing else', () => {
     class: 'roce',
     prefixLen: 30,
     speedMbps: 200000,
-    rdma: true
+    rdma: true,
   });
   expect(d.subnet).toBe('10.10.10.8/30');
   expect(d.detail).toBe('RoCE · RDMA · 200 Gb');
@@ -65,8 +65,8 @@ test('two addresses on one LAN are one network; distinct LANs stay distinct', ()
     addresses: [
       { addr: '10.10.10.9', iface: 'ib0', class: 'roce', prefixLen: 24, rdma: true },
       { addr: '10.10.10.13', iface: 'ib1', class: 'roce', prefixLen: 24, rdma: true },
-      { addr: '192.168.68.68', iface: 'en0', class: 'ethernet', prefixLen: 24 }
-    ]
+      { addr: '192.168.68.68', iface: 'en0', class: 'ethernet', prefixLen: 24 },
+    ],
   };
   const nets = networksOf(node);
   expect(nets.map((n) => n.subnet)).toEqual(['10.10.10.0/24', '192.168.68.0/24']);
@@ -80,8 +80,8 @@ test('unnamed networks do not collapse into each other', () => {
   const nets = networksOf({
     addresses: [
       { addr: '2001:db8::1', iface: 'en0', class: 'ethernet', prefixLen: 64 },
-      { addr: '2001:db8:1::1', iface: 'en1', class: 'ethernet', prefixLen: 64 }
-    ]
+      { addr: '2001:db8:1::1', iface: 'en1', class: 'ethernet', prefixLen: 64 },
+    ],
   });
   expect(nets.length).toBe(2);
 });
@@ -97,7 +97,7 @@ test('a plausible address is accepted in every form the agent resolves', () => {
     'spark-43fa.local:34334',
     '[fe80::1]',
     '[fe80::1]:34334',
-    'fe80::1' // bare v6: the agent resolves it, so this field must not refuse it
+    'fe80::1', // bare v6: the agent resolves it, so this field must not refuse it
   ]) {
     expect(checkTarget(t).ok).toBe(true);
   }
@@ -142,11 +142,11 @@ test('a /0 is refused rather than masked, so the mask never shifts by 32', () =>
 // unresolvable hostname, which is the confusing half of the failure.
 test('the pastes this box exists to catch are refused, with a reason', () => {
   const cases = [
-    ['10.0.0.5,10.0.0.6', 'list'],       // what joinCommand renders
-    ['ABC123@10.0.0.5', '@'],            // the join line's code@host
-    ['example.com/path', 'path'],        // a URL minus its scheme
-    ['[]', 'bracket'],                   // an empty bracketed host
-    ['[::1', 'bracket']                  // a bracket that never closes
+    ['10.0.0.5,10.0.0.6', 'list'], // what joinCommand renders
+    ['ABC123@10.0.0.5', '@'], // the join line's code@host
+    ['example.com/path', 'path'], // a URL minus its scheme
+    ['[]', 'bracket'], // an empty bracketed host
+    ['[::1', 'bracket'], // a bracket that never closes
   ];
   for (const [input] of cases) {
     const r = checkTarget(input);

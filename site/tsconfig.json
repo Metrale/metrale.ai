@@ -25,5 +25,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
-  }
+  },
+  // Build output and SvelteKit's generated tree are not source.
+  "exclude": ["node_modules", "build", ".svelte-kit"]
 }

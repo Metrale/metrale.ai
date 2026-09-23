@@ -1,0 +1,16 @@
+# Link check over the built site. Run from the repository root after the build.
+# Pull requests check internal links only, so the result is deterministic:
+#   lychee --config lychee.toml --offline 'site/build/**/*.html'
+# links-external.yml runs the same config without --offline on a schedule.
+
+root_dir = "site/build"
+
+# Cloudflare Pages serves /pricing from pricing.html and / from index.html.
+fallback_extensions = ["html"]
+# "." keeps /platform valid where platform.html sits beside a platform/ directory.
+index_files = ["index.html", "."]
+
+# An anchor that names no id on its page is a broken link too.
+include_fragments = "anchor-only"
+
+no_progress = true

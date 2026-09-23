@@ -9,9 +9,8 @@ import { routes, contacts } from './brand.js';
 export const pricingHero = {
   eyebrow: 'Pricing',
   title: 'Priced against productive GPU capacity, not seats.',
-  lede:
-    'Enterprise AI infrastructure software already prices per GPU per year. Metrale sits inside that range, ships with the control plane and the economics layer, and shows its payback on this page. Proposed list prices, September 2026.',
-  stamp: 'Proposed sheet · September 2026'
+  lede: 'Enterprise AI infrastructure software already prices per GPU per year. Metrale sits inside that range, ships with the control plane and the economics layer, and shows its payback on this page. Proposed list prices, September 2026.',
+  stamp: 'Proposed sheet · September 2026',
 };
 
 export const tiers = [
@@ -27,62 +26,65 @@ export const tiers = [
       'Every model recipe in atlas-recipes',
       'OpenAI, Anthropic and Responses APIs',
       'LAN fleet manager, early access',
-      'Community support in Discord'
+      'Community support in Discord',
     ],
     cta: { text: 'Join the waitlist', href: routes.waitlist },
-    tone: 'plain'
+    tone: 'plain',
   },
   {
     key: 'workstation',
     name: 'Workstation and edge',
     price: '$50',
     per: 'per box per month, billed annually',
-    blurb: 'A DGX Spark or Strix Halo class box serving an office, a branch or a field team. Commercial license, signed update channel, managed from the console.',
+    blurb:
+      'A DGX Spark or Strix Halo class box serving an office, a branch or a field team. Commercial license, signed update channel, managed from the console.',
     includes: [
       'Commercial license per box',
       'Signed stable and LTS channels',
       'Console access for every licensed box',
       'Email support, next business day',
-      'Volume pricing from 25 boxes'
+      'Volume pricing from 25 boxes',
     ],
     cta: { text: 'Price a fleet of boxes', href: routes.contact },
     tone: 'plain',
-    proposed: true
+    proposed: true,
   },
   {
     key: 'enterprise',
     name: 'Enterprise',
     price: '$3,000',
     per: 'per GPU per year, list',
-    blurb: 'The full platform for GPU fleets. Realized pricing at fleet scale runs $1,800 to $2,400 per GPU per year. Support and forward deployed engineering priced separately.',
+    blurb:
+      'The full platform for GPU fleets. Realized pricing at fleet scale runs $1,800 to $2,400 per GPU per year. Support and forward deployed engineering priced separately.',
     includes: [
       'Metrale Engine, commercial license',
       'Metrale Control, rollouts, routing, policy, repair',
       'Metrale Economics, chargeback and payback',
       'Named engineer and response SLA',
-      'Hosted, your cloud, on premises or air gapped'
+      'Hosted, your cloud, on premises or air gapped',
     ],
     cta: { text: 'Book a demo', href: routes.demoForm },
     tone: 'accent',
     proposed: true,
-    featured: true
+    featured: true,
   },
   {
     key: 'pilot',
     name: 'Proof of value',
     price: 'Fixed fee',
     per: 'four weeks, credited on conversion',
-    blurb: 'One model, one hardware target, one workload. A side by side ladder in week one and a receipt in dollars per workload at the end.',
+    blurb:
+      'One model, one hardware target, one workload. A side by side ladder in week one and a receipt in dollars per workload at the end.',
     includes: [
       'Scoped success criteria, yours or ours',
       'Side by side against your current engine',
       'Economics baseline of the target cluster',
       'Forward deployed engineer for the four weeks',
-      'Fee credited against the first year on conversion'
+      'Fee credited against the first year on conversion',
     ],
     cta: { text: 'Scope a pilot', href: routes.demoForm },
-    tone: 'plain'
-  }
+    tone: 'plain',
+  },
 ];
 
 export const anchors = {
@@ -92,9 +94,15 @@ export const anchors = {
   rows: [
     { name: 'Red Hat AI Inference Server', price: '~$2,500', per: 'per accelerator per year', note: 'Hardened vLLM, published list price' },
     { name: 'NVIDIA AI Enterprise', price: '$4,500', per: 'per GPU per year', note: 'Broad platform, OEM backed' },
-    { name: 'Metrale Enterprise', price: '~$3,000', per: 'per GPU per year, list', note: 'Engine, control plane and economics, realized $1,800 to $2,400 at scale', accent: true }
+    {
+      name: 'Metrale Enterprise',
+      price: '~$3,000',
+      per: 'per GPU per year, list',
+      note: 'Engine, control plane and economics, realized $1,800 to $2,400 at scale',
+      accent: true,
+    },
   ],
-  foot: 'Third party prices are public list prices at the time of writing and belong to their owners. Metrale prices are proposed and subject to contract.'
+  foot: 'Third party prices are public list prices at the time of writing and belong to their owners. Metrale prices are proposed and subject to contract.',
 };
 
 export const contractEconomics = {
@@ -104,8 +112,8 @@ export const contractEconomics = {
   rows: [
     { gpus: '64 GPUs', acv: '≈ $175K' },
     { gpus: '256 GPUs', acv: '≈ $550K' },
-    { gpus: '1,000 GPUs', acv: '≈ $2.0M' }
-  ]
+    { gpus: '1,000 GPUs', acv: '≈ $2.0M' },
+  ],
 };
 
 // What the platform meters, from the platform architecture brief of September
@@ -115,27 +123,38 @@ export const metering = {
   title: 'Priced on a number you can watch.',
   body: 'Proposed. The platform is being built to meter what it serves and show it live, so a renewal is read off the same number the console shows.',
   items: [
-    { title: 'GPU hours and GPU count', body: 'A license is a cluster or a number of GPUs, discovered by the platform, not declared on a form.' },
-    { title: 'Tokens per GPU second', body: 'The throughput the fleet actually produced, per GPU, per second, next to the throughput it could have.' },
-    { title: 'Cost per million tokens', body: 'GPU, storage, network and platform cost over the tokens delivered, for your fleet and for the baseline you ran before.' },
-    { title: 'Nothing through the gateway without a license', body: 'Every served request is entitled and counted, so the bill and the telemetry are the same record.' }
-  ]
+    {
+      title: 'GPU hours and GPU count',
+      body: 'A license is a cluster or a number of GPUs, discovered by the platform, not declared on a form.',
+    },
+    {
+      title: 'Tokens per GPU second',
+      body: 'The throughput the fleet actually produced, per GPU, per second, next to the throughput it could have.',
+    },
+    {
+      title: 'Cost per million tokens',
+      body: 'GPU, storage, network and platform cost over the tokens delivered, for your fleet and for the baseline you ran before.',
+    },
+    {
+      title: 'Nothing through the gateway without a license',
+      body: 'Every served request is entitled and counted, so the bill and the telemetry are the same record.',
+    },
+  ],
 };
 
 export const paybackCopy = {
   eyebrow: 'Payback',
   title: 'Find your payback period.',
-  lede:
-    'If a thing costs three thousand dollars and makes you a thousand a month, it pays for itself in three months, and everything after is upside. That is the number to walk to the CFO with. Three scenarios, every input editable, evidence class on every field.',
+  lede: 'If a thing costs three thousand dollars and makes you a thousand a month, it pays for itself in three months, and everything after is upside. That is the number to walk to the CFO with. Three scenarios, every input editable, evidence class on every field.',
   fleet: {
     title: 'Get more out of the fleet you own',
     body: 'The uplift frees GPUs. Freed GPUs are deferred purchases or rentals plus the power they burned. The license is what the uplift costs.',
-    note: 'Uplift defaults to 1.20x, below the measured ratio on the GB10 ladder at C=128, because a datacenter part is not a Spark until we publish the receipt.'
+    note: 'Uplift defaults to 1.20x, below the measured ratio on the GB10 ladder at C=128, because a datacenter part is not a Spark until we publish the receipt.',
   },
   api: {
     title: 'Stop renting tokens',
     body: 'Take the API bill, count the tokens, and run them on boxes you own at measured throughput. This is where the 70% claim on the front page comes from.',
-    note: 'Throughput defaults to the top rung of the published ladder. Blended API price defaults to a hosted rate for a 27B class open model, which you should replace with your own invoice.'
+    note: 'Throughput defaults to the top rung of the published ladder. Blended API price defaults to a hosted rate for a 27B class open model, which you should replace with your own invoice.',
   },
   // The third scenario counts in a physical unit. Tokens per second over watts is
   // tokens per joule (src/lib/economics.js spells the units out). The ladder
@@ -150,15 +169,17 @@ export const paybackCopy = {
     note: 'Throughput is the top rung of the published ladder, for both engines. The ladder does not record power yet, so the draw is yours to set. It defaults to 240 W for both, the rating of the power supply a DGX Spark ships with, which is a ceiling, so the efficiency shown is a floor. If one engine draws more for its extra tokens, type that in, and the advantage shrinks by exactly that much. This tab prices the energy of the tokens served and nothing else: not the hardware, not the license, and not the idle draw of a box left on for the hours it saves.',
     unit: 'Tokens per second, per watt. The seconds cancel, which leaves tokens per joule.',
     chartTitle: 'Tokens per joule, rung by rung',
-    chart: 'Measured throughput on each rung of the published ladder, over the draw typed here, held flat across the rungs. A box draws less when it does less, so the low rungs are understated until the ladder records power.',
-    chartMeasured: 'Measured throughput over the draw recorded on each rung of the published ladder.'
+    chart:
+      'Measured throughput on each rung of the published ladder, over the draw typed here, held flat across the rungs. A box draws less when it does less, so the low rungs are understated until the ladder records power.',
+    chartMeasured: 'Measured throughput over the draw recorded on each rung of the published ladder.',
   },
   classes: {
     MEASURED: 'From ladder.generated.json, the published concurrency ladder',
     PROPOSED: 'A proposed list price from this page, the team can change it',
-    USER: 'Yours to edit, the model recomputes as you type'
+    USER: 'Yours to edit, the model recomputes as you type',
   },
-  disclaimer: 'A model, not a quote. Savings depend on your workload, your utilization and the uplift measured on your hardware during the pilot.'
+  disclaimer:
+    'A model, not a quote. Savings depend on your workload, your utilization and the uplift measured on your hardware during the pilot.',
 };
 
 export const pricingFaqTag = 'pricing';
@@ -168,5 +189,5 @@ export const pricingCta = {
   title: 'Get the sheet, or get the receipt.',
   body: `Email ${contacts.sales} for the full price sheet, or book a working session and we run the ladder on your workload.`,
   primary: { text: 'Book a demo', href: routes.demoForm },
-  secondary: { text: 'Email sales', href: `mailto:${contacts.sales}?subject=Metrale%20pricing%20sheet` }
+  secondary: { text: 'Email sales', href: `mailto:${contacts.sales}?subject=Metrale%20pricing%20sheet` },
 };

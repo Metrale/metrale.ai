@@ -8,8 +8,7 @@
 
 <section id="mission" class="quote-band sx-violet">
   <svg class="quote-mark" viewBox="0 0 956 636" width="956" height="636" aria-hidden="true">
-    <g fill="none" stroke-width="76" stroke-linecap="round" stroke-linejoin="round"
-       stroke="currentColor">
+    <g fill="none" stroke-width="76" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor">
       <path d="M38 38L358 318L38 598" />
       <path d="M318 38L638 318L318 598" />
       <path d="M598 38L918 318L598 598" />

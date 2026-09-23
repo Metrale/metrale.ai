@@ -37,9 +37,7 @@ if (!root) {
 // the first match anywhere in the file, so a comment or an `oldFlagshipRecipe`
 // above it would validate the wrong name and pass — failing open, which is the
 // one way a guard must never fail.
-const { flagshipRecipe, runCommandRaw } = await import(
-  pathToFileURL(resolve(here, '..', 'src', 'lib', 'data.js')).href
-);
+const { flagshipRecipe, runCommandRaw } = await import(pathToFileURL(resolve(here, '..', 'src', 'lib', 'data.js')).href);
 
 /** Every `<name>.yaml` under the corpus, by stem. */
 function recipeStems(dir) {
@@ -70,9 +68,7 @@ if (stems.length === 0) {
 
 const problems = [];
 if (!stems.includes(flagshipRecipe)) {
-  problems.push(
-    `data.js advertises \`atlasctl run ${flagshipRecipe}\`, and no such recipe exists in the corpus.`
-  );
+  problems.push(`data.js advertises \`atlasctl run ${flagshipRecipe}\`, and no such recipe exists in the corpus.`);
 }
 // The pasteable command is checked too, because it is a second place the name
 // can be written and the two have already drifted once. A non-string here is a
@@ -81,9 +77,7 @@ if (!stems.includes(flagshipRecipe)) {
 if (typeof runCommandRaw !== 'string') {
   problems.push('data.js no longer exports runCommandRaw as a string; this guard cannot check it.');
 } else if (!runCommandRaw.includes(flagshipRecipe)) {
-  problems.push(
-    `runCommandRaw (${runCommandRaw}) does not name the flagship recipe ${flagshipRecipe}.`
-  );
+  problems.push(`runCommandRaw (${runCommandRaw}) does not name the flagship recipe ${flagshipRecipe}.`);
 }
 
 if (problems.length > 0) {

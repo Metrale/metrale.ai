@@ -36,7 +36,7 @@ test('an out-of-date agent is named as the agent, with the line that fixes it', 
 test('a Windows visitor is told to run the Windows line, not curl', () => {
   const win = installCommandFor('windows', {
     shellUrl: installerUrl,
-    powershellUrl: powershellInstallerUrl
+    powershellUrl: powershellInstallerUrl,
   }).command;
   const a = versionAdvice(4, 1, 1, win);
   expect(a.ok).toBe(false);

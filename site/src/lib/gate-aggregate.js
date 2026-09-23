@@ -174,7 +174,7 @@ export function aggregateSeries(pts, g) {
       tMin: members[0].t,
       tMax: members[size - 1].t,
       allPass: members.every(isAggregatable),
-      id: `${members[0].rec.git_sha}:${members[0].t}:${size}`
+      id: `${members[0].rec.git_sha}:${members[0].t}:${size}`,
     };
   });
 }

@@ -35,8 +35,7 @@
 
 <Overlay label="Cluster launch" id="launch" wide {onclose}>
   <p class="stage-sub">
-    Two phases, because one cannot fail cleanly: every machine validates and
-    reserves, and nothing starts until all of them have agreed.
+    Two phases, because one cannot fail cleanly: every machine validates and reserves, and nothing starts until all of them have agreed.
   </p>
   <ClusterLaunch {fleet} bind:flow bind:this={launcher} />
 
@@ -56,9 +55,7 @@
       Abort — release the reservations
     </button>
     {#if !abortable}
-      <span class="visually-hidden" id="ov-abort-why">
-        Nothing is reserved — there is nothing to abort.
-      </span>
+      <span class="visually-hidden" id="ov-abort-why"> Nothing is reserved — there is nothing to abort. </span>
     {/if}
     <button type="button" class="btn ov-close" onclick={() => onclose?.()}>
       Close{held ? ' — reservations stay held' : ''}

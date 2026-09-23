@@ -21,7 +21,7 @@ function respondWith(body, { ok = true, status = 200 } = {}) {
   globalThis.fetch = async () => ({
     ok,
     status,
-    text: async () => (typeof body === 'string' ? body : JSON.stringify(body))
+    text: async () => (typeof body === 'string' ? body : JSON.stringify(body)),
   });
 }
 
@@ -64,20 +64,20 @@ test('a well-formed response still comes back, ordered by index', async () => {
   respondWith({
     data: [
       { index: 1, embedding: [0.2] },
-      { index: 0, embedding: [0.1] }
-    ]
+      { index: 0, embedding: [0.1] },
+    ],
   });
   expect(await getEmbeddings(['a', 'b'], 'k')).toEqual([[0.1], [0.2]]);
 
   respondWith({
     results: [
       { index: 0, relevance_score: 0.1 },
-      { index: 2, relevance_score: 0.9 }
-    ]
+      { index: 2, relevance_score: 0.9 },
+    ],
   });
   expect(await rerank('q', ['a', 'b', 'c'], 'k')).toEqual([
     { index: 2, score: 0.9 },
-    { index: 0, score: 0.1 }
+    { index: 0, score: 0.1 },
   ]);
 });
 

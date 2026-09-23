@@ -10,7 +10,7 @@ describe('historyBand', () => {
     const band = historyBand([run(10, 20), run(14, 26), run(12, 22)]);
     expect(band).toEqual([
       { c: 1, lo: 10, hi: 14 },
-      { c: 2, lo: 20, hi: 26 }
+      { c: 2, lo: 20, hi: 26 },
     ]);
   });
 
@@ -31,13 +31,33 @@ describe('historyBand', () => {
 
   test('a rung measured once has no range and is skipped', () => {
     // A zero-height sliver would draw a hairline that reads as data.
-    const band = historyBand([{ pts: [{ c: 1, v: 10 }, { c: 2, v: 20 }] }, { pts: [{ c: 1, v: 12 }] }]);
+    const band = historyBand([
+      {
+        pts: [
+          { c: 1, v: 10 },
+          { c: 2, v: 20 },
+        ],
+      },
+      { pts: [{ c: 1, v: 12 }] },
+    ]);
     expect(band.map((b) => b.c)).toEqual([1]);
   });
 
   test('rungs come out ascending regardless of input order', () => {
-    const a = { pts: [{ c: 64, v: 5 }, { c: 2, v: 1 }, { c: 8, v: 3 }] };
-    const b = { pts: [{ c: 8, v: 4 }, { c: 64, v: 6 }, { c: 2, v: 2 }] };
+    const a = {
+      pts: [
+        { c: 64, v: 5 },
+        { c: 2, v: 1 },
+        { c: 8, v: 3 },
+      ],
+    };
+    const b = {
+      pts: [
+        { c: 8, v: 4 },
+        { c: 64, v: 6 },
+        { c: 2, v: 2 },
+      ],
+    };
     expect(historyBand([a, b]).map((x) => x.c)).toEqual([2, 8, 64]);
   });
 
@@ -71,13 +91,32 @@ describe('splitHistory', () => {
 
 describe('bandPath', () => {
   test('is a closed region, not a line', () => {
-    const d = bandPath([{ c: 1, lo: 1, hi: 2 }, { c: 2, lo: 2, hi: 4 }], (c) => c * 10, (v) => v * 10);
+    const d = bandPath(
+      [
+        { c: 1, lo: 1, hi: 2 },
+        { c: 2, lo: 2, hi: 4 },
+      ],
+      (c) => c * 10,
+      (v) => v * 10
+    );
     expect(d.endsWith('Z')).toBe(true);
     expect(d.startsWith('M')).toBe(true);
   });
 
   test('a band that cannot enclose anything draws nothing', () => {
-    expect(bandPath([], (c) => c, (v) => v)).toBe('');
-    expect(bandPath([{ c: 1, lo: 1, hi: 2 }], (c) => c, (v) => v)).toBe('');
+    expect(
+      bandPath(
+        [],
+        (c) => c,
+        (v) => v
+      )
+    ).toBe('');
+    expect(
+      bandPath(
+        [{ c: 1, lo: 1, hi: 2 }],
+        (c) => c,
+        (v) => v
+      )
+    ).toBe('');
   });
 });

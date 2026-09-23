@@ -53,7 +53,7 @@ export function historyBand(runs) {
     out.push({
       c,
       lo: wide ? sorted[0] : percentile(sorted, 0.1),
-      hi: wide ? sorted[sorted.length - 1] : percentile(sorted, 0.9)
+      hi: wide ? sorted[sorted.length - 1] : percentile(sorted, 0.9),
     });
   }
   return out.sort((a, b) => a.c - b.c);
@@ -74,7 +74,7 @@ export function splitHistory(runs) {
   return {
     latest: n > 0 ? runs[n - 1] : null,
     previous: n > 1 ? runs[n - 2] : null,
-    history: n > 2 ? runs.slice(0, n - 2) : []
+    history: n > 2 ? runs.slice(0, n - 2) : [],
   };
 }
 

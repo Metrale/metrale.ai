@@ -25,7 +25,7 @@
 // No third-party deps: Node builtins + `git` via child_process.
 // =============================================================================
 
-import { readdirSync, readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { writeStable } from './lib/write-stable.mjs';
 import { dirname, resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -44,7 +44,7 @@ function git(args, opts = {}) {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
     maxBuffer: 64 * 1024 * 1024,
-    ...opts
+    ...opts,
   }).trim();
 }
 function gitSoft(args) {
@@ -141,17 +141,14 @@ function slim(raw, branch) {
     atlas_version: raw.atlas_version,
     hardware: raw.hardware,
     perf_class: raw.hardware_state?.perf_class ?? '',
-    machine_id:
-      raw.hardware_state?.before?.machine?.machine_id ??
-      raw.hardware_state?.after?.machine?.machine_id ??
-      '',
+    machine_id: raw.hardware_state?.before?.machine?.machine_id ?? raw.hardware_state?.after?.machine?.machine_id ?? '',
     params: raw.params,
     serve_overrides: raw.serve_overrides,
     metrics: raw.metrics,
     frame_status: raw.frame_status,
     verdict: raw.verdict,
     verdict_reason: raw.verdict_reason,
-    branch
+    branch,
   };
 }
 
@@ -169,6 +166,31 @@ if (existsSync(RECORDS_ROOT)) {
 }
 const committedCount = records.size;
 
+// A partial clone (CI checks the engine out with blob:none) fetches a missing blob
+// the first time it is read, one round trip per record: minutes across every
+// branch. List the record blobs from the trees, which the clone has, and fetch
+// them in one request before reading them. A full clone skips this.
+function prefetchRecordBlobs(remote, refs) {
+  if (gitSoft(['config', `remote.${remote}.promisor`]) !== 'true') return;
+  const ids = new Set();
+  for (const ref of refs) {
+    for (const line of gitSoft(['ls-tree', '-r', ref, '--', '.benchmarks']).split('\n')) {
+      const m = line.match(/^\d+ blob ([0-9a-f]+)\t.+\.json$/);
+      if (m) ids.add(m[1]);
+    }
+  }
+  if (ids.size === 0) return;
+  try {
+    git(['-c', 'fetch.negotiationAlgorithm=noop', 'fetch', '--quiet', '--no-tags', '--no-write-fetch-head', '--stdin', remote], {
+      input: [...ids].join('\n') + '\n',
+      stdio: ['pipe', 'pipe', 'pipe'],
+      timeout: 300_000,
+    });
+  } catch (err) {
+    console.error(`gen-gates: record prefetch degraded (${String(err.message || err).split('\n')[0]})`);
+  }
+}
+
 // --- leg 2: every remote head (best-effort) ----------------------------------
 let branchesScanned = 0;
 let fromBranches = 0;
@@ -178,7 +200,7 @@ try {
     // Shallow-refresh all heads; tolerable if it fails (offline build).
     try {
       git(['fetch', '--quiet', '--depth=1', remote, `+refs/heads/*:refs/remotes/${remote}/*`], {
-        timeout: 120_000
+        timeout: 120_000,
       });
     } catch (err) {
       console.error(`gen-gates: fetch degraded (${String(err.message || err).split('\n')[0]})`);
@@ -186,6 +208,7 @@ try {
     const refs = gitSoft(['for-each-ref', '--format=%(refname:short)', `refs/remotes/${remote}`])
       .split('\n')
       .filter((r) => r && !r.endsWith('/HEAD'));
+    prefetchRecordBlobs(remote, refs);
     for (const ref of refs) {
       branchesScanned += 1;
       const paths = gitSoft(['ls-tree', '-r', '--name-only', ref, '--', '.benchmarks'])
@@ -218,11 +241,7 @@ for (const b of Object.values(benchmarks)) {
   b.records.sort((x, y) => x.recorded_at - y.recorded_at);
   assignTrendPredecessors(b.records, gitIsAncestor);
   for (const rec of b.records) {
-    rec.generated_ancestry = !gitCommitKnown(rec.git_sha)
-      ? 'unknown'
-      : gitIsAncestor(rec.git_sha, generatedHead)
-        ? 'yes'
-        : 'no';
+    rec.generated_ancestry = !gitCommitKnown(rec.git_sha) ? 'unknown' : gitIsAncestor(rec.git_sha, generatedHead) ? 'yes' : 'no';
   }
 }
 
@@ -231,7 +250,7 @@ const obj = {
   generated_date: gitSoft(['log', '-1', '--format=%cs']),
   registered: registeredBenchmarks(),
   sources: { committed: committedCount, branches_scanned: branchesScanned, from_branches: fromBranches },
-  benchmarks
+  benchmarks,
 };
 writeStable(OUT, obj, ['generated_sha', 'generated_date'], (o) => JSON.stringify(o) + '\n');
 console.log(

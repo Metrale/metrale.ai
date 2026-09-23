@@ -100,13 +100,7 @@
   }
 </script>
 
-<div
-  class="lm"
-  role="dialog"
-  aria-modal="true"
-  aria-label={`Launch settings for ${recipeId}`}
-  use:modal
->
+<div class="lm" role="dialog" aria-modal="true" aria-label={`Launch settings for ${recipeId}`} use:modal>
   <header class="lm-head">
     <div>
       <h3 class="lm-title mono">{recipeId}</h3>
@@ -125,8 +119,7 @@
         {agent.canLaunchReason || 'The agent on this machine reports it cannot run models.'}
       </p>
       <p class="lm-co-why">
-        It can still drive machines that do. Pair one from the control plane and
-        launch <code class="mono">{recipeId}</code> onto it from there.
+        It can still drive machines that do. Pair one from the control plane and launch <code class="mono">{recipeId}</code> onto it from there.
       </p>
     </div>
     <footer class="lm-foot">
@@ -134,81 +127,70 @@
       <a class="cmd-run lm-co-go" href={CONTROL}>Open the control plane</a>
     </footer>
   {:else}
-  <div class="lm-tabs" role="tablist">
-    {#each tabs as t (t.key)}
-      <button
-        type="button"
-        role="tab"
-        aria-selected={tab === t.key}
-        class="lm-tab"
-        class:lm-tab-on={tab === t.key}
-        onclick={() => (tab = t.key)}
-      >{t.label}</button>
-    {/each}
-  </div>
-
-  <div class="lm-body">
-    {#if tab === 'review'}
-      <p class="set-help">This is the command that will run. Nothing else is sent.</p>
-      {#if preview}
-        <pre class="lm-cmd mono">{preview}</pre>
-      {:else if failure}
-        <p class="set-error">{failure}</p>
-      {:else}
-        <p class="set-help">Rendering…</p>
-      {/if}
-
-      {#if changedCount > 0}
-        <h4 class="lm-h4">Changed from the recipe</h4>
-        <ul class="lm-diff mono">
-          {#each Object.entries(overrides) as [key, value] (key)}
-            <li>{key}: {String(defaults[key] ?? '—')} → {String(value)}</li>
-          {/each}
-        </ul>
-      {/if}
-
-      {#if unapplied.length > 0}
-        <p class="lm-warn">
-          Your agent does not understand {unapplied.length} setting(s) this recipe
-          carries, so they will <strong>not</strong> be applied:
-          <code class="mono">{unapplied.join(', ')}</code>.
-          Updating atlasctl may fix this.
-        </p>
-      {/if}
-    {:else}
-      {#each settingsIn(agent.schema, tab, showAdvanced) as spec (spec.key)}
-        <SettingField
-          {spec}
-          value={valueOf(spec)}
-          isDefault={!(spec.key in overrides)}
-          onchange={(v) => setValue(spec.key, v)}
-        />
+    <div class="lm-tabs" role="tablist">
+      {#each tabs as t (t.key)}
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === t.key}
+          class="lm-tab"
+          class:lm-tab-on={tab === t.key}
+          onclick={() => (tab = t.key)}>{t.label}</button
+        >
       {/each}
-      {#if fixedByRecipe.length > 0 && tab === 'server'}
-        <p class="lm-warn">
-          The recipe also sets <code class="mono">{fixedByRecipe.join(', ')}</code>.
-          {fixedByRecipe.length === 1 ? 'It is' : 'They are'} applied as written and cannot be changed from a
-          web page.
-        </p>
-      {/if}
-    {/if}
-  </div>
+    </div>
 
-  <footer class="lm-foot">
-    <label class="lm-adv">
-      <input type="checkbox" bind:checked={showAdvanced} /> Show advanced
-    </label>
-    <span class="lm-count">{changedCount} changed</span>
-    {#if invalid.length > 0}
-      <span class="set-error">{invalid.length} invalid</span>
-    {/if}
-    <button type="button" class="cmd-copy" onclick={onclose}>Cancel</button>
-    <button
-      type="button"
-      class="cmd-run"
-      onclick={start}
-      disabled={starting || invalid.length > 0}
-    >{starting ? 'Starting…' : 'Start'}</button>
-  </footer>
+    <div class="lm-body">
+      {#if tab === 'review'}
+        <p class="set-help">This is the command that will run. Nothing else is sent.</p>
+        {#if preview}
+          <pre class="lm-cmd mono">{preview}</pre>
+        {:else if failure}
+          <p class="set-error">{failure}</p>
+        {:else}
+          <p class="set-help">Rendering…</p>
+        {/if}
+
+        {#if changedCount > 0}
+          <h4 class="lm-h4">Changed from the recipe</h4>
+          <ul class="lm-diff mono">
+            {#each Object.entries(overrides) as [key, value] (key)}
+              <li>{key}: {String(defaults[key] ?? '—')} → {String(value)}</li>
+            {/each}
+          </ul>
+        {/if}
+
+        {#if unapplied.length > 0}
+          <p class="lm-warn">
+            Your agent does not understand {unapplied.length} setting(s) this recipe carries, so they will <strong>not</strong> be applied:
+            <code class="mono">{unapplied.join(', ')}</code>. Updating atlasctl may fix this.
+          </p>
+        {/if}
+      {:else}
+        {#each settingsIn(agent.schema, tab, showAdvanced) as spec (spec.key)}
+          <SettingField {spec} value={valueOf(spec)} isDefault={!(spec.key in overrides)} onchange={(v) => setValue(spec.key, v)} />
+        {/each}
+        {#if fixedByRecipe.length > 0 && tab === 'server'}
+          <p class="lm-warn">
+            The recipe also sets <code class="mono">{fixedByRecipe.join(', ')}</code>.
+            {fixedByRecipe.length === 1 ? 'It is' : 'They are'} applied as written and cannot be changed from a web page.
+          </p>
+        {/if}
+      {/if}
+    </div>
+
+    <footer class="lm-foot">
+      <label class="lm-adv">
+        <input type="checkbox" bind:checked={showAdvanced} /> Show advanced
+      </label>
+      <span class="lm-count">{changedCount} changed</span>
+      {#if invalid.length > 0}
+        <span class="set-error">{invalid.length} invalid</span>
+      {/if}
+      <button type="button" class="cmd-copy" onclick={onclose}>Cancel</button>
+      <button type="button" class="cmd-run" onclick={start} disabled={starting || invalid.length > 0}
+        >{starting ? 'Starting…' : 'Start'}</button
+      >
+    </footer>
   {/if}
 </div>

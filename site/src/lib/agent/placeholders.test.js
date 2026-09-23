@@ -52,7 +52,7 @@ describe('cap enforcement fails at the source of the creep', () => {
   test('registering one placeholder past a cap throws', () => {
     const bloated = [
       { id: 'a', region: 'dock', label: 'A', soon: 'Coming soon — x.' },
-      { id: 'b', region: 'dock', label: 'B', soon: 'Coming soon — y.' }
+      { id: 'b', region: 'dock', label: 'B', soon: 'Coming soon — y.' },
     ];
     expect(() => placeholdersFor('dock', FLEET, bloated)).toThrow(RangeError);
   });
@@ -67,9 +67,7 @@ describe('solo mode collapses the actions chips', () => {
     const chips = placeholdersFor('actions', SOLO);
     expect(chips.length).toBe(1);
     expect(chips[0].id).toBe('soon-menu');
-    expect(chips[0].collapsed.map((e) => e.id)).toEqual(
-      placeholdersFor('actions', FLEET).map((e) => e.id)
-    );
+    expect(chips[0].collapsed.map((e) => e.id)).toEqual(placeholdersFor('actions', FLEET).map((e) => e.id));
   });
 
   test('other regions do not collapse — two dashed tiles are not a roadmap', () => {

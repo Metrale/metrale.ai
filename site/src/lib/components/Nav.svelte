@@ -53,7 +53,14 @@
 </script>
 
 <!-- The loaded CodeChat handles Escape itself; this covers the drawer and the skeleton phase. -->
-<svelte:window onkeydown={(e) => { if (e.key === 'Escape') { open = false; if (chatOpen && !Chat) closeChat(); } }} />
+<svelte:window
+  onkeydown={(e) => {
+    if (e.key === 'Escape') {
+      open = false;
+      if (chatOpen && !Chat) closeChat();
+    }
+  }}
+/>
 
 <nav>
   <div class="nav-inner">
@@ -140,6 +147,10 @@
     <!-- Same .cc-backdrop/.cc classes as the real dialog: identical geometry,
          so the swap from skeleton to chat causes zero layout shift. -->
     <div class="cc-backdrop" onclick={closeChat} role="presentation">
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <!-- The click handler only stops a click inside the dialog reaching the
+           backdrop's close handler; it is not an interaction. Keyboard dismissal
+           is Escape, handled on the window. -->
       <div
         class="cc cc-skeleton"
         role="dialog"
@@ -147,6 +158,7 @@
         aria-label="{codeChat.navLabel}, loading"
         use:modal
         aria-busy="true"
+        tabindex="-1"
         onclick={(e) => e.stopPropagation()}
       >
         {#if chatError}

@@ -18,14 +18,19 @@ export function startSlowServer(body, { chunkSize = 512, delayMs = 60 } = {}) {
     res.writeHead(200, {
       'content-type': 'application/gzip',
       'content-length': String(body.byteLength),
-      'access-control-allow-origin': '*'
+      'access-control-allow-origin': '*',
     });
     let offset = 0;
     let closed = false;
-    res.on('close', () => { closed = true; });
+    res.on('close', () => {
+      closed = true;
+    });
     const tick = () => {
       if (closed) return;
-      if (offset >= body.byteLength) { res.end(); return; }
+      if (offset >= body.byteLength) {
+        res.end();
+        return;
+      }
       res.write(body.subarray(offset, offset + chunkSize));
       offset += chunkSize;
       setTimeout(tick, delayMs);
@@ -37,7 +42,11 @@ export function startSlowServer(body, { chunkSize = 512, delayMs = 60 } = {}) {
       const { port } = server.address();
       resolve({
         url: `http://127.0.0.1:${port}/corpus.jsonl.gz`,
-        close: () => new Promise((r) => { server.closeAllConnections?.(); server.close(() => r()); })
+        close: () =>
+          new Promise((r) => {
+            server.closeAllConnections?.();
+            server.close(() => r());
+          }),
       });
     });
   });

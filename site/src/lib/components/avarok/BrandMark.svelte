@@ -29,10 +29,29 @@
 </span>
 
 <style>
-  .av-mark { display: inline-flex; align-items: center; gap: 0.6rem; min-height: 34px; }
-  .av-mark img { height: var(--h); width: auto; max-width: 160px; }
-  .av-mark .av-logo-text { font-size: 0.72rem; white-space: normal; line-height: 1.2; }
-  .only-dark { display: none; }
-  :global(html:not([data-theme='light'])) .only-dark { display: block; }
-  :global(html:not([data-theme='light'])) .only-light { display: none; }
+  .av-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 34px;
+  }
+  .av-mark img {
+    height: var(--h);
+    width: auto;
+    max-width: 160px;
+  }
+  .av-mark .av-logo-text {
+    font-size: 0.72rem;
+    white-space: normal;
+    line-height: 1.2;
+  }
+  .only-dark {
+    display: none;
+  }
+  :global(html:not([data-theme='light'])) .only-dark {
+    display: block;
+  }
+  :global(html:not([data-theme='light'])) .only-light {
+    display: none;
+  }
 </style>

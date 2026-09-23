@@ -30,7 +30,7 @@ const MIME = {
   '.xml': 'application/xml',
   '.webmanifest': 'application/manifest+json',
   '.wasm': 'application/wasm',
-  '.gz': 'application/gzip'
+  '.gz': 'application/gzip',
 };
 
 async function isFile(p) {

@@ -8,14 +8,14 @@ import {
   chartGroupSize,
   liftEdges,
   medianMember,
-  nodeCountFor
+  nodeCountFor,
 } from './gate-aggregate.js';
 
 /** A point as GateChart builds them, with only the fields this module reads. */
 const pt = (t, v, verdict = 'PASS', sha = `sha${t}`) => ({
   t,
   v,
-  rec: { git_sha: sha, verdict, recorded_at: t }
+  rec: { git_sha: sha, verdict, recorded_at: t },
 });
 const run = (n, f = (i) => i) => Array.from({ length: n }, (_, i) => pt(i, f(i)));
 const sizes = (nodes) => nodes.map((n) => n.count);
@@ -118,9 +118,7 @@ describe('bucketing', () => {
   test('a group size of one leaves every point exactly where it was', () => {
     const pts = run(41, (i) => i * 7);
     const nodes = aggregateSeries(pts, 1);
-    expect(nodes.map((n) => [n.t, n.v, n.aggregated])).toEqual(
-      pts.map((p) => [p.t, p.v, false])
-    );
+    expect(nodes.map((n) => [n.t, n.v, n.aggregated])).toEqual(pts.map((p) => [p.t, p.v, false]));
   });
 });
 
@@ -164,8 +162,11 @@ describe('the plotted value', () => {
     // Five points at g=3 bucket as [1,3,1]: the endpoints stay solo and the
     // middle three form the group under test.
     const pts = [
-      pt(9, 1, 'PASS', 'zzz'), pt(10, 5, 'PASS', 'aaa'),
-      pt(11, 900, 'PASS', 'bbb'), pt(12, 7, 'PASS', 'ccc'), pt(13, 2, 'PASS', 'yyy')
+      pt(9, 1, 'PASS', 'zzz'),
+      pt(10, 5, 'PASS', 'aaa'),
+      pt(11, 900, 'PASS', 'bbb'),
+      pt(12, 7, 'PASS', 'ccc'),
+      pt(13, 2, 'PASS', 'yyy'),
     ];
     const nodes = aggregateSeries(pts, 3);
     expect(sizes(nodes)).toEqual([1, 3, 1]);
@@ -200,12 +201,17 @@ describe('lifting lineage onto nodes', () => {
     const nodes = aggregateSeries(pts, 2); // [1,2,2,1]
     expect(sizes(nodes)).toEqual([1, 2, 2, 1]);
     const chain = [
-      [pts[0], pts[1]], [pts[1], pts[2]], [pts[2], pts[3]],
-      [pts[3], pts[4]], [pts[4], pts[5]]
+      [pts[0], pts[1]],
+      [pts[1], pts[2]],
+      [pts[2], pts[3]],
+      [pts[3], pts[4]],
+      [pts[4], pts[5]],
     ];
     const lifted = liftEdges(nodes, chain);
     expect(lifted.map((e) => [nodes.indexOf(e.a), nodes.indexOf(e.b)])).toEqual([
-      [0, 1], [1, 2], [2, 3]
+      [0, 1],
+      [1, 2],
+      [2, 3],
     ]);
   });
 
@@ -221,7 +227,10 @@ describe('lifting lineage onto nodes', () => {
   test('two receipts crossing the same bucket boundary make one edge with support 2', () => {
     const pts = run(6);
     const nodes = aggregateSeries(pts, 2);
-    const lifted = liftEdges(nodes, [[pts[0], pts[1]], [pts[0], pts[2]]]);
+    const lifted = liftEdges(nodes, [
+      [pts[0], pts[1]],
+      [pts[0], pts[2]],
+    ]);
     expect(lifted).toHaveLength(1);
     expect(lifted[0].support).toBe(2);
   });

@@ -147,13 +147,6 @@
     <!-- The keyboard map's click-and-touch door: keys are a faster way in,
          never the only one. -->
     <ThemeToggle />
-    <button
-      type="button"
-      class="cmd-help mono"
-      aria-label="Keyboard shortcuts"
-      onclick={() => onhelp?.()}
-    >
-      ?
-    </button>
+    <button type="button" class="cmd-help mono" aria-label="Keyboard shortcuts" onclick={() => onhelp?.()}> ? </button>
   </div>
 </header>

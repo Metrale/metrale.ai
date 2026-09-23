@@ -33,13 +33,23 @@ const MAX_MESSAGES = 24;
 const MAX_MESSAGE_CHARS = 6000;
 const MAX_HISTORY_CHARS = 24000;
 
-const json = (status, body, headers = {}) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...headers } });
+const json = (status, body, headers = {}) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...headers },
+  });
 
 /** The CORS headers for this caller, or null when the caller is not one of ours. */
 export function corsFor(origin, env) {
   if (!origin) return null;
-  const exact = String(env.ALLOWED_ORIGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean);
-  const suffixes = String(env.ALLOWED_ORIGIN_SUFFIXES ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+  const exact = String(env.ALLOWED_ORIGINS ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const suffixes = String(env.ALLOWED_ORIGIN_SUFFIXES ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
   let host = '';
   try {
     const u = new URL(origin);
@@ -49,7 +59,13 @@ export function corsFor(origin, env) {
     return null;
   }
   if (!exact.includes(origin) && !suffixes.some((s) => host.endsWith(s))) return null;
-  return { 'access-control-allow-origin': origin, 'access-control-allow-methods': 'POST, GET, OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-max-age': '86400', vary: 'Origin' };
+  return {
+    'access-control-allow-origin': origin,
+    'access-control-allow-methods': 'POST, GET, OPTIONS',
+    'access-control-allow-headers': 'content-type',
+    'access-control-max-age': '86400',
+    vary: 'Origin',
+  };
 }
 
 /** The conversation as the model will see it, or an error. */
@@ -59,7 +75,8 @@ export function cleanConversation(input) {
   if (input.messages.length > MAX_MESSAGES) return { error: 'That conversation is too long. Start a new one.' };
   const messages = [];
   for (const m of input.messages) {
-    if (!m || (m.role !== 'user' && m.role !== 'assistant') || typeof m.content !== 'string') return { error: 'Each message needs a role of user or assistant and text content.' };
+    if (!m || (m.role !== 'user' && m.role !== 'assistant') || typeof m.content !== 'string')
+      return { error: 'Each message needs a role of user or assistant and text content.' };
     const content = m.content.trim();
     if (!content) continue;
     if (content.length > MAX_MESSAGE_CHARS) return { error: 'A message is too long.' };
@@ -105,8 +122,24 @@ function summarize(name, args, result) {
   }
 }
 
-const PHASES = { search_site: 'searching', get_benchmark: 'tool', estimate_economics: 'tool', list_pages: 'tool', next_steps: 'tool', repo_activity: 'tool', capture_lead: 'tool' };
-const TOOL_LABELS = { search_site: 'reading the site', get_benchmark: 'opening the ladder', estimate_economics: 'running the payback model', list_pages: 'reading the site map', next_steps: 'laying out next steps', repo_activity: 'reading the repository', capture_lead: 'sending your details' };
+const PHASES = {
+  search_site: 'searching',
+  get_benchmark: 'tool',
+  estimate_economics: 'tool',
+  list_pages: 'tool',
+  next_steps: 'tool',
+  repo_activity: 'tool',
+  capture_lead: 'tool',
+};
+const TOOL_LABELS = {
+  search_site: 'reading the site',
+  get_benchmark: 'opening the ladder',
+  estimate_economics: 'running the payback model',
+  list_pages: 'reading the site map',
+  next_steps: 'laying out next steps',
+  repo_activity: 'reading the repository',
+  capture_lead: 'sending your details',
+};
 
 export default {
   async fetch(request, env, ctx) {
@@ -116,7 +149,19 @@ export default {
 
     if (request.method === 'GET' && url.pathname === '/') {
       const { manifest } = await loadIndex(env);
-      return json(200, { ok: true, service: 'metrale-prime', model: env.PRIME_MODEL ?? 'grok-4.7', effort: env.PRIME_EFFORT ?? 'low', corpus: manifest, budget_usd: Number(env.PRIME_DAILY_BUDGET_USD ?? 0), spent_today_usd: Math.round((await spentToday(env)) * 10000) / 10000 }, cors);
+      return json(
+        200,
+        {
+          ok: true,
+          service: 'metrale-prime',
+          model: env.PRIME_MODEL ?? 'grok-4.7',
+          effort: env.PRIME_EFFORT ?? 'low',
+          corpus: manifest,
+          budget_usd: Number(env.PRIME_DAILY_BUDGET_USD ?? 0),
+          spent_today_usd: Math.round((await spentToday(env)) * 10000) / 10000,
+        },
+        cors
+      );
     }
     if (request.method === 'GET' && url.pathname === '/stats') {
       const code = url.searchParams.get('code') ?? '';
@@ -128,7 +173,8 @@ export default {
     if (!corsFor(origin, env)) return json(403, { ok: false, error: 'This origin may not call here.' });
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
     if (request.method !== 'POST') return json(405, { ok: false, error: 'POST only.' }, { ...cors, allow: 'POST, OPTIONS' });
-    if (!(request.headers.get('content-type') ?? '').toLowerCase().startsWith('application/json')) return json(415, { ok: false, error: 'Send JSON.' }, cors);
+    if (!(request.headers.get('content-type') ?? '').toLowerCase().startsWith('application/json'))
+      return json(415, { ok: false, error: 'Send JSON.' }, cors);
     if (!env.XAI_API_KEY) return json(503, { ok: false, error: 'The assistant is not configured.' }, cors);
 
     const raw = await request.text();
@@ -143,8 +189,18 @@ export default {
     if (error) return json(400, { ok: false, error }, cors);
 
     const ip = request.headers.get('cf-connecting-ip') ?? '';
-    if (await tooMany(env, ip, { perMinute: Number(env.PRIME_RATE_PER_MINUTE ?? 8), perDay: Number(env.PRIME_RATE_PER_DAY ?? 120) })) return json(429, { ok: false, error: 'Too many questions in a row. Give it a minute.' }, cors);
-    if (await overBudget(env)) return json(503, { ok: false, error: 'The assistant has reached its budget for today. The site still answers every question by page, and the contact page reaches a person.' }, cors);
+    if (await tooMany(env, ip, { perMinute: Number(env.PRIME_RATE_PER_MINUTE ?? 8), perDay: Number(env.PRIME_RATE_PER_DAY ?? 120) }))
+      return json(429, { ok: false, error: 'Too many questions in a row. Give it a minute.' }, cors);
+    if (await overBudget(env))
+      return json(
+        503,
+        {
+          ok: false,
+          error:
+            'The assistant has reached its budget for today. The site still answers every question by page, and the contact page reaches a person.',
+        },
+        cors
+      );
 
     const { index, manifest } = await loadIndex(env);
     const data = index.docs.length ? await env.PRIME.get('corpus:data', 'json').catch(() => null) : null;
@@ -162,15 +218,56 @@ export default {
     const system = systemPrompt({ site, audience, page: here, pages, partner, manifest, today: new Date().toISOString().slice(0, 10) });
     const convo = [{ role: 'system', content: system }, ...messages];
     const sources = [];
-    const toolCtx = { index, tiers, data: data ?? {}, env, site, sources, page, leadCaptured: false, fetchImpl: fetch, turns: messages.filter((m) => m.role === 'user').length, maxSearches: 4 };
-    const entry = { id, at: new Date(t0).toISOString(), model, effort, audience, page, partner, rounds: 0, tools: [], prompt_tokens: 0, cached_tokens: 0, completion_tokens: 0, reasoning_tokens: 0, cost_usd: 0, ttft_ms: null, first_answer_ms: null, total_ms: null, ok: false, error: '', country: request.cf?.country ?? '', question_chars: messages.at(-1).content.length, answer_chars: 0 };
+    const toolCtx = {
+      index,
+      tiers,
+      data: data ?? {},
+      env,
+      site,
+      sources,
+      page,
+      leadCaptured: false,
+      fetchImpl: fetch,
+      turns: messages.filter((m) => m.role === 'user').length,
+      maxSearches: 4,
+    };
+    const entry = {
+      id,
+      at: new Date(t0).toISOString(),
+      model,
+      effort,
+      audience,
+      page,
+      partner,
+      rounds: 0,
+      tools: [],
+      prompt_tokens: 0,
+      cached_tokens: 0,
+      completion_tokens: 0,
+      reasoning_tokens: 0,
+      cost_usd: 0,
+      ttft_ms: null,
+      first_answer_ms: null,
+      total_ms: null,
+      ok: false,
+      error: '',
+      country: request.cf?.country ?? '',
+      question_chars: messages.at(-1).content.length,
+      answer_chars: 0,
+    };
 
     const { response, send, close } = eventStream(cors);
     const run = async () => {
       let usage = { prompt_tokens: 0, cached_tokens: 0, completion_tokens: 0, reasoning_tokens: 0 };
       let answer = '';
       let phase = 'reading';
-      send('meta', { id, model, effort, partner, corpus: { built: manifest.built, commit: manifest.commit, public: manifest.public, partner: partner ? manifest.partner : 0 } });
+      send('meta', {
+        id,
+        model,
+        effort,
+        partner,
+        corpus: { built: manifest.built, commit: manifest.commit, public: manifest.public, partner: partner ? manifest.partner : 0 },
+      });
       send('phase', { phase });
       // Read first, then think. The visitor's message is searched before the
       // model is called, and what it finds goes into the prompt with its
@@ -182,7 +279,12 @@ export default {
         const read = await runTool('search_site', JSON.stringify({ query: question.slice(0, 300) }), toolCtx);
         if (read.results?.length) {
           entry.tools.push('read_site');
-          send('tool', { name: 'read_site', args: { query: question.slice(0, 120) }, summary: `${read.results.length} passages read before answering`, ms: Date.now() - started });
+          send('tool', {
+            name: 'read_site',
+            args: { query: question.slice(0, 120) },
+            summary: `${read.results.length} passages read before answering`,
+            ms: Date.now() - started,
+          });
           convo[0].content += `\n\nPassages already retrieved for the visitor's last message, numbered for citation. Use them and cite their numbers. Call search_site only for what they do not cover.\n\n${read.results.map((r) => `[${r.n}] ${r.title}${r.section ? ` · ${r.section}` : ''}${r.url ? ` (${r.url})` : ''}\n${r.text}`).join('\n\n')}`;
         }
       }
@@ -192,7 +294,15 @@ export default {
           const last = round === maxRounds;
           let finish = null;
           let roundContent = '';
-          for await (const ev of streamChat({ apiKey: env.XAI_API_KEY, model, effort, messages: convo, tools: last ? undefined : TOOLS, signal: request.signal, firstTokenTimeoutMs: Number(env.PRIME_FIRST_TOKEN_TIMEOUT_MS ?? 20000) })) {
+          for await (const ev of streamChat({
+            apiKey: env.XAI_API_KEY,
+            model,
+            effort,
+            messages: convo,
+            tools: last ? undefined : TOOLS,
+            signal: request.signal,
+            firstTokenTimeoutMs: Number(env.PRIME_FIRST_TOKEN_TIMEOUT_MS ?? 20000),
+          })) {
             if (ev.type === 'reasoning') {
               if (entry.ttft_ms === null) entry.ttft_ms = Date.now() - t0;
               if (phase !== 'reasoning') send('phase', { phase: (phase = 'reasoning') });
@@ -215,7 +325,11 @@ export default {
           if (!finish || finish.reason !== 'tool_calls' || finish.toolCalls.length === 0) break;
           // The model asked for tools. Run them, tell the page, and go round again.
           const calls = finish.toolCalls.filter((c) => c.name);
-          convo.push({ role: 'assistant', content: roundContent || null, tool_calls: calls.map((c) => ({ id: c.id, type: 'function', function: { name: c.name, arguments: c.arguments || '{}' } })) });
+          convo.push({
+            role: 'assistant',
+            content: roundContent || null,
+            tool_calls: calls.map((c) => ({ id: c.id, type: 'function', function: { name: c.name, arguments: c.arguments || '{}' } })),
+          });
           for (const c of calls) {
             let args = {};
             try {
@@ -224,11 +338,19 @@ export default {
               args = {};
             }
             const kind = PHASES[c.name] ?? 'tool';
-            send('phase', { phase: (phase = kind), detail: kind === 'searching' ? String(args.query ?? '').slice(0, 120) : (TOOL_LABELS[c.name] ?? c.name) });
+            send('phase', {
+              phase: (phase = kind),
+              detail: kind === 'searching' ? String(args.query ?? '').slice(0, 120) : (TOOL_LABELS[c.name] ?? c.name),
+            });
             const started = Date.now();
             const result = await runTool(c.name, c.arguments || '{}', toolCtx);
             entry.tools.push(c.name);
-            send('tool', { name: c.name, args: kind === 'searching' ? { query: args.query, kinds: args.kinds } : args, summary: summarize(c.name, args, result), ms: Date.now() - started });
+            send('tool', {
+              name: c.name,
+              args: kind === 'searching' ? { query: args.query, kinds: args.kinds } : args,
+              summary: summarize(c.name, args, result),
+              ms: Date.now() - started,
+            });
             convo.push({ role: 'tool', tool_call_id: c.id, content: JSON.stringify(result) });
           }
           if (answer && roundContent) {
@@ -238,7 +360,18 @@ export default {
           }
         }
         const cited = new Set([...answer.matchAll(/\[(\d{1,3})\]/g)].map((m) => Number(m[1])));
-        send('sources', sources.map((s) => ({ n: s.n, title: s.title, section: s.section, url: s.url, kind: s.kind, tier: s.tier, cited: cited.has(s.n) })));
+        send(
+          'sources',
+          sources.map((s) => ({
+            n: s.n,
+            title: s.title,
+            section: s.section,
+            url: s.url,
+            kind: s.kind,
+            tier: s.tier,
+            cited: cited.has(s.n),
+          }))
+        );
         entry.total_ms = Date.now() - t0;
         Object.assign(entry, usage);
         entry.answer_chars = answer.length;
@@ -247,13 +380,30 @@ export default {
           entry.error = 'empty';
           send('error', { kind: 'empty', message: 'The model produced no answer. Ask again, in other words.' });
         }
-        send('usage', { model, effort, rounds: entry.rounds, tools: entry.tools, ...usage, cost_usd: Math.round(entry.cost_usd * 1e6) / 1e6, ttft_ms: entry.ttft_ms, first_answer_ms: entry.first_answer_ms, total_ms: entry.total_ms });
+        send('usage', {
+          model,
+          effort,
+          rounds: entry.rounds,
+          tools: entry.tools,
+          ...usage,
+          cost_usd: Math.round(entry.cost_usd * 1e6) / 1e6,
+          ttft_ms: entry.ttft_ms,
+          first_answer_ms: entry.first_answer_ms,
+          total_ms: entry.total_ms,
+        });
         send('done', {});
       } catch (err) {
         entry.total_ms = Date.now() - t0;
         entry.error = err instanceof XaiError ? `upstream ${err.status || 'network'}` : String(err?.message ?? err).slice(0, 120);
         const kind = request.signal?.aborted ? 'aborted' : err instanceof XaiError ? (err.transient ? 'busy' : 'upstream') : 'internal';
-        if (kind !== 'aborted') send('error', { kind, message: kind === 'busy' ? 'The model is busy. Try again in a few seconds.' : 'Something went wrong on our side. Ask again, and if it repeats the contact page reaches a person.' });
+        if (kind !== 'aborted')
+          send('error', {
+            kind,
+            message:
+              kind === 'busy'
+                ? 'The model is busy. Try again in a few seconds.'
+                : 'Something went wrong on our side. Ask again, and if it repeats the contact page reaches a person.',
+          });
       } finally {
         close();
         ctx?.waitUntil?.(record(env, entry));
@@ -262,5 +412,5 @@ export default {
     ctx?.waitUntil?.(run());
     if (!ctx?.waitUntil) run();
     return response;
-  }
+  },
 };

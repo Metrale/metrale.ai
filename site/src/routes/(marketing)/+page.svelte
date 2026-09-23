@@ -30,7 +30,9 @@
     const destination = legacyEngineDestination(hash, search);
     if (destination) window.location.replace(destination);
   }
-  afterNavigate(({ to }) => { if (to) forward(to.url); });
+  afterNavigate(({ to }) => {
+    if (to) forward(to.url);
+  });
 </script>
 
 <svelte:window onhashchange={() => forward(window.location)} />

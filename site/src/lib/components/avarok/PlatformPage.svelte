@@ -56,7 +56,10 @@
         </div>
         <div class="av-grid av-grid-3 av-reveal">
           {#each block.items as b, i}
-            <div class="av-card av-card-accent av-sx-{['violet', 'cyan', 'green', 'gold'][i % 4]}"><h3>{b.title}</h3><p>{b.body}</p></div>
+            <div class="av-card av-card-accent av-sx-{['violet', 'cyan', 'green', 'gold'][i % 4]}">
+              <h3>{b.title}</h3>
+              <p>{b.body}</p>
+            </div>
           {/each}
         </div>
       </div>
@@ -71,7 +74,9 @@
         <div class="av-grid av-grid-4 av-reveal">
           {#each page.stats as s, i}
             <div class="av-tile av-sx-{['violet', 'cyan', 'green', 'gold'][i % 4]}">
-              <div class="av-num" style="font-size:2.2rem">{fill(s.value)}{#if s.unit}<span style="font-size:0.5em;font-weight:500"> {s.unit}</span>{/if}</div>
+              <div class="av-num" style="font-size:2.2rem">
+                {fill(s.value)}{#if s.unit}<span style="font-size:0.5em;font-weight:500"> {s.unit}</span>{/if}
+              </div>
               <p>{fill(s.label)}</p>
               {#if s.href}<a class="av-link" href={s.href}>Open it <span class="av-arrow">→</span></a>{/if}
             </div>
@@ -86,7 +91,10 @@
       <div class="av-container av-narrow">
         <figure class="av-quote av-reveal">
           <blockquote>“{page.quote.text}”</blockquote>
-          <cite>{page.quote.who}{#if page.quote.href} · <a href={page.quote.href} target="_blank" rel="noopener">source</a>{/if}</cite>
+          <cite
+            >{page.quote.who}{#if page.quote.href}
+              · <a href={page.quote.href} target="_blank" rel="noopener">source</a>{/if}</cite
+          >
         </figure>
       </div>
     </section>
@@ -102,5 +110,10 @@
 
   {#if page.faqTag}<FaqList items={faqFor(page.faqTag)} />{/if}
 
-  <CtaBand title={page.ctaTitle ?? 'See it against your own workload.'} body={page.ctaBody ?? 'A side by side ladder on your hardware in week one. Your models, your criteria, your receipt.'} primary={page.cta ?? { text: 'Book a demo', href: routes.demoForm }} secondary={page.cta2 ?? null} />
+  <CtaBand
+    title={page.ctaTitle ?? 'See it against your own workload.'}
+    body={page.ctaBody ?? 'A side by side ladder on your hardware in week one. Your models, your criteria, your receipt.'}
+    primary={page.cta ?? { text: 'Book a demo', href: routes.demoForm }}
+    secondary={page.cta2 ?? null}
+  />
 </PageShell>

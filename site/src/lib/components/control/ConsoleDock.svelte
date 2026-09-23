@@ -24,7 +24,7 @@
   const TABS = [
     { id: 'logs', label: 'Logs' },
     { id: 'launch', label: 'Launch' },
-    { id: 'status', label: 'Status' }
+    { id: 'status', label: 'Status' },
   ];
 </script>
 
@@ -58,7 +58,6 @@
 
   <!-- The one scroll region the stage's fixed rows leave. A scroll region
        must be keyboard-reachable or its overflow is mouse-only content. -->
-  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div class="dock-body" role="tabpanel" tabindex="0">
     {#if tab === 'logs'}
       <LogsTab {fleet} {node} {nodes} />
@@ -71,9 +70,8 @@
         <p class="dock-soon-head">Requests <span class="cs-chip">soon</span></p>
         <p class="dock-soon-text">{requests.soon}</p>
         <p class="dock-soon-text">
-          When the engine exports them, this tab becomes a per-request table
-          with KV-cache occupancy and queue depth — in this footprint, with
-          nothing else moving.
+          When the engine exports them, this tab becomes a per-request table with KV-cache occupancy and queue depth — in this footprint,
+          with nothing else moving.
         </p>
       </div>
     {/if}

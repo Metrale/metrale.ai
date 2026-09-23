@@ -12,14 +12,32 @@ import { contacts, formEndpoint } from './content/brand.js';
 
 const WORKER_DIR = join(import.meta.dir, '..', '..', 'deploy', 'cloudflare', 'forms-worker');
 const ORIGIN = 'https://atlascybernetics.ai';
-const baseEnv = () => ({ ALLOWED_ORIGINS: `${ORIGIN},http://localhost:5173`, ALLOWED_ORIGIN_SUFFIXES: '.atlas-site.pages.dev', TO_DEMO: 'sales@example.test', TO_WAITLIST: 'sales@example.test', TO_CAREERS: 'eng@example.test', MAIL_FROM: 'Forms <forms@example.test>' });
+const baseEnv = () => ({
+  ALLOWED_ORIGINS: `${ORIGIN},http://localhost:5173`,
+  ALLOWED_ORIGIN_SUFFIXES: '.atlas-site.pages.dev',
+  TO_DEMO: 'sales@example.test',
+  TO_WAITLIST: 'sales@example.test',
+  TO_CAREERS: 'eng@example.test',
+  MAIL_FROM: 'Forms <forms@example.test>',
+});
 const kv = () => {
   const store = new Map();
   return { store, get: async (k) => store.get(k) ?? null, put: async (k, v) => void store.set(k, v) };
 };
 const post = (body, { origin = ORIGIN, type = 'application/json', method = 'POST' } = {}) =>
-  new Request('https://forms.example.test/lead', { method, headers: { ...(origin ? { origin } : {}), 'content-type': type, 'cf-connecting-ip': '203.0.113.7' }, body: method === 'POST' ? (typeof body === 'string' ? body : JSON.stringify(body)) : undefined });
-const demo = { source: 'demo', name: 'Ada Buyer', email: 'ada@buyer.test', company: 'Buyer Corp', hardware: '64 H100', notes: 'Show us C=128.' };
+  new Request('https://forms.example.test/lead', {
+    method,
+    headers: { ...(origin ? { origin } : {}), 'content-type': type, 'cf-connecting-ip': '203.0.113.7' },
+    body: method === 'POST' ? (typeof body === 'string' ? body : JSON.stringify(body)) : undefined,
+  });
+const demo = {
+  source: 'demo',
+  name: 'Ada Buyer',
+  email: 'ada@buyer.test',
+  company: 'Buyer Corp',
+  hardware: '64 H100',
+  notes: 'Show us C=128.',
+};
 
 let outbound;
 const realFetch = globalThis.fetch;
@@ -35,7 +53,13 @@ afterEach(() => {
 });
 
 test('a request is kept first, then every configured channel is told', async () => {
-  const env = { ...baseEnv(), LEADS: kv(), DISCORD_WEBHOOK_URL: 'https://discord.test/hook', SLACK_WEBHOOK_URL: 'https://slack.test/hook', RESEND_API_KEY: 're_test' };
+  const env = {
+    ...baseEnv(),
+    LEADS: kv(),
+    DISCORD_WEBHOOK_URL: 'https://discord.test/hook',
+    SLACK_WEBHOOK_URL: 'https://slack.test/hook',
+    RESEND_API_KEY: 're_test',
+  };
   const res = await worker.fetch(post(demo), env);
   expect(res.status).toBe(200);
   const { ok, id } = await res.json();
@@ -109,7 +133,9 @@ test('what it refuses, and with which status', async () => {
   expect((await worker.fetch(post({ ...demo, notes: 'x'.repeat(17000) }), env)).status).toBe(413);
   expect((await worker.fetch(post({ ...demo, name: 'x'.repeat(300) }), env)).status).toBe(400);
   expect((await worker.fetch(new Request('https://forms.example.test/elsewhere', { method: 'POST' }), env)).status).toBe(404);
-  expect((await worker.fetch(new Request('https://forms.example.test/lead', { method: 'GET', headers: { origin: ORIGIN } }), env)).status).toBe(405);
+  expect(
+    (await worker.fetch(new Request('https://forms.example.test/lead', { method: 'GET', headers: { origin: ORIGIN } }), env)).status
+  ).toBe(405);
 });
 
 test('a field it does not know is dropped, not stored', () => {
@@ -141,6 +167,6 @@ test('the inboxes in wrangler.toml are the addresses the site publishes', () => 
 });
 
 // Empty means not switched on yet, and the forms draft an email instead.
-test('the site names no endpoint, or this Worker\'s /lead over https', () => {
+test("the site names no endpoint, or this Worker's /lead over https", () => {
   expect(formEndpoint).toMatch(/^(|https:\/\/[^/\s]+\/lead)$/);
 });

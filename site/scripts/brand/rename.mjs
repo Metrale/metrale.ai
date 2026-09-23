@@ -69,7 +69,20 @@ if (!FROM || !TO || !/^[A-Z][a-z]+$/.test(FROM) || !/^[A-Z][a-z]+$/.test(TO)) {
 
 // ---- what is what ----------------------------------------------------------------
 
-const SKIP_DIRS = new Set(['node_modules', 'build', '.svelte-kit', '.git', 'media', 'lattice', 'guide', 'playwright-report', 'test-results', '.wrangler', '.cache', 'corpus']);
+const SKIP_DIRS = new Set([
+  'node_modules',
+  'build',
+  '.svelte-kit',
+  '.git',
+  'media',
+  'lattice',
+  'guide',
+  'playwright-report',
+  'test-results',
+  '.wrangler',
+  '.cache',
+  'corpus',
+]);
 const GENERATED = /(\.generated\.json|SITE-GUIDE\.md|static\/llms\.txt|guide\/ledger\.json|guide\/site-guide\.json|sitemap\.xml)$/;
 
 /** Every file under `dir`, skipping what is never edited. */
@@ -104,7 +117,7 @@ const COPY = [
   /^site\/scripts\/media\/og\.mjs$/,
   /^web-shared\/components\/AtlasLockup\.svelte$/,
   /^blog\/src\/.+\.(svelte|js|html)$/,
-  /^site\/deploy\/cloudflare\/[\w-]+\/(wrangler\.toml|src\/.+\.js)$/
+  /^site\/deploy\/cloudflare\/[\w-]+\/(wrangler\.toml|src\/.+\.js)$/,
 ];
 const GATES = [
   /^site\/e2e\/.+\.(js|mjs)$/,
@@ -112,10 +125,20 @@ const GATES = [
   /^blog\/src\/.+\.test\.js$/,
   /^\.github\/workflows\/(site|lighthouse)\.yml$/,
   // The Lighthouse contracts list the gated pages by URL, the moved route among them.
-  /^(site|blog)\/lighthouse\/lighthouserc\.\w+$/
+  /^(site|blog)\/lighthouse\/lighthouserc\.\w+$/,
 ];
-const DOCS = [/^site\/[A-Z-]+\.md$/, /^assets\/brand\/[A-Z-]+\.md$/, /^site\/media-brief\/.+\.md$/, /^site\/static\/.+README\.md$/, /^site\/deploy\/.+README\.md$/];
-const ARTWORK = [/^assets\/brand\/.+\.(svg|png|json)$/, /^site\/static\/(favicon.*|icon-.*|apple-touch-icon\.png|og-image\.png|logo\.svg)$/, /^blog\/static\/(favicon.*|icon-.*|og.*\.png|logo.*)$/];
+const DOCS = [
+  /^site\/[A-Z-]+\.md$/,
+  /^assets\/brand\/[A-Z-]+\.md$/,
+  /^site\/media-brief\/.+\.md$/,
+  /^site\/static\/.+README\.md$/,
+  /^site\/deploy\/.+README\.md$/,
+];
+const ARTWORK = [
+  /^assets\/brand\/.+\.(svg|png|json)$/,
+  /^site\/static\/(favicon.*|icon-.*|apple-touch-icon\.png|og-image\.png|logo\.svg)$/,
+  /^blog\/static\/(favicon.*|icon-.*|og.*\.png|logo.*)$/,
+];
 const kindOf = (r) => {
   if (GENERATED.test(r)) return 'generated';
   if (ARTWORK.some((re) => re.test(r))) return 'artwork';
@@ -156,8 +179,21 @@ const HISTORY = /named Atlas|was Atlas|formerly|rebrand|until September 2026|the
 
 // ---- the pass --------------------------------------------------------------------
 
-const files = walk(REPO).filter((p) => /\.(js|mjs|svelte|html|json|toml|md|txt|yml|css|webmanifest)$/.test(p) || /(_redirects|_headers)$/.test(p));
-const report = { copy: [], gates: [], docs: [], internals: [], artwork: [], generated: [], history: [], lowercase: [], kept: [], other: [] };
+const files = walk(REPO).filter(
+  (p) => /\.(js|mjs|svelte|html|json|toml|md|txt|yml|css|webmanifest)$/.test(p) || /(_redirects|_headers)$/.test(p)
+);
+const report = {
+  copy: [],
+  gates: [],
+  docs: [],
+  internals: [],
+  artwork: [],
+  generated: [],
+  history: [],
+  lowercase: [],
+  kept: [],
+  other: [],
+};
 let changedFiles = 0;
 let changedWords = 0;
 
@@ -238,7 +274,10 @@ if (!current.includes(redirectLine)) {
   routeNotes.push(`add "${redirectLine}" to site/static/_redirects so the old address keeps working`);
   if (APPLY) {
     mkdirSync(dirname(redirects), { recursive: true });
-    writeFileSync(redirects, `${current.replace(/\s*$/, '')}\n# The page was /${ROUTE_FROM} before the rename.\n${redirectLine}\n`.replace(/^\n/, ''));
+    writeFileSync(
+      redirects,
+      `${current.replace(/\s*$/, '')}\n# The page was /${ROUTE_FROM} before the rename.\n${redirectLine}\n`.replace(/^\n/, '')
+    );
   }
 }
 

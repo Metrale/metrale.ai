@@ -97,14 +97,29 @@
     </div>
     <div class="av-tourstack av-reveal">
       {#each tour.tabs as t, i}
-        <div class="av-tabpanel" class:is-off={selected !== i} role="tabpanel" id={`tour-panel-${t.id}`} aria-labelledby={`tour-tab-${t.id}`} inert={selected !== i}>
+        <div
+          class="av-tabpanel"
+          class:is-off={selected !== i}
+          role="tabpanel"
+          id={`tour-panel-${t.id}`}
+          aria-labelledby={`tour-tab-${t.id}`}
+          inert={selected !== i}
+        >
           <div>
             <h3 class="av-h3">{t.title}</h3>
             <p class="av-lede" style="font-size:1rem">{t.body}</p>
             <a class="av-link" style="margin-top:1.25rem" href={tour.cta.href}>{tour.cta.text} <span class="av-arrow">→</span></a>
           </div>
           <div class="av-frame">
-            <div><VideoClip clip={media.tour[t.id]} active={selected === i} warm={warmed.includes(i)} hold={selected !== i && !primed} instant={i !== 0} /></div>
+            <div>
+              <VideoClip
+                clip={media.tour[t.id]}
+                active={selected === i}
+                warm={warmed.includes(i)}
+                hold={selected !== i && !primed}
+                instant={i !== 0}
+              />
+            </div>
           </div>
         </div>
       {/each}

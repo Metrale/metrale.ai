@@ -13,13 +13,7 @@
   import * as S from '$lib/agent/schema.js';
   import * as O from '$lib/agent/overrides.js';
 
-  let {
-    schema = [],
-    defaults = {},
-    overrides = $bindable({}),
-    onchange = () => {},
-    disabled = false,
-  } = $props();
+  let { schema = [], defaults = {}, overrides = $bindable({}), onchange = () => {}, disabled = false } = $props();
 
   let advanced = $state(false);
   let group = $state('server');
@@ -61,13 +55,9 @@
   <div class="se-bar">
     <div class="se-tabs" role="tablist" aria-label="Setting groups">
       {#each groups as g (g.key)}
-        <button
-          role="tab"
-          aria-selected={group === g.key}
-          class="se-tab"
-          class:se-tab-on={group === g.key}
-          onclick={() => (group = g.key)}
-        >{g.label}</button>
+        <button role="tab" aria-selected={group === g.key} class="se-tab" class:se-tab-on={group === g.key} onclick={() => (group = g.key)}
+          >{g.label}</button
+        >
       {/each}
     </div>
     <label class="se-adv">
@@ -140,8 +130,8 @@
 
   {#if fixed.length > 0}
     <p class="se-fixed" role="status">
-      The recipe also sets <code>{fixed.join(', ')}</code>. {fixed.length === 1 ? 'It is' : 'They are'} applied as
-      written and cannot be changed from a web page.
+      The recipe also sets <code>{fixed.join(', ')}</code>. {fixed.length === 1 ? 'It is' : 'They are'} applied as written and cannot be changed
+      from a web page.
     </p>
   {/if}
 </div>

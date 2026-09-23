@@ -33,7 +33,7 @@
     onlog,
     onpair,
     onunpair,
-    ondetails
+    ondetails,
   } = $props();
 
   const nodes = $derived(fleet.nodes);
@@ -61,16 +61,7 @@
     <IdentityHeader {node} {nodes} {onpair} {onunpair} {ondetails} />
     <VitalsGrid {node} paused={!vitalsOn} />
     <IoStrip {node} {entry} {paused} {nodes} />
-    <ActionsBar
-      bind:this={bar}
-      {fleet}
-      {node}
-      {nodes}
-      {solo}
-      {onverb}
-      {onlog}
-      onstats={() => poller?.pollNow(node.id)}
-    />
+    <ActionsBar bind:this={bar} {fleet} {node} {nodes} {solo} {onverb} {onlog} onstats={() => poller?.pollNow(node.id)} />
     <ConsoleDock {fleet} {node} {nodes} {tab} {ontab} {log} {onlog} />
   {:else}
     <p class="stage-none">No machine selected. Pick one from the roster.</p>

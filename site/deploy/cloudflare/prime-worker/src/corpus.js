@@ -43,9 +43,77 @@ const SYNONYMS = new Map([
   ['investors', 'investor'],
   ['prices', 'price'],
   ['pricing', 'price'],
-  ['costs', 'cost']
+  ['costs', 'cost'],
 ]);
-const STOP = new Set(['the', 'a', 'an', 'and', 'or', 'of', 'to', 'in', 'on', 'for', 'is', 'are', 'it', 'its', 'as', 'at', 'by', 'be', 'this', 'that', 'with', 'from', 'was', 'were', 'do', 'does', 'what', 'how', 'who', 'which', 'when', 'where', 'why', 'you', 'your', 'we', 'our', 'i', 'me', 'my', 'can', 'will', 'would', 'about', 'tell', 'us', 'they', 'them', 'their', 'have', 'has', 'not', 'if', 'than', 'then', 'so', 'into', 'any', 'all', 'more', 'most', 'some', 'there', 'here', 'also', 'much', 'many']);
+const STOP = new Set([
+  'the',
+  'a',
+  'an',
+  'and',
+  'or',
+  'of',
+  'to',
+  'in',
+  'on',
+  'for',
+  'is',
+  'are',
+  'it',
+  'its',
+  'as',
+  'at',
+  'by',
+  'be',
+  'this',
+  'that',
+  'with',
+  'from',
+  'was',
+  'were',
+  'do',
+  'does',
+  'what',
+  'how',
+  'who',
+  'which',
+  'when',
+  'where',
+  'why',
+  'you',
+  'your',
+  'we',
+  'our',
+  'i',
+  'me',
+  'my',
+  'can',
+  'will',
+  'would',
+  'about',
+  'tell',
+  'us',
+  'they',
+  'them',
+  'their',
+  'have',
+  'has',
+  'not',
+  'if',
+  'than',
+  'then',
+  'so',
+  'into',
+  'any',
+  'all',
+  'more',
+  'most',
+  'some',
+  'there',
+  'here',
+  'also',
+  'much',
+  'many',
+]);
 
 /** A light stemmer: plurals and the two common verb endings. Enough for search, wrong for grammar. */
 function stem(w) {
@@ -59,7 +127,9 @@ function stem(w) {
 /** Words of a text, lowercased, stemmed, synonyms folded, stop words dropped. */
 export function tokenize(text) {
   const out = [];
-  for (const raw of String(text ?? '').toLowerCase().split(/[^a-z0-9+.]+/)) {
+  for (const raw of String(text ?? '')
+    .toLowerCase()
+    .split(/[^a-z0-9+.]+/)) {
     const w = raw.replace(/^[.+]+|[.+]+$/g, '');
     if (w.length < 2 || STOP.has(w)) continue;
     if (BRAND.test(w)) {
@@ -88,7 +158,13 @@ export class Index {
       // the word. The heading is the author's own statement of what the passage
       // is about ("What the name means"), and a short question about a topic
       // usually shares its words with the heading, not with the body.
-      const tokens = [...tokenize(d.title), ...tokenize(d.section ?? ''), ...tokenize(d.title), ...tokenize(d.section ?? ''), ...tokenize(d.text)];
+      const tokens = [
+        ...tokenize(d.title),
+        ...tokenize(d.section ?? ''),
+        ...tokenize(d.title),
+        ...tokenize(d.section ?? ''),
+        ...tokenize(d.text),
+      ];
       const counts = new Map();
       for (const t of tokens) counts.set(t, (counts.get(t) ?? 0) + 1);
       for (const t of counts.keys()) this.df.set(t, (this.df.get(t) ?? 0) + 1);
@@ -145,7 +221,7 @@ export async function loadIndex(env, { force = false } = {}) {
   let manifest = { built: null, site: null, commit: null, public: 0, partner: 0 };
   if (env.PRIME) {
     for (const tier of ['public', 'partner']) {
-      let raw = null;
+      let raw;
       try {
         raw = await env.PRIME.get(`corpus:${tier}`, 'json');
       } catch {

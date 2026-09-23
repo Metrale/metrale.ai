@@ -13,16 +13,9 @@ import {
   rerankHandler,
   dailyQuota429Handler,
   freeQuotaPaidOkHandler,
-  QUOTA_RESET_AT
+  QUOTA_RESET_AT,
 } from './fixtures/openrouter.js';
-import {
-  META,
-  routeCorpus,
-  openChat,
-  waitReady,
-  withKey,
-  askQuestion
-} from './fixtures/chat-helpers.js';
+import { META, routeCorpus, openChat, waitReady, withKey, askQuestion } from './fixtures/chat-helpers.js';
 
 const FREE_MODEL = 'nvidia/nemotron-3-ultra-550b-a55b:free';
 const PAID_MODEL = 'nvidia/nemotron-3-ultra-550b-a55b';
@@ -33,10 +26,7 @@ async function routeRetrieval(context) {
 }
 
 test.describe('@quota daily allowance', () => {
-  test('a spent daily allowance shows the quota card with its reset, and never retries', async ({
-    page,
-    context
-  }) => {
+  test('a spent daily allowance shows the quota card with its reset, and never retries', async ({ page, context }) => {
     await routeCorpus(context);
     await routeRetrieval(context);
     const attempts = [];
@@ -60,24 +50,18 @@ test.describe('@quota daily allowance', () => {
 
     const expected = new Date(QUOTA_RESET_AT).toLocaleTimeString([], {
       hour: 'numeric',
-      minute: '2-digit'
+      minute: '2-digit',
     });
     await expect(card.locator('.cc-error-reset')).toContainText(expected);
 
     expect(attempts.length).toBe(1); // no backoff loop on a per-day cap
   });
 
-  test('the paid-model button re-asks on the paid twin and persists the choice', async ({
-    page,
-    context
-  }) => {
+  test('the paid-model button re-asks on the paid twin and persists the choice', async ({ page, context }) => {
     await routeCorpus(context);
     await routeRetrieval(context);
     const calls = [];
-    await context.route(
-      OR_CHAT,
-      freeQuotaPaidOkHandler('The scheduler batches decode in `batch.rs` [1].', { log: calls })
-    );
+    await context.route(OR_CHAT, freeQuotaPaidOkHandler('The scheduler batches decode in `batch.rs` [1].', { log: calls }));
 
     await withKey(page);
     await page.goto('/engine');
@@ -94,7 +78,7 @@ test.describe('@quota daily allowance', () => {
 
     // The answer now arrives, and it came from the paid twin.
     await expect(page.locator('.cm-card .cm-body').last()).toContainText('batch.rs', {
-      timeout: 20_000
+      timeout: 20_000,
     });
     expect(calls[calls.length - 1].model).toBe(PAID_MODEL);
     await expect(page.locator('.cc-model-id')).toHaveText(PAID_MODEL);

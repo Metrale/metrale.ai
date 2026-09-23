@@ -52,9 +52,7 @@
   // until now, so a platform we ship binaries for could not join a fleet.
   const commandPs = $derived(join ? joinCommandPowerShell(join, grantControl) : '');
   const kind = $derived(JW.offerKind(join));
-  const left = $derived(
-    join ? JW.remaining(JW.deadlineMs(join.mintedAtMs, join.expiresInS), nowMs()) : null
-  );
+  const left = $derived(join ? JW.remaining(JW.deadlineMs(join.mintedAtMs, join.expiresInS), nowMs()) : null);
   const stalled = $derived(shownAt > 0 && JW.stalled(shownAt, nowMs()));
 
   // Hold the shared clock only while the card is open, so a closed guide costs
@@ -116,15 +114,9 @@
 </script>
 
 <p class="fl-co-next">
-  <strong>Next:</strong> add the machine with the GPU. One command, run on that machine,
-  installs the agent, starts it, and pairs it back to here.
-  <button
-    type="button"
-    class="btn jg-toggle"
-    aria-expanded={open}
-    aria-controls="join-guide"
-    onclick={toggle}
-  >
+  <strong>Next:</strong> add the machine with the GPU. One command, run on that machine, installs the agent, starts it, and pairs it back to
+  here.
+  <button type="button" class="btn jg-toggle" aria-expanded={open} aria-controls="join-guide" onclick={toggle}>
     {open ? 'Hide the guide' : 'Show me how'}
   </button>
 </p>
@@ -138,10 +130,7 @@
         {arrived.name || 'The machine'} joined your fleet. It is in the panel above.
       </p>
     {:else}
-      <p class="jg-lead">
-        The next step happens on that machine, not this one. Everything you need to
-        carry over is on this card.
-      </p>
+      <p class="jg-lead">The next step happens on that machine, not this one. Everything you need to carry over is on this card.</p>
 
       {#if kind === 'command' && left && !left.expired}
         <ol class="ld-steps">
@@ -150,8 +139,7 @@
             <div>
               <p class="ld-step-t">Open a terminal on the GPU machine</p>
               <p class="jg-body">
-                SSH to it from here if you can: you'll see what the installer says
-                without walking back. Walking over works too.
+                SSH to it from here if you can: you'll see what the installer says without walking back. Walking over works too.
               </p>
             </div>
           </li>
@@ -169,49 +157,40 @@
                 <span>
                   Let this fleet run models on that machine.
                   <span class="jg-grant-why">
-                    Adds <code class="mono">--grant-control</code> to the line above. The
-                    permission is granted on that machine, by whoever runs the command
-                    there — untick it and you can still see the machine, but not launch
-                    on it from here.
+                    Adds <code class="mono">--grant-control</code> to the line above. The permission is granted on that machine, by whoever runs
+                    the command there — untick it and you can still see the machine, but not launch on it from here.
                   </span>
                 </span>
               </label>
               <label class="jg-grant">
-                <input
-                  type="checkbox"
-                  checked={allowControl}
-                  onchange={(e) => setAllowControl(e.currentTarget.checked)}
-                />
+                <input type="checkbox" checked={allowControl} onchange={(e) => setAllowControl(e.currentTarget.checked)} />
                 <span>
                   Let that machine control this one.
                   <span class="jg-grant-why">
-                    Ticking it means whoever drives the new machine can launch and stop
-                    models here. The permission is baked into the code, so changing this
-                    mints a fresh one — carry the new line, not the old.
+                    Ticking it means whoever drives the new machine can launch and stop models here. The permission is baked into the code,
+                    so changing this mints a fresh one — carry the new line, not the old.
                   </span>
                 </span>
               </label>
               <p class="jg-body">
-                It installs the agent, starts it in the background, and pairs the
-                machine back to this fleet — all three. Watch that terminal until it
-                finishes: if the join fails, the error prints there, not here.
+                It installs the agent, starts it in the background, and pairs the machine back to this fleet — all three. Watch that
+                terminal until it finishes: if the join fails, the error prints there, not here.
               </p>
               <p class="jg-facts">
-                Code <span class="mono">{JW.groupedCode(join.code)}</span> · good for one
-                machine, once · expires in <span class="mono">{left.label}</span>
+                Code <span class="mono">{JW.groupedCode(join.code)}</span> · good for one machine, once · expires in
+                <span class="mono">{left.label}</span>
                 <button type="button" class="jg-link" onclick={cancel}>Cancel this code</button>
               </p>
               {#if left.warning}
                 <p class="jg-warn">
-                  This code expires in {left.label}. Not at the machine yet? Mint a fresh
-                  one from this page when you're ready — minting again costs nothing.
+                  This code expires in {left.label}. Not at the machine yet? Mint a fresh one from this page when you're ready — minting
+                  again costs nothing.
                 </p>
               {/if}
               <p class="jg-body">
                 Can't paste on that machine? Only the tail of the line is yours:
-                <span class="mono">{JW.shortForm(join)}</span> — eight digits and this
-                machine's address. Short enough to photograph, read aloud, or retype;
-                the rest is the standard installer from this site.
+                <span class="mono">{JW.shortForm(join)}</span> — eight digits and this machine's address. Short enough to photograph, read aloud,
+                or retype; the rest is the standard installer from this site.
               </p>
             </div>
           </li>
@@ -220,9 +199,8 @@
             <div>
               <p class="ld-step-t">Come back to this page</p>
               <p class="jg-body">
-                Nothing to click. The machine appears in the panel above on its own. You
-                can close this tab while you go; the invitation lives in the agent on
-                this machine, not in the browser.
+                Nothing to click. The machine appears in the panel above on its own. You can close this tab while you go; the invitation
+                lives in the agent on this machine, not in the browser.
               </p>
             </div>
           </li>
@@ -231,38 +209,35 @@
         <p class="ld-watching" aria-live="polite">
           <span class="ld-pulse" aria-hidden="true"></span>
           {#if stalled}
-            Still watching. If you already ran the command, one of the causes below is
-            usually why — the far machine's terminal has the exact error.
+            Still watching. If you already ran the command, one of the causes below is usually why — the far machine's terminal has the
+            exact error.
           {:else}
-            Watching for the new machine — this page updates on its own. While the
-            install runs, the progress is in that machine's terminal, not here.
+            Watching for the new machine — this page updates on its own. While the install runs, the progress is in that machine's terminal,
+            not here.
           {/if}
         </p>
       {:else if kind === 'command' && left?.expired}
         <p class="jg-expired" role="status">
-          This code expired — nothing ran, and there is nothing to undo on that machine.
-          Codes go stale quickly on purpose, so one pasted in the wrong place dies fast.
+          This code expired — nothing ran, and there is nothing to undo on that machine. Codes go stale quickly on purpose, so one pasted in
+          the wrong place dies fast.
         </p>
         <button type="button" class="btn btn-primary" onclick={remint}>Mint a new code</button>
       {:else if kind === 'no_address'}
         <p class="jg-body">
-          This machine has no network address another machine could dial — only loopback
-          or virtual interfaces are up. Connect it to the network you want the fleet on,
-          then reopen this guide. Failing that, install the agent by hand:
+          This machine has no network address another machine could dial — only loopback or virtual interfaces are up. Connect it to the
+          network you want the fleet on, then reopen this guide. Failing that, install the agent by hand:
         </p>
         <InstallSteps />
       {:else}
         <p class="jg-body">
-          This agent cannot hand out an invitation. Install the agent on the other
-          machine and pair it from the form below.
+          This agent cannot hand out an invitation. Install the agent on the other machine and pair it from the form below.
         </p>
         <InstallSteps />
       {/if}
 
       <p class="ld-caution">
-        Anyone who runs that line joins your fleet and can use its hardware. Send it to a
-        machine you own, not a chat. It is fine in that machine's shell history
-        afterwards — the code works once, then it is dead.
+        Anyone who runs that line joins your fleet and can use its hardware. Send it to a machine you own, not a chat. It is fine in that
+        machine's shell history afterwards — the code works once, then it is dead.
       </p>
       <p class="ctl-safety">
         Any web page can show you an install command. Check the address bar says
@@ -276,15 +251,13 @@
           <li>
             The GPU machine has to be able to reach this one
             {#if JW.dialHost(join)}
-              at <span class="mono">{JW.dialHost(join)}:{JW.JOIN_PORT}</span>{/if}. A
-            different network, a VPN, or a firewall on that port blocks the join — the
-            install still succeeds and only the pairing step fails, with the error in that
-            machine's terminal. If the two machines can't see each other, add it by
-            address instead, using the form below this card.
+              at <span class="mono">{JW.dialHost(join)}:{JW.JOIN_PORT}</span>{/if}. A different network, a VPN, or a firewall on that port
+            blocks the join — the install still succeeds and only the pairing step fails, with the error in that machine's terminal. If the
+            two machines can't see each other, add it by address instead, using the form below this card.
           </li>
           <li>
-            If the code expired before you ran the line, mint a fresh one here and run the
-            new command there. The old line is dead; nothing to clean up.
+            If the code expired before you ran the line, mint a fresh one here and run the new command there. The old line is dead; nothing
+            to clean up.
           </li>
         </ul>
       </details>

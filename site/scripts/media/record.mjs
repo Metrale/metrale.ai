@@ -103,7 +103,7 @@ try {
       deviceScaleFactor: 1,
       colorScheme: 'dark',
       reducedMotion: 'no-preference',
-      recordVideo: { dir: RAW, size: { width: clip.width, height: clip.height } }
+      recordVideo: { dir: RAW, size: { width: clip.width, height: clip.height } },
     });
     const pageT0 = Date.now();
     const page = await context.newPage();
@@ -127,7 +127,7 @@ try {
       height: clip.height,
       trim: Math.round(trim * 1000) / 1000,
       seconds: Math.round(seconds * 1000) / 1000,
-      recordedAt: new Date().toISOString()
+      recordedAt: new Date().toISOString(),
     };
     writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + '\n');
     recorded++;

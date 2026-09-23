@@ -1,0 +1,38 @@
+# External links change without a commit here, so they are checked on a schedule
+# rather than on each pull request, where they would make the result depend on
+# other people's servers. A failure opens nothing and blocks nothing; it shows up
+# red in the Actions tab.
+
+name: links-external
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  external:
+    name: External links resolve
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/build-site
+        with:
+          commit: ${{ github.sha }}
+          github-token: ${{ github.token }}
+      - name: Install lychee
+        run: |
+          v=0.24.2
+          curl -fsSLo lychee.tgz "https://github.com/lycheeverse/lychee/releases/download/lychee-v$v/lychee-x86_64-unknown-linux-gnu.tar.gz"
+          echo "1f4e0ef7f6554a6ed33dd7ac144fb2e1bbed98598e7af973042fc5cd43951c9a  lychee.tgz" | sha256sum -c -
+          tar -xzf lychee.tgz && rm lychee.tgz
+          sudo mv "$(find . -maxdepth 2 -type f -name lychee | head -1)" /usr/local/bin/lychee
+      - name: Every link resolves
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: lychee --config lychee.toml 'site/build/**/*.html'

@@ -32,14 +32,12 @@ export const VARIANT_GROUPS = [
     primary: 'concurrency-sweep',
     members: [
       { bench: 'concurrency-sweep', label: 'no drafter', dash: null },
-      { bench: 'concurrency-sweep-dflash2', label: 'DFlash2', dash: '5 4' }
-    ]
-  }
+      { bench: 'concurrency-sweep-dflash2', label: 'DFlash2', dash: '5 4' },
+    ],
+  },
 ];
 
-const MEMBER = new Map(
-  VARIANT_GROUPS.flatMap((g) => g.members.map((m) => [m.bench, { ...m, group: g }]))
-);
+const MEMBER = new Map(VARIANT_GROUPS.flatMap((g) => g.members.map((m) => [m.bench, { ...m, group: g }])));
 
 /// The group a benchmark id belongs to, or `null` for the ordinary one-id-one-
 /// chart case.
@@ -63,9 +61,7 @@ export const variantLabel = (benchId) => MEMBER.get(benchId)?.label ?? null;
 /// a line joining two variants' points — that is prevented at the series
 /// level by `splitByVariant`, not here.
 export function groupRecords(group, recordsFor) {
-  return group.members
-    .flatMap((m) => recordsFor(m.bench))
-    .sort((a, b) => a.recorded_at - b.recorded_at);
+  return group.members.flatMap((m) => recordsFor(m.bench)).sort((a, b) => a.recorded_at - b.recorded_at);
 }
 
 /// Split records into one bucket per variant, in the group's draw order,

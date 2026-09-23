@@ -78,7 +78,7 @@ artwork, the palette or the type without breaking a gate.
 
 ## Layout
 
-```
+```text
 src/lib/content/             copy, routes, nav, prices, page registry
 src/lib/components/avarok/   marketing components
 src/lib/components/          developer page components

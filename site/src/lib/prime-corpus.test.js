@@ -4,20 +4,31 @@
 // (scripts/prime/chunk.mjs). The builder itself reads the build, so it is not
 // run here; the cutting is what can go quietly wrong.
 import { expect, test } from 'bun:test';
-import { htmlToText, sectionsFromHtml, mergeSmallSiblings, chunkText, slug, markdownSections, frontMatter } from '../../scripts/prime/chunk.mjs';
+import {
+  htmlToText,
+  sectionsFromHtml,
+  mergeSmallSiblings,
+  chunkText,
+  slug,
+  markdownSections,
+  frontMatter,
+} from '../../scripts/prime/chunk.mjs';
 
 test('html becomes the words a visitor reads, with entities decoded once', () => {
-  expect(htmlToText('<p>Faster &amp; <b>stronger</b>.</p><script>x()</script><svg><path d="M0"/></svg><p>Next&nbsp;line &amp;quot;</p>')).toBe('Faster & stronger.\nNext line &quot;');
+  expect(
+    htmlToText('<p>Faster &amp; <b>stronger</b>.</p><script>x()</script><svg><path d="M0"/></svg><p>Next&nbsp;line &amp;quot;</p>')
+  ).toBe('Faster & stronger.\nNext line &quot;');
 });
 
 test('a page is cut at its headings, each with the nearest anchor', () => {
-  const html = '<p>Opening words that come first.</p><section id="proof"><h2>Proof</h2><p>The ladder.</p></section><section class="x"><h2 id="tour">The console</h2><p>Five tabs.</p><h3>Ask</h3><p>Pick a model.</p></section>';
+  const html =
+    '<p>Opening words that come first.</p><section id="proof"><h2>Proof</h2><p>The ladder.</p></section><section class="x"><h2 id="tour">The console</h2><p>Five tabs.</p><h3>Ask</h3><p>Pick a model.</p></section>';
   const s = sectionsFromHtml(html);
   expect(s.map((x) => [x.heading, x.id, x.level, x.trail])).toEqual([
     ['', '', 0, []],
     ['Proof', 'proof', 2, ['Proof']],
     ['The console', 'tour', 2, ['The console']],
-    ['Ask', 'tour', 3, ['The console', 'Ask']]
+    ['Ask', 'tour', 3, ['The console', 'Ask']],
   ]);
   expect(htmlToText(s[1].html)).toBe('The ladder.');
 });
@@ -37,12 +48,28 @@ test('long text is cut at sentence ends under the limit, and crumbs are folded i
 });
 
 test('markdown is cut at its headings, links keep their address, fences are trimmed', () => {
-  const md = ['# Title', 'Intro with a [link](https://a.test/x) and ![an image](i.png).', '', '## Build', '', '```sh', ...Array.from({ length: 20 }, (_, i) => `line ${i}`), '```', '', 'After.', '', '### Deep', '| a | b |', '|---|---|', '| 1 | 2 |'].join('\n');
+  const md = [
+    '# Title',
+    'Intro with a [link](https://a.test/x) and ![an image](i.png).',
+    '',
+    '## Build',
+    '',
+    '```sh',
+    ...Array.from({ length: 20 }, (_, i) => `line ${i}`),
+    '```',
+    '',
+    'After.',
+    '',
+    '### Deep',
+    '| a | b |',
+    '|---|---|',
+    '| 1 | 2 |',
+  ].join('\n');
   const s = markdownSections(md, { fenceLines: 3 });
   expect(s.map((x) => [x.heading, x.level])).toEqual([
     ['Title', 1],
     ['Build', 2],
-    ['Deep', 3]
+    ['Deep', 3],
   ]);
   expect(s[0].text).toBe('Intro with a link (https://a.test/x) and .');
   expect(s[1].text).toContain('line 2');
@@ -60,7 +87,8 @@ test('front matter is read and the body kept', () => {
 });
 
 test('small sub sections under one parent become one passage, each led by its heading', () => {
-  const html = '<section id="team"><h2>Team: Deep roots</h2><p>Five people.</p><h3>Kyle Croll</h3><p>CEO. Navy veteran.</p><h3>Thomas Braun</h3><p>CTO. Started the engine.</p></section><section id="deck"><h2>The deck</h2><p>On request.</p></section>';
+  const html =
+    '<section id="team"><h2>Team: Deep roots</h2><p>Five people.</p><h3>Kyle Croll</h3><p>CEO. Navy veteran.</p><h3>Thomas Braun</h3><p>CTO. Started the engine.</p></section><section id="deck"><h2>The deck</h2><p>On request.</p></section>';
   const merged = mergeSmallSiblings(sectionsFromHtml(html));
   expect(merged.map((s) => s.heading)).toEqual(['Team: Deep roots', 'The deck']);
   expect(htmlToText(merged[0].html)).toBe('Five people.\nKyle Croll. CEO. Navy veteran.\nThomas Braun. CTO. Started the engine.');

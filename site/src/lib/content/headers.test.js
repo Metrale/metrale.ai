@@ -43,11 +43,15 @@ const walk = (dir) =>
   });
 
 // Both spellings: Pages serves pricing.html at /pricing, and a link can ask for either.
-const documents = [...pages.map((p) => p.path), '/engine', '/control', '/diligence'].flatMap((p) => (p === '/' ? ['/', '/index.html'] : [p, `${p}.html`]));
+const documents = [...pages.map((p) => p.path), '/engine', '/control', '/diligence'].flatMap((p) =>
+  p === '/' ? ['/', '/index.html'] : [p, `${p}.html`]
+);
 
 test('every page has exactly one cache rule, in both spellings', () => {
   // The 404 document is served for paths that match nothing, so it is never requested by its own name.
-  const problems = documents.filter((d) => !d.startsWith('/404') && matching(d).length !== 1).map((d) => `${d}: ${matching(d).length} rules`);
+  const problems = documents
+    .filter((d) => !d.startsWith('/404') && matching(d).length !== 1)
+    .map((d) => `${d}: ${matching(d).length} rules`);
   expect(problems).toEqual([]);
 });
 
@@ -55,12 +59,26 @@ test('no shipped file is matched by two Cache-Control rules, which Pages would c
   const files = walk(STATIC_DIR)
     .map((f) => '/' + relative(STATIC_DIR, f).split(/[\\/]/).join('/'))
     .filter((f) => !f.startsWith('/lattice/') || f.endsWith('.wasm'));
-  const doubled = files.filter((f) => matching(f).length > 1).map((f) => `${f}: ${matching(f).map((r) => r.path).join(' and ')}`);
+  const doubled = files
+    .filter((f) => matching(f).length > 1)
+    .map(
+      (f) =>
+        `${f}: ${matching(f)
+          .map((r) => r.path)
+          .join(' and ')}`
+    );
   expect(doubled).toEqual([]);
 });
 
 test('the media and the fonts are cached', () => {
-  for (const f of ['/media/console-ask.mp4', '/media/console-ask.webm', '/media/console-ask.webp', '/media/art/art-finance.webp', '/fonts/ibm-plex-sans-latin-400-normal.woff2', '/fonts/type.css']) {
+  for (const f of [
+    '/media/console-ask.mp4',
+    '/media/console-ask.webm',
+    '/media/console-ask.webp',
+    '/media/art/art-finance.webp',
+    '/fonts/ibm-plex-sans-latin-400-normal.woff2',
+    '/fonts/type.css',
+  ]) {
     expect(matching(f).length, f).toBe(1);
   }
 });

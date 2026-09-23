@@ -29,15 +29,21 @@
       <h2 class="av-sr">What the session covers</h2>
       <div class="av-split av-split-wide" style="align-items:start">
         <div class="av-stack av-reveal" style="gap:1.5rem">
-          <ul class="av-list-check av-sx-green">{#each d.bullets as b}<li>{b}</li>{/each}</ul>
+          <ul class="av-list-check av-sx-green">
+            {#each d.bullets as b}<li>{b}</li>{/each}
+          </ul>
           <!-- The film, once, with controls. It fetches nothing until it is in view. -->
           <div id="film" class="av-frame" style="scroll-margin-top:96px"><div><VideoClip clip={media.reel} controls /></div></div>
-          <p class="av-video-caption" style="margin-top:-0.6rem">One minute. Product footage is recorded from the product mockup on demo data.</p>
+          <p class="av-video-caption" style="margin-top:-0.6rem">
+            One minute. Product footage is recorded from the product mockup on demo data.
+          </p>
           <div class="av-card">
             <h3>{d.aside.title}</h3>
             <p>{d.aside.body}</p>
             <p style="margin-top:0.6rem"><a class="av-link" href={`mailto:${contacts.sales}`}>{contacts.sales}</a></p>
-            <p style="margin-top:0.6rem">{d.aside.discord} <a class="av-link" href={links.discord} target="_blank" rel="noopener">Join ↗</a></p>
+            <p style="margin-top:0.6rem">
+              {d.aside.discord} <a class="av-link" href={links.discord} target="_blank" rel="noopener">Join ↗</a>
+            </p>
           </div>
         </div>
         <div class="av-reveal" id="book" style="scroll-margin-top:96px"><DemoForm /></div>

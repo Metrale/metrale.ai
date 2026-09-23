@@ -26,7 +26,10 @@
   const many = $derived(records.length > 1);
 
   function onkeydown(e) {
-    if (e.key === 'Escape') { e.stopPropagation(); onclose(); }
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      onclose();
+    }
   }
   function ontabkey(e) {
     const to = moveTab(e.key, active, records.length);
@@ -40,10 +43,15 @@
 <svelte:window {onkeydown} />
 
 <div class="gpc-backdrop" onclick={onclose} role="presentation">
-  <article
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- The click handler only stops a click inside the dialog reaching the
+       backdrop's close handler; it is not an interaction. Keyboard dismissal
+       is Escape, handled on the window. -->
+  <div
     class="gpc receipt"
     role="dialog"
     aria-modal="true"
+    tabindex="-1"
     aria-label={many
       ? `Gate records, ${records.length} runs from ${fmtDate(records[0].recorded_at)} to ${fmtDate(records[records.length - 1].recorded_at)}`
       : `Gate record ${r.git_sha}`}
@@ -81,9 +89,12 @@
       </div>
 
       <div class="receipt-foot">
-        <span>{shortModel(r.target_model)}{#if many} · run {active + 1} of {records.length}{/if}</span>
+        <span
+          >{shortModel(r.target_model)}{#if many}
+            · run {active + 1} of {records.length}{/if}</span
+        >
         <button type="button" class="gpc-close" onclick={onclose}>close</button>
       </div>
     </div>
-  </article>
+  </div>
 </div>

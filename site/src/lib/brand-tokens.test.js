@@ -58,7 +58,7 @@ test('the three hues in the CSS are the ones in brand.json, both ends of each gr
   expect(token(':root', 'accent-fill')).toBe(hex(brand.color.violet[1]));
 });
 
-test('the text ramp on dark is the kit\'s inks and gray, and the type is the kit\'s family', () => {
+test("the text ramp on dark is the kit's inks and gray, and the type is the kit's family", () => {
   expect(token(':root', 't1')).toBe(hex(brand.color.ink.onDark[0]));
   expect(token(':root', 't2')).toBe(hex(brand.color.ink.onDark[1]));
   expect(token(':root', 't3')).toBe(hex(brand.color.product.onDark));
@@ -67,7 +67,21 @@ test('the text ramp on dark is the kit\'s inks and gray, and the type is the kit
 });
 
 test('brand.json carries every colour the CSS needs, so a new kit can be dropped in whole', () => {
-  for (const path of ['color.ground.dark', 'color.ground.light', 'color.ink.onDark.0', 'color.ink.onDark.1', 'color.ink.onLight', 'color.violet.0', 'color.violet.1', 'color.cyan.0', 'color.cyan.1', 'color.gold.0', 'color.gold.1', 'color.product.onDark', 'color.product.onLight']) {
+  for (const path of [
+    'color.ground.dark',
+    'color.ground.light',
+    'color.ink.onDark.0',
+    'color.ink.onDark.1',
+    'color.ink.onLight',
+    'color.violet.0',
+    'color.violet.1',
+    'color.cyan.0',
+    'color.cyan.1',
+    'color.gold.0',
+    'color.gold.1',
+    'color.product.onDark',
+    'color.product.onLight',
+  ]) {
     const v = path.split('.').reduce((o, k) => o?.[k], brand);
     expect(v, path).toMatch(/^#[0-9A-Fa-f]{6}$/);
   }

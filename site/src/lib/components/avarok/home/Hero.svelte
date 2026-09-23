@@ -22,13 +22,17 @@
           <a class="av-btn av-btn-primary av-btn-lg" href={hero.primary.href}>{hero.primary.text} <span class="av-arrow">→</span></a>
           <a class="av-btn av-btn-ghost av-btn-lg" href={hero.secondary.href}>{hero.secondary.text}</a>
         </div>
-        <p class="av-hero-claim"><strong>{hero.claim}</strong> <a class="av-link" href={hero.claimHref}>{hero.claimCta} <span class="av-arrow">→</span></a></p>
+        <p class="av-hero-claim">
+          <strong>{hero.claim}</strong> <a class="av-link" href={hero.claimHref}>{hero.claimCta} <span class="av-arrow">→</span></a>
+        </p>
       </div>
       <div class="av-hero-art">
         <div class="av-frame">
           <div><VideoClip clip={media.hero} eager /></div>
         </div>
-        <p class="av-video-caption">{hero.videoCaption} <a class="av-link" href={hero.film.href}>{hero.film.text} <span class="av-arrow">→</span></a></p>
+        <p class="av-video-caption">
+          {hero.videoCaption} <a class="av-link" href={hero.film.href}>{hero.film.text} <span class="av-arrow">→</span></a>
+        </p>
       </div>
     </div>
   </div>

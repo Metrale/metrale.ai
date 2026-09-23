@@ -7,13 +7,7 @@
 // happened. Both were reachable from a malformed frame.
 
 import { expect, test } from 'bun:test';
-import {
-  describeError,
-  looksLikeToken,
-  normaliseToken,
-  versionAdvice,
-  PROTOCOL_VERSION,
-} from './protocol.js';
+import { describeError, looksLikeToken, normaliseToken, versionAdvice, PROTOCOL_VERSION } from './protocol.js';
 
 // The remedy is now the CALLER's to supply, because only the caller knows
 // which machine the visitor is on. These tests pass the unix line except
@@ -64,13 +58,12 @@ test('a malformed bad_settings frame explains itself instead of throwing', () =>
 });
 
 test('bad_settings names the keys it was given, and says so when it has none', () => {
-  expect(describeError({ code: 'bad_settings', errors: [{ key: 'gpu_util' }, { key: 'ctx' }] }))
-    .toBe('The agent rejected these settings: gpu_util, ctx');
+  expect(describeError({ code: 'bad_settings', errors: [{ key: 'gpu_util' }, { key: 'ctx' }] })).toBe(
+    'The agent rejected these settings: gpu_util, ctx'
+  );
   // A member with no usable key still counts as a rejected setting.
-  expect(describeError({ code: 'bad_settings', errors: [{}, { key: 7 }] }))
-    .toBe('The agent rejected these settings: setting, setting');
-  expect(describeError({ code: 'bad_settings', errors: [] }))
-    .toBe('The agent rejected the settings but did not say which.');
+  expect(describeError({ code: 'bad_settings', errors: [{}, { key: 7 }] })).toBe('The agent rejected these settings: setting, setting');
+  expect(describeError({ code: 'bad_settings', errors: [] })).toBe('The agent rejected the settings but did not say which.');
 });
 
 test('an unnameable code never reaches the UI as an object', () => {
@@ -128,7 +121,7 @@ test('a message never shows the word undefined for a field the agent omitted', (
     { code: 'docker_unavailable' },
     { code: 'launch_failed' },
     { code: 'unknown_recipe', recipe: '' },
-    { code: 'launch_failed', detail: '   ' }
+    { code: 'launch_failed', detail: '   ' },
   ]) {
     const msg = describeError(error);
     expect(typeof msg).toBe('string');

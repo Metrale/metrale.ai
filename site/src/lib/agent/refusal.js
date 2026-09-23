@@ -83,7 +83,7 @@ export function refusal(outcome, ctx) {
     case 'control_refused':
       return {
         text: `${nameOf(error.node, nodes)} refused: ${verbatim(error.reason)}`,
-        blame: 'target'
+        blame: 'target',
       };
 
     // The relay declined or failed to carry it. `error.node` is the TARGET,
@@ -103,7 +103,7 @@ export function refusal(outcome, ctx) {
       const relay = who ? nameOf(who, nodes) : 'the relay';
       return {
         text: `${relay} could not reach ${nameOf(error.node, nodes)}: ${verbatim(error.detail)}`,
-        blame: 'relay'
+        blame: 'relay',
       };
     }
 
@@ -112,7 +112,7 @@ export function refusal(outcome, ctx) {
     case 'not_routable':
       return {
         text: `No route to ${nameOf(error.node, nodes)}: ${verbatim(error.reason)}`,
-        blame: 'local'
+        blame: 'local',
       };
 
     default: {

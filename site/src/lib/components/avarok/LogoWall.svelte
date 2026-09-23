@@ -28,7 +28,9 @@
         {#if it.emblem && logoWall.emblems}
           <li class="av-logo has-emblem" title={it.name}>
             <img src={`/logos/${it.emblem}.webp`} alt="" height="44" width="44" loading="lazy" />
-            <span class="av-logo-text av-logo-lines">{#each it.lines ?? [it.name] as line}<span>{line}</span>{/each}</span>
+            <span class="av-logo-text av-logo-lines"
+              >{#each it.lines ?? [it.name] as line}<span>{line}</span>{/each}</span
+            >
           </li>
         {:else if it.file}
           <li class="av-logo" title={it.name}>
@@ -45,7 +47,13 @@
       <ul class="av-programs av-reveal">
         {#each logoWall.programs as p}
           <li>
-            <svelte:element this={p.href ? 'a' : 'div'} href={p.href} target={p.href ? '_blank' : undefined} rel={p.href ? 'noopener' : undefined} class="av-program">
+            <svelte:element
+              this={p.href ? 'a' : 'div'}
+              href={p.href}
+              target={p.href ? '_blank' : undefined}
+              rel={p.href ? 'noopener' : undefined}
+              class="av-program"
+            >
               <BrandMark mark={p} />
               <span class="av-program-b">{p.blurb}</span>
             </svelte:element>
@@ -57,20 +65,88 @@
 </section>
 
 <style>
-  .av-wall { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .av-wall {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
   /* With the emblems the row is too wide for one line. Narrowing it makes the
      wrap fall four and three, which reads as meant, not as one mark left over. */
-  .av-logo-wall.has-emblems { max-width: 900px; margin-inline: auto; row-gap: 1.7rem; }
-  .av-wall :global(.av-wall-note) { margin-top: 1.9rem; max-width: 86ch; margin-inline: auto; }
+  .av-logo-wall.has-emblems {
+    max-width: 900px;
+    margin-inline: auto;
+    row-gap: 1.7rem;
+  }
+  .av-wall :global(.av-wall-note) {
+    margin-top: 1.9rem;
+    max-width: 86ch;
+    margin-inline: auto;
+  }
   /* An emblem keeps its colours: a greyed seal is a smudge. It is a little taller
      than a wordmark because its detail needs the pixels. */
-  .av-logo.has-emblem { height: 44px; gap: 0.7rem; filter: none; opacity: 0.92; }
-  .av-logo.has-emblem img { height: 44px; width: 44px; max-width: none; }
-  .av-logo-lines { display: grid; gap: 0.15rem; font-size: 0.7rem; line-height: 1.15; letter-spacing: 0.1em; }
-  .av-programs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; }
-  .av-program { display: grid; gap: 0.6rem; align-content: start; height: 100%; padding: 1.05rem 1.15rem; border: 1px solid var(--border); border-radius: var(--av-radius-sm); background: var(--card); text-decoration: none; color: inherit; transition: border-color 0.15s, transform 0.18s var(--av-ease), box-shadow 0.18s; }
-  a.av-program:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--av-shadow); }
-  .av-program-b { font-size: 0.8rem; color: var(--t3); line-height: 1.45; }
-  @media (max-width: 900px) { .av-programs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 560px) { .av-programs { grid-template-columns: minmax(0, 1fr); } .av-logo.has-emblem { height: 40px; } .av-logo.has-emblem img { height: 40px; width: 40px; } }
+  .av-logo.has-emblem {
+    height: 44px;
+    gap: 0.7rem;
+    filter: none;
+    opacity: 0.92;
+  }
+  .av-logo.has-emblem img {
+    height: 44px;
+    width: 44px;
+    max-width: none;
+  }
+  .av-logo-lines {
+    display: grid;
+    gap: 0.15rem;
+    font-size: 0.7rem;
+    line-height: 1.15;
+    letter-spacing: 0.1em;
+  }
+  .av-programs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+  .av-program {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    height: 100%;
+    padding: 1.05rem 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: var(--av-radius-sm);
+    background: var(--card);
+    text-decoration: none;
+    color: inherit;
+    transition:
+      border-color 0.15s,
+      transform 0.18s var(--av-ease),
+      box-shadow 0.18s;
+  }
+  a.av-program:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--av-shadow);
+  }
+  .av-program-b {
+    font-size: 0.8rem;
+    color: var(--t3);
+    line-height: 1.45;
+  }
+  @media (max-width: 900px) {
+    .av-programs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 560px) {
+    .av-programs {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .av-logo.has-emblem {
+      height: 40px;
+    }
+    .av-logo.has-emblem img {
+      height: 40px;
+      width: 40px;
+    }
+  }
 </style>

@@ -19,8 +19,20 @@ import { test, expect } from 'bun:test';
 import { nav, hero } from './data.js';
 
 const NON_DESCRIPTIVE = new Set([
-  'click here', 'click this', 'go', 'here', 'information', 'learn more', 'more',
-  'more info', 'more information', 'right here', 'read more', 'see more', 'start', 'this'
+  'click here',
+  'click this',
+  'go',
+  'here',
+  'information',
+  'learn more',
+  'more',
+  'more info',
+  'more information',
+  'right here',
+  'read more',
+  'see more',
+  'start',
+  'this',
 ]);
 
 test('no nav link label is non-descriptive link text', () => {

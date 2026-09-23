@@ -13,23 +13,23 @@ export const AUDIENCES = {
   infra: {
     label: 'I run GPUs at scale',
     brief:
-      'The visitor owns or operates GPU infrastructure: a neocloud, an enterprise datacenter, a hyperscaler platform team, a bank, a hospital, a police department or a city hall with a rack. They care about throughput on hardware they already have, utilization, governance and policy, deployment models (hosted, their cloud, on premises, air gapped), what a pilot looks like, and payback the CFO can read. Be concrete about numbers and their evidence class. Offer the working session and the four week proof of value when it fits.'
+      'The visitor owns or operates GPU infrastructure: a neocloud, an enterprise datacenter, a hyperscaler platform team, a bank, a hospital, a police department or a city hall with a rack. They care about throughput on hardware they already have, utilization, governance and policy, deployment models (hosted, their cloud, on premises, air gapped), what a pilot looks like, and payback the CFO can read. Be concrete about numbers and their evidence class. Offer the working session and the four week proof of value when it fits.',
   },
   investor: {
     label: 'I am evaluating an investment',
     brief:
-      'The visitor is doing diligence: an investor, an analyst, a strategic partner. They want the team and its history, the traction that is public (the repository, releases, the MLCommons contribution, the Hugging Face merge, AMD and NVIDIA Inception), how the product is positioned and priced, what is measured against what is claimed, and the open source strategy. Be exact about what is measured, modeled or proposed. The deck and the verification walkthrough are available from the CEO on request; offer that path.'
+      'The visitor is doing diligence: an investor, an analyst, a strategic partner. They want the team and its history, the traction that is public (the repository, releases, the MLCommons contribution, the Hugging Face merge, AMD and NVIDIA Inception), how the product is positioned and priced, what is measured against what is claimed, and the open source strategy. Be exact about what is measured, modeled or proposed. The deck and the verification walkthrough are available from the CEO on request; offer that path.',
   },
   contributor: {
     label: 'I want to contribute',
     brief:
-      'The visitor is an engineer: they want the architecture, the kernels, the recipes, the gates and certification, how to build and run the engine, where to start, the license and the CLA. Prefer technical precision and links to the repository documents. Point at the engine page, the contributing guide, the issues and the Discord.'
+      'The visitor is an engineer: they want the architecture, the kernels, the recipes, the gates and certification, how to build and run the engine, where to start, the license and the CLA. Prefer technical precision and links to the repository documents. Point at the engine page, the contributing guide, the issues and the Discord.',
   },
   curious: {
     label: 'Just looking',
     brief:
-      'The visitor is finding out what this is. Explain plainly, define terms the first time, keep it short, and point at one page to read next.'
-  }
+      'The visitor is finding out what this is. Explain plainly, define terms the first time, keep it short, and point at one page to read next.',
+  },
 };
 
 /** The rules, once. */
@@ -88,13 +88,17 @@ export function systemPrompt({ site, audience, page, pages, partner, manifest, t
     '',
     `Today is ${today}. The knowledge base was built ${manifest?.built ?? 'recently'}${manifest?.commit ? ` from commit ${manifest.commit}` : ''}. It holds this website, the repository's documentation, the blog and the repository's history${partner ? ', and the partner tier: the deck and the plan, which this visitor may read' : ''}.`,
     '',
-    a ? `Who is asking: ${a.label}. ${a.brief}` : 'Who is asking is not stated. Read it from the question, and if it matters, ask in one short sentence.',
-    page ? `The visitor is on ${page.path} (${page.title}${page.description ? `: ${page.description}` : ''}). Prefer what that page covers when the question is ambiguous.` : '',
+    a
+      ? `Who is asking: ${a.label}. ${a.brief}`
+      : 'Who is asking is not stated. Read it from the question, and if it matters, ask in one short sentence.',
+    page
+      ? `The visitor is on ${page.path} (${page.title}${page.description ? `: ${page.description}` : ''}). Prefer what that page covers when the question is ambiguous.`
+      : '',
     '',
     RULES.replace('${site}', site),
     '',
     'The pages of the site, path then title:',
-    map
+    map,
   ]
     .filter((l) => l !== null && l !== undefined)
     .join('\n');

@@ -1,20 +1,12 @@
 import { describe, expect, it } from 'bun:test';
-import {
-  dashFor,
-  groupFor,
-  groupRecords,
-  groupedBenches,
-  isLatestOfVariant,
-  splitByVariant,
-  variantLabel
-} from './gate-variants.js';
+import { dashFor, groupFor, groupRecords, groupedBenches, isLatestOfVariant, splitByVariant, variantLabel } from './gate-variants.js';
 
 const rec = (benchmark_id, recorded_at, extra = {}) => ({
   benchmark_id,
   recorded_at,
   target_model: 'unsloth/Qwen3.8-27B-NVFP4',
   metrics: {},
-  ...extra
+  ...extra,
 });
 
 describe('the concurrency group', () => {
@@ -47,7 +39,7 @@ describe('splitByVariant', () => {
       rec('concurrency-sweep', 10),
       rec('concurrency-sweep-dflash2', 20),
       rec('concurrency-sweep', 30),
-      rec('concurrency-sweep-dflash2', 40)
+      rec('concurrency-sweep-dflash2', 40),
     ];
     const buckets = splitByVariant(records);
     expect(buckets).toHaveLength(2);
@@ -76,11 +68,7 @@ describe('isLatestOfVariant', () => {
   // The bug a global "last element" would cause: the newest DFlash2 run is
   // usually not the newest run overall, so one whole variant would render
   // permanently faded and read as stale.
-  const records = [
-    rec('concurrency-sweep', 10),
-    rec('concurrency-sweep-dflash2', 20),
-    rec('concurrency-sweep', 30)
-  ];
+  const records = [rec('concurrency-sweep', 10), rec('concurrency-sweep-dflash2', 20), rec('concurrency-sweep', 30)];
 
   it('marks the newest of each variant, not the newest overall', () => {
     expect(isLatestOfVariant(records[2], records)).toBe(true);
@@ -93,16 +81,14 @@ describe('groupRecords', () => {
   it('merges the members chronologically', () => {
     const byBench = {
       'concurrency-sweep': [rec('concurrency-sweep', 30), rec('concurrency-sweep', 10)],
-      'concurrency-sweep-dflash2': [rec('concurrency-sweep-dflash2', 20)]
+      'concurrency-sweep-dflash2': [rec('concurrency-sweep-dflash2', 20)],
     };
     const merged = groupRecords(groupFor('concurrency-sweep'), (b) => byBench[b] ?? []);
     expect(merged.map((r) => r.recorded_at)).toEqual([10, 20, 30]);
   });
 
   it('survives a member with no records at all', () => {
-    const merged = groupRecords(groupFor('concurrency-sweep'), (b) =>
-      b === 'concurrency-sweep' ? [rec('concurrency-sweep', 1)] : []
-    );
+    const merged = groupRecords(groupFor('concurrency-sweep'), (b) => (b === 'concurrency-sweep' ? [rec('concurrency-sweep', 1)] : []));
     expect(merged).toHaveLength(1);
   });
 });

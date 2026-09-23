@@ -7,12 +7,7 @@
 
 <section id="news" class="sx-gold">
   <div class="container">
-    <SectionHead
-      label={news.label}
-      title={news.title}
-      sub={news.sub}
-      prov="every card links its primary source"
-    />
+    <SectionHead label={news.label} title={news.title} sub={news.sub} prov="every card links its primary source" />
 
     <div class="news-grid">
       {#each news.items as item}

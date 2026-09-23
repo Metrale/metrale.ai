@@ -10,7 +10,10 @@
     </div>
     <div class="av-chain av-reveal">
       {#each chain.steps as s}
-        <div class="av-chain-step"><h3>{s.title}</h3><p>{s.body}</p></div>
+        <div class="av-chain-step">
+          <h3>{s.title}</h3>
+          <p>{s.body}</p>
+        </div>
       {/each}
     </div>
     <p class="av-lede av-center av-reveal" style="margin: 2rem auto 0; max-width: 60ch">{chain.foot}</p>

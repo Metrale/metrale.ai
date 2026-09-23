@@ -106,9 +106,7 @@ test('empty and non-string input render nothing rather than throwing', () => {
 // see it: the injected attribute is not an `on*` handler and the href still
 // begins `https:`.
 function anchorAttrs(html) {
-  return [...html.matchAll(/<a\b([^>]*)>/g)].map((m) =>
-    [...m[1].matchAll(/([a-zA-Z-]+)\s*=/g)].map((a) => a[1]).sort()
-  );
+  return [...html.matchAll(/<a\b([^>]*)>/g)].map((m) => [...m[1].matchAll(/([a-zA-Z-]+)\s*=/g)].map((a) => a[1]).sort());
 }
 
 test('every emitted anchor carries exactly href, rel and target', () => {
@@ -119,7 +117,7 @@ test('every emitted anchor carries exactly href, rel and target', () => {
     '[a](https://a.com) and [b](https://b.com)',
     '[x](https://e.com/[1]z)',
     '[x](https://e.com/**a) more **b',
-    '[x](https://e.com/a[0]b*c)'
+    '[x](https://e.com/a[0]b*c)',
   ]) {
     for (const attrs of anchorAttrs(renderMarkdown(src))) {
       expect(attrs).toEqual(['href', 'rel', 'target']);

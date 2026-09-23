@@ -73,7 +73,7 @@ const TWINS = [
   ['ch-violet-text', 'ch-violet'],
   ['ch-cyan-text', 'ch-cyan'],
   ['ch-green-text', 'ch-green'],
-  ['ch-gold-text', 'ch-gold']
+  ['ch-gold-text', 'ch-gold'],
 ];
 
 test('the grounds and the text tokens are all present (so the loops below are not vacuous)', () => {
@@ -102,7 +102,16 @@ for (const [groundName, ground] of GROUNDS) {
 const CHIP_TINT = 0.12;
 const tint = (hueHex, groundHex, t) => {
   const c = (hex, i) => parseInt(hex.slice(i, i + 2), 16);
-  return '#' + [1, 3, 5].map((i) => Math.round(c(hueHex, i) * t + c(groundHex, i) * (1 - t)).toString(16).padStart(2, '0')).join('');
+  return (
+    '#' +
+    [1, 3, 5]
+      .map((i) =>
+        Math.round(c(hueHex, i) * t + c(groundHex, i) * (1 - t))
+          .toString(16)
+          .padStart(2, '0')
+      )
+      .join('')
+  );
 };
 for (const [textName, fillName] of TWINS) {
   const fill = declaration(DARK, 'dark', fillName);

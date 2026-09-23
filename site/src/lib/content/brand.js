@@ -32,7 +32,7 @@ export const company = {
   // Only what is sourced. The engine started in January 2026. Where the company
   // is based and how it works are the company's to state, not the site's to guess.
   founded: 'Started in 2026.',
-  x: '@AtlasInferenceX'
+  x: '@AtlasInferenceX',
 };
 
 // For a local demo of both apps. The live blog deploys from main, so until this
@@ -63,7 +63,7 @@ export const links = {
   contributing: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/CONTRIBUTING.md',
   changelog: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/CHANGELOG.md',
   issues: 'https://github.com/Avarok-Cybersecurity/atlas/issues',
-  sequoiaPatel: 'https://sequoiacap.com/podcast/dylan-patel-of-semianalysis-why-hardware-software-co-design-is-ais-real-100x'
+  sequoiaPatel: 'https://sequoiacap.com/podcast/dylan-patel-of-semianalysis-why-hardware-software-co-design-is-ais-real-100x',
 };
 
 // Where the forms post. Empty means each form drafts an email in the visitor's own
@@ -102,7 +102,7 @@ export const contacts = {
   community: 'community@metrale.com',
   press: 'press@metrale.com',
   careers: 'careers@metrale.com',
-  security: 'security@atlas.net'
+  security: 'security@atlas.net',
 };
 
 // The founders' own doors, as the site published them until 2026-09-21. Kept,
@@ -113,7 +113,7 @@ export const contactsDirect = {
   business: 'kyle@atlascybernetics.ai',
   technical: 'thomas@atlascybernetics.ai',
   operations: 'peter@atlascybernetics.ai',
-  collaboration: 'tom@atlascybernetics.ai'
+  collaboration: 'tom@atlascybernetics.ai',
 };
 
 // Routes. Every internal href on the site comes from here so a rename is one
@@ -148,7 +148,7 @@ export const routes = {
   trust: '/trust',
   openSource: '/engine',
   controlPlane: '/control',
-  diligence: '/diligence'
+  diligence: '/diligence',
 };
 
 export const industries = [
@@ -162,7 +162,7 @@ export const industries = [
   { slug: 'legal', name: 'Legal and professional services', short: 'Law firms' },
   { slug: 'hyperscalers', name: 'Hyperscalers and cloud platforms', short: 'Hyperscale' },
   { slug: 'research', name: 'Research labs and AI safety', short: 'Research' },
-  { slug: 'smb-edge', name: 'SMB and edge', short: 'SMB and edge' }
+  { slug: 'smb-edge', name: 'SMB and edge', short: 'SMB and edge' },
 ];
 
 export const solutionHref = (slug) => `${routes.solutions}/${slug}`;
@@ -173,10 +173,30 @@ export const industryBySlug = (slug) => industries.find((i) => i.slug === slug);
 // 2026-09-21 at the founders' request: the people who own the GPUs first, then
 // the regulated buyers, then the public sector, then research and the edge.
 export const sectors = [
-  { id: 'infrastructure', label: 'Own the GPUs', blurb: 'Fleets that sell or run capacity, and the datacenters that hold it.', industries: ['neoclouds', 'enterprise-datacenter', 'hyperscalers'] },
-  { id: 'regulated', label: 'Regulated industries', blurb: 'Where the prompt cannot leave the building and the auditor reads the log.', industries: ['financial-services', 'healthcare', 'legal'] },
-  { id: 'public-sector', label: 'Public sector', blurb: 'Government, defense, police and city halls, on networks of their own.', industries: ['government-defense', 'public-safety', 'local-government'] },
-  { id: 'research-edge', label: 'Research and edge', blurb: 'Labs that need every token they can get from a box, and small teams with a box or two.', industries: ['research', 'smb-edge'] }
+  {
+    id: 'infrastructure',
+    label: 'Own the GPUs',
+    blurb: 'Fleets that sell or run capacity, and the datacenters that hold it.',
+    industries: ['neoclouds', 'enterprise-datacenter', 'hyperscalers'],
+  },
+  {
+    id: 'regulated',
+    label: 'Regulated industries',
+    blurb: 'Where the prompt cannot leave the building and the auditor reads the log.',
+    industries: ['financial-services', 'healthcare', 'legal'],
+  },
+  {
+    id: 'public-sector',
+    label: 'Public sector',
+    blurb: 'Government, defense, police and city halls, on networks of their own.',
+    industries: ['government-defense', 'public-safety', 'local-government'],
+  },
+  {
+    id: 'research-edge',
+    label: 'Research and edge',
+    blurb: 'Labs that need every token they can get from a box, and small teams with a box or two.',
+    industries: ['research', 'smb-edge'],
+  },
 ];
 
 // The desktop mega menu and the mobile drawer render from the same tree.
@@ -192,8 +212,8 @@ export const nav = {
             { text: 'Overview', blurb: 'One platform, three layers, every GPU dollar accounted for', href: routes.platform },
             { text: company.engine, blurb: 'Compiled inference in Rust and CUDA, more tokens on the same silicon', href: routes.engine },
             { text: company.control, blurb: 'Signed rollouts, GPU aware routing, fleet policy and self repair', href: routes.control },
-            { text: company.economics, blurb: 'Cost per workload, chargeback and payback, against your baseline', href: routes.economics }
-          ]
+            { text: company.economics, blurb: 'Cost per workload, chargeback and payback, against your baseline', href: routes.economics },
+          ],
         },
         {
           heading: 'Trust and proof',
@@ -201,10 +221,10 @@ export const nav = {
             { text: 'Security', blurb: 'One signed binary, no Python in the request path, nothing leaves', href: routes.security },
             { text: 'Deployment', blurb: 'Hosted, your cloud account, on premises or air gapped', href: routes.deployment },
             { text: 'Hardware and models', blurb: 'Verified silicon and every recipe we ship', href: routes.hardware },
-            { text: 'Benchmarks', blurb: 'The concurrency ladder and every gate record, live from the repo', href: routes.benchmarks }
-          ]
-        }
-      ]
+            { text: 'Benchmarks', blurb: 'The concurrency ladder and every gate record, live from the repo', href: routes.benchmarks },
+          ],
+        },
+      ],
     },
     {
       label: 'Solutions',
@@ -214,9 +234,9 @@ export const nav = {
         heading: s.label,
         items: [
           ...s.industries.map((slug) => ({ text: industryBySlug(slug).name, href: solutionHref(slug) })),
-          ...(k === sectors.length - 1 ? [{ text: 'All solutions', href: routes.solutions, accent: true }] : [])
-        ]
-      }))
+          ...(k === sectors.length - 1 ? [{ text: 'All solutions', href: routes.solutions, accent: true }] : []),
+        ],
+      })),
     },
     { label: 'Why Metrale', href: routes.why },
     { label: 'Pricing', href: routes.pricing },
@@ -232,8 +252,8 @@ export const nav = {
             { text: 'Blog', blurb: 'Kernel work, measured benchmarks, product notes', href: links.blog, external: true },
             { text: 'Documentation', blurb: 'The Metrale book, install to fleet', href: links.docs, external: true },
             { text: 'Product updates', blurb: 'What shipped, rendered from the changelog', href: routes.updates },
-            { text: 'Events', blurb: 'Where to meet the team', href: routes.events }
-          ]
+            { text: 'Events', blurb: 'Where to meet the team', href: routes.events },
+          ],
         },
         {
           heading: 'Build',
@@ -242,10 +262,10 @@ export const nav = {
             { text: 'Community Edition', blurb: 'Not released yet. Join the waitlist', href: routes.waitlist },
             { text: 'Contributors', blurb: 'Everyone who has landed code, called out by name', href: routes.contributors },
             { text: 'Metrale Labs', blurb: 'The research arm and what it is working on', href: routes.labs },
-            { text: 'Verification walkthrough', blurb: 'Reproduce the ladder yourself, step by step', href: routes.diligence }
-          ]
-        }
-      ]
+            { text: 'Verification walkthrough', blurb: 'Reproduce the ladder yourself, step by step', href: routes.diligence },
+          ],
+        },
+      ],
     },
     {
       label: 'Company',
@@ -256,12 +276,12 @@ export const nav = {
             { text: 'About Metrale', blurb: 'The team and the two words that started it', href: routes.company },
             { text: 'Careers', blurb: 'The first hires on the founding team', href: routes.careers },
             { text: 'Trust center', blurb: 'Security posture, licensing and disclosure', href: routes.trust },
-            { text: 'Contact', blurb: 'Sales, partnerships, hardware and press', href: routes.contact }
-          ]
-        }
-      ]
-    }
-  ]
+            { text: 'Contact', blurb: 'Sales, partnerships, hardware and press', href: routes.contact },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 export const footer = {
@@ -276,12 +296,12 @@ export const footer = {
         { text: company.economics, href: routes.economics },
         { text: 'Security', href: routes.security },
         { text: 'Deployment', href: routes.deployment },
-        { text: 'Benchmarks', href: routes.benchmarks }
-      ]
+        { text: 'Benchmarks', href: routes.benchmarks },
+      ],
     },
     {
       heading: 'Solutions',
-      links: industries.map((i) => ({ text: i.name, href: solutionHref(i.slug) }))
+      links: industries.map((i) => ({ text: i.name, href: solutionHref(i.slug) })),
     },
     {
       heading: 'Resources',
@@ -293,8 +313,8 @@ export const footer = {
         { text: 'Contributors', href: routes.contributors },
         { text: 'Product updates', href: routes.updates },
         { text: 'Metrale Labs', href: routes.labs },
-        { text: 'Control plane, live', href: routes.controlPlane }
-      ]
+        { text: 'Control plane, live', href: routes.controlPlane },
+      ],
     },
     {
       heading: 'Company',
@@ -304,12 +324,12 @@ export const footer = {
         { text: 'Pricing', href: routes.pricing },
         { text: 'Trust center', href: routes.trust },
         { text: 'Contact', href: routes.contact },
-        { text: 'Book a demo', href: routes.demo }
-      ]
-    }
+        { text: 'Book a demo', href: routes.demo },
+      ],
+    },
   ],
   legal: `© 2026 ${company.legal} Metrale and Metrale Engine are products of ${company.legal}`,
   license: 'Community Edition under AGPL-3.0. Enterprise Edition under a commercial license.',
   mlperf:
-    'The MLPerf name and logo are registered and unregistered trademarks of MLCommons Association in the United States and other countries. All rights reserved. Unauthorized use strictly prohibited. See mlcommons.org for more information.'
+    'The MLPerf name and logo are registered and unregistered trademarks of MLCommons Association in the United States and other countries. All rights reserved. Unauthorized use strictly prohibited. See mlcommons.org for more information.',
 };

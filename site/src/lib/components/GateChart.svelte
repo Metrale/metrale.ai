@@ -17,7 +17,12 @@
 
   let { records, panel, onselect } = $props();
 
-  const W = 720, H = 232, PL = 56, PR = 16, PT = 14, PB = 30;
+  const W = 720,
+    H = 232,
+    PL = 56,
+    PR = 16,
+    PT = 14,
+    PB = 30;
   const LABEL_H = 13;
 
   const series = $derived(buildSeries(panel, records));
@@ -55,7 +60,7 @@
   const yTicks = $derived([
     { v: ext.v0, edge: ext.clipLow ? 'low' : null },
     { v: (ext.v0 + ext.v1) / 2, edge: null },
-    { v: ext.v1, edge: ext.clipHigh ? 'high' : null }
+    { v: ext.v1, edge: ext.clipHigh ? 'high' : null },
   ]);
   const xTicks = $derived.by(() => {
     const ts = [...new Set(series.flatMap((s) => s.nodes.map((n) => n.t)))].sort((a, b) => a - b);
@@ -63,16 +68,14 @@
     return picked.map((t, i) => ({
       t,
       anchor: i === 0 ? 'start' : i === picked.length - 1 ? 'end' : 'middle',
-      ax: i === 0 ? PL : i === picked.length - 1 ? W - PR : x(t)
+      ax: i === 0 ? PL : i === picked.length - 1 ? W - PR : x(t),
     }));
   });
 
   // End-of-series value labels, spread apart so two series ending at similar
   // values cannot print on top of each other.
   const endLabels = $derived.by(() => {
-    const ends = series
-      .filter((s) => s.nodes.length > 0)
-      .map((s) => ({ s, node: s.nodes[s.nodes.length - 1] }));
+    const ends = series.filter((s) => s.nodes.length > 0).map((s) => ({ s, node: s.nodes[s.nodes.length - 1] }));
     const placed = dodgeLabels(
       ends.map((e) => at(e.node).py - 9),
       { height: LABEL_H, top: PT + 7, bottom: H - PB - 6 }
@@ -83,7 +86,7 @@
       x: Math.min(at(e.node).px, W - PR - 4),
       y: placed[i],
       // A label pushed far from its point needs a thread back to it.
-      leader: Math.abs(placed[i] - (at(e.node).py - 9)) > 14 ? at(e.node) : null
+      leader: Math.abs(placed[i] - (at(e.node).py - 9)) > 14 ? at(e.node) : null,
     }));
   });
 
@@ -92,9 +95,7 @@
   const hasAgg = $derived(series.some((s) => s.nodes.some((n) => n.aggregated)));
   const hasClip = $derived(ext.clipHigh || ext.clipLow);
   const hasLone = $derived(series.some((s) => s.sparse));
-  const variantKeys = $derived(
-    [...new Map(series.map((s) => [`${s.metricKey}|${s.variant ?? ''}`, s])).values()]
-  );
+  const variantKeys = $derived([...new Map(series.map((s) => [`${s.metricKey}|${s.variant ?? ''}`, s])).values()]);
   const showVariantKey = $derived(new Set(series.map((s) => s.metricKey)).size > 1 || series.some((s) => s.variant));
 
   const describe = (s, n) => {
@@ -130,8 +131,7 @@
             {#each variantKeys as s}
               <span class="gate-legend-item">
                 <svg class="gl-swatch" viewBox="0 0 20 10" aria-hidden="true">
-                  <line x1="1" y1="5" x2="19" y2="5" stroke="currentColor" stroke-width="2"
-                    stroke-dasharray={s.dashed ? '5 4' : 'none'} />
+                  <line x1="1" y1="5" x2="19" y2="5" stroke="currentColor" stroke-width="2" stroke-dasharray={s.dashed ? '5 4' : 'none'} />
                 </svg>{s.metricLabel}
               </span>
             {/each}
@@ -143,30 +143,45 @@
             {#if hasFail}
               <span class="gate-legend-item">
                 <svg class="gl-swatch" viewBox="0 0 12 10" aria-hidden="true"
-                  ><circle cx="6" cy="5" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+                  ><circle cx="6" cy="5" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8" /></svg
+                >
                 fail
               </span>
             {/if}
             {#if hasAgg}
               <span class="gate-legend-item">
                 <svg class="gl-swatch" viewBox="0 0 12 10" aria-hidden="true"
-                  ><circle cx="6" cy="5" r="2.2" fill="currentColor" /><circle cx="6" cy="5" r="4.4"
-                    fill="none" stroke="currentColor" stroke-width="1" opacity="0.55" /></svg>
+                  ><circle cx="6" cy="5" r="2.2" fill="currentColor" /><circle
+                    cx="6"
+                    cy="5"
+                    r="4.4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1"
+                    opacity="0.55"
+                  /></svg
+                >
                 median of N
               </span>
             {/if}
             {#if hasLone}
               <span class="gate-legend-item">
-                <svg class="gl-swatch" viewBox="0 0 12 10" aria-hidden="true"
-                  ><path d={loneTriangle(6, 5, 4)} fill="currentColor" /></svg>
+                <svg class="gl-swatch" viewBox="0 0 12 10" aria-hidden="true"><path d={loneTriangle(6, 5, 4)} fill="currentColor" /></svg>
                 single run
               </span>
             {/if}
             {#if hasClip}
               <span class="gate-legend-item">
                 <svg class="gl-swatch" viewBox="0 0 12 10" aria-hidden="true"
-                  ><path d={clipCaret(6, 5, 'high')} fill="none" stroke="currentColor" stroke-width="1.8"
-                    stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  ><path
+                    d={clipCaret(6, 5, 'high')}
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  /></svg
+                >
                 off scale
               </span>
             {/if}
@@ -207,8 +222,16 @@
       {@const c = colorFor(s.model)}
       {#if !s.sparse}
         {#each s.edges as e}
-          <path class="gc-line" d={seg(e.a, e.b)} fill="none" stroke={c} stroke-width="2"
-            stroke-dasharray={s.dashed ? '5 4' : 'none'} stroke-linejoin="round" stroke-linecap="round" />
+          <path
+            class="gc-line"
+            d={seg(e.a, e.b)}
+            fill="none"
+            stroke={c}
+            stroke-width="2"
+            stroke-dasharray={s.dashed ? '5 4' : 'none'}
+            stroke-linejoin="round"
+            stroke-linecap="round"
+          />
         {/each}
       {/if}
       {#each s.nodes as n}
@@ -224,8 +247,15 @@
           <title>{describe(s, n)} · click for {n.count > 1 ? `the ${n.count} records` : 'the record'}</title>
           <circle class="gc-hit" cx={p.px} cy={p.py} r="11" />
           {#if p.clamped}
-            <path class="gc-mark gc-clip" d={clipCaret(p.px, p.py, p.clamped)} fill="none"
-              stroke={c} stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              class="gc-mark gc-clip"
+              d={clipCaret(p.px, p.py, p.clamped)}
+              fill="none"
+              stroke={c}
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           {:else if !n.allPass}
             <circle class="gc-mark gc-fail" cx={p.px} cy={p.py} r="4.5" fill="var(--card)" stroke={c} stroke-width="2" />
           {:else if n.aggregated}

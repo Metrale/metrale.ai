@@ -5,11 +5,7 @@
 
 <section id="hardware" class="section-alt sx-cyan">
   <div class="container">
-    <SectionHead
-      label={hardware.label}
-      title={hardware.title}
-      sub={hardware.sub}
-    />
+    <SectionHead label={hardware.label} title={hardware.title} sub={hardware.sub} />
 
     <div class="hw-grid">
       {#each hardware.cards as c}

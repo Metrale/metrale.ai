@@ -38,62 +38,62 @@ export const SHORTCUTS = [
     keys: '1–8',
     label: 'Select that roster row',
     test: (k) => /^[1-8]$/.test(k),
-    act: (k) => ({ kind: 'select', key: k })
+    act: (k) => ({ kind: 'select', key: k }),
   },
   {
     keys: '↑ ↓',
     label: 'Rove the roster (while it has focus)',
     test: () => false,
-    act: null
+    act: null,
   },
   {
     keys: 'l',
     label: 'Logs tab',
     test: (k) => k === 'l',
-    act: () => ({ kind: 'tab', tab: 'logs' })
+    act: () => ({ kind: 'tab', tab: 'logs' }),
   },
   {
     keys: 'n',
     label: 'Launch tab',
     test: (k) => k === 'n',
-    act: () => ({ kind: 'tab', tab: 'launch' })
+    act: () => ({ kind: 'tab', tab: 'launch' }),
   },
   {
     keys: 's',
     label: 'Stop the selected node — two presses, arm then confirm',
     test: (k) => k === 's',
-    act: () => ({ kind: 'stop' })
+    act: () => ({ kind: 'stop' }),
   },
   {
     keys: 'a',
     label: 'Jump to the alert lane',
     test: (k) => k === 'a',
-    act: () => ({ kind: 'alerts' })
+    act: () => ({ kind: 'alerts' }),
   },
   {
     keys: 'c',
     label: 'Cluster launch overlay',
     test: (k) => k === 'c',
-    act: () => ({ kind: 'cluster' })
+    act: () => ({ kind: 'cluster' }),
   },
   {
     keys: 'p',
     label: 'Pause / resume polling',
     test: (k) => k === 'p',
-    act: () => ({ kind: 'pause' })
+    act: () => ({ kind: 'pause' }),
   },
   {
     keys: '?',
     label: 'This sheet',
     test: (k) => k === '?',
-    act: () => ({ kind: 'sheet' })
+    act: () => ({ kind: 'sheet' }),
   },
   {
     keys: 'Esc',
     label: 'Close the open overlay or popover',
     test: () => false,
-    act: null
-  }
+    act: null,
+  },
 ];
 
 /**

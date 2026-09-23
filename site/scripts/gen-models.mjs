@@ -60,8 +60,7 @@ function parseRecipe(text) {
     return (h === -1 ? v : v.slice(0, h)).trim();
   };
   const unquote = (v) => {
-    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'")))
-      return v.slice(1, -1);
+    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) return v.slice(1, -1);
     return v;
   };
 
@@ -72,14 +71,20 @@ function parseRecipe(text) {
     if (line.trim() === '' || line.trim().startsWith('#')) continue;
 
     // section headers (no indentation, key with empty value)
-    if (/^metadata:\s*$/.test(line)) { section = 'metadata'; continue; }
-    if (/^defaults:\s*$/.test(line)) { section = 'defaults'; continue; }
+    if (/^metadata:\s*$/.test(line)) {
+      section = 'metadata';
+      continue;
+    }
+    if (/^defaults:\s*$/.test(line)) {
+      section = 'defaults';
+      continue;
+    }
     if (/^[a-zA-Z_]/.test(line) && section !== 'top' && /^[a-zA-Z_][\w.-]*:\s*\S/.test(line)) {
       // a new top-level scalar after a block ends a block section
       section = 'top';
     }
 
-    const m = line.match(/^(\s*)([\w.\-]+):\s*(.*)$/);
+    const m = line.match(/^(\s*)([\w.-]+):\s*(.*)$/);
     if (!m) continue;
     const [, indent, key, rest0] = m;
     const rest = rest0.trim();
@@ -92,7 +97,11 @@ function parseRecipe(text) {
       const block = [];
       while (i < lines.length) {
         const bl = lines[i];
-        if (bl.trim() === '') { block.push(''); i++; continue; }
+        if (bl.trim() === '') {
+          block.push('');
+          i++;
+          continue;
+        }
         const blIndent = bl.match(/^(\s*)/)[1].length;
         if (blIndent <= baseIndent) break;
         block.push(bl.slice(baseIndent + 2));
@@ -118,13 +127,13 @@ const FAMILY_DISPLAY = {
   'qwen3-next': 'Qwen3-Next',
   'qwen3-coder-next': 'Qwen3-Coder-Next',
   'qwen3-vl': 'Qwen3-VL',
-  'gemma4': 'Gemma-4',
+  gemma4: 'Gemma-4',
   'nemotron-3-nano': 'Nemotron-3 Nano',
   'nemotron-3-super': 'Nemotron-3 Super',
   'mistral-small-4': 'Mistral-Small-4',
   'minimax-m2.7': 'MiniMax-M2.7',
   'deepseek-v4': 'DeepSeek-V4',
-  'diffusion-gemma': 'Gemma Diffusion'
+  'diffusion-gemma': 'Gemma Diffusion',
 };
 function familyDisplay(fam) {
   if (FAMILY_DISPLAY[fam]) return FAMILY_DISPLAY[fam];
@@ -143,13 +152,13 @@ const VENDOR_OF_FAMILY = {
   'qwen3-next': 'Qwen',
   'qwen3-coder-next': 'Qwen',
   'qwen3-vl': 'Qwen',
-  'gemma4': 'Gemma',
+  gemma4: 'Gemma',
   'nemotron-3-nano': 'Nemotron',
   'nemotron-3-super': 'Nemotron',
   'mistral-small-4': 'Mistral',
   'minimax-m2.7': 'MiniMax',
   'deepseek-v4': 'DeepSeek',
-  'diffusion-gemma': 'Gemma'
+  'diffusion-gemma': 'Gemma',
 };
 // Display + icon key + stable sort order, keyed by vendor brand.
 const VENDOR_META = {
@@ -158,14 +167,12 @@ const VENDOR_META = {
   Nemotron: { icon: 'nemotron', order: 2 },
   Mistral: { icon: 'mistral', order: 3 },
   MiniMax: { icon: 'minimax', order: 4 },
-  DeepSeek: { icon: 'deepseek', order: 5 }
+  DeepSeek: { icon: 'deepseek', order: 5 },
 };
 function vendorOf(fam) {
   const v = VENDOR_OF_FAMILY[fam];
   if (!v) {
-    console.error(
-      `Unmapped recipe family "${fam}" — add it to VENDOR_OF_FAMILY. SSOT: ${SSOT_URL}`
-    );
+    console.error(`Unmapped recipe family "${fam}" — add it to VENDOR_OF_FAMILY. SSOT: ${SSOT_URL}`);
     process.exit(1);
   }
   return v;
@@ -232,10 +239,7 @@ for (const file of files) {
   // invocation per node, so the card shows the head's; the docs carry the rest.
   // atlasctl refuses to launch a multi-node recipe on one node rather than
   // quietly serving something smaller than the recipe describes.
-  const command =
-    topology === 'single'
-      ? `atlasctl run ${stem}`
-      : `atlasctl run ${stem} --rank 0 --world-size 2 --master-addr <spark-1>`;
+  const command = topology === 'single' ? `atlasctl run ${stem}` : `atlasctl run ${stem} --rank 0 --world-size 2 --master-addr <spark-1>`;
   const recipe = {
     displayName: recipeDisplay(stem),
     hfId: top.model || '',
@@ -246,7 +250,7 @@ for (const file of files) {
     // Stable identifier the Run button will use once the local agent lands.
     recipeId: stem,
     runnable: topology === 'single',
-    command
+    command,
   };
 
   if (!vendorMap.has(vendor)) vendorMap.set(vendor, new Map());
@@ -273,22 +277,14 @@ const vendors = [...vendorMap.entries()]
 const json = JSON.stringify(vendors, null, 2) + '\n';
 writeFileSync(OUT, json);
 
-const emitted = vendors.reduce(
-  (n, v) => n + v.subfamilies.reduce((m, s) => m + s.recipes.length, 0),
-  0
-);
+const emitted = vendors.reduce((n, v) => n + v.subfamilies.reduce((m, s) => m + s.recipes.length, 0), 0);
 if (emitted !== recipeCount || emitted !== files.length) {
-  console.error(
-    `Recipe count mismatch: yaml files=${files.length}, emitted=${emitted}. SSOT: ${SSOT_URL}`
-  );
+  console.error(`Recipe count mismatch: yaml files=${files.length}, emitted=${emitted}. SSOT: ${SSOT_URL}`);
   process.exit(1);
 }
 
 const subCount = vendors.reduce((n, v) => n + v.subfamilies.length, 0);
-console.log(
-  `Wrote ${OUT}\n  ${files.length} recipes across ${subCount} subfamilies` +
-    ` / ${vendors.length} vendors (SSOT: ${SSOT_URL})`
-);
+console.log(`Wrote ${OUT}\n  ${files.length} recipes across ${subCount} subfamilies` + ` / ${vendors.length} vendors (SSOT: ${SSOT_URL})`);
 for (const v of vendors) {
   const n = v.subfamilies.reduce((m, s) => m + s.recipes.length, 0);
   console.log(`  - ${v.vendor} (${n}):`);

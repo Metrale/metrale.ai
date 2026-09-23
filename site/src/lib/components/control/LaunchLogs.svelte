@@ -19,7 +19,7 @@
   let problem = $state(null);
   let open = $state(false);
   let follow = $state(true);
-  let pane;
+  let pane = $state(null);
 
   $effect(() => {
     if (!open) return;
@@ -66,16 +66,18 @@
       <p class="lg-problem" role="status">{problem}</p>
     {/if}
     {#if !running && lines.length > 0}
-      <p class="lg-exited" role="status">
-        This container has exited. These are the last lines it wrote.
-      </p>
+      <p class="lg-exited" role="status">This container has exited. These are the last lines it wrote.</p>
     {/if}
-    <div class="lg-pane" bind:this={pane} onscroll={(e) => {
-      const el = e.currentTarget;
-      // Following means "pinned to the bottom". Scrolling up turns it off, so
-      // reading an earlier line is not fought by the next poll.
-      follow = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
-    }}>
+    <div
+      class="lg-pane"
+      bind:this={pane}
+      onscroll={(e) => {
+        const el = e.currentTarget;
+        // Following means "pinned to the bottom". Scrolling up turns it off, so
+        // reading an earlier line is not fought by the next poll.
+        follow = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
+      }}
+    >
       {#if lines.length === 0 && !problem}
         <p class="lg-empty">Nothing yet.</p>
       {/if}
@@ -84,7 +86,13 @@
       {/each}
     </div>
     {#if running && !follow}
-      <button class="lg-follow" onclick={() => { follow = true; if (pane) pane.scrollTop = pane.scrollHeight; }}>
+      <button
+        class="lg-follow"
+        onclick={() => {
+          follow = true;
+          if (pane) pane.scrollTop = pane.scrollHeight;
+        }}
+      >
         Jump to newest
       </button>
     {/if}

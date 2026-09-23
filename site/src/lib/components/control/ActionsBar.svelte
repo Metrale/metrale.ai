@@ -66,10 +66,7 @@
     if (res.ok) {
       log('stop', `stopped ${res.reply.recipe}`, true);
     } else {
-      const r = refusal(
-        { error: res.error ?? null, message: res.message ?? null },
-        { target: onTarget(node), nodes }
-      );
+      const r = refusal({ error: res.error ?? null, message: res.message ?? null }, { target: onTarget(node), nodes });
       log('stop', r.text, false);
     }
     onverb?.('status');

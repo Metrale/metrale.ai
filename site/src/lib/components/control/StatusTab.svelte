@@ -20,9 +20,7 @@
   let problem = $state(null);
   let busy = $state(false);
 
-  const trusted = $derived(
-    Boolean(node && (node.isLocal || node.pairing === 'paired' || node.pairing === 'vouched'))
-  );
+  const trusted = $derived(Boolean(node && (node.isLocal || node.pairing === 'paired' || node.pairing === 'vouched')));
   // Value-stable: `node` is a new object on every 1Hz vitals event; keying the
   // refresh effect on the id keeps it from re-asking Status once a second.
   const nodeId = $derived(node?.id ?? null);
@@ -38,10 +36,7 @@
       replyVia = res.reply.via ?? null;
       problem = null;
     } else {
-      const r = refusal(
-        { error: res.error ?? null, message: res.message ?? null },
-        { target: onTarget(node), nodes }
-      );
+      const r = refusal({ error: res.error ?? null, message: res.message ?? null }, { target: onTarget(node), nodes });
       problem = r.text;
     }
   }
@@ -57,8 +52,7 @@
     untrack(() => refresh());
   });
 
-  const when = (at) =>
-    new Date(at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const when = (at) => new Date(at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 </script>
 
 <div class="dt">
