@@ -51,6 +51,7 @@
   <Chain />
   <Deliveries />
   <Voices />
+  <img src="/favicon.svg" width="32" height="32" />
   <FaqList items={faqFor('home')} />
   <CtaBand eyebrow={cta.eyebrow} title={cta.title} body={cta.body} primary={cta.primary} secondary={cta.secondary} />
 </PageShell>
