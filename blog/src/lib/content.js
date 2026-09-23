@@ -21,7 +21,7 @@ export const SITE = 'https://blog.metrale.ai';
 // local copy of the main site, for demoing both apps from one machine. Unset,
 // which is every real build, they go to the live site.
 export const MAIN_SITE = (import.meta.env ?? {}).VITE_MAIN_SITE || 'https://metrale.ai';
-export const DOCS_SITE = 'https://docs.atlascybernetics.ai';
+export const DOCS_SITE = 'https://docs.metrale.ai';
 export const githubUrl = 'https://github.com/Avarok-Cybersecurity/atlas';
 // Must match site/src/lib/data.js. An invite code is not derivable from
 // anything, so a wrong one is a dead link that looks entirely plausible.

@@ -16,10 +16,8 @@ const read = (rel) => readFileSync(new URL(rel, root), 'utf8');
 
 const HOSTS = {
   site: 'https://metrale.ai',
-  // The address the site links today. It moves to blog.metrale.ai with the
-  // switch-over in blog/README.md, and this line moves with it.
-  blog: 'https://blog.atlascybernetics.ai',
-  docs: 'https://docs.atlascybernetics.ai'
+  blog: 'https://blog.metrale.ai',
+  docs: 'https://docs.metrale.ai'
 };
 
 /** The generated marketing-site file. */

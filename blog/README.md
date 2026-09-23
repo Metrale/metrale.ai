@@ -44,13 +44,13 @@ Until the first is set the deploy job is skipped, not failed. Creating the
 project and putting the custom domain on it is done once, in the Cloudflare
 account, the way the site's `metrale-ai` project was.
 
-## When it is live
+## Live
 
-Three places in the site still send readers to the old blog address, and each
-is one line: `links.blog` in `site/src/lib/content/brand.js`, `blogUrl` in
-`site/src/lib/data.js`, and the `Documentation` link beside them if the docs
-move too. The old blog address should then redirect to the new one at the zone,
-so shared links and search results move.
+Since 2026-09-23: the Pages project `metrale-blog`, the custom domain
+`blog.metrale.ai`, and the site's own links (`links.blog` in
+`site/src/lib/content/brand.js`, `blogUrl` in `site/src/lib/data.js`) all point
+here. The old blog address should redirect to the new one at its zone, so shared
+links and search results move; that zone is in another account.
 
 ## What stayed as it was
 
