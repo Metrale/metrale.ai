@@ -5,13 +5,13 @@
   //
   // `steps` is the number of fragments this slide reveals. The active slide
   // reports it to the deck so the arrow keys walk fragments before moving on.
-  import { getContext } from 'svelte';
+  import { getContext, untrack } from 'svelte';
 
   let { act = 'violet', eyebrow = '', title = '', lede = '', steps = 0, wide = false, children } =
     $props();
 
   const deck = getContext('deck');
-  const n = deck.register(act);
+  const n = deck.register(untrack(() => act));
 
   const active = $derived(deck.current() === n);
 

@@ -19,7 +19,7 @@
   let problem = $state(null);
   let open = $state(false);
   let follow = $state(true);
-  let pane;
+  let pane = $state(null);
 
   $effect(() => {
     if (!open) return;

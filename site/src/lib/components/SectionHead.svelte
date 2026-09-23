@@ -11,9 +11,9 @@
   // and a document whose headings start at h2 fails heading-order.
   let { label, title, sub = '', prov = '', provUrl = '', level = 2 } = $props();
 
-  const parsed = /^\s*\/\/\s*(?:(\d+)\s*·\s*)?(.+?)\s*$/.exec(label);
-  const index = parsed?.[1] ?? '';
-  const name = parsed?.[2] ?? label;
+  const parsed = $derived(/^\s*\/\/\s*(?:(\d+)\s*·\s*)?(.+?)\s*$/.exec(label));
+  const index = $derived(parsed?.[1] ?? '');
+  const name = $derived(parsed?.[2] ?? label);
 </script>
 
 <div class="ledger-rail">

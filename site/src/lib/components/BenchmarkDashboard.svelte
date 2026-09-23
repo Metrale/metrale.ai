@@ -76,6 +76,10 @@
 <svelte:window {onkeydown} />
 
 <div class="bd-backdrop" onclick={onclose} role="presentation">
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- The click handler only stops a click inside the dialog reaching the
+       backdrop's close handler; it is not an interaction. Keyboard dismissal
+       is Escape, handled on the window. -->
   <div
     class="bd"
     role="dialog"

@@ -40,10 +40,15 @@
 <svelte:window {onkeydown} />
 
 <div class="gpc-backdrop" onclick={onclose} role="presentation">
-  <article
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- The click handler only stops a click inside the dialog reaching the
+       backdrop's close handler; it is not an interaction. Keyboard dismissal
+       is Escape, handled on the window. -->
+  <div
     class="gpc receipt"
     role="dialog"
     aria-modal="true"
+    tabindex="-1"
     aria-label={many
       ? `Gate records, ${records.length} runs from ${fmtDate(records[0].recorded_at)} to ${fmtDate(records[records.length - 1].recorded_at)}`
       : `Gate record ${r.git_sha}`}
@@ -85,5 +90,5 @@
         <button type="button" class="gpc-close" onclick={onclose}>close</button>
       </div>
     </div>
-  </article>
+  </div>
 </div>

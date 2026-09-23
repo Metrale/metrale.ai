@@ -21,12 +21,12 @@
   const isVerified = bench.status === 'verified' && rows.length > 0;
 
   const rungs = ladder.rows ?? [];
-  const isLadder = source === 'auto' && !isVerified && rungs.length > 0;
+  const isLadder = $derived(source === 'auto' && !isVerified && rungs.length > 0);
   // Compact (hero) prints the four rungs that bracket the range — single
   // stream, small batch, mid, and the widest published rung — because eight
   // rows would push the receipt past the fold on a laptop.
   const COMPACT_RUNGS = [1, 8, 32, 128];
-  const shown = compact ? rungs.filter((r) => COMPACT_RUNGS.includes(r.c)) : rungs;
+  const shown = $derived(compact ? rungs.filter((r) => COMPACT_RUNGS.includes(r.c)) : rungs);
   const bestLabel = (r) =>
     r.baselines.find((b) => b.id === r.best_baseline_id)?.label ?? 'baseline';
 </script>

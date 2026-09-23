@@ -108,12 +108,17 @@
     <!-- Same .bd-backdrop/.bd classes as the real dialog: identical dimensions,
          so the swap from skeleton to dashboard causes zero layout shift. -->
     <div class="bd-backdrop" onclick={closeDashboard} role="presentation">
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <!-- The click handler only stops a click inside the dialog reaching the
+           backdrop's close handler; it is not an interaction. Keyboard dismissal
+           is Escape, handled on the window. -->
       <div
         class="bd bd-skeleton"
         role="dialog"
         aria-modal="true"
         aria-label="Benchmark dashboard, loading"
         aria-busy="true"
+        tabindex="-1"
         onclick={(e) => e.stopPropagation()}
         use:modal
       >
