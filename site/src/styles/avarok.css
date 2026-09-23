@@ -1373,7 +1373,7 @@ html:not([data-theme='light']) .av img.is-dark-invert {
   font-family: var(--font-mono);
   /* Boxes are sized from the mono advance (0.6em). At phone width the drawing is
      scaled to about 0.7, and hinted glyph advances round up at that size on
-     Linux and Android, pushing a full line past its box. Lay text out unhinted. */
+     Linux and Android, pushing a full line past its box. Lay text out without hinting. */
   text-rendering: geometricPrecision;
 }
 .av-diagram .lbl {
