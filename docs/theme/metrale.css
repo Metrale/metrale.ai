@@ -1,0 +1,47 @@
+/* Metrale over the engine's docs skin.
+
+   Colours and the two type stacks come from web-shared/avarok-tokens.css, which
+   docs/build.mjs lays over the copy the book links, and the faces themselves
+   from fonts/fonts.css, which the same script writes. The skin
+   (theme/css/avarok.css, the engine's) keeps every rule it has. This file only
+   places the lockup in the menu bar, where the skin set the book's title in
+   type, and keeps the title readable for the accessibility tree. */
+
+.menu-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 1rem;
+  line-height: 1;
+}
+.menu-title .metrale-lockup {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  color: inherit;
+  text-decoration: none;
+}
+.menu-title .metrale-lockup svg {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+.menu-title .metrale-docs {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--t3);
+  padding-top: 0.15rem;
+}
+.menu-title .metrale-lockup:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+@media (max-width: 480px) {
+  .menu-title .metrale-docs {
+    display: none;
+  }
+}
