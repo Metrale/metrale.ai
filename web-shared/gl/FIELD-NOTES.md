@@ -17,7 +17,7 @@ verified pixel-for-pixel: **0 of 960,000 pixels differ**. So everything below
 is cost, not appearance.
 
 | | raw WebGL2 | three.js r185 |
-|---|---|---|
+| --- | --- | --- |
 | Over the wire (brotli) | **2.5 KB** | **151.1 KB** |
 | Parsed / compiled | **5.7 KB** | **733 KB** |
 | Main thread per frame | **< 0.01 ms** | **0.30 ms** |
@@ -81,7 +81,7 @@ AA. Two changes fixed it properly:
 Measured across 14 time samples over the whole viewport:
 
 | | on bare ground | worst case over the field |
-|---|---|---|
+| --- | --- | --- |
 | Headings `#E4E7EC` | 15.15:1 | **13.41:1** |
 | Body `#C9CCD4` | 11.69:1 | **10.35:1** |
 | Metadata `#82868F` | 5.15:1 | **4.56:1** |
@@ -98,7 +98,7 @@ amplitude was solved against.
 ## What it handles
 
 | Concern | Behavior |
-|---|---|
+| --- | --- |
 | No WebGL2 | Returns `null`; the CSS dot field stays visible. No error, no blank area. |
 | `prefers-reduced-motion` | Renders **one frozen frame**, cancels the loop. Not removed — freezing keeps the design and drops to zero ongoing cost. Re-checked live, since the OS setting can change mid-session. |
 | Hidden tab | rAF already stops; the handler resets the clock so it doesn't jump on return. |
@@ -125,7 +125,7 @@ The two failure modes worth naming, because they are silent:
 
 Verified against Svelte 5.57 / SvelteKit 2.70 / Vite 8.
 
-```
+```text
 src/lib/gl/chevron-field.js      the runtime
 src/lib/gl/chevron-field.glsl    the shader
 src/lib/components/ChevronField.svelte
@@ -184,7 +184,7 @@ the difference between the two renderers disagreeing and matching exactly.
 Everything visual is in the shader, in one place:
 
 | What | Where |
-|---|---|
+| --- | --- |
 | Overall strength | `amt` at the bottom of `main()` — **re-run the contrast check if raised** |
 | How crowded | `if (r1 > 0.30)` in `layer()` — higher is denser |
 | Mark size | `sz` in `layer()`. Keep `2.28 * sz + jitter < 0.5` or marks clip at cell seams |

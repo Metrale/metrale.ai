@@ -9,7 +9,7 @@ All files are 1280×720 WebP, lanczos, q70–78. Page-hero weight.
 
 From `site/`:
 
-```
+```sh
 node scripts/media/install.mjs --from media-brief/takes/pass2/art-gov.webp --as art-gov
 node scripts/media/install.mjs --from media-brief/takes/pass2/art-health.webp --as art-health
 node scripts/media/install.mjs --from media-brief/takes/pass2/art-finance.webp --as art-finance
@@ -19,7 +19,7 @@ node scripts/media/install.mjs --from media-brief/takes/pass2/art-research.webp 
 
 SMB/edge is four interchangeable stills. Pick one, or rotate:
 
-```
+```sh
 node scripts/media/install.mjs --from media-brief/takes/pass2/art-smb-police.webp --as art-desk-box --pages solutions/smb-edge
 node scripts/media/install.mjs --from media-brief/takes/pass2/art-smb-library.webp --as art-desk-box --pages solutions/smb-edge
 node scripts/media/install.mjs --from media-brief/takes/pass2/art-smb-autoshop.webp --as art-desk-box --pages solutions/smb-edge

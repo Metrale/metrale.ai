@@ -66,7 +66,7 @@ export function render(brief) {
       push(facts.join(' · '), '', '```text', fullPrompt(brief, s), '```', '', `Keep it if: ${s.keep}`, '', `Alt text: ${s.alt}`, '');
     }
   }
-  push('## Never', '', ...brief.never.map((n) => `- ${n}`), '', '## Sources', '', ...brief.sources.map((u) => `- ${u}`), '');
+  push('## Never', '', ...brief.never.map((n) => `- ${n}`), '', '## Sources', '', ...brief.sources.map((u) => `- <${u}>`), '');
   return out.join('\n');
 }
 
