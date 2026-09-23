@@ -1,21 +1,22 @@
 # Cloudflare Pages hosting
 
-atlascybernetics.ai and blog.atlascybernetics.ai are served by Cloudflare Pages.
-There is no origin server in the request path, which is the point: the previous
-host went down and took both properties with it.
+metrale.ai is served by Cloudflare Pages, with no origin server in the request
+path. The zone and the Pages project are in the Metrale Cloudflare account.
 
 ## Projects
 
 | Project | Serves | pages.dev |
 | --- | --- | --- |
-| `avarok-site` | `atlascybernetics.ai` | `avarok-site-80h.pages.dev` |
-| `atlas-blog` | `blog.atlascybernetics.ai` | `atlas-blog-3ja.pages.dev` |
+| `metrale-ai` | `metrale.ai` | `metrale-ai.pages.dev` |
 
-Both are **Direct Upload** projects, not Pages' git integration. The build in
-`.github/workflows/site.yml` needs an `atlas-recipes` checkout and a GitHub
-token, and it carries four gates a Pages-native build would bypass — the
-flagship-recipe check, the per-route `<title>` checks on both properties, and
-the blog/site cross-link check. CI builds, CI uploads the gated output.
+It is a **Direct Upload** project, not Pages' git integration. The build in
+`.github/actions/build-site` needs checkouts of `atlas-recipes` and of the engine
+at `site/engine.ref`, and it carries gates a Pages-native build would bypass:
+the flagship-recipe check and the per-route `<title>` check. CI builds, CI
+uploads the gated output: `deploy.yml` on every merge to `main`, and `pr.yml`'s
+`preview` job for pull requests from this repository's branches. The apex is a
+proxied CNAME to `metrale-ai.pages.dev`; the zone's mail records are separate
+and not touched by any of this.
 
 `--branch=main` on the upload is load-bearing: a deployment on any other branch
 gets a preview URL and does not move the custom domain. That fails as "the
