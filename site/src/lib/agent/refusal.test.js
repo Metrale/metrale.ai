@@ -7,7 +7,7 @@ const DGX1 = '11'.repeat(32);
 const DGX3 = '33'.repeat(32);
 const NODES = [
   { id: DGX1, name: 'dgx1' },
-  { id: DGX3, name: 'dgx3' }
+  { id: DGX3, name: 'dgx3' },
 ];
 const CTX = { target: DGX3, nodes: NODES };
 
@@ -22,10 +22,7 @@ describe('each failure names the machine it belongs to', () => {
   });
 
   test('a relay failure blames the relay and names both machines', () => {
-    const r = refusal(
-      { by: DGX1, error: { code: 'relay_refused', node: DGX3, detail: 'dial timed out' } },
-      CTX
-    );
+    const r = refusal({ by: DGX1, error: { code: 'relay_refused', node: DGX3, detail: 'dial timed out' } }, CTX);
     expect(r.blame).toBe('relay');
     expect(r.text).toBe('dgx1 could not reach dgx3: dial timed out');
   });
@@ -49,18 +46,12 @@ describe('each failure names the machine it belongs to', () => {
     // They agree on one hop, so a disagreement means something is wrong and
     // the structural field — written by the code that produced the error,
     // not by whoever forwarded it — is the one to believe.
-    const r = refusal(
-      { by: DGX3, error: { code: 'relay_refused', node: DGX3, via: DGX1, detail: 'dial timed out' } },
-      CTX
-    );
+    const r = refusal({ by: DGX3, error: { code: 'relay_refused', node: DGX3, via: DGX1, detail: 'dial timed out' } }, CTX);
     expect(r.text).toBe('dgx1 could not reach dgx3: dial timed out');
   });
 
   test('no route is a local fact: the fix is pairing, not a relay log', () => {
-    const r = refusal(
-      { error: { code: 'not_routable', node: DGX3, reason: 'not pinned and no reachable voucher' } },
-      CTX
-    );
+    const r = refusal({ error: { code: 'not_routable', node: DGX3, reason: 'not pinned and no reachable voucher' } }, CTX);
     expect(r.blame).toBe('local');
     expect(r.text).toBe('No route to dgx3: not pinned and no reachable voucher');
   });
@@ -72,10 +63,7 @@ describe('each failure names the machine it belongs to', () => {
   });
 
   test('a local error stays unattributed prose', () => {
-    const r = refusal(
-      { error: { code: 'docker_unavailable', detail: 'socket missing' } },
-      { target: null, nodes: NODES }
-    );
+    const r = refusal({ error: { code: 'docker_unavailable', detail: 'socket missing' } }, { target: null, nodes: NODES });
     expect(r.blame).toBe('local');
     expect(r.text).toBe('Docker is not available on that machine: socket missing');
   });
@@ -92,10 +80,7 @@ describe('the strings are safe and the names resolvable', () => {
   test('error detail passes through verbatim but sanitised', () => {
     // A refusal detail crosses a peer channel; control characters and bidi
     // marks must not survive into the DOM.
-    const r = refusal(
-      { error: { code: 'control_refused', node: DGX3, reason: 'bad\u0000 thing\u202e!' } },
-      CTX
-    );
+    const r = refusal({ error: { code: 'control_refused', node: DGX3, reason: 'bad\u0000 thing\u202e!' } }, CTX);
     expect(r.text).toBe('dgx3 refused: bad thing!');
   });
 

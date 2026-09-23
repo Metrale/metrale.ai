@@ -30,7 +30,7 @@
         id: n.id,
         name: n.name,
         at: readings[n.id]?.at ?? null,
-        reading: readings[n.id]?.reading ?? null
+        reading: readings[n.id]?.reading ?? null,
       }))
   );
   const decodeOf = (id) => {
@@ -50,7 +50,7 @@
 
   function onKeys(ev) {
     if (ev.target instanceof HTMLInputElement) return;
-    let next = null;
+    let next;
     if (ev.key === 'ArrowDown') next = move(nodes, selectedId, 1);
     else if (ev.key === 'ArrowUp') next = move(nodes, selectedId, -1);
     else next = selectByKey(nodes, ev.key);
@@ -90,15 +90,12 @@
     {/each}
     {#if fleet.peers.length === 0 && rows.length > 0}
       <li class="roster-solo">
-        Solo fleet. A second machine gives this column something to compare —
-        and unlocks the EP=2 recipes, which need exactly two nodes.
+        Solo fleet. A second machine gives this column something to compare — and unlocks the EP=2 recipes, which need exactly two nodes.
       </li>
     {/if}
   </ul>
 
   <div class="roster-foot">
-    <button type="button" class="btn btn-secondary roster-add" onclick={() => onadd?.()}>
-      Add machine
-    </button>
+    <button type="button" class="btn btn-secondary roster-add" onclick={() => onadd?.()}> Add machine </button>
   </div>
 </div>

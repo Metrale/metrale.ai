@@ -33,9 +33,7 @@ const RANK = { infini_band: 5, roce: 4, ethernet: 3, wireless: 2, unverified: 1 
  * @returns {object|null}
  */
 export function preferred(node) {
-  const usable = (node?.addresses ?? []).filter(
-    (a) => a.class !== 'virtual' && a.class !== 'loopback'
-  );
+  const usable = (node?.addresses ?? []).filter((a) => a.class !== 'virtual' && a.class !== 'loopback');
   if (usable.length === 0) return null;
   return usable.slice().sort((a, b) => {
     const r = (RANK[b.class] ?? 0) - (RANK[a.class] ?? 0);
@@ -82,7 +80,7 @@ export function points(nodes) {
     return list.map((node, i) => ({
       node,
       x: W / 2 - span / 2 + i * step,
-      y: H / 2
+      y: H / 2,
     }));
   }
 
@@ -95,7 +93,7 @@ export function points(nodes) {
     return {
       node,
       x: W / 2 + rx * Math.cos(t),
-      y: H / 2 + ry * Math.sin(t)
+      y: H / 2 + ry * Math.sin(t),
     };
   });
 }
@@ -121,8 +119,7 @@ export function edges(pts) {
       const pa = preferred(a.node);
       const pb = preferred(b.node);
       const cls = !pa || !pb ? 'none' : (RANK[pa.class] ?? 0) <= (RANK[pb.class] ?? 0) ? pa.class : pb.class;
-      const speed =
-        pa?.speedMbps && pb?.speedMbps ? Math.min(pa.speedMbps, pb.speedMbps) : null;
+      const speed = pa?.speedMbps && pb?.speedMbps ? Math.min(pa.speedMbps, pb.speedMbps) : null;
       out.push({
         a,
         b,
@@ -131,7 +128,7 @@ export function edges(pts) {
         // RDMA is what multi-node decode needs; anything else is worth saying
         // out loud, but "unverified" is missing information rather than a slow
         // link and must not be reported as a fault.
-        warn: cls !== 'roce' && cls !== 'infini_band' && cls !== 'unverified'
+        warn: cls !== 'roce' && cls !== 'infini_band' && cls !== 'unverified',
       });
     }
   }

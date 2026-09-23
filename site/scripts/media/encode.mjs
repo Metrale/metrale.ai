@@ -63,7 +63,8 @@ mkdirSync(OUT, { recursive: true });
 const provPath = resolve(OUT, 'provenance.json');
 const prov = existsSync(provPath) ? JSON.parse(readFileSync(provPath, 'utf8')) : {};
 
-const run = (args) => execFileSync(FFMPEG, ['-y', '-hide_banner', '-loglevel', 'error', ...args], { stdio: ['ignore', 'inherit', 'inherit'] });
+const run = (args) =>
+  execFileSync(FFMPEG, ['-y', '-hide_banner', '-loglevel', 'error', ...args], { stdio: ['ignore', 'inherit', 'inherit'] });
 const mb = (p) => (statSync(p).size / 1024 / 1024).toFixed(2);
 const flag = (p) => (statSync(p).size > BUDGET ? '  <-- over budget' : '');
 
@@ -96,17 +97,87 @@ for (const clip of clips) {
   const t = length.toFixed(3);
   const vf = `scale=${clip.width}:${clip.height}:flags=lanczos,format=yuv420p`;
 
-  run(['-ss', ss, '-i', raw, '-t', t, '-an', '-vf', vf, '-r', '30', '-c:v', 'libx264', '-preset', 'slow', '-crf', '27', '-profile:v', 'high', '-level', '4.0', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', mp4]);
-  run(['-ss', ss, '-i', raw, '-t', t, '-an', '-vf', vf, '-r', '30', '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', '36', '-row-mt', '1', '-deadline', 'good', '-cpu-used', '2', webm]);
+  run([
+    '-ss',
+    ss,
+    '-i',
+    raw,
+    '-t',
+    t,
+    '-an',
+    '-vf',
+    vf,
+    '-r',
+    '30',
+    '-c:v',
+    'libx264',
+    '-preset',
+    'slow',
+    '-crf',
+    '27',
+    '-profile:v',
+    'high',
+    '-level',
+    '4.0',
+    '-pix_fmt',
+    'yuv420p',
+    '-movflags',
+    '+faststart',
+    mp4,
+  ]);
+  run([
+    '-ss',
+    ss,
+    '-i',
+    raw,
+    '-t',
+    t,
+    '-an',
+    '-vf',
+    vf,
+    '-r',
+    '30',
+    '-c:v',
+    'libvpx-vp9',
+    '-b:v',
+    '0',
+    '-crf',
+    '36',
+    '-row-mt',
+    '1',
+    '-deadline',
+    'good',
+    '-cpu-used',
+    '2',
+    webm,
+  ]);
   // The poster. A loop looks the same everywhere. A console scene is most
   // itself at the end, once the answer and its receipt, the finished rollout
   // or the ledger is on screen; the clip's `poster` fraction says where.
   const at = (m.trim + length * (clip.posterAt ?? (isLoop ? 0.3 : 0.94))).toFixed(3);
-  run(['-ss', at, '-i', raw, '-frames:v', '1', '-vf', `scale=${clip.width}:${clip.height}:flags=lanczos`, '-c:v', 'libwebp', '-quality', '82', '-compression_level', '6', webp]);
+  run([
+    '-ss',
+    at,
+    '-i',
+    raw,
+    '-frames:v',
+    '1',
+    '-vf',
+    `scale=${clip.width}:${clip.height}:flags=lanczos`,
+    '-c:v',
+    'libwebp',
+    '-quality',
+    '82',
+    '-compression_level',
+    '6',
+    webp,
+  ]);
 
   prov[clip.name] = { kind: 'recorded', from: m.path, at: new Date().toISOString().slice(0, 10) };
   encoded++;
-  console.log(`${clip.name.padEnd(20)} ${t.padStart(7)}s  mp4 ${mb(mp4)} MB${flag(mp4)}  webm ${mb(webm)} MB${flag(webm)}  poster ${mb(webp)} MB`);
+  console.log(
+    `${clip.name.padEnd(20)} ${t.padStart(7)}s  mp4 ${mb(mp4)} MB${flag(mp4)}  webm ${mb(webm)} MB${flag(webm)}  poster ${mb(webp)} MB`
+  );
 }
 if (encoded) {
   const sorted = Object.fromEntries(Object.entries(prov).sort(([a], [b]) => a.localeCompare(b)));

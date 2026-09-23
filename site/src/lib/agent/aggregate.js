@@ -87,6 +87,6 @@ export function aggregate(entries, nowMs) {
     active: sum(readings, 'requests_active'),
     included: fresh.length,
     excluded,
-    caption
+    caption,
   };
 }

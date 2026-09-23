@@ -1,6 +1,20 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { expect, test } from 'bun:test';
-import { fleetModel, apiModel, energyModel, energyInputsFrom, efficiency, efficiencyLadder, axisFor, paybackLabel, FLEET_DEFAULTS, API_DEFAULTS, ENERGY_DEFAULTS, JOULES_PER_KWH, powerCostPerYear } from './economics.js';
+import {
+  fleetModel,
+  apiModel,
+  energyModel,
+  energyInputsFrom,
+  efficiency,
+  efficiencyLadder,
+  axisFor,
+  paybackLabel,
+  FLEET_DEFAULTS,
+  API_DEFAULTS,
+  ENERGY_DEFAULTS,
+  JOULES_PER_KWH,
+  powerCostPerYear,
+} from './economics.js';
 import ladder from './ladder.generated.json';
 
 test('power cost is watts times hours times PUE at the tariff', () => {
@@ -65,7 +79,10 @@ test('tokens per watt is tokens per joule: throughput over power, and the second
 });
 
 test('no draw or no throughput is no efficiency, not a division by zero', () => {
-  for (const bad of [{ tokensPerSecond: 0, watts: 240 }, { tokensPerSecond: 478, watts: 0 }]) {
+  for (const bad of [
+    { tokensPerSecond: 0, watts: 240 },
+    { tokensPerSecond: 478, watts: 0 },
+  ]) {
     const e = efficiency(bad);
     expect(e.tokensPerJoule).toBe(0);
     expect(Number.isFinite(e.kwhPerMillion)).toBe(true);
@@ -95,7 +112,15 @@ test('an engine that draws more for its extra tokens gives the advantage back', 
 test('a month of tokens becomes kilowatt hours at the wall, then dollars', () => {
   // 1 J per token: a billion tokens is 1e9 J = 277.78 kWh of IT load. PUE 1.5
   // makes it 416.67 at the meter. The baseline at 2 J per token is twice that.
-  const r = energyModel({ tokensPerSecond: 100, watts: 100, baselineTokensPerSecond: 50, baselineWatts: 100, pue: 1.5, usdPerKwh: 0.1, millionTokensPerMonth: 1000 });
+  const r = energyModel({
+    tokensPerSecond: 100,
+    watts: 100,
+    baselineTokensPerSecond: 50,
+    baselineWatts: 100,
+    pue: 1.5,
+    usdPerKwh: 0.1,
+    millionTokensPerMonth: 1000,
+  });
   expect(r.kwhPerMonth).toBe(417);
   expect(r.baselineKwhPerMonth).toBe(833);
   expect(r.kwhSavedPerMonth).toBe(417);
@@ -130,7 +155,7 @@ test('the graph has a point for every published rung, from measured throughput',
 test('a rung that records its draw uses it, and only a fully recorded ladder is called measured', () => {
   const rows = [
     { c: 1, atlas: 20, atlas_watts: 40, best_baseline_id: 'v', baselines: [{ id: 'v', tok_s: 10, watts: 50 }] },
-    { c: 8, atlas: 100, best_baseline_id: 'v', baselines: [{ id: 'v', tok_s: 80 }] }
+    { c: 8, atlas: 100, best_baseline_id: 'v', baselines: [{ id: 'v', tok_s: 80 }] },
   ];
   const mixed = efficiencyLadder(rows, { watts: 200, baselineWatts: 200 });
   expect(mixed.points[0]).toEqual({ c: 1, avarok: 0.5, baseline: 0.2, measured: true });
@@ -150,7 +175,18 @@ test('the scenario starts from the top rung, against the matched baseline and ne
   const { points } = efficiencyLadder(ladder.rows, { watts: start.watts, baselineWatts: start.baselineWatts });
   expect(points.at(-1).avarok).toBeCloseTo(energyModel(start).tokensPerJoule, 3);
   // A recorded draw on the top rung becomes the starting draw.
-  const recorded = energyInputsFrom([{ c: 4, atlas: 90, atlas_watts: 60, best_baseline_id: 'v', baselines: [{ id: 'fast', tok_s: 99 }, { id: 'v', tok_s: 70, watts: 55 }] }]);
+  const recorded = energyInputsFrom([
+    {
+      c: 4,
+      atlas: 90,
+      atlas_watts: 60,
+      best_baseline_id: 'v',
+      baselines: [
+        { id: 'fast', tok_s: 99 },
+        { id: 'v', tok_s: 70, watts: 55 },
+      ],
+    },
+  ]);
   expect(recorded).toMatchObject({ tokensPerSecond: 90, baselineTokensPerSecond: 70, watts: 60, baselineWatts: 55 });
   expect(energyInputsFrom([])).toEqual({ ...ENERGY_DEFAULTS });
 });

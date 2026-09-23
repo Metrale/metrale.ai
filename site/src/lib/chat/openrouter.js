@@ -12,7 +12,7 @@ import {
   APP_TITLE,
   SITE_ORIGIN,
   OR_MAX_ATTEMPTS,
-  OR_RETRY_BASE_MS
+  OR_RETRY_BASE_MS,
 } from './config.js';
 
 /** Error that knows whether retrying could plausibly help. */
@@ -51,7 +51,7 @@ function dailyQuota(errorBody, response) {
 function quotaError(what, message, quota) {
   return new OpenRouterError(`${what} failed: ${message}`, false, {
     quota: true,
-    resetAt: quota.resetAt
+    resetAt: quota.resetAt,
   });
 }
 
@@ -59,7 +59,7 @@ const headersFor = (apiKey) => ({
   Authorization: `Bearer ${apiKey}`,
   'Content-Type': 'application/json',
   'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : SITE_ORIGIN,
-  'X-Title': APP_TITLE
+  'X-Title': APP_TITLE,
 });
 
 /**
@@ -84,10 +84,7 @@ async function parseResponse(response, what) {
     const quota = response.status === 429 ? dailyQuota(body?.error, response) : null;
     if (quota) throw quotaError(what, body.error.message ?? 'daily limit reached', quota);
 
-    throw new OpenRouterError(
-      `${what} failed: ${response.status} - ${raw}`,
-      response.status === 429 || response.status >= 500
-    );
+    throw new OpenRouterError(`${what} failed: ${response.status} - ${raw}`, response.status === 429 || response.status >= 500);
   }
 
   let data;
@@ -154,7 +151,7 @@ export async function getEmbeddings(texts, apiKey, model = EMBEDDING_MODEL) {
     const response = await fetch(`${OPENROUTER_API_URL}/embeddings`, {
       method: 'POST',
       headers: headersFor(apiKey),
-      body: JSON.stringify({ model, input: texts })
+      body: JSON.stringify({ model, input: texts }),
     });
     return parseResponse(response, 'Embedding request');
   });
@@ -240,17 +237,14 @@ async function readSseStream(bodyStream, emit) {
           if (quota) throw quotaError('Chat request', message, quota);
           throw new OpenRouterError(
             `Chat request failed: ${message}`,
-            chunk.error.code === 429 ||
-              (chunk.error.code ?? 0) >= 500 ||
-              /ResourceExhausted|rate.?limit|overloaded/i.test(message)
+            chunk.error.code === 429 || (chunk.error.code ?? 0) >= 500 || /ResourceExhausted|rate.?limit|overloaded/i.test(message)
           );
         }
 
         const delta = chunk.choices?.[0]?.delta;
         if (!delta) continue;
         const reasoning = reasoningFromDelta(delta);
-        const answer =
-          typeof delta.content === 'string' && delta.content ? delta.content : undefined;
+        const answer = typeof delta.content === 'string' && delta.content ? delta.content : undefined;
         if (reasoning || answer) emit(reasoning, answer);
       }
     }
@@ -275,7 +269,7 @@ export async function chat(messages, system, apiKey, { onDelta, model = CHAT_MOD
   const body = JSON.stringify({
     model,
     messages: [{ role: 'system', content: system }, ...messages],
-    stream: true
+    stream: true,
   });
 
   let content = '';
@@ -291,7 +285,7 @@ export async function chat(messages, system, apiKey, { onDelta, model = CHAT_MOD
     const response = await fetch(`${OPENROUTER_API_URL}/chat/completions`, {
       method: 'POST',
       headers: headersFor(apiKey),
-      body
+      body,
     });
 
     const type = response.headers.get('content-type') ?? '';
@@ -340,8 +334,8 @@ export async function rerank(query, documents, apiKey, topN, model = RERANK_MODE
         query,
         documents,
         top_n: topN,
-        return_documents: false
-      })
+        return_documents: false,
+      }),
     });
     return parseResponse(response, 'Rerank request');
   });

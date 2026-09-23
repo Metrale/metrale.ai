@@ -25,7 +25,7 @@ export const PRICES = {
   'grok-4.5': { in: 2.0, cached: 0.3, out: 6.0 },
   'grok-4.3': { in: 1.25, cached: 0.2, out: 2.5 },
   'grok-4.20': { in: 1.25, cached: 0.2, out: 2.5 },
-  'grok-build-0.1': { in: 1.0, cached: 0.2, out: 2.0 }
+  'grok-build-0.1': { in: 1.0, cached: 0.2, out: 2.0 },
 };
 
 export class XaiError extends Error {
@@ -56,7 +56,7 @@ export function usageSummary(usage) {
     prompt_tokens: usage?.prompt_tokens ?? 0,
     cached_tokens: usage?.prompt_tokens_details?.cached_tokens ?? 0,
     completion_tokens: usage?.completion_tokens ?? 0,
-    reasoning_tokens: usage?.completion_tokens_details?.reasoning_tokens ?? 0
+    reasoning_tokens: usage?.completion_tokens_details?.reasoning_tokens ?? 0,
   };
 }
 
@@ -76,19 +76,30 @@ export function addUsage(a, b) {
  * A response that is not a stream (an error envelope, a plain completion) is
  * handled before the first yield, so a retry there never duplicates output.
  */
-export async function* streamChat({ apiKey, model, effort, messages, tools, signal, fetchImpl = fetch, url = XAI_URL, maxAttempts = 2, firstTokenTimeoutMs = 0 }) {
+export async function* streamChat({
+  apiKey,
+  model,
+  effort,
+  messages,
+  tools,
+  signal,
+  fetchImpl = fetch,
+  url = XAI_URL,
+  maxAttempts = 2,
+  firstTokenTimeoutMs = 0,
+}) {
   const body = {
     model,
     messages,
     stream: true,
-    stream_options: { include_usage: true }
+    stream_options: { include_usage: true },
   };
   if (effort) body.reasoning_effort = effort;
   if (tools?.length) {
     body.tools = tools;
     body.tool_choice = 'auto';
   }
-  let response = null;
+  let response;
   let reader = null;
   let first = null; // the first read, already awaited under the timeout
   for (let attempt = 1; ; attempt++) {
@@ -108,7 +119,7 @@ export async function* streamChat({ apiKey, model, effort, messages, tools, sign
         method: 'POST',
         headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
         body: JSON.stringify(body),
-        signal: own.signal
+        signal: own.signal,
       });
     } catch (err) {
       if (signal?.aborted) throw err;
@@ -158,7 +169,13 @@ export async function* streamChat({ apiKey, model, effort, messages, tools, sign
     const content = msg.content ?? '';
     if (content) yield { type: 'content', text: content };
     if (data.usage) yield { type: 'usage', usage: data.usage };
-    yield { type: 'finish', reason: data.choices[0].finish_reason ?? 'stop', toolCalls: normalizeToolCalls(msg.tool_calls ?? []), content, reasoning: msg.reasoning_content ?? '' };
+    yield {
+      type: 'finish',
+      reason: data.choices[0].finish_reason ?? 'stop',
+      toolCalls: normalizeToolCalls(msg.tool_calls ?? []),
+      content,
+      reasoning: msg.reasoning_content ?? '',
+    };
     return;
   }
   if (!response.body) throw new XaiError('xAI returned no stream', { transient: true });
@@ -179,7 +196,10 @@ export async function* streamChat({ apiKey, model, effort, messages, tools, sign
     } catch {
       return;
     }
-    if (chunk.error) throw new XaiError(`xAI stream error: ${chunk.error.message ?? 'unknown'}`, { transient: /rate|overload|capacity/i.test(String(chunk.error.message)) });
+    if (chunk.error)
+      throw new XaiError(`xAI stream error: ${chunk.error.message ?? 'unknown'}`, {
+        transient: /rate|overload|capacity/i.test(String(chunk.error.message)),
+      });
     if (chunk.usage) usage = chunk.usage;
     const choice = chunk.choices?.[0];
     if (!choice) return;

@@ -64,8 +64,18 @@
       {#if lede}<p class="av-lede av-lede-lg">{lede}</p>{/if}
       {#if primary || secondary}
         <div class="av-hero-actions">
-          {#if primary}<a class="av-btn av-btn-primary av-btn-lg" href={primary.href} target={primary.external ? '_blank' : undefined} rel={primary.external ? 'noopener' : undefined}>{primary.text} <span class="av-arrow">→</span></a>{/if}
-          {#if secondary}<a class="av-btn av-btn-ghost av-btn-lg" href={secondary.href} target={secondary.external ? '_blank' : undefined} rel={secondary.external ? 'noopener' : undefined}>{secondary.text}</a>{/if}
+          {#if primary}<a
+              class="av-btn av-btn-primary av-btn-lg"
+              href={primary.href}
+              target={primary.external ? '_blank' : undefined}
+              rel={primary.external ? 'noopener' : undefined}>{primary.text} <span class="av-arrow">→</span></a
+            >{/if}
+          {#if secondary}<a
+              class="av-btn av-btn-ghost av-btn-lg"
+              href={secondary.href}
+              target={secondary.external ? '_blank' : undefined}
+              rel={secondary.external ? 'noopener' : undefined}>{secondary.text}</a
+            >{/if}
         </div>
       {/if}
       {#if who}<p class="av-who"><span class="av-kicker">Who this is for</span>{who}</p>{/if}
@@ -74,13 +84,26 @@
     {#if clip}
       <div class="av-page-hero-art">
         <div class="av-frame"><div><VideoClip {clip} eager /></div></div>
-        {#if clip.name.startsWith('console-')}<p class="av-video-caption">Metrale Console. Demo data, recorded from the product mockup.</p>{/if}
+        {#if clip.name.startsWith('console-')}<p class="av-video-caption">
+            Metrale Console. Demo data, recorded from the product mockup.
+          </p>{/if}
       </div>
     {:else if art}
       <div class="av-frame av-page-hero-art" class:is-turning={arts.length > 1} bind:this={frame}>
         <div>
           {#each arts as a, i (a.slot)}
-            <img class:is-on={i === shown} src={a.src} alt={i === shown ? a.alt : ''} aria-hidden={i === shown ? undefined : 'true'} width={a.width} height={a.height} decoding="async" fetchpriority={i === 0 ? 'high' : undefined} loading={i === 0 ? undefined : 'lazy'} onerror={i === 0 ? retry : undefined} />
+            <img
+              class:is-on={i === shown}
+              src={a.src}
+              alt={i === shown ? a.alt : ''}
+              aria-hidden={i === shown ? undefined : 'true'}
+              width={a.width}
+              height={a.height}
+              decoding="async"
+              fetchpriority={i === 0 ? 'high' : undefined}
+              loading={i === 0 ? undefined : 'lazy'}
+              onerror={i === 0 ? retry : undefined}
+            />
           {/each}
         </div>
       </div>
@@ -89,24 +112,69 @@
 </section>
 
 <style>
-  .av-page-hero { padding: 4rem 0 3rem; }
-  .av-page-hero-in { max-width: 820px; }
-  .has-art .av-page-hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 3rem; align-items: center; }
-  .av-page-hero-art img { display: block; width: 100%; height: auto; }
+  .av-page-hero {
+    padding: 4rem 0 3rem;
+  }
+  .av-page-hero-in {
+    max-width: 820px;
+  }
+  .has-art .av-page-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 3rem;
+    align-items: center;
+  }
+  .av-page-hero-art img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
   /* Every still is dark. A dark ground means a late one is a shadow, not a white hole. */
-  .av-page-hero-art > div { background: #0E1318; position: relative; }
+  .av-page-hero-art > div {
+    background: #0e1318;
+    position: relative;
+  }
   /* Several stills: the first gives the box its height, the rest lie over it, and
      only opacity changes. */
-  .is-turning img { opacity: 0; transition: opacity 1.4s var(--av-ease); }
-  .is-turning img.is-on { opacity: 1; }
-  .is-turning img:not(:first-child) { position: absolute; inset: 0; height: 100%; object-fit: cover; }
+  .is-turning img {
+    opacity: 0;
+    transition: opacity 1.4s var(--av-ease);
+  }
+  .is-turning img.is-on {
+    opacity: 1;
+  }
+  .is-turning img:not(:first-child) {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    object-fit: cover;
+  }
   /* The hero ground is tinted, and the quiet caption grey measured 4.46:1 on the
      violet tint, under the 4.5 it needs. One step darker clears it on every tint. */
-  .av-page-hero-art :global(.av-video-caption) { color: var(--t2); }
-  @media (max-width: 1000px) {
-    .has-art .av-page-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .av-page-hero-art :global(.av-video-caption) {
+    color: var(--t2);
   }
-  .av-page-hero .av-h1 { font-size: clamp(2.2rem, 4.6vw, 3.6rem); margin-top: 0; }
-  .has-art .av-h1 { font-size: clamp(2rem, 3.6vw, 3rem); }
-  .av-who { margin-top: 1.8rem; padding-top: 1.2rem; border-top: 1px dashed var(--border-strong); color: var(--t2); font-size: 0.95rem; display: grid; gap: 0.4rem; max-width: 62ch; }
+  @media (max-width: 1000px) {
+    .has-art .av-page-hero-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2rem;
+    }
+  }
+  .av-page-hero .av-h1 {
+    font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+    margin-top: 0;
+  }
+  .has-art .av-h1 {
+    font-size: clamp(2rem, 3.6vw, 3rem);
+  }
+  .av-who {
+    margin-top: 1.8rem;
+    padding-top: 1.2rem;
+    border-top: 1px dashed var(--border-strong);
+    color: var(--t2);
+    font-size: 0.95rem;
+    display: grid;
+    gap: 0.4rem;
+    max-width: 62ch;
+  }
 </style>

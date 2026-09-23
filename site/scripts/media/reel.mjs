@@ -64,9 +64,13 @@ const collect = (v) => {
 };
 modules.forEach(collect);
 for (const seg of cut.segments) {
-  const sentences = seg.caption.split(/(?<=[.?])\s+/).map((s) => s.replace(/[.?]$/, '').trim()).filter(Boolean);
+  const sentences = seg.caption
+    .split(/(?<=[.?])\s+/)
+    .map((s) => s.replace(/[.?]$/, '').trim())
+    .filter(Boolean);
   const stray = sentences.filter((s) => !copy.some((c) => c.includes(s)));
-  if (stray.length) die(`segment "${seg.id}" says "${stray.join('", "')}", which is not in src/lib/content. Use a line the site already says.`);
+  if (stray.length)
+    die(`segment "${seg.id}" says "${stray.join('", "')}", which is not in src/lib/content. Use a line the site already says.`);
 }
 const { routes, SITE } = await load('src/lib/content/brand.js');
 const home = modules[0];
@@ -113,7 +117,8 @@ const css = `
 function overlay(seg) {
   const cap = `<p class="cap">${esc(seg.caption)}</p>`;
   const label = seg.label ? `<span class="label">${esc(seg.label)}</span>` : '';
-  if (seg.kind === 'ambient') return `<div class="scrim"></div><div class="corner mark">${lockupH}</div><div class="lower">${label}${cap}</div>`;
+  if (seg.kind === 'ambient')
+    return `<div class="scrim"></div><div class="corner mark">${lockupH}</div><div class="lower">${label}${cap}</div>`;
   if (seg.kind === 'product') return `<div class="stage"></div><div class="ring"></div><div class="under">${label}${cap}</div>`;
   if (seg.kind === 'lockup') return `<div class="veil"></div><div class="center"><div class="mark">${lockupFull}</div>${cap}</div>`;
   return `<div class="end"><div class="mark">${lockupFull}</div>${cap}<span class="pill">${esc(home.cta.primary.text)}</span><span class="url">${esc(new URL(SITE).host + routes.demo)}</span></div>`;
@@ -125,7 +130,10 @@ try {
   const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
   await page.goto(`${server.origin}/`, { waitUntil: 'load' });
   for (const seg of cut.segments) {
-    await page.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>${overlay(seg)}</body></html>`, { waitUntil: 'load' });
+    await page.setContent(
+      `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>${overlay(seg)}</body></html>`,
+      { waitUntil: 'load' }
+    );
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(120);
     await page.screenshot({ path: resolve(WORK, `${seg.id}.png`), type: 'png', omitBackground: true });
@@ -137,15 +145,18 @@ try {
 console.log(`reel: ${cut.segments.length} overlays rendered`);
 
 // --- 3. segments ------------------------------------------------------------------
-const run = (args) => execFileSync(FFMPEG, ['-y', '-hide_banner', '-loglevel', 'error', ...args], { stdio: ['ignore', 'inherit', 'inherit'] });
+const run = (args) =>
+  execFileSync(FFMPEG, ['-y', '-hide_banner', '-loglevel', 'error', ...args], { stdio: ['ignore', 'inherit', 'inherit'] });
 const rawManifestPath = resolve(site, '.media-raw', 'manifest.json');
 const rawManifest = existsSync(rawManifestPath) ? JSON.parse(readFileSync(rawManifestPath, 'utf8')) : {};
 
 /** The best available source for a segment, and how far in its scene starts. */
 function source(seg) {
-  if (seg.take && existsSync(resolve(site, 'media-brief', 'takes', seg.take))) return { file: resolve(site, 'media-brief', 'takes', seg.take), lead: 0, from: 'take' };
+  if (seg.take && existsSync(resolve(site, 'media-brief', 'takes', seg.take)))
+    return { file: resolve(site, 'media-brief', 'takes', seg.take), lead: 0, from: 'take' };
   const raw = resolve(site, '.media-raw', `${seg.slot}.webm`);
-  if (seg.kind === 'product' && existsSync(raw) && rawManifest[seg.slot]) return { file: raw, lead: rawManifest[seg.slot].trim, from: 'raw recording' };
+  if (seg.kind === 'product' && existsSync(raw) && rawManifest[seg.slot])
+    return { file: raw, lead: rawManifest[seg.slot].trim, from: 'raw recording' };
   const slot = resolve(OUT, `${seg.slot}.mp4`);
   if (!existsSync(slot)) die(`segment "${seg.id}" has no source: no take, no raw recording and no ${seg.slot}.mp4`);
   return { file: slot, lead: 0, from: 'encoded slot' };
@@ -195,13 +206,50 @@ for (let i = 1; i < files.length; i++) {
 }
 const total = lengths.reduce((a, b) => a + b, 0) - XF * (files.length - 1);
 const master = resolve(WORK, 'reel-master.mp4');
-run([...inputs, '-filter_complex', chain.replace(/;$/, ''), '-map', '[film]', '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', '15', '-pix_fmt', 'yuv420p', '-r', String(FPS), master]);
+run([
+  ...inputs,
+  '-filter_complex',
+  chain.replace(/;$/, ''),
+  '-map',
+  '[film]',
+  '-an',
+  '-c:v',
+  'libx264',
+  '-preset',
+  'slow',
+  '-crf',
+  '15',
+  '-pix_fmt',
+  'yuv420p',
+  '-r',
+  String(FPS),
+  master,
+]);
 
 // --- 5. what the site ships -----------------------------------------------------------
 const mp4 = resolve(OUT, 'reel.mp4');
 const webm = resolve(OUT, 'reel.webm');
 const webp = resolve(OUT, 'reel.webp');
-run(['-i', master, '-an', '-c:v', 'libx264', '-preset', 'slow', '-crf', '25', '-profile:v', 'high', '-level', '4.0', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', mp4]);
+run([
+  '-i',
+  master,
+  '-an',
+  '-c:v',
+  'libx264',
+  '-preset',
+  'slow',
+  '-crf',
+  '25',
+  '-profile:v',
+  'high',
+  '-level',
+  '4.0',
+  '-pix_fmt',
+  'yuv420p',
+  '-movflags',
+  '+faststart',
+  mp4,
+]);
 run(['-i', master, '-an', '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', '35', '-row-mt', '1', '-deadline', 'good', '-cpu-used', '2', webm]);
 // The poster is the lockup card: it says whose film this is before it plays.
 const lockupAt = lengths.slice(0, 2).reduce((a, b) => a + b, 0) - XF * 2 + lengths[2] * 0.6;
@@ -210,7 +258,10 @@ run(['-ss', lockupAt.toFixed(3), '-i', master, '-frames:v', '1', '-c:v', 'libweb
 const provPath = resolve(OUT, 'provenance.json');
 const prov = existsSync(provPath) ? JSON.parse(readFileSync(provPath, 'utf8')) : {};
 prov.reel = { kind: 'assembled', from: 'media-brief/reel.json', at: new Date().toISOString().slice(0, 10) };
-writeFileSync(provPath, `${JSON.stringify(Object.fromEntries(Object.entries(prov).sort(([a], [b]) => a.localeCompare(b))), null, 2)}${String.fromCharCode(10)}`);
+writeFileSync(
+  provPath,
+  `${JSON.stringify(Object.fromEntries(Object.entries(prov).sort(([a], [b]) => a.localeCompare(b))), null, 2)}${String.fromCharCode(10)}`
+);
 
 const mb = (p) => (statSync(p).size / 1024 / 1024).toFixed(2);
 console.log(`reel: ${total.toFixed(1)}s  mp4 ${mb(mp4)} MB  webm ${mb(webm)} MB  poster ${mb(webp)} MB`);

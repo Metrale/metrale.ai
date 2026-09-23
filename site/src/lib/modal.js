@@ -70,9 +70,7 @@ export function modal(node) {
     // Window-level, because a step change can unmount the focused control
     // and drop focus to <body> — a dialog-scoped listener goes deaf exactly
     // then, and the next Tab walks the page behind the modal.
-    const focusables = [...node.querySelectorAll(FOCUSABLE)].filter(
-      (el) => el.offsetParent !== null || el === document.activeElement
-    );
+    const focusables = [...node.querySelectorAll(FOCUSABLE)].filter((el) => el.offsetParent !== null || el === document.activeElement);
     if (focusables.length === 0) {
       // Nothing to land on: the dialog itself keeps focus.
       ev.preventDefault();
@@ -101,6 +99,6 @@ export function modal(node) {
       // re-rendered away. Focusing a detached element is a silent no-op, so
       // the check is only about not throwing on a null.
       opener?.focus?.();
-    }
+    },
   };
 }

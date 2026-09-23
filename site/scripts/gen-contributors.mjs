@@ -43,7 +43,7 @@ try {
     generated_date: new Date().toISOString().slice(0, 10),
     repo: REPO,
     total_contributions: contributors.reduce((n, c) => n + c.contributions, 0),
-    contributors
+    contributors,
   };
   const prev = existsSync(out) ? JSON.parse(readFileSync(out, 'utf8')) : null;
   if (!prev || JSON.stringify(prev.contributors) !== JSON.stringify(contributors)) {
@@ -56,6 +56,6 @@ try {
   if (existsSync(out)) {
     console.warn(`gen-contributors: ${err.message}; keeping the committed file`);
   } else {
-    throw new Error(`gen-contributors: ${err.message} and no committed file to fall back on`);
+    throw new Error(`gen-contributors: ${err.message} and no committed file to fall back on`, { cause: err });
   }
 }

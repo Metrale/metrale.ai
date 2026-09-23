@@ -93,8 +93,7 @@ function settingsMap(settings) {
   const out = {};
   for (const key of Object.keys(settings).sort()) {
     const v = settings[key];
-    const ok =
-      typeof v === 'boolean' || typeof v === 'string' || (typeof v === 'number' && Number.isFinite(v));
+    const ok = typeof v === 'boolean' || typeof v === 'string' || (typeof v === 'number' && Number.isFinite(v));
     if (!ok) throw new TypeError(`setting ${key} is not a boolean, finite number, or string`);
     out[key] = v;
   }
@@ -131,7 +130,7 @@ export function preview(id, recipe, settings, on) {
     id: correlation(id),
     recipe: recipeId(recipe),
     settings: settingsMap(settings),
-    on: target(on)
+    on: target(on),
   };
 }
 
@@ -142,7 +141,7 @@ export function launch(id, recipe, settings, on) {
     id: correlation(id),
     recipe: recipeId(recipe),
     settings: settingsMap(settings),
-    on: target(on)
+    on: target(on),
   };
 }
 
@@ -171,7 +170,7 @@ export function launchLogs(id, recipe, lines, on) {
     id: correlation(id),
     recipe: recipeId(recipe),
     lines,
-    on: target(on)
+    on: target(on),
   };
 }
 

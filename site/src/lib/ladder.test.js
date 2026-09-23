@@ -31,8 +31,8 @@ test('follows the lower rung leader even when another config leads the top', () 
         best_baseline_id: 'mtp',
         baselines: [
           { id: 'mtp', label: 'vLLM + MTP', tok_s: 90 },
-          { id: 'nospec', label: 'vLLM, no speculation', tok_s: 80 }
-        ]
+          { id: 'nospec', label: 'vLLM, no speculation', tok_s: 80 },
+        ],
       },
       {
         c: 128,
@@ -40,8 +40,8 @@ test('follows the lower rung leader even when another config leads the top', () 
         best_baseline_id: 'nospec',
         baselines: [
           { id: 'mtp', label: 'vLLM + MTP', tok_s: 88 },
-          { id: 'nospec', label: 'vLLM, no speculation', tok_s: 120 }
-        ]
+          { id: 'nospec', label: 'vLLM, no speculation', tok_s: 120 },
+        ],
       }
     )
   );

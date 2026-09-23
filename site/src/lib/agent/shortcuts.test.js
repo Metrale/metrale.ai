@@ -9,18 +9,7 @@ describe('the map itself', () => {
   test('every spec key is present, in the spec order', () => {
     // §3's keyboard map, verbatim. A row disappearing from the table would
     // silently disappear from the sheet too — this is the tripwire.
-    expect(SHORTCUTS.map((s) => s.keys)).toEqual([
-      '1–8',
-      '↑ ↓',
-      'l',
-      'n',
-      's',
-      'a',
-      'c',
-      'p',
-      '?',
-      'Esc'
-    ]);
+    expect(SHORTCUTS.map((s) => s.keys)).toEqual(['1–8', '↑ ↓', 'l', 'n', 's', 'a', 'c', 'p', '?', 'Esc']);
   });
 
   test('every row carries prose for the sheet', () => {
@@ -40,7 +29,7 @@ describe('dispatch', () => {
     ['a', { kind: 'alerts' }],
     ['c', { kind: 'cluster' }],
     ['p', { kind: 'pause' }],
-    ['?', { kind: 'sheet' }]
+    ['?', { kind: 'sheet' }],
   ])('%s dispatches', (key, action) => {
     expect(shortcut(key, FREE)).toEqual(action);
   });

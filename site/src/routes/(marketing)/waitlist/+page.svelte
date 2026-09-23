@@ -20,16 +20,27 @@
       <h2 class="av-sr">What joining gets you</h2>
       <div class="av-split av-split-wide" style="align-items:start">
         <div class="av-stack av-reveal" style="gap:1.5rem">
-          <ul class="av-list-check av-sx-green">{#each w.bullets as b}<li>{b}</li>{/each}</ul>
+          <ul class="av-list-check av-sx-green">
+            {#each w.bullets as b}<li>{b}</li>{/each}
+          </ul>
           <div class="av-card">
             <h3>{w.today.title}</h3>
             <p>{w.today.body}</p>
-            <p style="margin-top:0.6rem"><a class="av-link" href={w.today.cta.href}>{w.today.cta.text} <span class="av-arrow">→</span></a></p>
-            <p style="margin-top:0.6rem">{w.today.discord} <a class="av-link" href={links.discord} target="_blank" rel="noopener">Join ↗</a></p>
+            <p style="margin-top:0.6rem">
+              <a class="av-link" href={w.today.cta.href}>{w.today.cta.text} <span class="av-arrow">→</span></a>
+            </p>
+            <p style="margin-top:0.6rem">
+              {w.today.discord} <a class="av-link" href={links.discord} target="_blank" rel="noopener">Join ↗</a>
+            </p>
           </div>
         </div>
         <div class="av-reveal" id="join" style="scroll-margin-top:96px">
-          <DemoForm form={w.form} source="waitlist" to={contacts.sales} subject={(v) => `Community Edition waitlist, ${v.name || v.email || ''}`} />
+          <DemoForm
+            form={w.form}
+            source="waitlist"
+            to={contacts.sales}
+            subject={(v) => `Community Edition waitlist, ${v.name || v.email || ''}`}
+          />
         </div>
       </div>
     </div>

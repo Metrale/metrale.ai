@@ -90,7 +90,7 @@
         selected: n.id === selectedId,
         running: n.running !== null,
         recipe: n.running,
-        on: n.isLocal ? null : n.id
+        on: n.isLocal ? null : n.id,
       })),
       cadenceMs
     );
@@ -181,16 +181,12 @@
     // prevents default; dispatching again would double-move the selection.
     if (e.defaultPrevented) return;
     const t = e.target;
-    const typing = Boolean(
-      t instanceof Element && t.closest('input, textarea, select, [contenteditable="true"]')
-    );
-    const overlayOpen = Boolean(
-      pairingOpen || clusterOpen || sheetOpen || pairing || unpairing || details
-    );
+    const typing = Boolean(t instanceof Element && t.closest('input, textarea, select, [contenteditable="true"]'));
+    const overlayOpen = Boolean(pairingOpen || clusterOpen || sheetOpen || pairing || unpairing || details);
     const act = shortcut(e.key, {
       typing,
       overlayOpen,
-      modified: e.ctrlKey || e.metaKey || e.altKey
+      modified: e.ctrlKey || e.metaKey || e.altKey,
     });
     if (!act) return;
     e.preventDefault();
@@ -259,15 +255,7 @@
       onvitals={(v) => (vitalsOn = v)}
       onhelp={() => (sheetOpen = true)}
     />
-    <Roster
-      {fleet}
-      {selectedId}
-      {poller}
-      {paused}
-      onselect={select}
-      onadd={() => (pairingOpen = true)}
-      onpair={(n) => (pairing = n)}
-    />
+    <Roster {fleet} {selectedId} {poller} {paused} onselect={select} onadd={() => (pairingOpen = true)} onpair={(n) => (pairing = n)} />
     <NodeStage
       bind:this={stageEl}
       {fleet}
@@ -317,8 +305,8 @@
             <div class="ctl-setup">
               <h2>Lost the agent</h2>
               <p>
-                The connection to the local agent dropped. This page is trying again on
-                its own, and will pick up where it left off as soon as the agent answers.
+                The connection to the local agent dropped. This page is trying again on its own, and will pick up where it left off as soon
+                as the agent answers.
               </p>
               <p class="ld-watching">Reconnecting…</p>
               <p>
@@ -340,10 +328,9 @@
               {/if}
               <p>
                 An agent is running, but it has not seen this browser before. Run
-                <code class="mono">atlasctl agent token</code> and paste the value into the
-                launch dialog on the <a href="/engine#models">engine page</a> — that is where the token
-                field lives, not here. This page notices on its own once you have; it keeps
-                looking. This is separate from pairing machines to each other.
+                <code class="mono">atlasctl agent token</code> and paste the value into the launch dialog on the
+                <a href="/engine#models">engine page</a> — that is where the token field lives, not here. This page notices on its own once you
+                have; it keeps looking. This is separate from pairing machines to each other.
               </p>
             </div>
           {:else}
@@ -359,10 +346,7 @@
               {#if fleet.detail}
                 <p class="ld-error" role="alert">{fleet.detail}</p>
               {/if}
-              <p>
-                Metrale runs on your hardware, not ours. Install the agent on a machine
-                and this page becomes its control panel.
-              </p>
+              <p>Metrale runs on your hardware, not ours. Install the agent on a machine and this page becomes its control panel.</p>
               <InstallSteps />
               {#if attempted}
                 <p class="ld-watching">
@@ -373,14 +357,11 @@
                 <!-- Not "watching": nothing is being watched until the operator
                      asks. Saying otherwise would be a claim about behaviour that
                      is deliberately not happening yet. -->
-                <button type="button" class="btn btn-primary" onclick={connectNow}>
-                  Connect to the agent on this machine
-                </button>
+                <button type="button" class="btn btn-primary" onclick={connectNow}> Connect to the agent on this machine </button>
                 <p class="ctl-safety">
-                  Your browser will ask permission to reach other apps on this
-                  device. That is this page opening a connection to the agent on
-                  127.0.0.1, and nothing else — it is asked now, rather than on
-                  arrival, because until now there was nothing to connect to.
+                  Your browser will ask permission to reach other apps on this device. That is this page opening a connection to the agent
+                  on 127.0.0.1, and nothing else — it is asked now, rather than on arrival, because until now there was nothing to connect
+                  to.
                 </p>
               {/if}
               <p class="ctl-safety">
@@ -392,13 +373,13 @@
                    not import the marketing content modules. -->
               <div class="ctl-context">
                 <p>
-                  This is the local fleet manager, the first piece of Metrale Control. It grows
-                  into the enterprise control plane the platform pages describe:
+                  This is the local fleet manager, the first piece of Metrale Control. It grows into the enterprise control plane the
+                  platform pages describe:
                   <a href="/platform/control#blueprint">how it is built</a>, the
                   <a href="/platform/deployment#parity">three ways to own it</a>, and the
-                  <a href="/platform/economics#operators">ledger it feeds</a>. The engine it
-                  manages is the one on <a href="/engine">the developers page</a>, and the numbers
-                  it reports are the ones the <a href="/platform/economics#blueprint">economics layer</a> counts.
+                  <a href="/platform/economics#operators">ledger it feeds</a>. The engine it manages is the one on
+                  <a href="/engine">the developers page</a>, and the numbers it reports are the ones the
+                  <a href="/platform/economics#blueprint">economics layer</a> counts.
                 </p>
               </div>
             </div>
@@ -441,15 +422,10 @@
           sub="Idle machines matter as much as busy ones. A clamped clock, a failing fan or a full cache filesystem is something to know before a launch, not after a benchmark comes back wrong."
         />
         <h3 class="al-empty-title">Nothing to report</h3>
-        <p class="al-empty">
-          No alerts. This section stays here so you never have to wonder where they
-          would appear.
-        </p>
+        <p class="al-empty">No alerts. This section stays here so you never have to wonder where they would appear.</p>
       </div>
     </section>
   </main>
-
-  
 {/if}
 
 {#if fleet.mode === 'live' && pairingOpen}

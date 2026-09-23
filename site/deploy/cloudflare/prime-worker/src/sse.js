@@ -39,7 +39,7 @@ export function eventStream(headers = {}) {
     },
     cancel() {
       controller = null;
-    }
+    },
   });
   const send = (event, data) => {
     try {
@@ -62,8 +62,15 @@ export function eventStream(headers = {}) {
       'content-type': 'text/event-stream; charset=utf-8',
       'cache-control': 'no-store, no-transform',
       'x-accel-buffering': 'no',
-      ...headers
-    }
+      ...headers,
+    },
   });
-  return { response, send, close, get open() { return controller !== null; } };
+  return {
+    response,
+    send,
+    close,
+    get open() {
+      return controller !== null;
+    },
+  };
 }

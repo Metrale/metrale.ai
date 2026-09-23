@@ -15,17 +15,9 @@ import {
   rerankHandler,
   sseChatHandler,
   sseMidStreamErrorHandler,
-  installPacedChat
+  installPacedChat,
 } from './fixtures/openrouter.js';
-import {
-  META,
-  routeCorpus,
-  openChat,
-  statusText,
-  waitReady,
-  withKey,
-  askQuestion
-} from './fixtures/chat-helpers.js';
+import { META, routeCorpus, openChat, statusText, waitReady, withKey, askQuestion } from './fixtures/chat-helpers.js';
 
 // Reasoning deltas: even indices stream as `delta.reasoning`, odd indices as
 // `delta.reasoning_details` (see sseChatFrames) — both shapes must land in
@@ -38,7 +30,7 @@ const REASONING = [
   'I should cite [1] and include the rust line. ',
   'Checking the other context blocks for a better excerpt. ',
   'Nothing closer than [1] in the retrieved set. ',
-  'Now writing the final answer.'
+  'Now writing the final answer.',
 ];
 
 // Content deltas include a mid-stream XSS probe split across two deltas — the
@@ -56,7 +48,7 @@ const CONTENT = [
   // fragment of the attribute name as a misspelling when the cut lands one
   // letter later.
   'Probe: <img src=x on',
-  'error="window.__xss=1"> must print as text, never run.'
+  'error="window.__xss=1"> must print as text, never run.',
 ];
 
 async function routeRetrieval(context) {
@@ -64,10 +56,7 @@ async function routeRetrieval(context) {
   await context.route(OR_RERANK, rerankHandler());
 }
 
-test('the thinking trace streams, collapses to the disclosure, and the answer streams below', async ({
-  page,
-  context
-}) => {
+test('the thinking trace streams, collapses to the disclosure, and the answer streams below', async ({ page, context }) => {
   await routeCorpus(context);
   await routeRetrieval(context);
   await withKey(page);
@@ -89,9 +78,7 @@ test('the thinking trace streams, collapses to the disclosure, and the answer st
   // The trace streams: its text grows while reasoning deltas arrive.
   const traceText = card.locator('.cm-think-text');
   const grew = (await traceText.textContent()).length;
-  await expect
-    .poll(async () => (await traceText.textContent()).length, { timeout: 15_000 })
-    .toBeGreaterThan(grew);
+  await expect.poll(async () => (await traceText.textContent()).length, { timeout: 15_000 }).toBeGreaterThan(grew);
 
   // First answer token: the trace collapses to the one-line disclosure and
   // the pill flips to writing.
@@ -105,9 +92,7 @@ test('the thinking trace streams, collapses to the disclosure, and the answer st
   // The answer grows progressively as markdown.
   const body = card.locator('.cm-body');
   const bodyLen = (await body.textContent()).length;
-  await expect
-    .poll(async () => (await body.textContent()).length, { timeout: 15_000 })
-    .toBeGreaterThan(bodyLen);
+  await expect.poll(async () => (await body.textContent()).length, { timeout: 15_000 }).toBeGreaterThan(bodyLen);
 
   // Completion: the printed message carries the full markdown answer, the
   // persistent disclosure, and the sources footer.
@@ -131,10 +116,7 @@ test('the thinking trace streams, collapses to the disclosure, and the answer st
   await expect(toggle).toContainText('hide');
 });
 
-test('a one-shot SSE response settles into the full answer with the reasoning disclosure', async ({
-  page,
-  context
-}) => {
+test('a one-shot SSE response settles into the full answer with the reasoning disclosure', async ({ page, context }) => {
   await routeCorpus(context);
   await routeRetrieval(context);
   await context.route(OR_CHAT, sseChatHandler(REASONING, CONTENT));
@@ -150,9 +132,7 @@ test('a one-shot SSE response settles into the full answer with the reasoning di
   await expect.poll(() => card.getAttribute('data-streaming')).toBeNull();
 
   // [DONE] respected, full answer assembled from the content deltas.
-  await expect(card.locator('.cm-body')).toContainText(
-    'The verifier keeps the longest accepted prefix of the draft tokens'
-  );
+  await expect(card.locator('.cm-body')).toContainText('The verifier keeps the longest accepted prefix of the draft tokens');
   await expect(card.locator('pre.cc-fence code.language-rust')).toContainText('take_while');
   await expect(card.locator('.cm-body')).toContainText('<img src=x onerror=');
   expect(await page.evaluate(() => window.__xss)).toBeUndefined();

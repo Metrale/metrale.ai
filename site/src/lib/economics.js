@@ -36,7 +36,7 @@ export const FLEET_DEFAULTS = Object.freeze({
   wattsPerGpu: 700, // H100 class, USER
   pue: 1.3, // USER
   usdPerKwh: 0.12, // USER
-  replacedSoftwarePerGpuYear: 0 // e.g. 4500 for NVIDIA AI Enterprise, USER
+  replacedSoftwarePerGpuYear: 0, // e.g. 4500 for NVIDIA AI Enterprise, USER
 });
 
 /** Defaults for the API replacement scenario. */
@@ -50,7 +50,7 @@ export const API_DEFAULTS = Object.freeze({
   wattsPerBox: 240, // USER
   pue: 1.2, // USER
   usdPerKwh: 0.12, // USER
-  licensePerBoxMonth: 50 // PROPOSED workstation license
+  licensePerBoxMonth: 50, // PROPOSED workstation license
 });
 
 /** Defaults for the tokens per watt scenario. */
@@ -64,7 +64,7 @@ export const ENERGY_DEFAULTS = Object.freeze({
   baselineWatts: 240, // USER. Equal draw is an assumption, and the visitor can break it
   pue: 1.2, // USER
   usdPerKwh: 0.12, // USER
-  millionTokensPerMonth: 1000 // USER
+  millionTokensPerMonth: 1000, // USER
 });
 
 const round = (n, d = 1) => Math.round(n * 10 ** d) / 10 ** d;
@@ -104,7 +104,7 @@ export function fleetModel(input = {}) {
     net: Math.round(net),
     threeYearNet: Math.round(net * 3),
     paybackMonths: Number.isFinite(paybackMonths) ? round(paybackMonths, 1) : null,
-    savingsPct: spend > 0 ? round((net / spend) * 100, 1) : 0
+    savingsPct: spend > 0 ? round((net / spend) * 100, 1) : 0,
   };
 }
 
@@ -139,7 +139,7 @@ export function apiModel(input = {}) {
     monthlySavings: Math.round(monthlySavings),
     savingsPct: i.monthlySpend > 0 ? round((monthlySavings / i.monthlySpend) * 100, 1) : 0,
     costPerMillion: round(costPerMillion, 3),
-    paybackMonths: paybackMonths === null ? null : round(paybackMonths, 1)
+    paybackMonths: paybackMonths === null ? null : round(paybackMonths, 1),
   };
 }
 
@@ -163,7 +163,7 @@ export function efficiency({ tokensPerSecond, watts }) {
   return {
     tokensPerJoule: ok ? tokensPerSecond / watts : 0,
     joulesPerToken,
-    kwhPerMillion: (joulesPerToken * 1e6) / JOULES_PER_KWH
+    kwhPerMillion: (joulesPerToken * 1e6) / JOULES_PER_KWH,
   };
 }
 
@@ -203,7 +203,7 @@ export function energyModel(input = {}) {
     kwhPerMonth: Math.round(monthKwh(ours)),
     baselineKwhPerMonth: Math.round(monthKwh(theirs)),
     kwhSavedPerMonth: Math.round(kwhSaved),
-    usdSavedPerYear: Math.round(kwhSaved * i.usdPerKwh * 12)
+    usdSavedPerYear: Math.round(kwhSaved * i.usdPerKwh * 12),
   };
 }
 
@@ -233,7 +233,7 @@ export function efficiencyLadder(rows = [], { watts = ENERGY_DEFAULTS.watts, bas
         c: r.c,
         avarok: perJoule(r.atlas, measured ? r.atlas_watts : watts),
         baseline: perJoule(base.tok_s, measured ? base.watts : baselineWatts),
-        measured
+        measured,
       };
     });
   return { points, measured: points.length > 0 && points.every((p) => p.measured) };
@@ -249,7 +249,12 @@ export function energyInputsFrom(rows = []) {
   const base = top && matchedBaseline(top);
   if (!top || !base) return { ...ENERGY_DEFAULTS };
   const measured = top.atlas_watts > 0 && base.watts > 0;
-  return { ...ENERGY_DEFAULTS, tokensPerSecond: top.atlas, baselineTokensPerSecond: base.tok_s, ...(measured ? { watts: top.atlas_watts, baselineWatts: base.watts } : {}) };
+  return {
+    ...ENERGY_DEFAULTS,
+    tokensPerSecond: top.atlas,
+    baselineTokensPerSecond: base.tok_s,
+    ...(measured ? { watts: top.atlas_watts, baselineWatts: base.watts } : {}),
+  };
 }
 
 /**

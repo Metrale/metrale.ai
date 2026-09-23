@@ -4,11 +4,7 @@ import { describe, expect, test } from 'bun:test';
 import * as Sel from './selection.js';
 
 const ID = (n) => String(n).repeat(64).slice(0, 64);
-const NODES = [
-  { id: ID(1), isLocal: true },
-  { id: ID(2) },
-  { id: ID(3) }
-];
+const NODES = [{ id: ID(1), isLocal: true }, { id: ID(2) }, { id: ID(3) }];
 
 describe('number keys jump to roster rows', () => {
   test('1 selects the first row, 3 the third', () => {

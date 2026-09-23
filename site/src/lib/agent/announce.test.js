@@ -16,7 +16,7 @@ describe('the single live region speaks only on severity transitions', () => {
   test('the first alert is announced, verbatim from the alert', () => {
     expect(announcement(null, [warn])).toEqual({
       severity: 'warning',
-      text: 'warning: dgx2: cache fs at 94%'
+      text: 'warning: dgx2: cache fs at 94%',
     });
   });
 
@@ -43,7 +43,7 @@ describe('the single live region speaks only on severity transitions', () => {
     // none — which reads as all-clear against a previously announced warning.
     expect(announcement('warning', [{ severity: 'apocalyptic' }])).toEqual({
       severity: null,
-      text: 'All alerts cleared.'
+      text: 'All alerts cleared.',
     });
     expect(announcement(null, [{ severity: 'apocalyptic' }])).toBeNull();
   });

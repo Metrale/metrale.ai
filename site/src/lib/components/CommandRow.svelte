@@ -51,11 +51,6 @@
        read. Not a button — it is text, and `role`/`aria-label` name it so the
        stop is explicable rather than a mystery focus. -->
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-  <code
-    class="mono"
-    bind:this={codeEl}
-    tabindex="0"
-    role="group"
-    aria-label="Command, scrollable">{command}</code>
+  <code class="mono" bind:this={codeEl} tabindex="0" role="group" aria-label="Command, scrollable">{command}</code>
   <button type="button" class="cmd-copy" onclick={copy}>{copyLabel(state, label)}</button>
 </div>

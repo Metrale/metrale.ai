@@ -7,7 +7,7 @@ const DGX1 = '11'.repeat(32);
 const DGX3 = '33'.repeat(32);
 const NODES = [
   { id: DGX1, name: 'dgx1' },
-  { id: DGX3, name: 'dgx3' }
+  { id: DGX3, name: 'dgx3' },
 ];
 
 const paired = (over = {}) => ({
@@ -19,20 +19,12 @@ const paired = (over = {}) => ({
   cannotLaunchReason: '',
   running: 'qwen3.8-27b-nvfp4',
   reachedVia: null,
-  ...over
+  ...over,
 });
 
 describe('the bar offers exactly the seven verbs, in order', () => {
   test('the vocabulary is closed', () => {
-    expect(VERBS.map((v) => v.id)).toEqual([
-      'recipes',
-      'preview',
-      'launch',
-      'stop',
-      'status',
-      'stats',
-      'logs'
-    ]);
+    expect(VERBS.map((v) => v.id)).toEqual(['recipes', 'preview', 'launch', 'stop', 'status', 'stats', 'logs']);
   });
 });
 
@@ -54,9 +46,7 @@ describe('disabled with the stated reason, never hidden', () => {
   });
 
   test('a control-only machine refuses launch verbs in its own words', () => {
-    const a = availability(
-      paired({ canLaunch: false, cannotLaunchReason: 'no accelerator present' })
-    );
+    const a = availability(paired({ canLaunch: false, cannotLaunchReason: 'no accelerator present' }));
     expect(a.launch).toEqual({ enabled: false, reason: 'no accelerator present' });
     expect(a.preview.enabled).toBe(false);
     // Reading its inventory and status is still allowed.
@@ -81,9 +71,7 @@ describe('disabled with the stated reason, never hidden', () => {
 
   test('vouched machines are controllable — that is what the relay is for', () => {
     expect(targetable(paired({ pairing: 'vouched', reachedVia: DGX1 }))).toBe(true);
-    expect(availability(paired({ pairing: 'vouched', reachedVia: DGX1 })).launch.enabled).toBe(
-      true
-    );
+    expect(availability(paired({ pairing: 'vouched', reachedVia: DGX1 })).launch.enabled).toBe(true);
   });
 
   test('no selection disables everything', () => {
@@ -100,9 +88,7 @@ describe('every action states where it will run', () => {
   });
 
   test('mutating verbs on a relayed target warn about the travel', () => {
-    expect(travelWarning(paired({ reachedVia: DGX1 }), NODES)).toBe(
-      'This will travel through dgx1.'
-    );
+    expect(travelWarning(paired({ reachedVia: DGX1 }), NODES)).toBe('This will travel through dgx1.');
     expect(travelWarning(paired(), NODES)).toBeNull();
     expect(travelWarning(null, NODES)).toBeNull();
   });

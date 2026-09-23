@@ -38,9 +38,7 @@ export const ROOT = { id: '__you__', kind: 'browser', label: 'You' };
  * @returns {{tier: number, nodes: object[]}[]}
  */
 export function tiers(nodes) {
-  const list = (Array.isArray(nodes) ? nodes : []).filter(
-    (n) => n && typeof n.id === 'string' && n.id.length > 0
-  );
+  const list = (Array.isArray(nodes) ? nodes : []).filter((n) => n && typeof n.id === 'string' && n.id.length > 0);
   const local = list.filter((n) => n.isLocal);
   const remote = list.filter((n) => !n.isLocal);
   const present = new Set(local.concat(remote).map((n) => n.id));
@@ -67,9 +65,7 @@ export function tiers(nodes) {
  * @returns {{from: string, to: string, kind: 'browser'|'direct'|'vouched'}[]}
  */
 export function reach(nodes) {
-  const list = (Array.isArray(nodes) ? nodes : []).filter(
-    (n) => n && typeof n.id === 'string' && n.id.length > 0
-  );
+  const list = (Array.isArray(nodes) ? nodes : []).filter((n) => n && typeof n.id === 'string' && n.id.length > 0);
   const local = list.find((n) => n.isLocal);
   const present = new Set(list.map((n) => n.id));
   const out = [];

@@ -15,7 +15,12 @@
 
   let { records, panel, onselect } = $props();
 
-  const W = 720, H = 232, PL = 56, PR = 16, PT = 14, PB = 30;
+  const W = 720,
+    H = 232,
+    PL = 56,
+    PR = 16,
+    PT = 14,
+    PB = 30;
   const LABEL_H = 13;
 
   const runs = $derived(
@@ -24,7 +29,7 @@
         rec,
         pts: ladderPoints(rec),
         dash: dashFor(rec.benchmark_id),
-        variant: variantLabel(rec.benchmark_id)
+        variant: variantLabel(rec.benchmark_id),
       }))
       .filter((r) => r.pts.length > 0)
   );
@@ -49,7 +54,7 @@
         color: colorFor(latest.rec.target_model),
         dash: latest.dash,
         variant: latest.variant,
-        model: latest.rec.target_model
+        model: latest.rec.target_model,
       };
     });
   });
@@ -58,7 +63,7 @@
     const cs = runs.flatMap((r) => r.pts.map((p) => p.c));
     const vs = [
       ...lanes.flatMap((l) => [l.latest, l.previous].filter(Boolean).flatMap((r) => r.pts.map((p) => p.v))),
-      ...lanes.flatMap((l) => l.band.flatMap((b) => [b.lo, b.hi]))
+      ...lanes.flatMap((l) => l.band.flatMap((b) => [b.lo, b.hi])),
     ];
     const [c0, c1] = [Math.min(...cs), Math.max(...cs)];
     const [lo, hi] = [Math.min(...vs), Math.max(...vs)];
@@ -68,8 +73,7 @@
     return { l0: Math.log2(c0), l1: Math.log2(c1), v0: Math.max(0, lo - pad), v1: hi + pad };
   });
 
-  const x = (c) =>
-    PL + (ext.l1 === ext.l0 ? 0.5 : (Math.log2(c) - ext.l0) / (ext.l1 - ext.l0)) * (W - PL - PR);
+  const x = (c) => PL + (ext.l1 === ext.l0 ? 0.5 : (Math.log2(c) - ext.l0) / (ext.l1 - ext.l0)) * (W - PL - PR);
   const y = (v) => PT + (1 - (v - ext.v0) / (ext.v1 - ext.v0 || 1)) * (H - PT - PB);
   const path = (pts) => pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.c).toFixed(1)} ${y(p.v).toFixed(1)}`).join(' ');
 
@@ -82,9 +86,7 @@
   const hasHistory = $derived(lanes.some((l) => l.band.length > 1));
 
   const endLabels = $derived.by(() => {
-    const ends = lanes
-      .filter((l) => l.latest?.pts.length)
-      .map((l) => ({ l, p: l.latest.pts[l.latest.pts.length - 1] }));
+    const ends = lanes.filter((l) => l.latest?.pts.length).map((l) => ({ l, p: l.latest.pts[l.latest.pts.length - 1] }));
     const placed = dodgeLabels(
       ends.map((e) => y(e.p.v) - 9),
       { height: LABEL_H, top: PT + 7, bottom: H - PB - 6 }
@@ -93,7 +95,7 @@
       text: fmtV(e.p.v),
       color: e.l.color,
       x: Math.min(x(e.p.c), W - PR - 4),
-      y: placed[i]
+      y: placed[i],
     }));
   });
 </script>
@@ -121,8 +123,16 @@
           {#each variants as v}
             <span class="gate-legend-item">
               <svg class="gl-swatch" viewBox="0 0 20 10" aria-hidden="true">
-                <line x1="1" y1="5" x2="19" y2="5" stroke="currentColor" stroke-width="2"
-                  stroke-dasharray={v.dash} stroke-linecap="round" />
+                <line
+                  x1="1"
+                  y1="5"
+                  x2="19"
+                  y2="5"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-dasharray={v.dash}
+                  stroke-linecap="round"
+                />
               </svg>{v.variant}
             </span>
           {/each}
@@ -169,7 +179,11 @@
           style={lane.dash ? `color:${lane.color}` : undefined}
           stroke="none"
         >
-          <title>range over {lane.history.length} earlier runs{lane.variant ? ` · ${lane.variant}` : ''} · {fmtDate(lane.history[0].rec.recorded_at)} – {fmtDate(lane.history[lane.history.length - 1].rec.recorded_at)}</title>
+          <title
+            >range over {lane.history.length} earlier runs{lane.variant ? ` · ${lane.variant}` : ''} · {fmtDate(
+              lane.history[0].rec.recorded_at
+            )} – {fmtDate(lane.history[lane.history.length - 1].rec.recorded_at)}</title
+          >
         </path>
       {/if}
     {/each}
@@ -178,25 +192,42 @@
       {#each [lane.previous, lane.latest].filter(Boolean) as r, i}
         {@const isLatest = i === [lane.previous, lane.latest].filter(Boolean).length - 1}
         <g opacity={isLatest ? 1 : 0.45}>
-          <path d={path(r.pts)} fill="none" stroke={lane.color} stroke-width={isLatest ? 2 : 1.25}
-            stroke-dasharray={lane.dash} stroke-linejoin="round" stroke-linecap="round" />
+          <path
+            d={path(r.pts)}
+            fill="none"
+            stroke={lane.color}
+            stroke-width={isLatest ? 2 : 1.25}
+            stroke-dasharray={lane.dash}
+            stroke-linejoin="round"
+            stroke-linecap="round"
+          />
           {#each r.pts as p}
             <g
               class="gc-pt"
               role="button"
               tabindex="0"
-              aria-label="C={p.c}: {fmtV(p.v)} tok/s{lane.variant ? ', ' + lane.variant : ''} on {fmtDate(r.rec.recorded_at)}, {r.rec.verdict} — details"
+              aria-label="C={p.c}: {fmtV(p.v)} tok/s{lane.variant ? ', ' + lane.variant : ''} on {fmtDate(r.rec.recorded_at)}, {r.rec
+                .verdict} — details"
               onclick={() => onselect([r.rec])}
               onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), onselect([r.rec]))}
             >
-              <title>C={p.c} · {fmtV(p.v)} tok/s{lane.variant ? ' · ' + lane.variant : ''} · {fmtDate(r.rec.recorded_at)} · {r.rec.verdict} · click for record</title>
+              <title
+                >C={p.c} · {fmtV(p.v)} tok/s{lane.variant ? ' · ' + lane.variant : ''} · {fmtDate(r.rec.recorded_at)} · {r.rec.verdict} · click
+                for record</title
+              >
               <circle class="gc-hit" cx={x(p.c)} cy={y(p.v)} r="11" />
               {#if r.rec.verdict === 'PASS'}
-                <circle class="gc-mark" cx={x(p.c)} cy={y(p.v)} r={isLatest ? 3.5 : 2.5} fill={lane.color}
-                  stroke="var(--card)" stroke-width="1" />
+                <circle
+                  class="gc-mark"
+                  cx={x(p.c)}
+                  cy={y(p.v)}
+                  r={isLatest ? 3.5 : 2.5}
+                  fill={lane.color}
+                  stroke="var(--card)"
+                  stroke-width="1"
+                />
               {:else}
-                <circle class="gc-mark gc-fail" cx={x(p.c)} cy={y(p.v)} r="4.5" fill="var(--card)"
-                  stroke={lane.color} stroke-width="2" />
+                <circle class="gc-mark gc-fail" cx={x(p.c)} cy={y(p.v)} r="4.5" fill="var(--card)" stroke={lane.color} stroke-width="2" />
               {/if}
             </g>
           {/each}

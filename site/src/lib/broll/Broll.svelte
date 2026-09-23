@@ -63,6 +63,6 @@
     width: 100vw;
     height: 100vh;
     display: block;
-    background: #0E1318;
+    background: #0e1318;
   }
 </style>

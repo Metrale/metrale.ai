@@ -41,11 +41,7 @@
     return map;
   });
 
-  const lines = $derived(
-    edges
-      .map((e) => ({ e, a: placed.get(e.from), b: placed.get(e.to) }))
-      .filter((l) => l.a && l.b)
-  );
+  const lines = $derived(edges.map((e) => ({ e, a: placed.get(e.from), b: placed.get(e.to) })).filter((l) => l.a && l.b));
 
   const shown = $derived([...placed.values()]);
 
@@ -66,16 +62,11 @@
   <figcaption class="rm-cap">
     How your fleet is connected
     <HelpDot label="How to reach machines on another network">
+      <p>This graph is drawn from where you are: your browser, the agent on this machine, and everything reachable outwards from it.</p>
       <p>
-        This graph is drawn from where you are: your browser, the agent on this
-        machine, and everything reachable outwards from it.
-      </p>
-      <p>
-        A machine drawn one column further out is reached <em>through</em> the
-        one before it, not directly. To add machines on a network this one
-        cannot see, install the agent on a machine that sits on both — one
-        interface on each — and pair with that. It becomes the middle node, and
-        its neighbours appear behind it.
+        A machine drawn one column further out is reached <em>through</em> the one before it, not directly. To add machines on a network this
+        one cannot see, install the agent on a machine that sits on both — one interface on each — and pair with that. It becomes the middle node,
+        and its neighbours appear behind it.
       </p>
       <p>Pairing stays between neighbours; a middle node vouches, it does not share keys.</p>
     </HelpDot>
@@ -93,9 +84,7 @@
         y2={l.b.y}
       />
       {#if l.e.kind === 'vouched'}
-        <text class="rm-edge-label" x={(l.a.x + l.b.x) / 2} y={(l.a.y + l.b.y) / 2 - 8} text-anchor="middle">
-          via
-        </text>
+        <text class="rm-edge-label" x={(l.a.x + l.b.x) / 2} y={(l.a.y + l.b.y) / 2 - 8} text-anchor="middle"> via </text>
       {/if}
     {/each}
 
@@ -104,14 +93,7 @@
         {#if p.node.kind === 'browser'}
           <rect class="rm-you" x={p.x - R} y={p.y - R + 4} width={R * 2} height={R * 2 - 8} rx="6" />
         {:else}
-          <circle
-            class="rm-dot"
-            class:rm-dot-local={p.node.isLocal}
-            class:rm-dot-vouched={p.tier === 3}
-            cx={p.x}
-            cy={p.y}
-            r={R}
-          />
+          <circle class="rm-dot" class:rm-dot-local={p.node.isLocal} class:rm-dot-vouched={p.tier === 3} cx={p.x} cy={p.y} r={R} />
         {/if}
         <text class="rm-label" x={p.x} y={p.y + R + 15} text-anchor="middle">{short(p.node)}</text>
       </g>

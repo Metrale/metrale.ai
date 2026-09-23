@@ -51,7 +51,9 @@
         </div>
         <div class="av-tabs av-reveal" role="tablist" aria-label="Model vendors">
           {#each modelData as v}
-            <button type="button" role="tab" class="av-tab" aria-selected={vendor === v.vendor} onclick={() => (vendor = v.vendor)}>{v.vendor} <span class="av-mono" style="opacity:.6">{v.subfamilies.reduce((n, f) => n + f.recipes.length, 0)}</span></button>
+            <button type="button" role="tab" class="av-tab" aria-selected={vendor === v.vendor} onclick={() => (vendor = v.vendor)}
+              >{v.vendor} <span class="av-mono" style="opacity:.6">{v.subfamilies.reduce((n, f) => n + f.recipes.length, 0)}</span></button
+            >
           {/each}
         </div>
         {#if current}

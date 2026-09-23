@@ -40,10 +40,11 @@ test.describe('front page', () => {
 
   test('the hero clip actually plays: its clock advances and the poster gives way', async ({ page }) => {
     await page.goto('/');
-    const playing = () => page.evaluate(() => {
-      const v = document.querySelector('.av-hero .av-video video');
-      return !!v && !v.paused && v.currentTime > 0.2 && v.readyState >= 2;
-    });
+    const playing = () =>
+      page.evaluate(() => {
+        const v = document.querySelector('.av-hero .av-video video');
+        return !!v && !v.paused && v.currentTime > 0.2 && v.readyState >= 2;
+      });
     await expect.poll(playing, { timeout: 20_000 }).toBe(true);
     await expect(page.locator('.av-hero .av-video img')).toHaveClass(/is-hidden/);
   });
@@ -88,7 +89,9 @@ test.describe('front page', () => {
     await expect(shown).toBeVisible();
     expect(await shown.evaluate((i) => i.complete && i.naturalWidth)).toBeGreaterThan(600);
     // only the chosen tab plays, and the one left behind rewinds under its poster
-    await expect.poll(() => page.locator('#tour-panel-governance video').evaluate((v) => !v.paused && v.currentTime > 0.2), { timeout: 20_000 }).toBe(true);
+    await expect
+      .poll(() => page.locator('#tour-panel-governance video').evaluate((v) => !v.paused && v.currentTime > 0.2), { timeout: 20_000 })
+      .toBe(true);
     const others = await page.locator('#tour .av-tabpanel.is-off video').evaluateAll((vs) => vs.every((v) => v.paused));
     expect(others).toBe(true);
   });
@@ -116,21 +119,28 @@ test.describe('front page', () => {
 
   test('the architecture diagram keeps every label inside its box, and every box on the canvas', async ({ page }) => {
     await page.goto('/platform');
-    const problems = await page.locator('.av-diagram svg').first().evaluate((svg) => {
-      const vb = svg.viewBox.baseVal;
-      const boxes = [...svg.querySelectorAll('rect.box')].map((r) => r.getBBox());
-      const out = [];
-      for (const r of boxes) if (r.x < vb.x || r.y < vb.y || r.x + r.width > vb.x + vb.width || r.y + r.height > vb.y + vb.height) out.push('a box leaves the canvas');
-      for (const t of svg.querySelectorAll('text')) {
-        const b = t.getBBox();
-        const cx = b.x + b.width / 2;
-        const cy = b.y + b.height / 2;
-        const host = boxes.filter((r) => cx >= r.x && cx <= r.x + r.width && cy >= r.y && cy <= r.y + r.height).sort((a, c) => a.width * a.height - c.width * c.height)[0];
-        if (!host) out.push('no box holds: ' + t.textContent);
-        else if (b.x < host.x + 8 || b.x + b.width > host.x + host.width - 8) out.push('overflows its box: ' + t.textContent);
-      }
-      return out;
-    });
+    const problems = await page
+      .locator('.av-diagram svg')
+      .first()
+      .evaluate((svg) => {
+        const vb = svg.viewBox.baseVal;
+        const boxes = [...svg.querySelectorAll('rect.box')].map((r) => r.getBBox());
+        const out = [];
+        for (const r of boxes)
+          if (r.x < vb.x || r.y < vb.y || r.x + r.width > vb.x + vb.width || r.y + r.height > vb.y + vb.height)
+            out.push('a box leaves the canvas');
+        for (const t of svg.querySelectorAll('text')) {
+          const b = t.getBBox();
+          const cx = b.x + b.width / 2;
+          const cy = b.y + b.height / 2;
+          const host = boxes
+            .filter((r) => cx >= r.x && cx <= r.x + r.width && cy >= r.y && cy <= r.y + r.height)
+            .sort((a, c) => a.width * a.height - c.width * c.height)[0];
+          if (!host) out.push('no box holds: ' + t.textContent);
+          else if (b.x < host.x + 8 || b.x + b.width > host.x + host.width - 8) out.push('overflows its box: ' + t.textContent);
+        }
+        return out;
+      });
     expect(problems).toEqual([]);
   });
 
@@ -199,7 +209,7 @@ test.describe('pricing', () => {
 
   // The third scenario counts in a physical unit. The ladder publishes throughput
   // and no power, so the draw must read USER, and nothing may call it measured.
-  test('the third scenario counts in tokens per joule, and says the draw is the visitor\'s', async ({ page }) => {
+  test("the third scenario counts in tokens per joule, and says the draw is the visitor's", async ({ page }) => {
     await page.goto(`${routes.pricing}#payback`);
     const tabs = page.locator('#payback [role="tab"]');
     await expect(tabs).toHaveCount(3);
@@ -221,7 +231,10 @@ test.describe('pricing', () => {
     await expect.poll(perJoule).toBeCloseTo(before * 2, 1);
 
     // A baseline that draws as little gives the advantage back, and the tab says so.
-    await panel.getByLabel(/watts under load/).nth(1).fill('1');
+    await panel
+      .getByLabel(/watts under load/)
+      .nth(1)
+      .fill('1');
     await expect(panel.locator('.av-calc-hero')).toContainText('the baseline is the more efficient');
   });
 
@@ -236,7 +249,9 @@ test.describe('pricing', () => {
       const facts = await chart.evaluate((svg) => {
         const vb = svg.viewBox.baseVal;
         const texts = [...svg.querySelectorAll('text')].map((t) => ({ t: t.textContent, b: t.getBBox() }));
-        const outside = texts.filter(({ b }) => b.x < 0 || b.y < 0 || b.x + b.width > vb.width || b.y + b.height > vb.height).map(({ t }) => t);
+        const outside = texts
+          .filter(({ b }) => b.x < 0 || b.y < 0 || b.x + b.width > vb.width || b.y + b.height > vb.height)
+          .map(({ t }) => t);
         const onALine = new Set();
         for (const path of svg.querySelectorAll('path')) {
           for (let d = 0, len = path.getTotalLength(); d <= len; d += 2) {
@@ -244,12 +259,20 @@ test.describe('pricing', () => {
             for (const { t, b } of texts) if (p.x > b.x && p.x < b.x + b.width && p.y > b.y && p.y < b.y + b.height) onALine.add(t);
           }
         }
-        return { rungs: svg.querySelectorAll('text.axis').length, outside, onALine: [...onALine], textPx: (parseFloat(getComputedStyle(svg.querySelector('text.axis')).fontSize) * svg.getBoundingClientRect().width) / vb.width };
+        return {
+          rungs: svg.querySelectorAll('text.axis').length,
+          outside,
+          onALine: [...onALine],
+          textPx: (parseFloat(getComputedStyle(svg.querySelector('text.axis')).fontSize) * svg.getBoundingClientRect().width) / vb.width,
+        };
       });
       expect(facts.outside, `text outside the drawing at ${width}`).toEqual([]);
       expect(facts.onALine, `labels crossed by a line at ${width}`).toEqual([]);
       expect(facts.textPx, `axis text size at ${width}`).toBeGreaterThan(8);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `no sideways scroll at ${width}`).toBe(true);
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth),
+        `no sideways scroll at ${width}`
+      ).toBe(true);
     }
   });
 
@@ -342,7 +365,12 @@ test.describe('nothing on a marketing page costs CPU while it sits there', () =>
         document
           .getAnimations()
           .filter((a) => a.effect?.getTiming().iterations === Infinity)
-          .map((a) => ({ name: a.animationName ?? '', props: [...new Set(a.effect.getKeyframes().flatMap((k) => Object.keys(k)))].filter((k) => !['offset', 'easing', 'composite', 'computedOffset'].includes(k)) }))
+          .map((a) => ({
+            name: a.animationName ?? '',
+            props: [...new Set(a.effect.getKeyframes().flatMap((k) => Object.keys(k)))].filter(
+              (k) => !['offset', 'easing', 'composite', 'computedOffset'].includes(k)
+            ),
+          }))
           .filter((a) => a.name !== 'av-dash' && a.props.some((prop) => !['transform', 'opacity'].includes(prop)))
       );
       expect(offenders).toEqual([]);
@@ -389,7 +417,7 @@ test.describe('demo request', () => {
     }
     const [request] = await Promise.all([
       page.waitForEvent('request', { predicate: (r) => r.url().startsWith('mailto:'), timeout: 5000 }).catch(() => null),
-      page.locator('form.av-form button[type="submit"]').click()
+      page.locator('form.av-form button[type="submit"]').click(),
     ]);
     await expect(page.locator('form.av-form [role="status"]')).toBeVisible();
     if (request) expect(decodeURIComponent(request.url())).toContain('Metrale working session');
@@ -415,7 +443,7 @@ test.describe('calls to action land on the form', () => {
     await page.locator('#waitlist-email').fill('dev@example.com');
     const [request] = await Promise.all([
       page.waitForEvent('request', { predicate: (r) => r.url().startsWith('mailto:'), timeout: 5000 }).catch(() => null),
-      page.locator('form.av-form button[type="submit"]').click()
+      page.locator('form.av-form button[type="submit"]').click(),
     ]);
     await expect(page.locator('form.av-form [role="status"]')).toContainText('on the list');
     if (request) expect(decodeURIComponent(request.url())).toContain('Community Edition waitlist');
@@ -430,11 +458,13 @@ test.describe('calls to action land on the form', () => {
 });
 
 test.describe('an email button always does something', () => {
-  test('it shows the address and says it was copied', async ({ page, context }, testInfo) => {
+  test('it shows the address and says it was copied', async ({ page, context }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write']).catch(() => {});
     await page.goto('/pricing');
     // keep the test browser on the page: there is no mail app for it to open
-    await page.evaluate(() => document.addEventListener('click', (e) => e.target.closest?.('a[href^="mailto:"]') && e.preventDefault(), true));
+    await page.evaluate(() =>
+      document.addEventListener('click', (e) => e.target.closest?.('a[href^="mailto:"]') && e.preventDefault(), true)
+    );
     await expect(page.locator('.av-mailtoast')).toBeHidden();
     await page.getByRole('link', { name: 'Email sales' }).first().click();
     await expect(page.locator('.av-mailtoast')).toBeVisible();
@@ -446,14 +476,16 @@ test.describe('an email button always does something', () => {
   // the repository's own.
   test('each door on the contact page names the job, and a role mailbox answers it', async ({ page }) => {
     await page.goto('/contact');
-    const doors = await page.locator('main a[href^="mailto:"]').evaluateAll((as) => as.map((a) => `${a.textContent.trim().split(' · ')[0]} -> ${a.getAttribute('href').slice(7)}`));
+    const doors = await page
+      .locator('main a[href^="mailto:"]')
+      .evaluateAll((as) => as.map((a) => `${a.textContent.trim().split(' · ')[0]} -> ${a.getAttribute('href').slice(7)}`));
     expect(doors).toEqual([
       'Email sales -> sales@metrale.com',
       'Email engineering -> engineering@metrale.com',
       'Partnerships -> partnerships@metrale.com',
       'Community and open source -> community@metrale.com',
       'Report privately -> security@atlas.net',
-      'Email press and investors -> press@metrale.com'
+      'Email press and investors -> press@metrale.com',
     ]);
     // No founder's own address is published anywhere on the page.
     expect(doors.join(' ')).not.toMatch(/(eric|kyle|thomas|peter|tom)@/);
@@ -537,17 +569,30 @@ test.describe('logos', () => {
     await page.goto('/');
     await page.locator('.av-wall').scrollIntoViewIfNeeded();
     const broken = async () =>
-      page.locator('.av-wall img').evaluateAll((imgs) => imgs.filter((i) => i.offsetParent !== null && !(i.complete && i.naturalWidth > 0)).map((i) => i.getAttribute('src')));
+      page
+        .locator('.av-wall img')
+        .evaluateAll((imgs) =>
+          imgs.filter((i) => i.offsetParent !== null && !(i.complete && i.naturalWidth > 0)).map((i) => i.getAttribute('src'))
+        );
     await expect(page.locator('.av-wall .has-emblem img')).toHaveCount(2);
     await expect.poll(broken, { timeout: 15_000 }).toEqual([]);
-    await page.evaluate(() => document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light'));
+    await page.evaluate(() =>
+      document.documentElement.setAttribute(
+        'data-theme',
+        document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light'
+      )
+    );
     await expect.poll(broken, { timeout: 15_000 }).toEqual([]);
     await expect(page.locator('.av-wall-note')).toContainText('does not imply or constitute DoD endorsement');
   });
 });
 
 test.describe('the hidden field that catches bots', () => {
-  for (const [path, id] of [['/demo', 'demo'], ['/waitlist', 'waitlist'], ['/company/careers', 'careers']]) {
+  for (const [path, id] of [
+    ['/demo', 'demo'],
+    ['/waitlist', 'waitlist'],
+    ['/company/careers', 'careers'],
+  ]) {
     test(`${path}: it is there, and no person can reach it`, async ({ page }) => {
       await page.goto(path);
       const trap = page.locator(`#${id}-website`);
@@ -567,7 +612,7 @@ test.describe('installed art', () => {
     ['/pricing', '/media/art/art-desk-box.webp'],
     ['/solutions/healthcare', '/media/art/art-health.webp'],
     ['/platform/economics', '/media/art/art-power.webp'],
-    ['/labs', '/media/art/art-research.webp']
+    ['/labs', '/media/art/art-research.webp'],
   ];
   for (const [path, src] of samples) {
     test(`${path} paints its still`, async ({ page }) => {

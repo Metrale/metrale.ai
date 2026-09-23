@@ -34,7 +34,7 @@ export const VERBS = [
   { id: 'stop', label: 'Stop', mutating: true, needsRunning: true, needsLaunch: false },
   { id: 'status', label: 'Status', mutating: false, needsRunning: false, needsLaunch: false },
   { id: 'stats', label: 'Stats', mutating: false, needsRunning: true, needsLaunch: false },
-  { id: 'logs', label: 'Logs', mutating: false, needsRunning: true, needsLaunch: false }
+  { id: 'logs', label: 'Logs', mutating: false, needsRunning: true, needsLaunch: false },
 ];
 
 /**

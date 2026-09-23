@@ -3,9 +3,14 @@
   // CSP + perf). Data regenerated from the GitHub API every deploy by gen-stars.mjs.
   import stars from '$lib/stars.generated.json';
 
-  const W = 640, H = 264, PL = 46, PR = 18, PT = 18, PB = 34;
+  const W = 640,
+    H = 264,
+    PL = 46,
+    PR = 18,
+    PT = 18,
+    PB = 34;
   const pts = stars.history ?? [];
-  const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   const maxY = Math.max(100, Math.ceil((stars.count || 1) / 100) * 100);
   const xFor = (i) => PL + (pts.length <= 1 ? 0 : (i / (pts.length - 1)) * (W - PL - PR));
@@ -13,14 +18,15 @@
 
   const xy = pts.map((p, i) => ({ x: xFor(i), y: yFor(p.stars), ...p }));
   const line = xy.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
-  const area = xy.length ? `${line} L${xy[xy.length-1].x.toFixed(1)} ${H-PB} L${xy[0].x.toFixed(1)} ${H-PB} Z` : '';
+  const area = xy.length ? `${line} L${xy[xy.length - 1].x.toFixed(1)} ${H - PB} L${xy[0].x.toFixed(1)} ${H - PB} Z` : '';
   const last = xy[xy.length - 1];
 
   const yTicks = [0, maxY / 2, maxY];
-  const label = (d) => { const m = +String(d).slice(5, 7) - 1; return MON[m] ?? d; };
-  const xTicks = xy.length
-    ? [xy[0], xy[Math.floor(xy.length / 2)], xy[xy.length - 1]].map((p) => ({ x: p.x, t: label(p.date) }))
-    : [];
+  const label = (d) => {
+    const m = +String(d).slice(5, 7) - 1;
+    return MON[m] ?? d;
+  };
+  const xTicks = xy.length ? [xy[0], xy[Math.floor(xy.length / 2)], xy[xy.length - 1]].map((p) => ({ x: p.x, t: label(p.date) })) : [];
 </script>
 
 <div class="star-chart">

@@ -23,7 +23,7 @@ export const prime = $state({
   model: '', // reported by the Worker on the first answer
   effort: '',
   corpus: null, // { built, commit, public, partner }
-  error: null // { kind, message } for the last failed answer
+  error: null, // { kind, message } for the last failed answer
 });
 
 let seq = 0;
@@ -34,7 +34,17 @@ const nextId = () => `${Date.now().toString(36)}-${(seq++).toString(36)}`;
 function save() {
   if (!browser) return;
   try {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ audience: prime.audience, access: prime.access, messages: prime.messages, telemetry: prime.telemetry, model: prime.model, effort: prime.effort }));
+    sessionStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({
+        audience: prime.audience,
+        access: prime.access,
+        messages: prime.messages,
+        telemetry: prime.telemetry,
+        model: prime.model,
+        effort: prime.effort,
+      })
+    );
   } catch {
     /* private mode, quota */
   }
@@ -121,7 +131,7 @@ export function summarize(list) {
     // Session-wide cache share and the mean streaming rate over the answers
     // that streamed at all.
     cachedShare: sum('prompt_tokens') > 0 ? Math.min(1, sum('cached_tokens') / sum('prompt_tokens')) : null,
-    rate: rated.length ? rated.reduce((a, t) => a + tokensPerSecond(t), 0) / rated.length : null
+    rate: rated.length ? rated.reduce((a, t) => a + tokensPerSecond(t), 0) / rated.length : null,
   };
 }
 
@@ -139,7 +149,21 @@ export async function ask(text, { page = '' } = {}) {
 
   const id = nextId();
   const started = performance.now();
-  prime.turn = { id, phase: 'reading', detail: '', reasoning: '', answer: '', tools: [], sources: [], usage: null, startedAt: started, firstAt: 0, answerAt: 0, model: '', partner: false };
+  prime.turn = {
+    id,
+    phase: 'reading',
+    detail: '',
+    reasoning: '',
+    answer: '',
+    tools: [],
+    sources: [],
+    usage: null,
+    startedAt: started,
+    firstAt: 0,
+    answerAt: 0,
+    model: '',
+    partner: false,
+  };
   save();
 
   // Tokens are batched to one state write per frame: a fast stream costs one
@@ -171,11 +195,21 @@ export async function ask(text, { page = '' } = {}) {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ messages: history, audience: prime.audience, page, access: prime.access || undefined }),
-      signal: controller.signal
+      signal: controller.signal,
     });
     if (!res.ok || !(res.headers.get('content-type') ?? '').includes('text/event-stream')) {
       const body = await res.json().catch(() => ({}));
-      failure = { kind: res.status === 429 ? 'rate' : res.status === 503 && /budget/i.test(body.error ?? '') ? 'budget' : res.status >= 500 ? 'upstream' : 'internal', message: body.error ?? '' };
+      failure = {
+        kind:
+          res.status === 429
+            ? 'rate'
+            : res.status === 503 && /budget/i.test(body.error ?? '')
+              ? 'budget'
+              : res.status >= 500
+                ? 'upstream'
+                : 'internal',
+        message: body.error ?? '',
+      };
     } else {
       await readEvents(res.body, (name, data) => {
         const t = prime.turn;
@@ -236,7 +270,11 @@ export async function ask(text, { page = '' } = {}) {
   if (!t) return;
   const thinkMs = t.answerAt ? Math.round(t.answerAt - t.startedAt) : Math.round(performance.now() - t.startedAt);
   const usage = t.usage
-    ? { ...t.usage, tokens: (t.usage.prompt_tokens ?? 0) + (t.usage.completion_tokens ?? 0) + (t.usage.reasoning_tokens ?? 0), at: new Date().toISOString() }
+    ? {
+        ...t.usage,
+        tokens: (t.usage.prompt_tokens ?? 0) + (t.usage.completion_tokens ?? 0) + (t.usage.reasoning_tokens ?? 0),
+        at: new Date().toISOString(),
+      }
     : null;
   if (usage) {
     prime.telemetry.push({
@@ -254,7 +292,7 @@ export async function ask(text, { page = '' } = {}) {
       completion_tokens: usage.completion_tokens ?? 0,
       model: usage.model,
       effort: usage.effort,
-      at: usage.at
+      at: usage.at,
     });
     prime.telemetry = prime.telemetry.slice(-60);
   }
@@ -263,7 +301,17 @@ export async function ask(text, { page = '' } = {}) {
     prime.error = failure;
     prime.messages.push({ id, role: 'assistant', text: '', error: failure, reasoning: t.reasoning, tools: t.tools, thinkMs });
   } else {
-    prime.messages.push({ id, role: 'assistant', text: t.answer, reasoning: t.reasoning, tools: t.tools, sources: t.sources, usage, thinkMs, partial: Boolean(failure) });
+    prime.messages.push({
+      id,
+      role: 'assistant',
+      text: t.answer,
+      reasoning: t.reasoning,
+      tools: t.tools,
+      sources: t.sources,
+      usage,
+      thinkMs,
+      partial: Boolean(failure),
+    });
     if (failure && failure.kind !== 'aborted') prime.error = failure;
   }
   save();

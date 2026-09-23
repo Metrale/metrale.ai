@@ -19,7 +19,12 @@ const walk = (dir) =>
     return statSync(p).isDirectory() ? walk(p) : [p];
   });
 
-const MARKETING = [join(SRC, 'lib', 'content'), join(SRC, 'lib', 'components', 'avarok'), join(SRC, 'routes', '(marketing)'), join(SRC, 'lib', 'broll')];
+const MARKETING = [
+  join(SRC, 'lib', 'content'),
+  join(SRC, 'lib', 'components', 'avarok'),
+  join(SRC, 'routes', '(marketing)'),
+  join(SRC, 'lib', 'broll'),
+];
 const HEAVY = ['gates.generated.json', '$lib/gates.js', '$lib/deck/content.js'];
 // The one marketing page that exists to chart the gate records, the way
 // /engine does. It pays for the data knowingly and nothing else may.
@@ -27,7 +32,9 @@ const ALLOWED = [join('routes', '(marketing)', 'benchmarks', '+page.svelte')];
 
 test('nothing a marketing page loads imports the gate record set', () => {
   const offenders = [];
-  for (const file of MARKETING.flatMap(walk).filter((f) => /\.(svelte|js)$/.test(f) && !f.endsWith('.test.js') && !ALLOWED.some((a) => f.endsWith(a)))) {
+  for (const file of MARKETING.flatMap(walk).filter(
+    (f) => /\.(svelte|js)$/.test(f) && !f.endsWith('.test.js') && !ALLOWED.some((a) => f.endsWith(a))
+  )) {
     const text = readFileSync(file, 'utf8');
     for (const line of text.split('\n')) {
       if (!/^\s*import\b/.test(line)) continue;

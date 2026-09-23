@@ -27,7 +27,7 @@
 // =============================================================================
 
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { writeStable } from './lib/write-stable.mjs';
 import { dirname, resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -90,7 +90,7 @@ function rungStats(seriesId, c, file) {
     tpot_p50_ms: tpot.length ? r2(median(tpot)) : null,
     source: file,
     measured_utc: doc.started_utc ?? null,
-    harness_sha256: (doc.driver_sha256 ?? '').slice(0, 10) || null
+    harness_sha256: (doc.driver_sha256 ?? '').slice(0, 10) || null,
   };
 }
 
@@ -125,14 +125,12 @@ if (!matched) die('no matched-parity baseline');
 const variants = series.filter((s) => s.role === 'variant');
 for (const v of variants) {
   for (const row of subject.rungs) {
-    if (!v.rungs.some((r) => r.c === row.c))
-      die(`variant ${v.id} is missing rung C=${row.c}`);
+    if (!v.rungs.some((r) => r.c === row.c)) die(`variant ${v.id} is missing rung C=${row.c}`);
   }
 }
 const KNOWN_ROLES = new Set(['subject', 'baseline', 'variant']);
 for (const s2 of series) {
-  if (!KNOWN_ROLES.has(s2.role))
-    die(`series ${s2.id} has unknown role ${JSON.stringify(s2.role)}`);
+  if (!KNOWN_ROLES.has(s2.role)) die(`series ${s2.id} has unknown role ${JSON.stringify(s2.role)}`);
 }
 
 const at = (s, c) => s.rungs.find((r) => r.c === c);
@@ -155,7 +153,7 @@ const rows = subject.rungs.map((row) => {
     ratio_vs_best: r3(row.tok_s / m.tok_s),
     ratio_vs_matched: r3(row.tok_s / m.tok_s),
     ratio_vs_fastest: r3(row.tok_s / fastest.tok_s),
-    wins: row.tok_s > m.tok_s
+    wins: row.tok_s > m.tok_s,
   };
 });
 
@@ -191,8 +189,8 @@ const out = {
     won: rows.filter((r) => r.wins).length,
     all_won: rows.every((r) => r.wins),
     min_ratio: r3(Math.min(...rows.map((r) => r.ratio_vs_matched))),
-    max_ratio: r3(Math.max(...rows.map((r) => r.ratio_vs_matched)))
-  }
+    max_ratio: r3(Math.max(...rows.map((r) => r.ratio_vs_matched))),
+  },
 };
 
 writeStable(OUT, out, ['generated_utc'], (o) => `${JSON.stringify(o, null, 2)}\n`);

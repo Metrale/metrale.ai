@@ -53,7 +53,14 @@
 </script>
 
 <!-- The loaded CodeChat handles Escape itself; this covers the drawer and the skeleton phase. -->
-<svelte:window onkeydown={(e) => { if (e.key === 'Escape') { open = false; if (chatOpen && !Chat) closeChat(); } }} />
+<svelte:window
+  onkeydown={(e) => {
+    if (e.key === 'Escape') {
+      open = false;
+      if (chatOpen && !Chat) closeChat();
+    }
+  }}
+/>
 
 <nav>
   <div class="nav-inner">

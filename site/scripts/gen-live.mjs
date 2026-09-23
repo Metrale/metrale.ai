@@ -50,16 +50,20 @@ const out = {
     date: gates.generated_date,
     registered: gates.registered?.length ?? 0,
     concurrencyRecords: concurrency.length,
-    concurrencyPass: concurrency.filter((r) => r.verdict === 'PASS').length
+    concurrencyPass: concurrency.filter((r) => r.verdict === 'PASS').length,
   },
-  recipes
+  recipes,
 };
 
 const target = resolve(lib, 'live.generated.json');
 const text = JSON.stringify(out, null, 2) + '\n';
 if (existsSync(target) && readFileSync(target, 'utf8').replace(/\r\n/g, '\n') === text) {
-  console.log(`gen-live: ${target} unchanged (${out.gates.concurrencyPass}/${out.gates.concurrencyRecords} concurrency gates, ${recipes} recipes)`);
+  console.log(
+    `gen-live: ${target} unchanged (${out.gates.concurrencyPass}/${out.gates.concurrencyRecords} concurrency gates, ${recipes} recipes)`
+  );
 } else {
   writeFileSync(target, text);
-  console.log(`gen-live: wrote ${target} (${out.gates.concurrencyPass}/${out.gates.concurrencyRecords} concurrency gates, ${recipes} recipes)`);
+  console.log(
+    `gen-live: wrote ${target} (${out.gates.concurrencyPass}/${out.gates.concurrencyRecords} concurrency gates, ${recipes} recipes)`
+  );
 }

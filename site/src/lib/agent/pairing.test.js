@@ -33,7 +33,7 @@ const exchangeReply = (over = {}) => ({
   exchanged: true,
   verification: 'abcd-ef01',
   detail: '',
-  ...over
+  ...over,
 });
 
 test('an exchange reply carries words and does not claim trust', () => {
@@ -105,8 +105,7 @@ test('a decision reader must be told which outcome means success', () => {
 test('detail text is sanitized, because it is rendered', () => {
   const d = readDecision({ trusted: false, detail: 'a\u202eb' }, false).detail;
   expect(d).toBe('ab');
-  expect(readDecision({ trusted: false, detail: 'x'.repeat(9999) }, false).detail.length)
-    .toBeLessThan(9999);
+  expect(readDecision({ trusted: false, detail: 'x'.repeat(9999) }, false).detail.length).toBeLessThan(9999);
 });
 
 // ---- pairing with a typed address ----------------------------------------
@@ -119,7 +118,7 @@ test('a successful address pairing names the machine that answered', () => {
     address: '10.10.10.2',
     exchanged: true,
     verification: 'amber-koala-drift',
-    detail: ''
+    detail: '',
   });
   expect(r.ok).toBe(true);
   expect(r.node).toBe('c'.repeat(64));
@@ -139,7 +138,7 @@ test('nothing answering is not a machine with no name', () => {
     address: '',
     exchanged: false,
     verification: null,
-    detail: 'nothing answered at that address'
+    detail: 'nothing answered at that address',
   });
   expect(r.ok).toBe(false);
   expect(r.node).toBeNull();
@@ -162,7 +161,7 @@ test('a name from the wire is sanitized before it is rendered', () => {
     node: 'e'.repeat(64),
     exchanged: true,
     verification: 'w',
-    name: 'spark\u202e-evil'
+    name: 'spark\u202e-evil',
   });
   expect(r.name).toBe('spark-evil');
 });

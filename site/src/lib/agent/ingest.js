@@ -36,7 +36,6 @@ export function sanitize(raw, max = NAME_MAX) {
   return out.trim();
 }
 
-
 /**
  * The enumerations the agent can legitimately send.
  *
@@ -64,15 +63,7 @@ export const MAX_NODES = 64;
 // peer's claim. It must never share a visual treatment with 'paired'.
 const PAIRING = ['discovered', 'pairing', 'paired', 'vouched', 'unreachable'];
 const SEVERITY = ['info', 'warning', 'critical'];
-const LINK_CLASS = [
-  'roce',
-  'infini_band',
-  'ethernet',
-  'wireless',
-  'virtual',
-  'loopback',
-  'unverified'
-];
+const LINK_CLASS = ['roce', 'infini_band', 'ethernet', 'wireless', 'virtual', 'loopback', 'unverified'];
 
 /**
  * One of `allowed`, or `fallback`.
@@ -127,7 +118,7 @@ const METRIC_FIELDS = [
   'power_w',
   'memory_used_frac',
   'memory_total_bytes',
-  'disk_free_bytes'
+  'disk_free_bytes',
 ];
 
 /** One `Metric`, or null if it is not one. */
@@ -157,7 +148,7 @@ export function alert(a) {
     // strip: sanitising would make it harmless to render and still let a peer
     // choose the class name.
     severity: oneOf(a?.severity, SEVERITY, 'warning'),
-    detail: sanitize(a?.detail, DETAIL_MAX)
+    detail: sanitize(a?.detail, DETAIL_MAX),
   };
 }
 
@@ -175,9 +166,7 @@ export function vitals(raw) {
   const out = {};
   for (const f of METRIC_FIELDS) out[f] = metric(raw[f]);
   // Not metrics: a plain bound, a boolean and a counter.
-  out.sm_clock_healthy_mhz = Number.isFinite(raw.sm_clock_healthy_mhz)
-    ? raw.sm_clock_healthy_mhz
-    : null;
+  out.sm_clock_healthy_mhz = Number.isFinite(raw.sm_clock_healthy_mhz) ? raw.sm_clock_healthy_mhz : null;
   out.docker_ok = raw.docker_ok === true;
   out.agent_uptime_s = Number.isFinite(raw.agent_uptime_s) ? raw.agent_uptime_s : null;
   return out;
@@ -211,10 +200,7 @@ export function ingestNode(raw) {
       // on rather than only its address. Dropped until now, which is why the
       // UI could show "10.10.10.2" but never "on the 10.10.10.0/24 fabric".
       // 0 means the agent did not report one; it is not a /0.
-      prefixLen:
-        Number.isInteger(a?.prefix_len) && a.prefix_len >= 0 && a.prefix_len <= 128
-          ? a.prefix_len
-          : 0
+      prefixLen: Number.isInteger(a?.prefix_len) && a.prefix_len >= 0 && a.prefix_len <= 128 ? a.prefix_len : 0,
     })),
     // Two different questions, kept apart on purpose.
     //
@@ -244,7 +230,7 @@ export function ingestNode(raw) {
     vitals: vitals(raw?.vitals),
     alerts: (Array.isArray(raw?.alerts) ? raw.alerts : []).slice(0, 8).map(alert),
     running: raw?.running ? sanitize(raw.running, 64) : null,
-    lastSeen: Date.now()
+    lastSeen: Date.now(),
   };
 }
 

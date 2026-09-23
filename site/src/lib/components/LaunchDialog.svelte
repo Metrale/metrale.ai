@@ -52,7 +52,9 @@
       showProbe = false;
       return;
     }
-    const timer = setTimeout(() => { showProbe = true; }, PROBE_VISIBLE_AFTER_MS);
+    const timer = setTimeout(() => {
+      showProbe = true;
+    }, PROBE_VISIBLE_AFTER_MS);
     return () => clearTimeout(timer);
   });
 
@@ -82,7 +84,10 @@
       timer = setTimeout(tick, delay);
     };
     let timer = setTimeout(tick, delay);
-    return () => { cancelled = true; clearTimeout(timer); };
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   });
 
   // Escape closes. Focus-in, the Tab trap and focus-return are `use:modal`'s
@@ -92,7 +97,9 @@
   // because in the pairing ceremony it is a rejection, not a close.
   $effect(() => {
     if (launch.openRecipe === null) return;
-    const onKey = (e) => { if (e.key === 'Escape') launch.close(); };
+    const onKey = (e) => {
+      if (e.key === 'Escape') launch.close();
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   });
@@ -114,16 +121,7 @@
       onstarted={(reply) => launch.started(reply)}
     />
   {:else}
-    <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
-    <div
-      class="ld"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="ld-title"
-      tabindex="-1"
-      bind:this={dialogEl}
-      use:modal
-    >
+    <div class="ld" role="dialog" aria-modal="true" aria-labelledby="ld-title" tabindex="-1" bind:this={dialogEl} use:modal>
       <header class="ld-head">
         <h3 class="ld-title" id="ld-title">
           {#if launch.phase === 'connecting' && showProbe}Looking for your agent
@@ -145,14 +143,12 @@
             <span class="ld-spinner" aria-hidden="true"></span>
             <span>Checking <code class="mono">127.0.0.1:34333</code> …</span>
           </div>
-
         {:else if launch.phase === 'connecting'}
           <!-- Sub-threshold: hold the frame rather than paint something that is
                about to be replaced. Same height as the guide, so nothing jumps
                when the real answer lands a few milliseconds from now. -->
           <div class="ld-settle" aria-hidden="true"></div>
-
-          {:else if launch.phase === 'placement' && launch.placement?.kind === 'none'}
+        {:else if launch.phase === 'placement' && launch.placement?.kind === 'none'}
           <p class="ld-place-lead">{launch.placement.reason}</p>
 
           {#if !launch.placement.canOnboard}
@@ -167,62 +163,54 @@
               <CommandRow command="sudo usermod -aG docker $USER" extra="ld-place-cmd" />
               <CommandRow command="newgrp docker" extra="ld-place-cmd" />
               <p class="ld-place-sub">
-                Then reopen this dialog. The agent re-checks on its own, so there is
-                nothing to restart. Do not use <code>sudo atlasctl</code> — it runs
-                the model as root and leaves root-owned files in <code>~/.avarok</code>
+                Then reopen this dialog. The agent re-checks on its own, so there is nothing to restart. Do not use <code
+                  >sudo atlasctl</code
+                >
+                — it runs the model as root and leaves root-owned files in <code>~/.avarok</code>
                 that your normal user cannot read.
               </p>
             {/if}
             <p class="ld-place-sub">
-              <a
-                class="link"
-                href="https://docs.atlascybernetics.ai/getting-started/troubleshooting.html"
-                target="_blank"
-                rel="noopener">Troubleshooting guide</a
+              <a class="link" href="https://docs.atlascybernetics.ai/getting-started/troubleshooting.html" target="_blank" rel="noopener"
+                >Troubleshooting guide</a
               >
             </p>
           {:else}
-          <p class="ld-place-lead">
-            Add a machine that can. Run this on it — the code is good for one
-            machine, once, for {Math.round((launch.join?.expiresInS ?? 600) / 60)} minutes.
-          </p>
-          {#if joinCmd}
-            <CommandRow command={joinCmd} extra="ld-place-cmd" />
-            {#if joinCmdPs}
-              <p class="ld-place-sub">Or, if that machine runs Windows:</p>
-              <CommandRow command={joinCmdPs} extra="ld-place-cmd" />
-            {/if}
-            <p class="ld-watching">
-              <span class="ld-pulse" aria-hidden="true"></span>
-              Watching for it — this dialog will continue on its own.
+            <p class="ld-place-lead">
+              Add a machine that can. Run this on it — the code is good for one machine, once, for {Math.round(
+                (launch.join?.expiresInS ?? 600) / 60
+              )} minutes.
             </p>
-          {:else if launch.join}
-            <!-- A window opened, but this machine offered no address another
+            {#if joinCmd}
+              <CommandRow command={joinCmd} extra="ld-place-cmd" />
+              {#if joinCmdPs}
+                <p class="ld-place-sub">Or, if that machine runs Windows:</p>
+                <CommandRow command={joinCmdPs} extra="ld-place-cmd" />
+              {/if}
+              <p class="ld-watching">
+                <span class="ld-pulse" aria-hidden="true"></span>
+                Watching for it — this dialog will continue on its own.
+              </p>
+            {:else if launch.join}
+              <!-- A window opened, but this machine offered no address another
                  machine could dial. Rendering the bar anyway drew an empty box
                  with a Copy button next to it, which is how an operator found
                  this: there was nothing to copy and nothing saying why. -->
-            <p class="ld-place-sub">
-              This machine has no network address another machine could dial —
-              only loopback or virtual interfaces are up. Connect it to the
-              network you want the fleet on, then reopen this dialog. The code
-              itself is fine; there is nowhere to point it.
-            </p>
-          {:else}
-            <p class="ld-place-sub">
-              This agent cannot invite machines. Install the agent on the other
-              machine and pair it from the control plane.
+              <p class="ld-place-sub">
+                This machine has no network address another machine could dial — only loopback or virtual interfaces are up. Connect it to
+                the network you want the fleet on, then reopen this dialog. The code itself is fine; there is nowhere to point it.
+              </p>
+            {:else}
+              <p class="ld-place-sub">
+                This agent cannot invite machines. Install the agent on the other machine and pair it from the control plane.
+              </p>
+            {/if}
+            <p class="ld-caution">
+              Anyone who runs that command joins your fleet and can use its hardware. Send it to a machine you own, not a chat.
             </p>
           {/if}
-          <p class="ld-caution">
-            Anyone who runs that command joins your fleet and can use its
-            hardware. Send it to a machine you own, not a chat.
-          </p>
-          {/if}
-
         {:else if launch.phase === 'placement'}
-          <p class="ld-place-lead">
-            More than one of your machines can run this. Pick one.
-          </p>
+          <p class="ld-place-lead">More than one of your machines can run this. Pick one.</p>
           <ul class="ld-place">
             {#each launch.placement?.options ?? [] as n (n.id)}
               <li>
@@ -236,27 +224,18 @@
               </li>
             {/each}
           </ul>
-
         {:else if launch.phase === 'guide'}
-          <p>
-            Metrale runs on your hardware, not ours. This page can start a model for
-            you once a small local agent is listening.
-          </p>
+          <p>Metrale runs on your hardware, not ours. This page can start a model for you once a small local agent is listening.</p>
           <InstallSteps />
           <p class="ld-watching" aria-live="polite">
             <span class="ld-pulse" aria-hidden="true"></span>
             Watching for it — this will continue on its own.
           </p>
           <p class="ld-caution">
-            Any web page can show you an install command. Check the address bar
-            says <strong>atlascybernetics.ai</strong> before running one.
+            Any web page can show you an install command. Check the address bar says <strong>atlascybernetics.ai</strong> before running one.
           </p>
-
         {:else if launch.phase === 'pairing'}
-          <p>
-            The agent prints a token when it starts. Paste it once so it knows
-            this browser is yours.
-          </p>
+          <p>The agent prints a token when it starts. Paste it once so it knows this browser is yours.</p>
           <CommandRow command="atlasctl agent token" />
           <form onsubmit={submitToken}>
             <input
@@ -272,17 +251,14 @@
             </button>
           </form>
           {#if launch.detail}<p class="ld-error" role="alert">{launch.detail}</p>{/if}
-
         {:else if launch.phase === 'running'}
           {#if launch.endpoint}
             <p>
-              Serving at <code class="mono">{launch.endpoint}</code>. The model
-              takes a few minutes to load before it answers.
+              Serving at <code class="mono">{launch.endpoint}</code>. The model takes a few minutes to load before it answers.
             </p>
           {:else}
             <p>Started. The model takes a few minutes to load before it answers.</p>
           {/if}
-
         {:else}
           <p class="ld-error" role="alert">{launch.detail || 'The agent reported a problem.'}</p>
           <button type="button" class="cmd-copy" onclick={() => launch.retry()}>Try again</button>

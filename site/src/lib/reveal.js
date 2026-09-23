@@ -34,6 +34,6 @@ export function reveal(root) {
     destroy: () => {
       io.disconnect();
       live.disconnect();
-    }
+    },
   };
 }

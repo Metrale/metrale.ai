@@ -15,7 +15,7 @@ export const GROUPS = [
   { key: 'memory_kv', label: 'Memory & KV' },
   { key: 'speculative', label: 'Speculative' },
   { key: 'tools_chat', label: 'Tools & chat' },
-  { key: 'topology', label: 'Topology' }
+  { key: 'topology', label: 'Topology' },
 ];
 
 /** Which groups actually have settings in this agent's schema. */
@@ -78,9 +78,7 @@ export function checkValue(spec, value) {
 
 /** Whether this page can render an editor for a bound kind. */
 export function isEditable(spec) {
-  return ['int', 'float', 'enum', 'toggle', 'bool_value', 'int_or_auto'].includes(
-    spec?.bound?.kind
-  );
+  return ['int', 'float', 'enum', 'toggle', 'bool_value', 'int_or_auto'].includes(spec?.bound?.kind);
 }
 
 /**

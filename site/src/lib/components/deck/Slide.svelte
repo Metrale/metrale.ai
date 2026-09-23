@@ -7,8 +7,7 @@
   // reports it to the deck so the arrow keys walk fragments before moving on.
   import { getContext, untrack } from 'svelte';
 
-  let { act = 'violet', eyebrow = '', title = '', lede = '', steps = 0, wide = false, children } =
-    $props();
+  let { act = 'violet', eyebrow = '', title = '', lede = '', steps = 0, wide = false, children } = $props();
 
   const deck = getContext('deck');
   const n = deck.register(untrack(() => act));
@@ -56,7 +55,9 @@
     align-content: start;
     opacity: 0.28;
     scale: 0.985;
-    transition: opacity 480ms ease, scale 620ms cubic-bezier(0.66, 0, 0.24, 1);
+    transition:
+      opacity 480ms ease,
+      scale 620ms cubic-bezier(0.66, 0, 0.24, 1);
   }
   .sl-active {
     opacity: 1;
@@ -115,7 +116,9 @@
   .sl :global(.at) {
     opacity: 0;
     transform: translateY(0.35em);
-    transition: opacity 220ms ease, transform 220ms ease;
+    transition:
+      opacity 220ms ease,
+      transform 220ms ease;
   }
   .sl-active :global(.at) {
     opacity: clamp(0, calc(var(--step, 0) - var(--n) + 1), 1);

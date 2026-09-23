@@ -51,7 +51,9 @@ const staticRoutes = pageFiles.map(routePath).filter((p) => !p.includes('['));
 test('every page in the registry has a route', () => {
   const missing = pages
     .map((p) => p.path)
-    .filter((path) => !staticRoutes.includes(path) && !(path.startsWith('/solutions/') && industries.some((i) => solutionHref(i.slug) === path)));
+    .filter(
+      (path) => !staticRoutes.includes(path) && !(path.startsWith('/solutions/') && industries.some((i) => solutionHref(i.slug) === path))
+    );
   expect(missing).toEqual([]);
 });
 
@@ -128,7 +130,10 @@ test('every internal link in the copy, the nav and the footer resolves', () => {
 
 test('an anchor that points into the front page or the pricing page exists there', () => {
   const anchors = allStrings.map(([, s]) => s).filter((s) => isInternalLink(s) && s.includes('#'));
-  const source = walk(join(SITE_DIR, 'src')).filter((f) => f.endsWith('.svelte')).map((f) => readFileSync(f, 'utf8')).join('\n');
+  const source = walk(join(SITE_DIR, 'src'))
+    .filter((f) => f.endsWith('.svelte'))
+    .map((f) => readFileSync(f, 'utf8'))
+    .join('\n');
   const missing = [...new Set(anchors)].filter((a) => {
     const id = a.split('#')[1];
     return !ENGINE_ROUTES.includes(a.split('#')[0]) && !new RegExp(`id=["'{\`]${id}["'}\`]`).test(source);
@@ -154,7 +159,9 @@ test('the copy keeps its voice: no em dashes, semicolons or exclamation marks', 
 
 test('no placeholder is misspelled: every {name} in the copy is one live.js fills', async () => {
   const { live } = await import('./live.js');
-  const unknown = allStrings.flatMap(([at, s]) => [...s.matchAll(/\{(\w+)\}/g)].filter((m) => !(m[1] in live)).map((m) => `${at}: {${m[1]}}`));
+  const unknown = allStrings.flatMap(([at, s]) =>
+    [...s.matchAll(/\{(\w+)\}/g)].filter((m) => !(m[1] in live)).map((m) => `${at}: {${m[1]}}`)
+  );
   expect(unknown).toEqual([]);
 });
 
@@ -168,7 +175,7 @@ test('every clip in the manifest ships an mp4, a webm and a poster, and none is 
       // prompt pack is heavier; 4.5 MB is 10 s of dark 720p at the encoder's crf.
       ['mp4', clip.mp4, 40_000, clip.maxBytes ?? 4_500_000],
       ['webm', clip.webm, 40_000, clip.maxBytes ?? 4_500_000],
-      ['poster', clip.poster, 4_000, 160_000]
+      ['poster', clip.poster, 4_000, 160_000],
     ]) {
       const file = join(STATIC_DIR, url);
       if (!existsSync(file)) problems.push(`${clip.name}: ${kind} is missing`);

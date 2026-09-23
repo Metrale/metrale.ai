@@ -56,7 +56,6 @@ export class LaunchSession {
    * members — which is a normal thing to be, not an error.
    */
 
-
   /** Detail for the current phase — an error message, usually. */
   detail = $state('');
 
@@ -192,8 +191,7 @@ export class LaunchSession {
     // fleet.localCanLaunch`, because `canLaunch` initialises to `false`, not
     // null — a plain `??` would never reach the fleet, and a handshake still in
     // flight would read as "cannot launch".
-    const canLaunchHere =
-      this.agent.phase === 'ready' ? this.agent.canLaunch : fleet.localCanLaunch;
+    const canLaunchHere = this.agent.phase === 'ready' ? this.agent.canLaunch : fleet.localCanLaunch;
     const d = Placement.decide(fleet.nodes, recipe, canLaunchHere);
     this.placement = d;
 

@@ -35,10 +35,7 @@
 {#if message?.role === 'user'}
   <p class="cm-user"><span class="cm-prompt" aria-hidden="true">❯</span>{message.text}</p>
 {:else}
-  <article
-    class="cm-card receipt-print"
-    data-streaming={live ? (collapsible ? 'writing' : 'thinking') : undefined}
-  >
+  <article class="cm-card receipt-print" data-streaming={live ? (collapsible ? 'writing' : 'thinking') : undefined}>
     <header class="cm-head">
       <span class="cm-title">{codeChat.answerTag}</span>
       {#if message?.sources?.length}
@@ -51,12 +48,7 @@
     {#if reasoning}
       <div class="cm-think" data-open={traceOpen}>
         {#if collapsible}
-          <button
-            type="button"
-            class="cm-think-toggle"
-            aria-expanded={traceOpen}
-            onclick={() => (traceChoice = !traceOpen)}
-          >
+          <button type="button" class="cm-think-toggle" aria-expanded={traceOpen} onclick={() => (traceChoice = !traceOpen)}>
             <span class="cm-think-time">{codeChat.trace.reasonedPrefix} {secs}s</span>
             <span class="cm-think-sep" aria-hidden="true">·</span>
             <span class="cm-think-act">{traceOpen ? codeChat.trace.hide : codeChat.trace.show}</span>
@@ -70,6 +62,7 @@
       </div>
     {/if}
     {#if answer || !live}
+      <!-- eslint-disable-next-line svelte/no-at-html-tags -- renderMarkdown escapes all input first (chat/markdown.js) -->
       <div class="cm-body">{@html renderMarkdown(answer)}</div>
     {/if}
     {#if message?.sources?.length}

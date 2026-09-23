@@ -45,7 +45,13 @@ describe('strategyFor', () => {
 
 describe('media', () => {
   it('is left to the browser: video arrives in byte ranges the worker cannot cache', () => {
-    for (const p of ['/media/console-ask.mp4', '/media/console-ask.webm', '/media/reel.mp4', '/media/art/art-gov.webp', '/team/kyle-croll.webp']) {
+    for (const p of [
+      '/media/console-ask.mp4',
+      '/media/console-ask.webm',
+      '/media/reel.mp4',
+      '/media/art/art-gov.webp',
+      '/team/kyle-croll.webp',
+    ]) {
       expect(strategyFor(p)).toBe('bypass');
       expect(shouldPrecache(p)).toBe(false);
     }
@@ -58,7 +64,15 @@ describe('media', () => {
     const root = join(import.meta.dir, '..', '..', '..', 'static');
     const walk = (dir) => readdirSync(dir).flatMap((f) => (statSync(join(dir, f)).isDirectory() ? walk(join(dir, f)) : [join(dir, f)]));
     const bytes = walk(root)
-      .map((file) => ({ path: '/' + file.slice(root.length + 1).split(sep).join('/'), size: statSync(file).size }))
+      .map((file) => ({
+        path:
+          '/' +
+          file
+            .slice(root.length + 1)
+            .split(sep)
+            .join('/'),
+        size: statSync(file).size,
+      }))
       .filter((f) => shouldPrecache(f.path))
       .reduce((sum, f) => sum + f.size, 0);
     expect(bytes).toBeLessThan(1_000_000);

@@ -34,7 +34,7 @@ describe('only real differences travel', () => {
   });
 
   test('0.90 and 0.9 are the same number, not a change', () => {
-    const o = O.set({}, 'gpu_memory_utilization', 0.90, DEFAULTS);
+    const o = O.set({}, 'gpu_memory_utilization', 0.9, DEFAULTS);
     expect(o).toEqual({});
   });
 

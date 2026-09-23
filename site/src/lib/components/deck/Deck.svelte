@@ -37,7 +37,7 @@
     step: () => step,
     setSteps(n) {
       stepsOnSlide = n;
-    }
+    },
   });
 
   const act = $derived(acts[index] ?? 'violet');
@@ -116,13 +116,7 @@
     </div>
   </div>
 
-  <button
-    type="button"
-    class="dk-edge dk-edge-prev"
-    onclick={retreat}
-    disabled={index === 0 && step === 0}
-    aria-label="Previous slide"
-  >
+  <button type="button" class="dk-edge dk-edge-prev" onclick={retreat} disabled={index === 0 && step === 0} aria-label="Previous slide">
     <svg viewBox="0 0 396 636" aria-hidden="true">
       <path d="M358 38L38 318L358 598" />
     </svg>
@@ -222,7 +216,9 @@
     background: none;
     cursor: pointer;
     opacity: 0.24;
-    transition: opacity 200ms ease, translate 200ms ease;
+    transition:
+      opacity 200ms ease,
+      translate 200ms ease;
   }
   .dk-edge svg {
     width: 0.85rem;
@@ -275,7 +271,9 @@
   .dk-seg {
     flex: 1;
     background: var(--border);
-    transition: background 320ms ease, opacity 320ms ease;
+    transition:
+      background 320ms ease,
+      opacity 320ms ease;
     opacity: 0.55;
   }
   .dk-seg.on {

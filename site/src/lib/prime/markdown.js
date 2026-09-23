@@ -34,14 +34,21 @@ function renderSegment(escaped) {
   out = out.replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,;:!?]|$)/g, '$1<em>$2</em>');
   out = out.replace(/(^|[\s(])_([^_\n]+)_(?=[\s).,;:!?]|$)/g, '$1<em>$2</em>');
   // [n] citations, after links so a link opener is never eaten. [1][2] and [1, 2] both work.
-  out = out.replace(/\[(\d{1,3}(?:\s*,\s*\d{1,3})*)\](?!\()/g, (m, list) => list.split(/\s*,\s*/).map((n) => `<sup class="pr-cite" data-n="${n}">[${n}]</sup>`).join(''));
+  out = out.replace(/\[(\d{1,3}(?:\s*,\s*\d{1,3})*)\](?!\()/g, (m, list) =>
+    list
+      .split(/\s*,\s*/)
+      .map((n) => `<sup class="pr-cite" data-n="${n}">[${n}]</sup>`)
+      .join('')
+  );
   return out;
 }
 
 function renderInline(text) {
   return escapeHtml(text)
     .split(/(`[^`\n]+`)/)
-    .map((part) => (part.length > 2 && part.startsWith('`') && part.endsWith('`') ? `<code>${part.slice(1, -1)}</code>` : renderSegment(part)))
+    .map((part) =>
+      part.length > 2 && part.startsWith('`') && part.endsWith('`') ? `<code>${part.slice(1, -1)}</code>` : renderSegment(part)
+    )
     .join('');
 }
 
@@ -88,7 +95,16 @@ function renderTable(lines) {
   const thead = `<thead><tr>${cells(head)
     .map((c) => `<th>${renderInline(c)}</th>`)
     .join('')}</tr></thead>`;
-  const tbody = body.length ? `<tbody>${body.map((r) => `<tr>${cells(r).map((c) => `<td>${renderInline(c)}</td>`).join('')}</tr>`).join('')}</tbody>` : '';
+  const tbody = body.length
+    ? `<tbody>${body
+        .map(
+          (r) =>
+            `<tr>${cells(r)
+              .map((c) => `<td>${renderInline(c)}</td>`)
+              .join('')}</tr>`
+        )
+        .join('')}</tbody>`
+    : '';
   return `<div class="pr-table"><table>${thead}${tbody}</table></div>`;
 }
 
@@ -108,7 +124,8 @@ export function renderMarkdown(src) {
     if (block.length === 0) return;
     if (kind === 'list') html.push(renderList(block));
     else if (kind === 'table') html.push(renderTable(block));
-    else if (kind === 'quote') html.push(`<blockquote>${block.map((l) => renderInline(l.replace(/^\s*>\s?/, ''))).join('<br>')}</blockquote>`);
+    else if (kind === 'quote')
+      html.push(`<blockquote>${block.map((l) => renderInline(l.replace(/^\s*>\s?/, ''))).join('<br>')}</blockquote>`);
     else html.push(`<p>${block.map(renderInline).join('<br>')}</p>`);
     block = [];
     kind = '';

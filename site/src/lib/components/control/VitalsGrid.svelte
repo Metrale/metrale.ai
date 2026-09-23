@@ -25,9 +25,7 @@
 
   $effect(() => useClock());
 
-  const trusted = $derived(
-    node.isLocal || node.pairing === 'paired' || node.pairing === 'vouched' || node.pairing === 'unreachable'
-  );
+  const trusted = $derived(node.isLocal || node.pairing === 'paired' || node.pairing === 'vouched' || node.pairing === 'unreachable');
   const offline = $derived(node.pairing === 'unreachable');
   const stale = $derived(trusted && isStale(node, nowMs()));
   const staleFor = $derived(Math.max(0, Math.round((nowMs() - node.lastSeen) / 1000)));
@@ -60,7 +58,6 @@
    */
   const severityOf = (alerts, kind) => alerts.find((a) => a.kind === kind)?.severity ?? null;
 
-
   const clockAlert = $derived(severityOf(node.alerts, 'sm_clock_clamped'));
   const memAlert = $derived(severityOf(node.alerts, 'memory_pressure'));
   const tempAlert = $derived(severityOf(node.alerts, 'thermal_throttle'));
@@ -70,21 +67,16 @@
   // Plain values become the metric shape here so VitalTile stays the one
   // renderer: a boolean health and a counter are still readings.
   const dockerMetric = $derived(v ? { state: 'reading', value: v.docker_ok ? 1 : 0 } : null);
-  const uptimeMetric = $derived(
-    v && Number.isFinite(v.agent_uptime_s) ? { state: 'reading', value: v.agent_uptime_s } : null
-  );
+  const uptimeMetric = $derived(v && Number.isFinite(v.agent_uptime_s) ? { state: 'reading', value: v.agent_uptime_s } : null);
 </script>
 
 <div class="vg" aria-label="Vitals">
   {#if !trusted}
-    <p class="vg-note">
-      Telemetry from an unpaired machine proves nothing, so none is shown.
-      Pair it and these tiles fill in.
-    </p>
+    <p class="vg-note">Telemetry from an unpaired machine proves nothing, so none is shown. Pair it and these tiles fill in.</p>
   {:else if offline}
     <p class="vg-note">
-      Paired, but not answering right now — last seen {staleFor}s ago. It stays
-      in your fleet; switch it on and these tiles come back on their own.
+      Paired, but not answering right now — last seen {staleFor}s ago. It stays in your fleet; switch it on and these tiles come back on
+      their own.
     </p>
   {:else}
     <div class="vg-grid">
@@ -118,13 +110,7 @@
         {paused}
       />
       <VitalTile label="DISK FREE" metric={v?.disk_free_bytes} unit=" GB" format={gb} alert={diskAlert} {stale} {paused} />
-      <VitalTile
-        label="DOCKER"
-        metric={dockerMetric}
-        format={(x) => (x ? 'ok' : 'down')}
-        {stale}
-        {paused}
-      />
+      <VitalTile label="DOCKER" metric={dockerMetric} format={(x) => (x ? 'ok' : 'down')} {stale} {paused} />
       <VitalTile label="AGENT UP" metric={uptimeMetric} format={S.uptime} {stale} {paused} />
     </div>
   {/if}

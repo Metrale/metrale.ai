@@ -39,9 +39,31 @@ const pieces = (body) =>
   [...body.matchAll(/<(path|rect)\b([^>]*?)\/?>/g)].map((m) => {
     const attrs = m[2];
     const fill = attrs.match(/fill="([^"]+)"/)?.[1] ?? '';
-    const ink = /#\w+w\)|#[0-9A-F]{6}$/i.test(fill) && !/v\)|c\)|g\)/.test(fill) ? 'ink' : fill.endsWith('v)') ? 'violet' : fill.endsWith('c)') ? 'cyan' : fill.endsWith('g)') ? 'gold' : 'ink';
-    if (m[1] === 'rect') return { kind: 'rect', ink, x: +attrs.match(/x="([^"]+)"/)[1], y: +attrs.match(/y="([^"]+)"/)[1], w: +attrs.match(/width="([^"]+)"/)[1], h: +attrs.match(/height="([^"]+)"/)[1] };
-    return { kind: 'path', ink, d: attrs.match(/d="([^"]+)"/)[1], stroke: /stroke-width="([^"]+)"/.test(attrs) ? +attrs.match(/stroke-width="([^"]+)"/)[1] : 0 };
+    const ink =
+      /#\w+w\)|#[0-9A-F]{6}$/i.test(fill) && !/v\)|c\)|g\)/.test(fill)
+        ? 'ink'
+        : fill.endsWith('v)')
+          ? 'violet'
+          : fill.endsWith('c)')
+            ? 'cyan'
+            : fill.endsWith('g)')
+              ? 'gold'
+              : 'ink';
+    if (m[1] === 'rect')
+      return {
+        kind: 'rect',
+        ink,
+        x: +attrs.match(/x="([^"]+)"/)[1],
+        y: +attrs.match(/y="([^"]+)"/)[1],
+        w: +attrs.match(/width="([^"]+)"/)[1],
+        h: +attrs.match(/height="([^"]+)"/)[1],
+      };
+    return {
+      kind: 'path',
+      ink,
+      d: attrs.match(/d="([^"]+)"/)[1],
+      stroke: /stroke-width="([^"]+)"/.test(attrs) ? +attrs.match(/stroke-width="([^"]+)"/)[1] : 0,
+    };
   });
 
 const word = G.wordmark({ theme: 'dark', id: 'w' });
@@ -59,7 +81,7 @@ const art = {
   boxes: { wordmark: box(word), mark: box(mark), compact: box(compact) },
   wordmark: pieces(word.body),
   mark: pieces(mark.body),
-  compact: pieces(compact.body)
+  compact: pieces(compact.body),
 };
 const module_ = `// Generated ${art.generated}\n// The brand artwork as data: what AtlasLockup.svelte draws. Colours are the\n// kit's reference values; the component maps each ink to a token.\nexport const ART = ${JSON.stringify(art, null, 1)};\n`;
 
@@ -68,12 +90,12 @@ const files = {
   [join(BRAND, 'svg', 'wordmark-ondark.svg')]: G.tight(G.wordmark({ theme: 'dark', id: 'w' }), 'Metrale') + '\n',
   [join(BRAND, 'svg', 'wordmark.svg')]: G.tight(G.wordmark({ theme: 'light', id: 'w' }), 'Metrale') + '\n',
   [join(BRAND, 'svg', 'wordmark-mono-ondark.svg')]: G.tight(G.wordmark({ theme: 'dark', id: 'w', mono: true }), 'Metrale') + '\n',
-  [join(BRAND, 'svg', 'wordmark-mono.svg')]: G.tight(G.wordmark({ theme: 'light', id: 'w', mono: true }), 'Metrale') + '\n'
+  [join(BRAND, 'svg', 'wordmark-mono.svg')]: G.tight(G.wordmark({ theme: 'light', id: 'w', mono: true }), 'Metrale') + '\n',
 };
 
 let stale = 0;
 for (const [file, content] of Object.entries(files)) {
-  let current = null;
+  let current;
   try {
     current = readFileSync(file, 'utf8');
   } catch {
@@ -90,5 +112,7 @@ if (CHECK) {
   }
   console.log('lockup: current');
 } else {
-  console.log(`lockup: wrote ${stale} file(s). wordmark ${art.boxes.wordmark.width}x${art.boxes.wordmark.height}, mark ${art.boxes.mark.width}x${art.boxes.mark.height}, ${art.wordmark.length} pieces`);
+  console.log(
+    `lockup: wrote ${stale} file(s). wordmark ${art.boxes.wordmark.width}x${art.boxes.wordmark.height}, mark ${art.boxes.mark.width}x${art.boxes.mark.height}, ${art.wordmark.length} pieces`
+  );
 }

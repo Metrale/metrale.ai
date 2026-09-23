@@ -48,10 +48,26 @@ export function render(brief) {
     ''
   );
   const modes = [
-    ['text-to-image', 'Stills, from text', `Aspect ratio and resolution are set in the interface or the API (\`aspect_ratio\`, \`resolution\`), not in the prompt. Ask for ${Math.min(4, brief.limits.images_per_request)} at a time and pick one.`],
-    ['image-to-image', 'Stills, from one of our own frames', `Upload the source image with the prompt. The procedural frames fix the composition, so the result drops into the slot the loop already holds. Up to ${brief.limits.edit_source_images} source images per edit.`],
-    ['text-to-video', 'Video, from text', `For a picture we have no still of. There is no source image to hold the look, so the house style is joined onto the prompt in words, and the prompt is longer than an image to video prompt is allowed to be. Expect to throw more of these away. Up to ${brief.limits.video_seconds_max} seconds at ${brief.limits.video_resolution}.`],
-    ['image-to-video', 'Video, from an approved still', `Upload the approved still with the prompt. Keep the prompt short: the model can see the picture, and words that describe it again only add noise. Motion first, then the camera. One camera path. Up to ${brief.limits.video_seconds_max} seconds at ${brief.limits.video_resolution}. The site plays every clip muted and the encoder strips audio.`]
+    [
+      'text-to-image',
+      'Stills, from text',
+      `Aspect ratio and resolution are set in the interface or the API (\`aspect_ratio\`, \`resolution\`), not in the prompt. Ask for ${Math.min(4, brief.limits.images_per_request)} at a time and pick one.`,
+    ],
+    [
+      'image-to-image',
+      'Stills, from one of our own frames',
+      `Upload the source image with the prompt. The procedural frames fix the composition, so the result drops into the slot the loop already holds. Up to ${brief.limits.edit_source_images} source images per edit.`,
+    ],
+    [
+      'text-to-video',
+      'Video, from text',
+      `For a picture we have no still of. There is no source image to hold the look, so the house style is joined onto the prompt in words, and the prompt is longer than an image to video prompt is allowed to be. Expect to throw more of these away. Up to ${brief.limits.video_seconds_max} seconds at ${brief.limits.video_resolution}.`,
+    ],
+    [
+      'image-to-video',
+      'Video, from an approved still',
+      `Upload the approved still with the prompt. Keep the prompt short: the model can see the picture, and words that describe it again only add noise. Motion first, then the camera. One camera path. Up to ${brief.limits.video_seconds_max} seconds at ${brief.limits.video_resolution}. The site plays every clip muted and the encoder strips audio.`,
+    ],
   ];
   for (const [mode, heading, note] of modes) {
     push(`## ${heading}`, '', note, '');

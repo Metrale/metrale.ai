@@ -39,29 +39,99 @@
 
 <style>
   .av-receipt {
-    position: relative; isolation: isolate; overflow: hidden;
-    display: grid; grid-template-rows: auto 1fr auto; gap: 1rem;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 1rem;
     padding: 1.35rem 1.35rem 1.15rem;
-    background: var(--card); border: 1px solid var(--border); border-radius: var(--av-radius);
-    color: inherit; text-decoration: none;
-    transition: transform 0.22s var(--av-ease), border-color 0.22s, box-shadow 0.22s;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--av-radius);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      transform 0.22s var(--av-ease),
+      border-color 0.22s,
+      box-shadow 0.22s;
   }
   /* The card's colour, as light from its top right corner. It brightens on hover. */
   .av-receipt::before {
-    content: ''; position: absolute; z-index: -1; right: -30%; top: -55%; width: 90%; aspect-ratio: 1;
+    content: '';
+    position: absolute;
+    z-index: -1;
+    right: -30%;
+    top: -55%;
+    width: 90%;
+    aspect-ratio: 1;
     background: radial-gradient(closest-side, color-mix(in srgb, var(--sx) 34%, transparent), transparent);
-    opacity: 0.55; transition: opacity 0.3s, transform 0.5s var(--av-ease);
+    opacity: 0.55;
+    transition:
+      opacity 0.3s,
+      transform 0.5s var(--av-ease);
   }
-  .av-receipt:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--sx) 70%, var(--border)); box-shadow: 0 24px 48px -28px color-mix(in srgb, var(--sx) 60%, transparent), var(--av-shadow); }
-  .av-receipt:hover::before { opacity: 1; transform: scale(1.15); }
-  .av-receipt-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-height: 36px; }
-  .av-receipt-date { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sx-text); white-space: nowrap; padding: 0.22rem 0.5rem; border: 1px solid color-mix(in srgb, var(--sx) 40%, transparent); border-radius: 999px; background: color-mix(in srgb, var(--sx) 10%, transparent); }
-  .av-receipt h3 { font-size: 1rem; line-height: 1.38; letter-spacing: -0.01em; font-weight: 600; }
+  .av-receipt:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--sx) 70%, var(--border));
+    box-shadow:
+      0 24px 48px -28px color-mix(in srgb, var(--sx) 60%, transparent),
+      var(--av-shadow);
+  }
+  .av-receipt:hover::before {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  .av-receipt-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 36px;
+  }
+  .av-receipt-date {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sx-text);
+    white-space: nowrap;
+    padding: 0.22rem 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--sx) 40%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--sx) 10%, transparent);
+  }
+  .av-receipt h3 {
+    font-size: 1rem;
+    line-height: 1.38;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
   /* The tear line of a receipt, and the till it was printed at. */
   /* Two rows on every card, never one on some: the tear lines have to line up. */
-  .av-receipt-foot { display: grid; gap: 0.35rem; padding-top: 0.9rem; border-top: 1px dashed var(--border-strong); }
-  .av-receipt-cta { font-weight: 600; font-size: 0.9rem; color: var(--accent); display: inline-flex; gap: 0.3rem; }
-  .av-receipt-host { font-family: var(--font-mono); font-size: 0.68rem; color: var(--t3); letter-spacing: 0.02em; }
-  .av-receipt .av-arrow { transition: transform 0.22s var(--av-ease); }
-  .av-receipt:hover .av-arrow { transform: translate(2px, -2px); }
+  .av-receipt-foot {
+    display: grid;
+    gap: 0.35rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--border-strong);
+  }
+  .av-receipt-cta {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--accent);
+    display: inline-flex;
+    gap: 0.3rem;
+  }
+  .av-receipt-host {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--t3);
+    letter-spacing: 0.02em;
+  }
+  .av-receipt .av-arrow {
+    transition: transform 0.22s var(--av-ease);
+  }
+  .av-receipt:hover .av-arrow {
+    transform: translate(2px, -2px);
+  }
 </style>

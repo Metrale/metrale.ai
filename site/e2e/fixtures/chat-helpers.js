@@ -65,10 +65,7 @@ export async function waitReady(page) {
 }
 
 export function withKey(page) {
-  return page.addInitScript(
-    ([k, v]) => localStorage.setItem(k, v),
-    [LS_OPENROUTER_KEY, TEST_KEY]
-  );
+  return page.addInitScript(([k, v]) => localStorage.setItem(k, v), [LS_OPENROUTER_KEY, TEST_KEY]);
 }
 
 export async function askQuestion(page, question) {

@@ -28,7 +28,7 @@
     onmakehead,
     onselect,
     onpair,
-    onunpair
+    onunpair,
   } = $props();
 
   // D3 is a summary, never the ceremony: the epoch-pinned Prepare→Commit
@@ -40,13 +40,13 @@
     if (f.started?.length > 0) {
       return {
         line: `running · ${f.recipe}`,
-        members: f.started.map((r) => ({ name: r.name, rank: r.rank, ok: true }))
+        members: f.started.map((r) => ({ name: r.name, rank: r.rank, ok: true })),
       };
     }
     if (f.epoch != null && f.phase === 'prepared') {
       return {
         line: `prepared · epoch ${f.epoch}`,
-        members: f.answers.map((r) => ({ name: r.name, rank: r.rank, ok: r.prepared === true }))
+        members: f.answers.map((r) => ({ name: r.name, rank: r.rank, ok: r.prepared === true })),
       };
     }
     return { line: 'No cluster.', members: [] };
@@ -70,10 +70,7 @@
   <section class="rail-sec rail-alerts" id="alerts" aria-label="Alerts">
     <h3 class="rail-h">Alerts</h3>
     {#if fleet.alerts.length === 0}
-      <p class="rail-quiet">
-        Nothing to report. This lane stays here so you never wonder where
-        alerts would appear.
-      </p>
+      <p class="rail-quiet">Nothing to report. This lane stays here so you never wonder where alerts would appear.</p>
     {:else}
       <!-- An internal scroll region, so keyboard-reachable like every other. -->
       <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
@@ -84,9 +81,7 @@
               type="button"
               class="rail-al-row"
               onclick={() => onselect?.(a.node)}
-              aria-label={`${a.severity} on ${a.nodeName}: ${
-                a.detail || a.kind.replaceAll('_', ' ')
-              }. Select that machine.`}
+              aria-label={`${a.severity} on ${a.nodeName}: ${a.detail || a.kind.replaceAll('_', ' ')}. Select that machine.`}
             >
               <span class="al-sev al-{a.severity}" aria-hidden="true">{a.severity}</span>
               <span class="rail-al-body" aria-hidden="true">
@@ -133,28 +128,17 @@
                right; the rail contradicted it. -->
           {#if node.isLocal || node.pairing === 'paired' || node.pairing === 'unreachable'}
             {#if node.canLaunch}
-              <button
-                type="button"
-                class="topo-act-btn"
-                disabled={head === node.id}
-                onclick={() => onmakehead?.(node.id)}
-              >
+              <button type="button" class="topo-act-btn" disabled={head === node.id} onclick={() => onmakehead?.(node.id)}>
                 {head === node.id ? 'Head (rank 0)' : 'Make head'}
               </button>
             {:else}
               <span class="topo-act-note">Control only — cannot hold a rank</span>
             {/if}
             {#if !node.isLocal}
-              <button
-                type="button"
-                class="topo-act-btn topo-act-danger"
-                onclick={() => onunpair?.(node)}>Unpair…</button
-              >
+              <button type="button" class="topo-act-btn topo-act-danger" onclick={() => onunpair?.(node)}>Unpair…</button>
             {/if}
           {:else}
-            <button type="button" class="topo-act-btn" onclick={() => onpair?.(node)}>
-              Pair…
-            </button>
+            <button type="button" class="topo-act-btn" onclick={() => onpair?.(node)}> Pair… </button>
           {/if}
         </div>
       {:else}
@@ -177,15 +161,12 @@
       </ul>
     {:else}
       <p class="rail-quiet">
-        Recipes that span two machines launch from the overlay — every rank
-        previews its own exact command before anything reserves.
+        Recipes that span two machines launch from the overlay — every rank previews its own exact command before anything reserves.
       </p>
     {/if}
     {#if clusterFlow?.linkWarning}
       <p class="rail-cl-warn">{clusterFlow.linkWarning}</p>
     {/if}
-    <button type="button" class="btn btn-primary rail-cl-btn" onclick={() => oncluster?.()}>
-      Cluster launch…
-    </button>
+    <button type="button" class="btn btn-primary rail-cl-btn" onclick={() => oncluster?.()}> Cluster launch… </button>
   </section>
 </aside>

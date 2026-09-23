@@ -29,7 +29,16 @@
 </section>
 
 <style>
-  .av-layer-title { font-weight: 600; color: var(--t1) !important; margin-bottom: 0.5rem; }
-  .av-solution-foot { margin-top: 2.5rem; text-align: center; }
-  .av-solution-foot .av-lede { margin-inline: auto; }
+  .av-layer-title {
+    font-weight: 600;
+    color: var(--t1) !important;
+    margin-bottom: 0.5rem;
+  }
+  .av-solution-foot {
+    margin-top: 2.5rem;
+    text-align: center;
+  }
+  .av-solution-foot .av-lede {
+    margin-inline: auto;
+  }
 </style>

@@ -27,32 +27,31 @@
 >
   <div class="wide2">
     <div class="at" style="--n: 1">
-    <Cmd
-      label="the baseline leg, then the subject leg"
-      lines={[
-        `spark benchmark run concurrency-sweep \\`,
-        `  --url http://127.0.0.1:8000 --model ${claim.checkpoint} \\`,
-        `  --param concurrencies=1,4,8,16 --param isls=512 --param osl=320 \\`,
-        `  --skip-coherence-probe --format json > vllm.json`,
-        `spark benchmark run concurrency-sweep \\`,
-        `  --url http://127.0.0.1:8888 --model ${claim.checkpoint} \\`,
-        `  --param concurrencies=1,4,8,16 --param isls=512 --param osl=320 \\`,
-        `  --format json > atlas.json`
-      ]}
-      note="http:// only. stdout carries the record and stderr the progress, so the redirect gives a clean file. Those --param values are the ones the gate pins; an unknown key is an error, never a silent no-op."
-    />
+      <Cmd
+        label="the baseline leg, then the subject leg"
+        lines={[
+          `spark benchmark run concurrency-sweep \\`,
+          `  --url http://127.0.0.1:8000 --model ${claim.checkpoint} \\`,
+          `  --param concurrencies=1,4,8,16 --param isls=512 --param osl=320 \\`,
+          `  --skip-coherence-probe --format json > vllm.json`,
+          `spark benchmark run concurrency-sweep \\`,
+          `  --url http://127.0.0.1:8888 --model ${claim.checkpoint} \\`,
+          `  --param concurrencies=1,4,8,16 --param isls=512 --param osl=320 \\`,
+          `  --format json > atlas.json`,
+        ]}
+        note="http:// only. stdout carries the record and stderr the progress, so the redirect gives a clean file. Those --param values are the ones the gate pins; an unknown key is an error, never a silent no-op."
+      />
     </div>
     <aside class="side at" style="--n: 2">
       <p class="side-h mono">Two instruments, not interchangeable</p>
       <p>
-        The published C=1…128 ladder came from <code class="mono">{claim.harnessFile}</code>, a
-        campaign driver with <code class="mono">--reps</code>; the gate's sweep runs one measured
-        batch per cell at pinned parameters.
+        The published C=1…128 ladder came from <code class="mono">{claim.harnessFile}</code>, a campaign driver with
+        <code class="mono">--reps</code>; the gate's sweep runs one measured batch per cell at pinned parameters.
       </p>
       <p>
-        Their prompt corpus is byte-identical, which makes a cell's throughput comparable across
-        the two. Their percentile rules are <em>not</em> — the driver interpolates, the gate takes a
-        nearest rank — so compare the aggregate tok/s the ladder publishes, never one instrument's
+        Their prompt corpus is byte-identical, which makes a cell's throughput comparable across the two. Their percentile rules are <em
+          >not</em
+        > — the driver interpolates, the gate takes a nearest rank — so compare the aggregate tok/s the ladder publishes, never one instrument's
         p50 TTFT against the other's. Only the gate's produces a record CI accepts.
       </p>
     </aside>
@@ -78,7 +77,7 @@
           `  --url http://127.0.0.1:8888 --model ${claim.checkpoint} \\`,
           `  --label atlas --out atlas_ladder.json \\`,
           `  --concs ${claim.concsArg} \\`,
-          `  --reps ${claim.reps} --isl ${claim.isl} --osl ${claim.osl} --warmup ${claim.warmup}`
+          `  --reps ${claim.reps} --isl ${claim.isl} --osl ${claim.osl} --warmup ${claim.warmup}`,
         ]}
         note={`Every knob is a required argument — the driver defaults nothing silently, so the command IS the methodology. Swap --url and --label for the vLLM leg and run them back to back. Budget about an hour per leg on a GB10: C=128 alone streams ${128 * claim.osl} tokens per rep, and there are ${claim.reps} timed reps plus ${claim.warmup} warmup at every rung.`}
       />
@@ -86,16 +85,15 @@
     <aside class="side at" style="--n: 2">
       <p class="side-h mono">Check the driver hash first</p>
       <p>
-        The driver prints its own <code class="mono">sha256</code> on the first line and writes it
-        into the output as <code class="mono">driver_sha256</code>. The published Atlas legs carry
+        The driver prints its own <code class="mono">sha256</code> on the first line and writes it into the output as
+        <code class="mono">driver_sha256</code>. The published Atlas legs carry
         <code class="mono">{claim.harnessShaAvarok}</code>; the copy in the repository today hashes
         <code class="mono">{claim.harnessShaRepo}</code>.
       </p>
       <p>
         Same sampling behaviour — both send <code class="mono">presence_penalty</code> and
-        <code class="mono">frequency_penalty</code> at 0.0, which is what the recorded pair differed
-        over — but they are not the same bytes, so record the hash you actually ran rather than
-        quoting ours.
+        <code class="mono">frequency_penalty</code> at 0.0, which is what the recorded pair differed over — but they are not the same bytes, so
+        record the hash you actually ran rather than quoting ours.
       </p>
     </aside>
   </div>
@@ -121,15 +119,14 @@
         `      --pull-request-gate --yes`,
         `done`,
         ``,
-        `spark benchmark --pull-request-gate-check    # what CI then runs`
+        `spark benchmark --pull-request-gate-check    # what CI then runs`,
       ]}
       note="One gate per process, which is why it is a loop. Each run writes .benchmarks/&lt;id&gt;/&lt;date&gt;-&lt;sha&gt;.json carrying the metrics, the verdict, the hardware fingerprint, the exact command and the commit sha."
     />
   </div>
   <p class="after at" style="--n: 2">
-    <code class="mono">--url</code> and <code class="mono">--pull-request-gate</code> are mutually
-    exclusive by design: a run pointed at someone else's server can be measured and argued about,
-    but it can never become a record. The CLI draws the line between an experiment and evidence,
+    <code class="mono">--url</code> and <code class="mono">--pull-request-gate</code> are mutually exclusive by design: a run pointed at someone
+    else's server can be measured and argued about, but it can never become a record. The CLI draws the line between an experiment and evidence,
     so a reviewer does not have to.
   </p>
 </Slide>
@@ -166,27 +163,25 @@
         </tbody>
       </table>
       <p class="tb-note">
-        Lowering the cap to match the rung looks neutral. It is not: vLLM sizes its KV blocks and
-        scheduler budget from <code class="mono">max_num_seqs</code>, so a smaller cap changes
-        allocation, preemption and prefix reuse — and materially favours it.
+        Lowering the cap to match the rung looks neutral. It is not: vLLM sizes its KV blocks and scheduler budget from <code class="mono"
+          >max_num_seqs</code
+        >, so a smaller cap changes allocation, preemption and prefix reuse — and materially favours it.
       </p>
     </div>
     <div class="at" style="--n: 2">
       <p class="lead">
         A matched cap-32 pair, adopted in good faith to dodge a hardware hazard, produced
-        <strong>0.975×</strong> and inverted the true ordering. Measured again at the certified
-        cap-128 configuration on the same box the same day: <strong>1.007×</strong>, with
-        non-overlapping distributions — Atlas's worst rep beat vLLM's best.
+        <strong>0.975×</strong> and inverted the true ordering. Measured again at the certified cap-128 configuration on the same box the
+        same day: <strong>1.007×</strong>, with non-overlapping distributions — Atlas's worst rep beat vLLM's best.
       </p>
       <p class="lead">
-        The certified table pins cap 128 on both engines at <em>every</em> rung, independently of
-        the concurrency being driven. That pin is load-bearing.
+        The certified table pins cap 128 on both engines at <em>every</em> rung, independently of the concurrency being driven. That pin is load-bearing.
       </p>
     </div>
   </div>
   <p class="pull at" style="--n: 3">
-    If you re-cap to survive a hazard on your own box: say so beside the number, and re-pin both
-    engines to the same value. Do not fold it into the certified column.
+    If you re-cap to survive a hazard on your own box: say so beside the number, and re-pin both engines to the same value. Do not fold it
+    into the certified column.
   </p>
 </Slide>
 
@@ -202,24 +197,22 @@
     <article class="at" style="--n: 1">
       <h3>MTP speculation, width-laddered</h3>
       <p>
-        K is chosen per concurrency (<code class="mono">1:3,2:1,4:2,8:2,16:1</code>) rather than
-        fixed, and self-disables above 32 concurrent sequences where verify cost exceeds the win.
+        K is chosen per concurrency (<code class="mono">1:3,2:1,4:2,8:2,16:1</code>) rather than fixed, and self-disables above 32
+        concurrent sequences where verify cost exceeds the win.
       </p>
     </article>
     <article class="at" style="--n: 2">
       <h3>Prefill co-dispatch + fp8 row-wise</h3>
       <p>
-        Prefill overlaps decode rather than stalling it; row-wise fp8 moves fewer bytes on the
-        bandwidth-bound path. Decode at this scale is a memory-traffic problem, so this is where a
-        real win has to come from.
+        Prefill overlaps decode rather than stalling it; row-wise fp8 moves fewer bytes on the bandwidth-bound path. Decode at this scale is
+        a memory-traffic problem, so this is where a real win has to come from.
       </p>
     </article>
     <article class="at" style="--n: 3">
       <h3>Why C=128 is the widest rung</h3>
       <p>
-        It is not that Atlas gets faster — it is that vLLM's C=128 falls <em>below</em> its own
-        C=64 when speculation stays on at high concurrency. Atlas's ladder has already switched it
-        off. The margin is a scheduling decision, and it is reproducible for that reason.
+        It is not that Atlas gets faster — it is that vLLM's C=128 falls <em>below</em> its own C=64 when speculation stays on at high concurrency.
+        Atlas's ladder has already switched it off. The margin is a scheduling decision, and it is reproducible for that reason.
       </p>
     </article>
   </div>

@@ -37,33 +37,51 @@ const TOKEN = 'avarokprobe' + Date.now();
 
 /** CPU seconds used so far by this browser's processes, keyed by process type. */
 function cpuByType() {
-  let rows = [];
+  let rows;
   if (process.platform === 'win32') {
     const ps = `Get-CimInstance Win32_Process -Filter "Name LIKE 'chrome%' OR Name LIKE 'headless%'" | ForEach-Object { "$($_.ProcessId)|$($_.ParentProcessId)|$([double]($_.KernelModeTime + $_.UserModeTime) / 1e7)|$($_.CommandLine)" }`;
     const out = execFileSync('powershell.exe', ['-NoProfile', '-Command', ps], { encoding: 'utf8', maxBuffer: 1 << 24 });
-    rows = out.split(/\r?\n/).filter(Boolean).map((l) => {
-      const [pid, ppid, cpu, ...cmd] = l.split('|');
-      return { pid: +pid, ppid: +ppid, cpu: +cpu, cmd: cmd.join('|') };
-    });
+    rows = out
+      .split(/\r?\n/)
+      .filter(Boolean)
+      .map((l) => {
+        const [pid, ppid, cpu, ...cmd] = l.split('|');
+        return { pid: +pid, ppid: +ppid, cpu: +cpu, cmd: cmd.join('|') };
+      });
   } else {
     const out = execFileSync('ps', ['-eo', 'pid=,ppid=,cputime=,args='], { encoding: 'utf8', maxBuffer: 1 << 24 });
-    rows = out.split('\n').filter(Boolean).map((l) => {
-      const m = l.trim().match(/^(\d+)\s+(\d+)\s+([\d:.-]+)\s+(.*)$/);
-      if (!m) return null;
-      const parts = m[3].replace(/^(\d+)-/, (_, d) => `${+d * 24}:`).split(':').map(Number);
-      const cpu = parts.reduce((s, v) => s * 60 + v, 0);
-      return { pid: +m[1], ppid: +m[2], cpu, cmd: m[4] };
-    }).filter(Boolean);
+    rows = out
+      .split('\n')
+      .filter(Boolean)
+      .map((l) => {
+        const m = l.trim().match(/^(\d+)\s+(\d+)\s+([\d:.-]+)\s+(.*)$/);
+        if (!m) return null;
+        const parts = m[3]
+          .replace(/^(\d+)-/, (_, d) => `${+d * 24}:`)
+          .split(':')
+          .map(Number);
+        const cpu = parts.reduce((s, v) => s * 60 + v, 0);
+        return { pid: +m[1], ppid: +m[2], cpu, cmd: m[4] };
+      })
+      .filter(Boolean);
   }
   const root = rows.find((r) => r.cmd.includes(TOKEN) && !/--type=/.test(r.cmd));
   if (!root) return {};
   const mine = new Set([root.pid]);
-  for (let grew = true; grew; ) {
+  for (let grew = true; grew;) {
     grew = false;
-    for (const r of rows) if (mine.has(r.ppid) && !mine.has(r.pid)) { mine.add(r.pid); grew = true; }
+    for (const r of rows)
+      if (mine.has(r.ppid) && !mine.has(r.pid)) {
+        mine.add(r.pid);
+        grew = true;
+      }
   }
   const acc = {};
-  for (const r of rows) if (mine.has(r.pid)) { const type = (r.cmd.match(/--type=([a-z-]+)/) || [, 'browser'])[1]; acc[type] = (acc[type] || 0) + r.cpu; }
+  for (const r of rows)
+    if (mine.has(r.pid)) {
+      const type = r.cmd.match(/--type=([a-z-]+)/)?.[1] ?? 'browser';
+      acc[type] = (acc[type] || 0) + r.cpu;
+    }
   return acc;
 }
 
@@ -72,12 +90,15 @@ const variants = [
   ['as shipped', '', false],
   ['css animations paused', STILL, false],
   ['videos paused', '', true],
-  ['both', STILL, true]
+  ['both', STILL, true],
 ];
 
 const results = [];
 for (const [name, css, pause] of variants) {
-  const browser = await chromium.launch({ headless: true, args: [`--${TOKEN}`, '--headless=new', '--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist', '--enable-gpu-rasterization'] });
+  const browser = await chromium.launch({
+    headless: true,
+    args: [`--${TOKEN}`, '--headless=new', '--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist', '--enable-gpu-rasterization'],
+  });
   const ctx = await browser.newContext({ viewport: { width: 1600, height: 1000 }, serviceWorkers: 'block' });
   const page = await ctx.newPage();
   await page.goto(origin + path, { waitUntil: 'load' });
@@ -87,7 +108,11 @@ for (const [name, css, pause] of variants) {
     await page.waitForTimeout(1500);
   }
   if (css) await page.addStyleTag({ content: css });
-  if (pause) await page.evaluate(() => { document.querySelectorAll('video').forEach((v) => v.pause()); HTMLMediaElement.prototype.play = () => Promise.resolve(); });
+  if (pause)
+    await page.evaluate(() => {
+      document.querySelectorAll('video').forEach((v) => v.pause());
+      HTMLMediaElement.prototype.play = () => Promise.resolve();
+    });
   await page.waitForTimeout(2500);
   const cdp = await ctx.newCDPSession(page);
   await cdp.send('Performance.enable');
@@ -104,14 +129,23 @@ for (const [name, css, pause] of variants) {
     variant: name,
     'renderer %': +pct('renderer').toFixed(1),
     'gpu %': +pct('gpu-process').toFixed(1),
-    'all processes %': +Object.keys(c1).reduce((s, k) => s + pct(k), 0).toFixed(1),
+    'all processes %': +Object.keys(c1)
+      .reduce((s, k) => s + pct(k), 0)
+      .toFixed(1),
     'main thread busy %': +(((m1.TaskDuration - m0.TaskDuration) / dt) * 100).toFixed(1),
-    'style and layout ms/s': +(((m1.RecalcStyleDuration - m0.RecalcStyleDuration + m1.LayoutDuration - m0.LayoutDuration) / dt) * 1000).toFixed(1)
+    'style and layout ms/s': +(
+      ((m1.RecalcStyleDuration - m0.RecalcStyleDuration + m1.LayoutDuration - m0.LayoutDuration) / dt) *
+      1000
+    ).toFixed(1),
   });
   await browser.close();
 }
 console.log(`${path}${target ? ' at ' + target : ''}: percent of one core, page idle, ${WINDOW_MS / 1000} s window`);
 console.table(results);
 const shipped = results[0]['all processes %'];
-console.log(shipped <= 5 ? `ok: ${shipped}% idle, within the 5% budget` : `OVER BUDGET: ${shipped}% idle. The variants above show which suspect owns it.`);
+console.log(
+  shipped <= 5
+    ? `ok: ${shipped}% idle, within the 5% budget`
+    : `OVER BUDGET: ${shipped}% idle. The variants above show which suspect owns it.`
+);
 process.exit(shipped <= 5 ? 0 : 1);

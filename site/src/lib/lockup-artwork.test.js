@@ -17,7 +17,7 @@ const { ART } = await import('../../../web-shared/brand-art.js');
 const lockup = read('../../../web-shared/components/AtlasLockup.svelte');
 const tokens = read('../../../web-shared/avarok-tokens.css');
 
-test('brand-art.js is what the kit\'s geometry draws today', () => {
+test("brand-art.js is what the kit's geometry draws today", () => {
   const G = require('../../../assets/brand/src/geometry.js');
   G.setPaths(JSON.parse(read('../../../assets/brand/src/paths.json')));
   const w = G.wordmark({ theme: 'dark', id: 'w' });
@@ -45,14 +45,15 @@ test('the component draws from the module and nothing else, and maps each ink to
   expect(lockup).toContain("import { ART } from '../brand-art.js'");
   expect(lockup).not.toMatch(/\bd="M\d/); // no path literal of its own
   for (const id of ['m-ink', 'm-violet', 'm-cyan', 'm-gold', 'm-wordmark', 'm-mark', 'm-compact']) expect(lockup).toContain(`id="${id}"`);
-  for (const t of ['--m-ink-hi', '--m-ink-lo', '--m-lavender', '--m-violet', '--m-cyan-hi', '--m-cyan-lo', '--m-gold-hi', '--m-gold-lo']) expect(lockup).toContain(`var(${t})`);
+  for (const t of ['--m-ink-hi', '--m-ink-lo', '--m-lavender', '--m-violet', '--m-cyan-hi', '--m-cyan-lo', '--m-gold-hi', '--m-gold-lo'])
+    expect(lockup).toContain(`var(${t})`);
   // The kit's gradient directions, kept.
   expect(lockup).toMatch(/id="m-violet" x1="0" y1="0" x2="0.25" y2="1"/);
   expect(lockup).toMatch(/id="m-cyan" x1="0" y1="0" x2="1" y2="0"/);
   expect(lockup).toMatch(/id="m-gold" x1="0.8" y1="0" x2="0.2" y2="1"/);
 });
 
-test('the tokens the inks read are the kit\'s colours, per ground', () => {
+test("the tokens the inks read are the kit's colours, per ground", () => {
   const block = (sel) => tokens.slice(tokens.indexOf(sel), tokens.indexOf('\n}', tokens.indexOf(sel)));
   const dark = block(':root {');
   const light = block('[data-theme="light"]');

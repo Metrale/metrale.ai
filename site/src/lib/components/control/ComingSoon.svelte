@@ -32,7 +32,7 @@
     /** Button text, when the collapsed chip names the group rather than an entry. */
     label = null,
     /** 'chip' (actions bar, command strip, alert lane) or 'tile' (I/O strip). */
-    kind = 'chip'
+    kind = 'chip',
   } = $props();
 
   const entries = $derived((ids ?? [id]).map(placeholder));
@@ -116,9 +116,7 @@
       {:else}
         <p class="cs-text">{entry.soon}</p>
       {/if}
-      <button type="button" class="cs-close" bind:this={closeBtn} onclick={() => close(true)}>
-        Close
-      </button>
+      <button type="button" class="cs-close" bind:this={closeBtn} onclick={() => close(true)}> Close </button>
     </div>
   {/if}
 </span>

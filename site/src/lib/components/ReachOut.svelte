@@ -37,8 +37,10 @@
             <a class="email-btn-addr" href={`mailto:${e}`}>
               <span class="email-ico" aria-hidden="true">✉</span><span class="email-addr">{e}</span>
             </a>
-            <button type="button" class="email-btn-copy" onclick={(ev) =>
-                copy(e, ev.currentTarget.closest('.email-btn')?.querySelector('.email-addr'))}
+            <button
+              type="button"
+              class="email-btn-copy"
+              onclick={(ev) => copy(e, ev.currentTarget.closest('.email-btn')?.querySelector('.email-addr'))}
               aria-label={`Copy ${e}`}
             >
               {copied === e ? copyLabel(copyState) : 'Copy'}
@@ -46,7 +48,8 @@
           </div>
         {/each}
         <a class="btn btn-discord" href={discordUrl} target="_blank" rel="noopener">
-          <DiscordIcon size={17} /> {reachout.discordCta}
+          <DiscordIcon size={17} />
+          {reachout.discordCta}
         </a>
       </div>
     </div>

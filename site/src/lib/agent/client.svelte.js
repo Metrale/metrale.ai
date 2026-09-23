@@ -7,13 +7,7 @@
 // something to explain, not something to fail on.
 
 import { currentInstall } from '$lib/install/host.svelte.js';
-import {
-  AGENT_URL,
-  PROTOCOL_VERSION,
-  describeError,
-  storedToken,
-  versionAdvice
-} from './protocol.js';
+import { AGENT_URL, PROTOCOL_VERSION, describeError, storedToken, versionAdvice } from './protocol.js';
 import * as msgs from './control-msgs.js';
 
 /** How long to wait for an agent before deciding there is not one. */

@@ -32,7 +32,10 @@ const contrast = (a, b) => {
   return (hi + 0.05) / (lo + 0.05);
 };
 
-const SURFACES = [['--bg', token('bg')], ['--card', token('card')]];
+const SURFACES = [
+  ['--bg', token('bg')],
+  ['--card', token('card')],
+];
 const SERIES = [...Object.entries(MODEL_COLORS), ['fallback', UNKNOWN_MODEL_COLOR]];
 
 test('the series palette is not empty (so the loops below are not vacuous)', () => {

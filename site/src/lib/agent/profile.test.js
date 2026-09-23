@@ -27,7 +27,7 @@ function storage(initial = null, fail = false) {
     },
     get raw() {
       return value;
-    }
+    },
   };
 }
 
@@ -120,14 +120,14 @@ test('override values keep scalars and drop everything else', () => {
         enable_mtp: true,
         nested: { evil: 1 },
         list: [1, 2],
-        nothing: null
-      }
-    }
+        nothing: null,
+      },
+    },
   });
   expect(P.load(storage(raw)).overrides['a-recipe']).toEqual({
     port: 8888,
     kv_cache_dtype: 'fp8',
-    enable_mtp: true
+    enable_mtp: true,
   });
 });
 
@@ -163,7 +163,7 @@ test('what save writes is what load reads back', () => {
     recipe: 'qwen3.6-27b',
     selected: ['aa', 'bb'],
     head: 'aa',
-    overrides: { 'qwen3.6-27b': { port: 8890 } }
+    overrides: { 'qwen3.6-27b': { port: 8890 } },
   });
   expect(P.save(s, p)).toBe(true);
   expect(P.load(s)).toEqual(p);

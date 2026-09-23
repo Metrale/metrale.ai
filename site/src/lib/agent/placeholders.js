@@ -34,7 +34,7 @@ export const CAPS = {
   launch: 1,
   // The Status tab's footer: the one admission that the action log is
   // session-memory, not an audit trail.
-  status: 1
+  status: 1,
 };
 
 const REGISTRY = [
@@ -42,68 +42,68 @@ const REGISTRY = [
     id: 'test-prompt',
     region: 'actions',
     label: 'Test prompt',
-    soon: 'Coming soon — the agent has no prompt-proxy verb, and the model endpoint is cross-origin from this page.'
+    soon: 'Coming soon — the agent has no prompt-proxy verb, and the model endpoint is cross-origin from this page.',
   },
   {
     id: 'model-cache',
     region: 'actions',
     label: 'Model cache',
-    soon: 'Coming soon — the agent reports only free disk space, not what is in the model cache.'
+    soon: 'Coming soon — the agent reports only free disk space, not what is in the model cache.',
   },
   {
     id: 'update-agent',
     region: 'actions',
     label: 'Update agent',
-    soon: 'Coming soon — there is no update verb; shipping one is security-sensitive and will not be rushed.'
+    soon: 'Coming soon — there is no update verb; shipping one is security-sensitive and will not be rushed.',
   },
   {
     id: 'requests-tab',
     region: 'dock',
     label: 'Requests',
-    soon: 'Coming soon — the engine does not yet export a per-request table, KV-cache occupancy, or queue depth.'
+    soon: 'Coming soon — the engine does not yet export a per-request table, KV-cache occupancy, or queue depth.',
   },
   {
     id: 'range-1h',
     region: 'command',
     label: '1h',
-    soon: 'Coming soon — the agent keeps no history ring buffer and has no query verb for one; this page can only show what it saw this session.'
+    soon: 'Coming soon — the agent keeps no history ring buffer and has no query verb for one; this page can only show what it saw this session.',
   },
   {
     id: 'range-24h',
     region: 'command',
     label: '24h',
-    soon: 'Coming soon — the agent keeps no history ring buffer and has no query verb for one; this page can only show what it saw this session.'
+    soon: 'Coming soon — the agent keeps no history ring buffer and has no query verb for one; this page can only show what it saw this session.',
   },
   {
     id: 'launch-phase',
     region: 'launch',
     label: 'Launch phase',
-    soon: 'Coming soon — LaunchPhase is shared vocabulary, but no wire message carries a phase yet; this strip lights up rank by rank when one does.'
+    soon: 'Coming soon — LaunchPhase is shared vocabulary, but no wire message carries a phase yet; this strip lights up rank by rank when one does.',
   },
   {
     id: 'durable-audit',
     region: 'status',
     label: 'Durable audit',
-    soon: 'Coming soon — the agent keeps no action history; this log is only what this page did this session, and it dies with the tab.'
+    soon: 'Coming soon — the agent keeps no action history; this log is only what this page did this session, and it dies with the tab.',
   },
   {
     id: 'alert-ack',
     region: 'alerts',
     label: 'Ack',
-    soon: 'Coming soon — alerts are live state only; the agent keeps no acknowledgement.'
+    soon: 'Coming soon — alerts are live state only; the agent keeps no acknowledgement.',
   },
   {
     id: 'alert-silence',
     region: 'alerts',
     label: 'Silence',
-    soon: 'Coming soon — alerts are live state only; the agent keeps no silencing rules.'
+    soon: 'Coming soon — alerts are live state only; the agent keeps no silencing rules.',
   },
   {
     id: 'alert-routing',
     region: 'alerts',
     label: 'Routing',
-    soon: 'Coming soon — no notification configuration exists anywhere in the agent.'
-  }
+    soon: 'Coming soon — no notification configuration exists anywhere in the agent.',
+  },
 ];
 
 /**
@@ -129,9 +129,7 @@ export function placeholdersFor(region, opts, registry = REGISTRY) {
   const entries = registry.filter((e) => e.region === region);
   if (entries.length > CAPS[region]) {
     // Fail at the source of the creep, not in a review screenshot.
-    throw new RangeError(
-      `${region} carries ${entries.length} placeholders; its cap is ${CAPS[region]}`
-    );
+    throw new RangeError(`${region} carries ${entries.length} placeholders; its cap is ${CAPS[region]}`);
   }
   if (opts.solo && region === 'actions' && entries.length > 1) {
     return [
@@ -139,8 +137,8 @@ export function placeholdersFor(region, opts, registry = REGISTRY) {
         id: 'soon-menu',
         region: 'actions',
         label: 'soon ▾',
-        collapsed: entries
-      }
+        collapsed: entries,
+      },
     ];
   }
   return entries;

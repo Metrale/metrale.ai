@@ -59,7 +59,16 @@
 
 {#if CHAT_URL}
   {#if !open}
-    <button type="button" class="pr-launch" aria-label={copy.launcher.aria} aria-expanded="false" aria-haspopup="dialog" onpointerenter={warm} onfocus={warm} onclick={() => show()}>
+    <button
+      type="button"
+      class="pr-launch"
+      aria-label={copy.launcher.aria}
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      onpointerenter={warm}
+      onfocus={warm}
+      onclick={() => show()}
+    >
       <PrimeMark size={22} class="pr-launch-mark" />
       <span class="pr-launch-label">{copy.launcher.label}</span>
     </button>
@@ -74,18 +83,66 @@
 
 <style>
   .pr-launch {
-    position: fixed; right: 20px; bottom: 20px; z-index: 104;
-    display: inline-flex; align-items: center; gap: 0.5rem; height: 46px; padding: 0 1rem 0 0.75rem;
-    border-radius: 999px; border: 1px solid var(--border-strong); background: var(--card); color: var(--t1);
-    font-family: var(--font-sans); font-weight: 650; font-size: 0.9rem; letter-spacing: -0.005em; cursor: pointer;
-    box-shadow: var(--shadow); transition: transform 0.18s var(--av-ease, ease-out), border-color 0.18s, box-shadow 0.18s;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 104;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 46px;
+    padding: 0 1rem 0 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    background: var(--card);
+    color: var(--t1);
+    font-family: var(--font-sans);
+    font-weight: 650;
+    font-size: 0.9rem;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition:
+      transform 0.18s var(--av-ease, ease-out),
+      border-color 0.18s,
+      box-shadow 0.18s;
   }
-  .pr-launch:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: var(--shadow-lg); }
-  .pr-launch:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .pr-launch :global(.pr-launch-mark) { color: var(--t1); }
-  .pr-launch-fail { position: fixed; right: 20px; bottom: 76px; z-index: 104; margin: 0; padding: 0.5rem 0.8rem; border-radius: 10px; background: var(--card); border: 1px solid var(--border-strong); font-size: 0.8rem; color: var(--red); }
+  .pr-launch:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-lg);
+  }
+  .pr-launch:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .pr-launch :global(.pr-launch-mark) {
+    color: var(--t1);
+  }
+  .pr-launch-fail {
+    position: fixed;
+    right: 20px;
+    bottom: 76px;
+    z-index: 104;
+    margin: 0;
+    padding: 0.5rem 0.8rem;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    font-size: 0.8rem;
+    color: var(--red);
+  }
   @media (max-width: 480px) {
-    .pr-launch { right: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); height: 44px; padding: 0 0.9rem 0 0.7rem; }
+    .pr-launch {
+      right: 14px;
+      bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+      height: 44px;
+      padding: 0 0.9rem 0 0.7rem;
+    }
   }
-  @media (prefers-reduced-motion: reduce) { .pr-launch { transition: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .pr-launch {
+      transition: none;
+    }
+  }
 </style>

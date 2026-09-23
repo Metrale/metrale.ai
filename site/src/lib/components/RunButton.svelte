@@ -22,9 +22,7 @@
   disabled={!runnable || isConnecting}
   aria-haspopup="dialog"
   aria-expanded={isOpen}
-  title={runnable
-    ? 'Run this recipe on your own machine'
-    : 'This recipe needs more than one machine — use the command instead'}
+  title={runnable ? 'Run this recipe on your own machine' : 'This recipe needs more than one machine — use the command instead'}
 >
   {#if isConnecting}Checking…{:else}Run{/if}
 </button>

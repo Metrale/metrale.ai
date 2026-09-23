@@ -51,12 +51,7 @@
       <code class="mono">{String(value)}</code>
       <span class="set-note">this page cannot edit this setting; its default applies</span>
     {:else if spec.bound.kind === 'toggle' || spec.bound.kind === 'bool_value'}
-      <input
-        id={`set-${spec.key}`}
-        type="checkbox"
-        checked={value === true}
-        onchange={(e) => onchange(e.currentTarget.checked)}
-      />
+      <input id={`set-${spec.key}`} type="checkbox" checked={value === true} onchange={(e) => onchange(e.currentTarget.checked)} />
     {:else if spec.bound.kind === 'enum'}
       <select id={`set-${spec.key}`} value={String(value)} onchange={(e) => onchange(e.currentTarget.value)}>
         {#each spec.bound.variants as v (v)}
@@ -64,18 +59,13 @@
         {/each}
       </select>
     {:else if spec.bound.kind === 'int_or_auto'}
-      <input
-        id={`set-${spec.key}`}
-        class="mono"
-        value={String(value)}
-        onchange={(e) => commit(e.currentTarget.value)}
-      />
+      <input id={`set-${spec.key}`} class="mono" value={String(value)} onchange={(e) => commit(e.currentTarget.value)} />
     {:else}
       <input
         id={`set-${spec.key}`}
         class="mono"
         type="number"
-        value={value}
+        {value}
         min={spec.bound.min}
         max={spec.bound.max}
         step={spec.bound.kind === 'float' ? 0.01 : 1}

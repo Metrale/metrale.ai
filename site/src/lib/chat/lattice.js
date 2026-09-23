@@ -71,7 +71,7 @@ export function createCorpusCollection(dim) {
     handle.deleteCollection(COLLECTION);
   }
   const res = handle.createCollection(COLLECTION, {
-    vectors: { size: dim, distance: 'Cosine' }
+    vectors: { size: dim, distance: 'Cosine' },
   });
   if (!res || res.status !== 'ok' || res.result !== true) {
     throw new Error(`createCollection failed: ${(res && res.error) || 'unknown wasm error'}`);
@@ -89,7 +89,7 @@ export function upsertBatch(points) {
  */
 export function searchVectors(vector, limit) {
   const res = requireDb().search(COLLECTION, new Float32Array(vector), limit, {
-    with_payload: true
+    with_payload: true,
   });
   return unwrap(res, 'search');
 }

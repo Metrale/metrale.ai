@@ -79,14 +79,16 @@ const kept = releases
   .slice(0, KEEP)
   .map((r) => ({
     ...r,
-    sections: r.sections.map((s) => ({ kind: s.kind, items: s.items.slice(0, MAX_ITEMS), more: Math.max(0, s.items.length - MAX_ITEMS) }))
+    sections: r.sections.map((s) => ({ kind: s.kind, items: s.items.slice(0, MAX_ITEMS), more: Math.max(0, s.items.length - MAX_ITEMS) })),
   }));
 if (kept.length === 0) throw new Error('gen-changelog: no releases parsed from CHANGELOG.md');
 
 let sha = 'unknown';
 try {
   sha = execSync('git rev-parse --short=10 HEAD', { cwd: site, encoding: 'utf8' }).trim();
-} catch {}
+} catch {
+  /* no repository here: the sha stays unknown */
+}
 const json = { generated_sha: sha, generated_date: new Date().toISOString().slice(0, 10), source: 'CHANGELOG.md', releases: kept };
 const prev = (() => {
   try {

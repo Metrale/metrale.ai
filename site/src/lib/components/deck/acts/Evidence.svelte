@@ -37,15 +37,14 @@
         ['weights', claim.checkpoint, 'HF repo, pinned revision'],
         ['seeds', `seed ${claim.seed}, temp ${claim.temperature}`, 'constants in the harness, not flags'],
         ['raw data', 'per-rung JSON', 'every rep, not the aggregate — in bench/ladder38/'],
-        ['record', claim.resultsDoc, 'the lab notebook, including what failed']
+        ['record', claim.resultsDoc, 'the lab notebook, including what failed'],
       ]}
     />
     <aside class="ask">
       <p class="ask-h mono">What we would ask of you</p>
       <p>
-        Rent your own GB10 hour. Run the two legs back to back. If a rung disagrees with our table
-        by more than its published spread, that is a finding and we want it — the fragile rungs
-        (C=8, C=16, C=32) are where to spend the budget first.
+        Rent your own GB10 hour. Run the two legs back to back. If a rung disagrees with our table by more than its published spread, that
+        is a finding and we want it — the fragile rungs (C=8, C=16, C=32) are where to spend the budget first.
       </p>
     </aside>
   </div>
@@ -62,24 +61,32 @@
   <ul class="notes">
     <li class="at" style="--n: 1">
       <span class="nt mono">retraction</span>
-      <span>An “agentic wall regression” was withdrawn once it turned out to be a cross-box
-      comparison. The withdrawal is in the file, above the claim it replaced.</span>
+      <span
+        >An “agentic wall regression” was withdrawn once it turned out to be a cross-box comparison. The withdrawal is in the file, above
+        the claim it replaced.</span
+      >
     </li>
     <li class="at" style="--n: 2">
       <span class="nt mono">negative</span>
-      <span>Four hypotheses closed as negative results — D-Cut pruning net-negative at the
-      contested rungs, the K-ladder A/B, a fixed-cost audit, and <code class="mono">decode_tps</code>
-      rejected as a gate.</span>
+      <span
+        >Four hypotheses closed as negative results — D-Cut pruning net-negative at the contested rungs, the K-ladder A/B, a fixed-cost
+        audit, and <code class="mono">decode_tps</code>
+        rejected as a gate.</span
+      >
     </li>
     <li class="at" style="--n: 3">
       <span class="nt mono">discarded</span>
-      <span>Two completed runs thrown away for being measured on the wrong box, and a bf16-KV
-      attempt discarded for not matching the reference — rather than kept as the better number.</span>
+      <span
+        >Two completed runs thrown away for being measured on the wrong box, and a bf16-KV attempt discarded for not matching the reference
+        — rather than kept as the better number.</span
+      >
     </li>
     <li class="at" style="--n: 4">
       <span class="nt mono">excluded</span>
-      <span>Driver version excluded as an explanation by measuring three boxes across two
-      drivers. Thermals excluded by re-baselining after a physical move.</span>
+      <span
+        >Driver version excluded as an explanation by measuring three boxes across two drivers. Thermals excluded by re-baselining after a
+        physical move.</span
+      >
     </li>
   </ul>
 </Slide>
@@ -95,21 +102,20 @@
   <div class="grid2">
     <div class="at" style="--n: 1">
       <p class="lead">
-        Ten gates are required for a pull request to land, and thresholds are not a percentage
-        band: they are absolute per-metric floors committed in
+        Ten gates are required for a pull request to land, and thresholds are not a percentage band: they are absolute per-metric floors
+        committed in
         <code class="mono">kernels/gb10/&lt;model&gt;/BENCH.toml</code>, each with an explicit
-        <code class="mono">noise</code> slack. CI refuses a slack above 5% of its own bound — larger
-        than that is a threshold change wearing a measurement-noise costume.
+        <code class="mono">noise</code> slack. CI refuses a slack above 5% of its own bound — larger than that is a threshold change wearing a
+        measurement-noise costume.
       </p>
       <p class="lead">
         A record is voided by <em>content</em>, not ancestry. Eight paths invalidate one:
         <code class="mono">crates/</code>, <code class="mono">kernels/</code>,
         <code class="mono">Cargo.toml</code>, <code class="mono">Cargo.lock</code>,
         <code class="mono">vendor/</code>, <code class="mono">3rdparty_patches/</code>,
-        <code class="mono">rust-toolchain.toml</code> — and <code class="mono">jinja-templates/</code>,
-        which is runtime input rather than build input: the server loads one over the checkpoint's own
-        chat template, so editing it changes the bytes every prompt renders to. A dirty tree fails, and
-        an entry declaring no thresholds fails rather than passes.
+        <code class="mono">rust-toolchain.toml</code> — and <code class="mono">jinja-templates/</code>, which is runtime input rather than
+        build input: the server loads one over the checkpoint's own chat template, so editing it changes the bytes every prompt renders to.
+        A dirty tree fails, and an entry declaring no thresholds fails rather than passes.
       </p>
     </div>
     <div class="at" style="--n: 2">
@@ -127,8 +133,8 @@
         </tbody>
       </table>
       <p class="note2">
-        Calibrated at mean minus max(3σ, ~5%) from three fresh reps on the same instrument, never
-        from a best rep — the derivation is a comment beside each floor.
+        Calibrated at mean minus max(3σ, ~5%) from three fresh reps on the same instrument, never from a best rep — the derivation is a
+        comment beside each floor.
       </p>
     </div>
   </div>
@@ -155,15 +161,14 @@
         ['headers', 'SPDX line 1, every source file', 'CI-enforced via skywalking-eyes against .licenserc.yaml'],
         ['dependencies', 'deny.toml allowlist', 'licence policy is a lockfile, not a policy document'],
         ['contributors', 'CLA workflow', 'cla.yml gates every pull request'],
-        ['provenance', 'signed commits, merge ancestry check', 'merge-ancestry.yml rejects unrecorded history']
+        ['provenance', 'signed commits, merge ancestry check', 'merge-ancestry.yml rejects unrecorded history'],
       ]}
     />
     <aside class="ask at" style="--n: 2">
       <p class="ask-h mono">The question behind the question</p>
       <p>
-        AGPL is a red flag when it is <em>found</em> in a proprietary serving path during
-        diligence. It is a position when it is the licence of the whole work, with a CLA that
-        keeps relicensing possible. We are the second case, and the CLA is why.
+        AGPL is a red flag when it is <em>found</em> in a proprietary serving path during diligence. It is a position when it is the licence of
+        the whole work, with a CLA that keeps relicensing possible. We are the second case, and the CLA is why.
       </p>
     </aside>
   </div>
@@ -218,19 +223,23 @@
         `spark benchmark list concurrency-sweep`,
         `spark benchmark run concurrency-sweep --url YOUR_VLLM_URL --model CHECKPOINT \\`,
         `    --param concurrencies=1,4,8,16 --param isls=512 --param osl=320`,
-        `spark benchmark run concurrency-sweep --pull-request-gate --yes`
+        `spark benchmark run concurrency-sweep --pull-request-gate --yes`,
       ]}
       note="The first line prints every parameter and its default. The second measures whatever you already have serving. The third is the one CI runs. Expect ~2 hours on a single GB10 including the model download."
     />
     <ul class="links">
       <li><span class="mono">results</span><a class="link" href={links.results} target="_blank" rel="noopener">{claim.resultsDoc}</a></li>
-      <li><span class="mono">source</span><a class="link" href={links.repo} target="_blank" rel="noopener">github.com/Avarok-Cybersecurity/atlas</a></li>
+      <li>
+        <span class="mono">source</span><a class="link" href={links.repo} target="_blank" rel="noopener"
+          >github.com/Avarok-Cybersecurity/atlas</a
+        >
+      </li>
       <li><span class="mono">gates</span><a class="link" href={links.gateDoc} target="_blank" rel="noopener">what “verified” means</a></li>
     </ul>
   </div>
   <p class="close">
-    Every number in this deck is read from the same generated records the front page renders. If
-    the ladder is re-run and a rung is lost, these slides say so on the next build.
+    Every number in this deck is read from the same generated records the front page renders. If the ladder is re-run and a rung is lost,
+    these slides say so on the next build.
   </p>
 </Slide>
 

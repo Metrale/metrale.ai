@@ -46,7 +46,7 @@ export function normalizeJoinReply(reply) {
   return {
     code,
     addresses: Array.isArray(reply.addresses) ? reply.addresses : [],
-    expiresInS: Number.isFinite(reply.expires_in_s) ? reply.expires_in_s : 0
+    expiresInS: Number.isFinite(reply.expires_in_s) ? reply.expires_in_s : 0,
   };
 }
 
@@ -106,7 +106,7 @@ export function remaining(deadline, nowMs) {
     // 59.999s left it is 60 — and a threshold built on it would stay silent
     // for a whole second after the window is genuinely inside the last minute.
     warning: leftMs < WARN_UNDER_S * 1000,
-    expired: leftMs <= 0
+    expired: leftMs <= 0,
   };
 }
 

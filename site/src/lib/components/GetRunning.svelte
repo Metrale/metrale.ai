@@ -35,11 +35,7 @@
 
 <section id="run" class="section-alt sx-cyan">
   <div class="container">
-    <SectionHead
-      label={getRunning.label}
-      title={getRunning.title}
-      sub={getRunning.sub}
-    />
+    <SectionHead label={getRunning.label} title={getRunning.title} sub={getRunning.sub} />
 
     <div class="run-grid">
       <div>
@@ -65,16 +61,24 @@
         <div class="hero-cmd" style="margin-top:0.6rem">
           <span class="prompt">{install.prompt}</span>
           <code bind:this={quickEl}>{quickInstall}</code>
-          <button type="button" class="copy-btn" onclick={() => copy(quickInstall, quickEl)}>{copied === quickInstall ? copyLabel(copyState) : 'Copy'}</button>
+          <button type="button" class="copy-btn" onclick={() => copy(quickInstall, quickEl)}
+            >{copied === quickInstall ? copyLabel(copyState) : 'Copy'}</button
+          >
         </div>
         <div class="hero-cmd" style="margin-top:0.5rem">
           <span class="prompt">{install.prompt}</span>
           <code bind:this={rawEl}>{runCommandRaw}</code>
-          <button type="button" class="copy-btn" onclick={() => copy(runCommandRaw, rawEl)}>{copied === runCommandRaw ? copyLabel(copyState) : 'Copy'}</button>
+          <button type="button" class="copy-btn" onclick={() => copy(runCommandRaw, rawEl)}
+            >{copied === runCommandRaw ? copyLabel(copyState) : 'Copy'}</button
+          >
         </div>
         <p class="run-note">
-          The first 60 seconds live here. Everything after, per model recipes, EP=2, tuning,
-          lives in the docs. <a class="link" href={guideUrl} target="_blank" rel="noopener">{getRunning.docsCta}</a>
+          The first 60 seconds live here. Everything after, per model recipes, EP=2, tuning, lives in the docs. <a
+            class="link"
+            href={guideUrl}
+            target="_blank"
+            rel="noopener">{getRunning.docsCta}</a
+          >
           · <a class="link" href={githubUrl} target="_blank" rel="noopener">README</a>
         </p>
       </div>

@@ -16,14 +16,9 @@
   const discovered = $derived(!node.isLocal && (node.pairing === 'discovered' || node.pairing === 'pairing'));
   const worst = $derived.by(() => {
     const weight = { critical: 0, warning: 1, info: 2 };
-    return node.alerts.reduce(
-      (w, a) => ((weight[a.severity] ?? 9) < (weight[w?.severity] ?? 9) ? a : w),
-      null
-    );
+    return node.alerts.reduce((w, a) => ((weight[a.severity] ?? 9) < (weight[w?.severity] ?? 9) ? a : w), null);
   });
-  const viaName = $derived(
-    node.reachedVia ? (nodes.find((n) => n.id === node.reachedVia)?.name ?? 'a peer') : null
-  );
+  const viaName = $derived(node.reachedVia ? (nodes.find((n) => n.id === node.reachedVia)?.name ?? 'a peer') : null);
 
   const trustLabel = $derived(
     node.isLocal
@@ -49,13 +44,7 @@
 </script>
 
 <li class="rr" class:rr-selected={vm.selected} aria-current={vm.selected ? 'true' : undefined}>
-  <button
-    type="button"
-    class="rr-main"
-    data-node={node.id}
-    aria-label={label}
-    onclick={() => onselect?.(node.id)}
-  >
+  <button type="button" class="rr-main" data-node={node.id} aria-label={label} onclick={() => onselect?.(node.id)}>
     <span class="rr-body" aria-hidden="true">
       <span class="rr-id">
         <span class="rr-name">{node.name}</span>
