@@ -16,18 +16,30 @@ Vector masters from Wikimedia Commons. The wall greys them, and inverts them on 
 | `google.svg` | Commons, File:Google 2015 logo.svg | Public domain (not copyrightable). Trademark of its owner |
 | `toyota.svg` | Commons, File:Toyota logo.svg (the wordmark, not the emblem) | Public domain (not copyrightable). Trademark of its owner. Added 2026-09-21 at the founders' request |
 
-## Prior roles: the two commands
+## Prior roles
+
+The whole wall is switched off since 2026-09-23 (`logoWall.show` in `src/lib/content/home.js`), at the
+owners' request, until after funding. The files stay for when it returns.
+
+### The wordmark added last
+
+| file | source | what was done to it |
+| --- | --- | --- |
+| `ups.svg` | Commons, File:UPS Logo Shield 2017.svg | Public domain (not copyrightable). Trademark of its owner. Added 2026-09-23 at the founders' request. Run through `svgo --multipass` |
+
+### The command
 
 | file | source | what was done to it |
 | --- | --- | --- |
 | `uscybercom.webp` | Commons, File:Seal of the United States Cyber Command.svg | Rendered at 160 px, saved as WebP. The vector master is 2.3 MB |
-| `nswc.webp` | Commons, File:US NSWC insignia.jpg | Masked to a circle to drop the photo's white corners, scaled to 160 px, saved as WebP |
 
-Official names, as the organisations write them: **United States Cyber Command** and **Naval Special Warfare Command**.
+Official name, as the organisation writes it: **United States Cyber Command**. The Naval
+Special Warfare Command emblem that stood beside it was taken down on 2026-09-23 at the
+owners' request, file and all.
 
-**Read this before launch.** Both files are works of the United States government, so nobody holds a copyright in them. That is not the same as being free to use. Department of Defense seals, emblems and insignia are protected, and a company may not use them in a way that could suggest the Department endorses it. Permission comes from the owning service's trademark and licensing office (for the Navy, the Navy Trademark Licensing Office). The wall names prior roles, says it is not an endorsement, and carries the Department's standard disclaimer, but none of that is permission.
+**Read this before launch.** The file is a work of the United States government, so nobody holds a copyright in it. That is not the same as being free to use. Department of Defense seals, emblems and insignia are protected, and a company may not use them in a way that could suggest the Department endorses it. Permission comes from the owning service's trademark and licensing office (for the Navy, the Navy Trademark Licensing Office). The wall names prior roles, says it is not an endorsement, and carries the Department's standard disclaimer, but none of that is permission.
 
-So the emblems are a switch. Set `logoWall.emblems` to `false` in `src/lib/content/home.js` and both entries render as set type ("U.S. Cyber Command", "Naval Special Warfare"), which needs nobody's permission. Whoever owns the launch decision should either get the permission in writing or flip the switch.
+So the emblems are a switch. Set `logoWall.emblems` to `false` in `src/lib/content/home.js` and the entry renders as set type ("U.S. Cyber Command"), which needs nobody's permission. Whoever owns the launch decision should either get the permission in writing or flip the switch.
 
 ## Programs and partners
 

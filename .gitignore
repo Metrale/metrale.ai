@@ -23,3 +23,6 @@ site/deploy/cloudflare/prime-worker/corpus/
 .inputs/
 site/static/install.sh
 site/static/install.ps1
+
+# wrangler writes a cache wherever it is run
+.wrangler/

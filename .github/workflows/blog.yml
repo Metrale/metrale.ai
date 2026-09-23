@@ -1,0 +1,119 @@
+# The blog, blog/: a SvelteKit app of its own beside the site, on the same
+# tokens (web-shared/). A pull request that touches it is built and checked,
+# with the site built beside it so every deep link from the blog into the site
+# is proved against the section it names. A push to main deploys it to its
+# Cloudflare Pages project once that project exists: set the repository
+# variable BLOG_PAGES_PROJECT to the project's name (the plan is `metrale-blog`,
+# serving blog.metrale.ai) and the deploy job wakes up; set BLOG_URL to the
+# address and the deploy checks the host answers with the headers it promises.
+# Until then the deploy is skipped, not failed. The two Cloudflare secrets are
+# the ones the site's deploy uses.
+
+name: blog
+
+on:
+  pull_request:
+    paths:
+      - 'blog/**'
+      - 'web-shared/**'
+      - '.github/workflows/blog.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'blog/**'
+      - 'web-shared/**'
+      - '.github/workflows/blog.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: blog-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and check the blog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: latest
+      - name: Install
+        working-directory: blog
+        run: bun install --frozen-lockfile
+      # The markdown pipeline, the cross-link checker, llms.txt: no network.
+      - name: Unit tests
+        working-directory: blog
+        run: bun run test:unit
+      - name: Build
+        working-directory: blog
+        run: bun run build
+      # The markdown toolchain runs in the build and must not reach a reader.
+      - name: Nothing from the toolchain ships
+        working-directory: blog
+        run: bun e2e/check-bundle.mjs
+      # The blog's footer and posts deep-link into the site's sections. The site
+      # is built here the way its own checks build it, so a renamed section
+      # fails this pull request rather than landing a reader at the top of a page.
+      - name: Build the site
+        uses: ./.github/actions/build-site
+        with:
+          commit: ${{ github.sha }}
+          github-token: ${{ github.token }}
+      - name: Every link into the site lands on its section
+        run: bun blog/e2e/check-crosslinks.mjs site/build blog/build
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: build
+    if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && vars.BLOG_PAGES_PROJECT != '' }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: blog-deploy
+      cancel-in-progress: false
+    defaults:
+      run:
+        working-directory: blog
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT: ${{ vars.BLOG_PAGES_PROJECT }}
+        run: >-
+          npx --yes wrangler@4 pages deploy build
+          --project-name="$PROJECT" --branch=main
+          --commit-hash="$GITHUB_SHA" --commit-dirty=false
+      - name: The host answers
+        if: ${{ vars.BLOG_URL != '' }}
+        env:
+          URL: ${{ vars.BLOG_URL }}
+        run: |
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$URL/?t=$GITHUB_RUN_ID-$i" || true)
+            echo "attempt $i: $code"
+            if [ "$code" = "200" ]; then exit 0; fi
+            sleep 10
+          done
+          echo "::error::$URL did not answer 200 within five minutes"
+          exit 1
+      # The four response headers the host promises, on a document, an asset
+      # and a 404 (blog/static/_headers is where Pages reads them from).
+      - name: The headers the host promises
+        if: ${{ vars.BLOG_URL != '' }}
+        env:
+          URL: ${{ vars.BLOG_URL }}
+        run: bun e2e/check-headers.mjs "$URL"

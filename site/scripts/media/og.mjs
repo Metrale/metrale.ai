@@ -22,13 +22,15 @@ import { fileURLToPath } from 'node:url';
 import { serve } from './serve.mjs';
 import { SITE } from '../../src/lib/content/brand.js';
 import { hero } from '../../src/lib/content/home.js';
-import { SITE as BLOG_SITE, blog } from '../../../blog/src/lib/content.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const site = resolve(here, '..', '..');
 const repo = resolve(site, '..');
 const BUILD = resolve(site, 'build');
 const BLOG = process.argv.includes('--blog');
+// The blog is a sibling app that not every checkout carries, so its content
+// is loaded only when its card is asked for.
+const { SITE: BLOG_SITE, blog } = BLOG ? await import('../../../blog/src/lib/content.js') : {};
 const OUT = BLOG ? resolve(repo, 'blog', 'static', 'og-image.png') : resolve(site, 'static', 'og-image.png');
 
 if (!existsSync(resolve(BUILD, 'index.html'))) {

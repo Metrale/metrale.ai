@@ -232,3 +232,12 @@ test('every emblem on the wall has a plain text form', () => {
   expect(home.logoWall.items.filter((i) => i.emblem && !(i.short || i.name))).toEqual([]);
   expect(home.logoWall.note).toContain('does not imply or constitute DoD endorsement');
 });
+
+// A mark that links leads to the organisation's own home page, over https and
+// nowhere deeper. A bad address here is a bad address on the front page.
+test('every link on the logo wall is an https home page', () => {
+  for (const i of home.logoWall.items) {
+    if (!i.href) continue;
+    expect(i.href).toMatch(/^https:\/\/[a-z0-9.-]+\/$/);
+  }
+});

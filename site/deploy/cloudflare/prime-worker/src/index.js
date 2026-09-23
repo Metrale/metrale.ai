@@ -206,7 +206,7 @@ export default {
     const data = index.docs.length ? await env.PRIME.get('corpus:data', 'json').catch(() => null) : null;
     const partner = Boolean(env.PRIME_PARTNER_CODE && access && access === env.PRIME_PARTNER_CODE);
     const tiers = partner ? ['public', 'partner'] : ['public'];
-    const site = env.SITE ?? 'https://atlascybernetics.ai';
+    const site = env.SITE ?? 'https://metrale.ai';
     const model = env.PRIME_MODEL ?? 'grok-4.7';
     const effort = env.PRIME_EFFORT ?? 'low';
     const maxRounds = Math.max(1, Math.min(6, Number(env.PRIME_MAX_ROUNDS ?? 4)));

@@ -157,6 +157,12 @@
   .dk {
     position: fixed;
     inset: 0;
+    /* A level of its own, above the rest of the document. The footer comes
+       after the deck in the page and its badge fades in through opacity,
+       which makes it a stacking context painted in document order: without
+       this the badge showed through the cover headline on a wide window.
+       The nav keeps its own, higher level. */
+    z-index: 2;
     container-type: size;
     container-name: stage;
     background: var(--bg);

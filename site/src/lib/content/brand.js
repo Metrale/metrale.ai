@@ -15,7 +15,7 @@
 
 // The domain is unchanged by the rebrand (see PR #1101). When DNS moves, this
 // is the one constant to change. Everything absolute is built from it.
-export const SITE = 'https://atlascybernetics.ai';
+export const SITE = 'https://metrale.ai';
 
 export const company = {
   name: 'Metrale',
@@ -47,8 +47,8 @@ export const links = {
   github: 'https://github.com/Avarok-Cybersecurity/atlas',
   recipes: 'https://github.com/Avarok-Cybersecurity/atlas-recipes',
   discord: 'https://discord.gg/RQcGakU2jW',
-  blog: localBlog || 'https://blog.atlascybernetics.ai',
-  docs: 'https://docs.atlascybernetics.ai',
+  blog: localBlog || 'https://blog.metrale.ai',
+  docs: 'https://docs.metrale.ai',
   x: 'https://x.com/AtlasInferenceX',
   guide: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md',
   ladderLog: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/bench/ladder38/RESULTS.md',
@@ -79,7 +79,7 @@ export const formEndpoint = '';
 // request. Deploy the Worker (its README has the setup), paste its address here
 // without a path, then `bun run guide`. A build may also name it through
 // VITE_PRIME_ENDPOINT, which is how the browser tests and a local trial run it.
-export const primeEndpoint = '';
+export const primeEndpoint = 'https://metrale-prime.metrale.workers.dev';
 
 // Who answers what. One address per job, and the job is the key, so a change of
 // person is a change of one line. Since 2026-09-21 these are role mailboxes at
@@ -102,7 +102,7 @@ export const contacts = {
   community: 'community@metrale.com',
   press: 'press@metrale.com',
   careers: 'careers@metrale.com',
-  security: 'security@atlas.net',
+  security: 'security@metrale.com',
 };
 
 // The founders' own doors, as the site published them until 2026-09-21. Kept,

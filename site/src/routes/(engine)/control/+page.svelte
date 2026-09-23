@@ -366,7 +366,7 @@
               {/if}
               <p class="ctl-safety">
                 Any web page can show you an install command. Check the address bar says
-                <strong>atlascybernetics.ai</strong> before running one.
+                <strong>metrale.ai</strong> before running one.
               </p>
               <!-- Where this page sits in the platform. The paths are the marketing
                    site's; they are written here as strings so this bundle does

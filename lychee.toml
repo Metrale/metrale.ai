@@ -14,3 +14,7 @@ index_files = ["index.html", "."]
 include_fragments = "anchor-only"
 
 no_progress = true
+
+# Two hosts answer anything but a browser with 403. Both open in a browser and
+# were checked by hand; the logo wall on the front page links to them.
+exclude = ['^https://www\.cybercom\.mil/', '^https://www\.nsw\.navy\.mil/']

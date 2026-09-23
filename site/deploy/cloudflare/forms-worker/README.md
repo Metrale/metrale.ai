@@ -42,8 +42,8 @@ Then prove it, with the address it printed:
 ```sh
 curl -i https://avarok-forms.<account>.workers.dev/                       # {"ok":true,...}
 curl -i https://avarok-forms.<account>.workers.dev/lead \
-  -H 'origin: https://atlascybernetics.ai' -H 'content-type: application/json' \
-  -d '{"source":"demo","name":"Test","email":"you@atlascybernetics.ai","company":"Test","notes":"Wiring check."}'
+  -H 'origin: https://metrale.ai' -H 'content-type: application/json' \
+  -d '{"source":"demo","name":"Test","email":"you@metrale.com","company":"Test","notes":"Wiring check."}'
 ```
 
 A 200 with an `id` means it was kept or delivered. Look for it where you pointed it.
@@ -60,7 +60,7 @@ Then, from `site/`: `bun x --bun vite build`, `bun run guide -- --note "Forms po
 commit, push. The guide tracks the endpoint as a fact, so the unit suite fails until it is
 recorded. From that commit the forms post here and the email draft is only the fallback.
 
-A custom address (`forms.atlascybernetics.ai`) is optional: add it under the Worker's
+A custom address (`forms.metrale.ai`) is optional: add it under the Worker's
 Settings, Domains and Routes, and use it in `formEndpoint` instead.
 
 ## Try it on your own machine first
