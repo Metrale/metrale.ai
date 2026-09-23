@@ -53,14 +53,18 @@ rmSync(WORK, { recursive: true, force: true });
 mkdirSync(WORK, { recursive: true });
 for (const entry of ['book.toml', 'src', 'theme', 'scripts-gen-llms.mjs', 'scripts-inject-meta.mjs']) {
   if (!existsSync(join(BOOK, entry))) die(`the book has no ${entry}; the layout this script expects has changed`);
-  cpSync(join(BOOK, entry), join(WORK, entry), {
-    recursive: true,
-    dereference: true,
-  });
+  // Symlinks are kept as symlinks: the book links its tokens file to a path
+  // outside book/, which a sparse checkout of book/ alone does not have.
+  cpSync(join(BOOK, entry), join(WORK, entry), { recursive: true, dereference: false });
 }
 
 // ---- the tokens ---------------------------------------------------------------
-copyFileSync(join(repo, 'web-shared', 'avarok-tokens.css'), join(WORK, 'theme', 'css', 'avarok-tokens.css'));
+const tokens = join(repo, 'web-shared', 'avarok-tokens.css');
+if (!existsSync(tokens)) die(`no tokens at ${tokens}`);
+const tokensAt = join(WORK, 'theme', 'css', 'avarok-tokens.css');
+mkdirSync(dirname(tokensAt), { recursive: true });
+rmSync(tokensAt, { force: true }); // the book's link, or the text a Windows checkout keeps in its place
+copyFileSync(tokens, tokensAt);
 
 // ---- 2. the type ------------------------------------------------------------------
 const FONTS = join(repo, 'site', 'static', 'fonts');
