@@ -249,10 +249,13 @@
   {
    "rev": 16,
    "date": "2026-09-23",
-   "base": "0e8ee14e9",
-   "note": "The site's address is metrale.ai; the installers, the Workers' origins and the social card follow it",
+   "base": "8f0dbbcbd",
+   "note": "The site's address is metrale.ai; the guide is live at its Worker; the blog and the docs have their names on the new domain; the security mailbox moved with the other role addresses",
    "touched": [
     "site.origin",
+    "links.blog",
+    "links.docs",
+    "contacts.security",
     "og-image.png"
    ]
   }
@@ -764,9 +767,15 @@
   },
   {
    "key": "contacts.security",
-   "value": "security@atlas.net",
-   "rev": 1,
-   "date": "2026-09-18",
+   "value": "security@metrale.com",
+   "rev": 2,
+   "date": "2026-09-23",
+   "was": [
+    {
+     "value": "security@atlas.net",
+     "until": "2026-09-23"
+    }
+   ],
    "used": [
     "/contact",
     "/trust"
@@ -971,9 +980,15 @@
   },
   {
    "key": "links.blog",
-   "value": "https://blog.atlascybernetics.ai",
-   "rev": 1,
-   "date": "2026-09-18",
+   "value": "https://blog.metrale.ai",
+   "rev": 2,
+   "date": "2026-09-23",
+   "was": [
+    {
+     "value": "https://blog.atlascybernetics.ai",
+     "until": "2026-09-23"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -1080,9 +1095,15 @@
   },
   {
    "key": "links.docs",
-   "value": "https://docs.atlascybernetics.ai",
-   "rev": 1,
-   "date": "2026-09-18",
+   "value": "https://docs.metrale.ai",
+   "rev": 2,
+   "date": "2026-09-23",
+   "was": [
+    {
+     "value": "https://docs.atlascybernetics.ai",
+     "until": "2026-09-23"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -3605,12 +3626,12 @@
   {
    "menu": "Resources",
    "text": "Blog",
-   "href": "https://blog.atlascybernetics.ai"
+   "href": "https://blog.metrale.ai"
   },
   {
    "menu": "Resources",
    "text": "Documentation",
-   "href": "https://docs.atlascybernetics.ai"
+   "href": "https://docs.metrale.ai"
   },
   {
    "menu": "Resources",
@@ -3762,12 +3783,12 @@
   {
    "column": "Resources",
    "text": "Blog",
-   "href": "https://blog.atlascybernetics.ai"
+   "href": "https://blog.metrale.ai"
   },
   {
    "column": "Resources",
    "text": "Documentation",
-   "href": "https://docs.atlascybernetics.ai"
+   "href": "https://docs.metrale.ai"
   },
   {
    "column": "Resources",
@@ -4196,8 +4217,8 @@
      "button": false
     },
     {
-     "text": "Report privately · security@atlas.net",
-     "href": "mailto:security@atlas.net",
+     "text": "Report privately · security@metrale.com",
+     "href": "mailto:security@metrale.com",
      "kind": "mail",
      "button": false
     },
@@ -5406,13 +5427,13 @@
    "links": [
     {
      "text": "Blog Kernel work, measured benchmarks and what it takes to run frontier models on hardware",
-     "href": "https://blog.atlascybernetics.ai",
+     "href": "https://blog.metrale.ai",
      "kind": "out",
      "button": false
     },
     {
      "text": "Documentation The Metrale book. Install, recipes, deployment, the control plane and the ga",
-     "href": "https://docs.atlascybernetics.ai",
+     "href": "https://docs.metrale.ai",
      "kind": "out",
      "button": false
     },
@@ -7362,7 +7383,7 @@
   }
  ],
  "outbound": {
-  "https://blog.atlascybernetics.ai": [
+  "https://blog.metrale.ai": [
    "/resources",
    "(every page: header or footer)"
   ],
@@ -7374,7 +7395,7 @@
    "/resources/events",
    "/waitlist"
   ],
-  "https://docs.atlascybernetics.ai": [
+  "https://docs.metrale.ai": [
    "/resources",
    "(every page: header or footer)"
   ],
@@ -7462,7 +7483,7 @@
    "/demo",
    "/pricing"
   ],
-  "security@atlas.net": [
+  "security@metrale.com": [
    "/contact"
   ]
  }

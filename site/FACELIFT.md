@@ -394,13 +394,16 @@ gate green.
    file. Worth one look on the preview deployment.
 13. **Domain.** `metrale.ai`, since 2026-09-23. `SITE` in `brand.js` was the one
     constant to move; the installer addresses, the robots file, the two
-    Workers' allowed origins and the social card followed it. Still on the old
-    domain, each for a reason of its own: the blog and the docs, which are
-    hosted there; the address the forms Worker sends from, which is the domain
-    the mail service has verified; and the security mailbox, which the engine
-    repository's `SECURITY.md` publishes, so the two change together. The old
-    domain should redirect to the new one at the zone, so shared links and
-    search results move too.
+    Workers' allowed origins and the social card followed it. The blog has its
+    own name on the new domain (`blog.metrale.ai`, a Pages project of its own)
+    and the docs have one that redirects to where they are hosted today
+    (`docs.metrale.ai`, a rule in the zone) until they move. Still on the old
+    domain: the address the forms Worker sends from, which is the domain the
+    mail service has verified. The security mailbox moved to the
+    new domain with the other role addresses on 2026-09-23, at the owners'
+    word; the engine repository's `SECURITY.md` still names the old one until
+    that repository is next touched. The old domain should redirect to the
+    new one at its zone, so shared links and search results move too.
 14. **The two command emblems.** They are on the wall because they were asked
     for. Department of Defense emblems may not be used in a way that suggests
     endorsement, and a company normally needs the owning service's permission

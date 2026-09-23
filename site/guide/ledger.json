@@ -248,10 +248,13 @@
     {
       "rev": 16,
       "date": "2026-09-23",
-      "base": "0e8ee14e9",
-      "note": "The site's address is metrale.ai; the installers, the Workers' origins and the social card follow it",
+      "base": "8f0dbbcbd",
+      "note": "The site's address is metrale.ai; the guide is live at its Worker; the blog and the docs have their names on the new domain; the security mailbox moved with the other role addresses",
       "touched": [
         "site.origin",
+        "links.blog",
+        "links.docs",
+        "contacts.security",
         "og-image.png"
       ]
     }
@@ -419,9 +422,15 @@
       ]
     },
     "contacts.security": {
-      "value": "security@atlas.net",
-      "rev": 1,
-      "date": "2026-09-18"
+      "value": "security@metrale.com",
+      "rev": 2,
+      "date": "2026-09-23",
+      "was": [
+        {
+          "value": "security@atlas.net",
+          "until": "2026-09-23"
+        }
+      ]
     },
     "contacts.technical": {
       "value": "thomas@atlascybernetics.ai",
@@ -465,9 +474,15 @@
       "date": "2026-09-18"
     },
     "links.blog": {
-      "value": "https://blog.atlascybernetics.ai",
-      "rev": 1,
-      "date": "2026-09-18"
+      "value": "https://blog.metrale.ai",
+      "rev": 2,
+      "date": "2026-09-23",
+      "was": [
+        {
+          "value": "https://blog.atlascybernetics.ai",
+          "until": "2026-09-23"
+        }
+      ]
     },
     "links.changelog": {
       "value": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/CHANGELOG.md",
@@ -485,9 +500,15 @@
       "date": "2026-09-18"
     },
     "links.docs": {
-      "value": "https://docs.atlascybernetics.ai",
-      "rev": 1,
-      "date": "2026-09-18"
+      "value": "https://docs.metrale.ai",
+      "rev": 2,
+      "date": "2026-09-23",
+      "was": [
+        {
+          "value": "https://docs.atlascybernetics.ai",
+          "until": "2026-09-23"
+        }
+      ]
     },
     "links.github": {
       "value": "https://github.com/Avarok-Cybersecurity/atlas",

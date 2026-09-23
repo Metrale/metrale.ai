@@ -3,7 +3,7 @@
 
    Imported by BOTH web properties:
      site/src/routes/+layout.svelte  -> metrale.ai
-     blog/src/app.css                -> blog.atlascybernetics.ai
+     blog/src/app.css                -> blog.metrale.ai
 
    Values come from the brand kit (assets/brand/tokens/brand.json, and the
    constants in assets/brand/src/geometry.js): the ground #0E1318 is the only

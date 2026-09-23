@@ -24,7 +24,7 @@
 </script>
 
 <!-- The ambient chevron field: one fullscreen triangle, one fragment shader,
-     the same code blog.atlascybernetics.ai renders. It paints the page ground
+     the same code blog.metrale.ai renders. It paints the page ground
      itself, so `body`'s background sits behind it rather than beside it.
 
      It must stay a DIRECT child of the layout root. A `transform`, `filter`,

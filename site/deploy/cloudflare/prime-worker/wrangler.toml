@@ -38,7 +38,7 @@ LOG_TTL_DAYS = "30"
 # counters, the rate limits and the telemetry.
 [[kv_namespaces]]
 binding = "PRIME"
-id = "PASTE_THE_ID_HERE"
+id = "cd0c1b6441e8422f9c6920756d2eedb2"
 
 # Secrets are never written here. Set them with `npx wrangler@4 secret put <NAME>`,
 # or for a local run put them in .dev.vars (ignored by git):

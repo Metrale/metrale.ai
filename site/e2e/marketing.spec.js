@@ -484,7 +484,7 @@ test.describe('an email button always does something', () => {
       'Email engineering -> engineering@metrale.com',
       'Partnerships -> partnerships@metrale.com',
       'Community and open source -> community@metrale.com',
-      'Report privately -> security@atlas.net',
+      'Report privately -> security@metrale.com',
       'Email press and investors -> press@metrale.com',
     ]);
     // No founder's own address is published anywhere on the page.

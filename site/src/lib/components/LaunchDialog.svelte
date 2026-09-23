@@ -171,7 +171,7 @@
               </p>
             {/if}
             <p class="ld-place-sub">
-              <a class="link" href="https://docs.atlascybernetics.ai/getting-started/troubleshooting.html" target="_blank" rel="noopener"
+              <a class="link" href="https://docs.metrale.ai/getting-started/troubleshooting.html" target="_blank" rel="noopener"
                 >Troubleshooting guide</a
               >
             </p>
