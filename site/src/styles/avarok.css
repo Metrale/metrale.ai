@@ -1371,6 +1371,10 @@ html:not([data-theme='light']) .av img.is-dark-invert {
   height: auto;
   min-width: 760px;
   font-family: var(--font-mono);
+  /* Boxes are sized from the mono advance (0.6em). At phone width the drawing is
+     scaled to about 0.7, and hinted glyph advances round up at that size on
+     Linux and Android, pushing a full line past its box. Lay text out unhinted. */
+  text-rendering: geometricPrecision;
 }
 .av-diagram .lbl {
   fill: var(--t1);
