@@ -239,56 +239,22 @@ export const careers = {
     primary: { text: 'Good first issues', href: `${links.github}/labels/good%20first%20issue`, external: true },
     secondary: { text: 'How to contribute', href: links.contributing, external: true },
   },
-  // These are the first hires the company plans. Nothing says a search is open
-  // for any of them yet, so the page does not say "openings".
+  // The roles themselves are src/lib/content/positions.jsonl, one per line,
+  // read by the page through the JSON the build generates from it. Nothing
+  // says a search is open for any of them unless a line's status says so, so
+  // the page does not say "openings".
   rolesTitle: 'The first hires',
-  rolesHeading: 'Four roles we are building toward',
-  roles: [
-    {
-      title: 'Kernel Engineer',
-      location: 'Location by agreement',
-      team: 'Engine',
-      body: 'CUDA and Rust. Attention, MoE, GDN and quantized GEMM kernels per hardware target, with a certified benchmark on every merge. Hopper and Blackwell are the next campaigns.',
-      does: [
-        'Write and tune kernels for one hardware target at a time',
-        'Land every change behind a certified benchmark',
-        'Open the Hopper and Blackwell campaigns',
-      ],
-      signal: 'A kernel you wrote, and the number it moved.',
-    },
-    {
-      title: 'Founding Platform and Distributed Systems Engineer',
-      location: 'Location by agreement',
-      team: 'Control',
-      body: 'The control plane. Routing, rollout, autoscaling, repair and policy across mixed NVIDIA and AMD fleets, in Rust, on Kubernetes, in the customer’s account and ours.',
-      does: [
-        'Build routing, rollout, autoscaling, repair and policy in Rust',
-        'Run it on Kubernetes, in the customer’s account and in ours',
-        'Keep the control plane off the inference path',
-      ],
-      signal: 'A scheduler or control plane you ran in production.',
-    },
-    {
-      title: 'Founding Infrastructure and Forward Deployed Engineer',
-      location: 'Location by agreement, travel',
-      team: 'Customers',
-      body: 'You stand up the pilot, run the ladder on the customer’s hardware, and hand them the receipt. The person the customer calls, and the person who tells engineering what broke.',
-      does: [
-        'Stand up the pilot on the customer’s hardware',
-        'Run the ladder and hand over the receipt',
-        'Bring what broke back to engineering',
-      ],
-      signal: 'A deployment you carried from the first call to production.',
-    },
-    {
-      title: 'Strategic Product and Marketing Advisor',
-      location: 'Part time',
-      team: 'Go to market',
-      body: 'Former product, sales or GTM leadership at an inference or GPU infrastructure company. Monthly working sessions, pricing and positioning review, select enterprise calls.',
-      does: ['Monthly working sessions with the founders', 'Review pricing and positioning', 'Join select enterprise calls'],
-      signal: 'Product, sales or go to market leadership at an inference or GPU infrastructure company.',
-    },
-  ],
+  rolesHeading: 'The roles we are building toward',
+  roleOther: 'Something else',
+  search: {
+    label: 'Search the roles',
+    placeholder: 'Rust, Kubernetes, on site…',
+    teams: 'Team',
+    work: 'The work',
+    requirements: 'What we look for',
+    none: 'No role matches that.',
+    clear: 'Show every role',
+  },
   cta: { text: 'Email the team', href: `mailto:${contacts.careers}?subject=Metrale%20careers` },
   apply: { text: 'Register interest', href: '#apply' },
   // The interest form. Same component as the demo form, so it behaves the same:
@@ -302,13 +268,9 @@ export const careers = {
         name: 'role',
         label: 'Role',
         type: 'select',
-        options: [
-          'Kernel Engineer',
-          'Platform and Distributed Systems Engineer',
-          'Infrastructure and Forward Deployed Engineer',
-          'Product and Marketing Advisor',
-          'Something else',
-        ],
+        // The options are the roles in positions.jsonl, then `roleOther`; the page
+        // fills them so the two never drift.
+        options: [],
       },
       { name: 'work', label: 'Something you built', type: 'url', placeholder: 'A repository, a pull request, a write up' },
       { name: 'notes', label: 'Anything else', type: 'textarea', placeholder: 'What you want to work on, and why here' },

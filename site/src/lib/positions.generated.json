@@ -1,0 +1,71 @@
+{
+  "positions": [
+    {
+      "id": "kernel-engineer",
+      "title": "Kernel Engineer",
+      "team": "Engine",
+      "location": "Location by agreement",
+      "status": "planned",
+      "summary": "CUDA and Rust. Attention, MoE, GDN and quantized GEMM kernels per hardware target, with a certified benchmark on every merge. Hopper and Blackwell are the next campaigns.",
+      "does": [
+        "Write and tune kernels for one hardware target at a time",
+        "Land every change behind a certified benchmark",
+        "Open the Hopper and Blackwell campaigns"
+      ],
+      "requirements": [
+        "CUDA and Rust, at the level of a kernel you can show",
+        "A kernel you wrote, and the number it moved"
+      ]
+    },
+    {
+      "id": "founding-platform-engineer",
+      "title": "Founding Platform and Distributed Systems Engineer",
+      "team": "Control",
+      "location": "Location by agreement",
+      "status": "planned",
+      "summary": "The control plane. Routing, rollout, autoscaling, repair and policy across mixed NVIDIA and AMD fleets, in Rust, on Kubernetes, in the customer’s account and ours.",
+      "does": [
+        "Build routing, rollout, autoscaling, repair and policy in Rust",
+        "Run it on Kubernetes, in the customer’s account and in ours",
+        "Keep the control plane off the inference path"
+      ],
+      "requirements": [
+        "Rust and Kubernetes in production",
+        "A scheduler or control plane you ran in production"
+      ]
+    },
+    {
+      "id": "founding-forward-deployed-engineer",
+      "title": "Founding Infrastructure and Forward Deployed Engineer",
+      "team": "Customers",
+      "location": "Location by agreement, travel",
+      "status": "planned",
+      "summary": "You stand up the pilot, run the ladder on the customer’s hardware, and hand them the receipt. The person the customer calls, and the person who tells engineering what broke.",
+      "does": [
+        "Stand up the pilot on the customer’s hardware",
+        "Run the ladder and hand over the receipt",
+        "Bring what broke back to engineering"
+      ],
+      "requirements": [
+        "Comfortable on a customer’s hardware, on site, on the first call",
+        "A deployment you carried from the first call to production"
+      ]
+    },
+    {
+      "id": "product-and-marketing-advisor",
+      "title": "Strategic Product and Marketing Advisor",
+      "team": "Go to market",
+      "location": "Part time",
+      "status": "planned",
+      "summary": "Former product, sales or GTM leadership at an inference or GPU infrastructure company. Monthly working sessions, pricing and positioning review, select enterprise calls.",
+      "does": [
+        "Monthly working sessions with the founders",
+        "Review pricing and positioning",
+        "Join select enterprise calls"
+      ],
+      "requirements": [
+        "Product, sales or go to market leadership at an inference or GPU infrastructure company"
+      ]
+    }
+  ]
+}
