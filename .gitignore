@@ -1,0 +1,25 @@
+# Dependencies and builds
+node_modules/
+site/build/
+site/.svelte-kit/
+.lighthouseci/
+playwright-report/
+test-results/
+
+# Secrets: never commit. The Worker's real values live in .dev.vars (copy of .dev.vars.example)
+.dev.vars
+.env
+.env.*
+!.env.example
+!.dev.vars.example
+
+# Generated knowledge base for the guide (cut from a built site)
+site/deploy/cloudflare/prime-worker/corpus/
+
+# OS noise
+.DS_Store
+
+# CI build inputs (checkouts of the public engine repositories) and what they copy in
+.inputs/
+site/static/install.sh
+site/static/install.ps1

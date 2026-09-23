@@ -1,0 +1,7 @@
+# Copy to .dev.vars (which git ignores) for `npx wrangler@4 dev`. In production the
+# same names are set with `npx wrangler@4 secret put <NAME>` and never in a file.
+XAI_API_KEY=
+# Optional. A word a partner types to unlock the partner tier of the knowledge base.
+PRIME_PARTNER_CODE=
+# Optional. Lets GET /stats?code=<this> read the telemetry.
+PRIME_ADMIN_CODE=

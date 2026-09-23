@@ -1,0 +1,206 @@
+# Metrale Prime, the site's guide: the Worker in site/deploy/cloudflare/prime-worker.
+#
+# Two ways in. A push to main that touches the Worker's own code deploys it;
+# the knowledge base is not re-cut on that path, because the base comes from
+# the built site and the site workflow owns that build. "Run workflow" does
+# any combination by hand: deploy, re-cut and upload the knowledge base, and,
+# if asked, spend one real question on the deployed Worker as a smoke test.
+#
+# Secrets this needs, in the repository's settings:
+#   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID   the same two the site's deploy uses
+#   XAI_API_KEY                                    the model key. A company key from
+#                                                  console.x.ai with a monthly cap,
+#                                                  not a person's own
+#   PRIME_PARTNER_CODE                             opens the partner tier
+#   PRIME_ADMIN_CODE                               opens /stats
+# and one variable:
+#   PRIME_WORKER_URL                               https://metrale-prime.<account>.workers.dev,
+#                                                  for the health check; unset skips it
+#
+# Every secret is written into the Worker with `wrangler secret put` on every
+# deploy, so rotating one is: change it in the repository's settings, run this.
+# The prime-worker README has the full account: how the key was held and tested
+# locally, what the trials cost, and the daily budget the Worker enforces.
+
+name: prime-worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/deploy/cloudflare/prime-worker/src/**'
+      - 'site/deploy/cloudflare/prime-worker/wrangler.toml'
+      - '.github/workflows/prime-worker.yml'
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: Deploy the Worker and write its secrets
+        type: boolean
+        default: true
+      corpus:
+        description: Build the site, re-cut the knowledge base and upload it
+        type: boolean
+        default: true
+      smoke_question:
+        description: Ask the deployed Worker one real question (spends about two cents)
+        type: boolean
+        default: false
+
+concurrency:
+  group: prime-worker
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  # Nothing here runs until the Worker's secrets are in the repository's settings
+  # (the two Cloudflare ones and the model key) and its KV namespace id is in
+  # wrangler.toml. Until then every job is skipped,
+  # not failed. Secrets cannot be read in a job's `if:`, so this job reads them
+  # and says yes or no.
+  ready:
+    name: The Worker's secrets are set
+    runs-on: ubuntu-latest
+    outputs:
+      ok: ${{ steps.check.outputs.ok }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - id: check
+        env:
+          CLOUDFLARE_API_TOKEN:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          XAI_API_KEY:           ${{ secrets.XAI_API_KEY }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ] || [ -z "$XAI_API_KEY" ]; then
+            echo "::notice::The Worker's secrets are not all set; skipping. See the header of this file."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          elif grep -q 'PASTE_THE_ID_HERE' site/deploy/cloudflare/prime-worker/wrangler.toml; then
+            echo "::notice::wrangler.toml still carries the placeholder KV id; skipping. Run 'npx wrangler@4 kv namespace create PRIME' once and commit the id (the Worker README's step 1)."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  test:
+    name: The Worker's own tests
+    needs: ready
+    if: ${{ needs.ready.outputs.ok == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Install bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      # The Worker's request loop against a fake model and a fake KV, the
+      # knowledge base builder, and the page's renderer and stream reader. No
+      # network, no key, no spend.
+      - name: Test
+        run: bun test --preload ./test-runes.js src/lib/prime-worker.test.js src/lib/prime-corpus.test.js src/lib/prime
+
+  deploy:
+    name: Deploy the Worker
+    needs: [ready, test]
+    if: ${{ needs.ready.outputs.ok == 'true' && (github.event_name == 'push' || inputs.deploy) }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site/deploy/cloudflare/prime-worker
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      # wrangler v4 refuses to start below Node 22.
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx --yes wrangler@4 deploy
+
+      # Each secret is written only when the repository holds a value for it,
+      # so a missing one leaves whatever the Worker already has rather than
+      # blanking it. Values go through stdin, never the command line.
+      - name: Write the secrets
+        env:
+          CLOUDFLARE_API_TOKEN:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          XAI_API_KEY:           ${{ secrets.XAI_API_KEY }}
+          PRIME_PARTNER_CODE:    ${{ secrets.PRIME_PARTNER_CODE }}
+          PRIME_ADMIN_CODE:      ${{ secrets.PRIME_ADMIN_CODE }}
+        run: |
+          put() { # name
+            v="${!1}"
+            if [ -z "$v" ]; then echo "::warning::$1 is not set in the repository; the Worker keeps its current value"; return; fi
+            printf '%s' "$v" | npx --yes wrangler@4 secret put "$1"
+            echo "wrote $1"
+          }
+          put XAI_API_KEY
+          put PRIME_PARTNER_CODE
+          put PRIME_ADMIN_CODE
+
+      - name: Health
+        if: ${{ vars.PRIME_WORKER_URL != '' }}
+        env:
+          URL: ${{ vars.PRIME_WORKER_URL }}
+        run: |
+          body=$(curl -fsS --max-time 20 "$URL/")
+          echo "$body"
+          echo "$body" | grep -q '"ok":true' || { echo "::error::the Worker did not answer ok"; exit 1; }
+
+      # One real question, only when asked for. It proves the key, the model,
+      # the knowledge base and the stream end to end, and it costs about two
+      # cents on grok-4.7 at low effort. The cost the Worker reports is checked
+      # against a ceiling so a misconfigured effort cannot spend quietly.
+      - name: Smoke question
+        if: ${{ inputs.smoke_question && vars.PRIME_WORKER_URL != '' }}
+        env:
+          URL: ${{ vars.PRIME_WORKER_URL }}
+        run: |
+          out=$(curl -sS --max-time 120 -N "$URL/chat" \
+            -H 'content-type: application/json' -H 'origin: https://atlascybernetics.ai' \
+            -d '{"messages":[{"role":"user","content":"In one sentence, what is Metrale?"}],"audience":"","page":"/"}')
+          echo "$out" | tail -c 1200
+          echo "$out" | grep -q '^event: done' || { echo "::error::the stream did not finish"; exit 1; }
+          cost=$(echo "$out" | grep -A1 '^event: usage' | grep -o '"cost_usd":[0-9.]*' | cut -d: -f2)
+          echo "cost: $cost"
+          awk -v c="${cost:-1}" 'BEGIN { exit (c < 0.10) ? 0 : 1 }' || { echo "::error::one answer cost $cost, over the ceiling"; exit 1; }
+
+  corpus:
+    name: Re-cut and upload the knowledge base
+    needs: [ready, test]
+    if: ${{ needs.ready.outputs.ok == 'true' && github.event_name == 'workflow_dispatch' && inputs.corpus }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      # The knowledge base is cut from the built pages, so the site is built here
+      # exactly as pr.yml and deploy.yml build it.
+      - name: Build the site
+        uses: ./.github/actions/build-site
+        with:
+          commit: ${{ github.sha }}
+          github-token: ${{ github.token }}
+
+      # The public tier only. The partner tier's documents live outside the
+      # repository on purpose, and are uploaded by hand from a machine that has
+      # them: `node scripts/prime/corpus.mjs --private <dir> --upload --remote`.
+      - name: Cut and upload
+        env:
+          CLOUDFLARE_API_TOKEN:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/prime/corpus.mjs --upload --remote

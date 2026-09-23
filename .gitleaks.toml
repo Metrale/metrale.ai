@@ -1,0 +1,10 @@
+# gitleaks: the default rules, plus the key formats this site's stack uses that
+# the defaults do not know.
+[extend]
+useDefault = true
+
+[[rules]]
+id = "xai-api-key"
+description = "xAI API key (Metrale Prime's model key)"
+regex = '''\bxai-[A-Za-z0-9]{40,}\b'''
+keywords = ["xai-"]

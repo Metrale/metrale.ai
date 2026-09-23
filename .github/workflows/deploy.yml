@@ -1,0 +1,63 @@
+# Every merge to main is built and deployed to Cloudflare Pages (project metrale-ai),
+# then the production site is fetched to prove it serves this commit.
+#
+# Secrets: CLOUDFLARE_API_TOKEN (Pages: Edit on the account), CLOUDFLARE_ACCOUNT_ID.
+
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  PAGES_PROJECT: metrale-ai
+  PRODUCTION_URL: https://metrale.ai
+
+jobs:
+  deploy:
+    name: Build and deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Build the site
+        uses: ./.github/actions/build-site
+        with:
+          commit: ${{ github.sha }}
+          github-token: ${{ github.token }}
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: >-
+          npx --yes wrangler@4 pages deploy site/build
+          --project-name="$PAGES_PROJECT" --branch=main
+          --commit-hash="$GITHUB_SHA" --commit-dirty=false
+
+      # The edge takes a few seconds to serve a new deployment. Poll for up to five
+      # minutes, then fail loudly if production does not answer 200 with this commit.
+      - name: Production serves this commit
+        run: |
+          for i in $(seq 1 30); do
+            home=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$PRODUCTION_URL/" || true)
+            served=$(curl -fsS --max-time 20 -H 'cache-control: no-cache' "$PRODUCTION_URL/version.txt?t=$GITHUB_RUN_ID-$i" 2>/dev/null | tr -d '[:space:]' || true)
+            echo "attempt $i: / answered $home, version.txt says '${served}'"
+            if [ "$home" = "200" ] && [ "$served" = "$GITHUB_SHA" ]; then
+              echo "$PRODUCTION_URL serves $GITHUB_SHA"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::$PRODUCTION_URL did not serve $GITHUB_SHA with a 200 within five minutes"
+          exit 1

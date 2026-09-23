@@ -1,0 +1,48 @@
+# metrale-prime: the Worker behind the site's chatbot, Metrale Prime (M′).
+# README.md beside this file has the setup. Nothing secret is written here.
+name = "metrale-prime"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[vars]
+# Who may call it. Exact origins, then host suffixes for Pages preview deployments.
+ALLOWED_ORIGINS = "https://atlascybernetics.ai,https://www.atlascybernetics.ai,http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173"
+ALLOWED_ORIGIN_SUFFIXES = ".atlas-site.pages.dev,.avarok-site-80h.pages.dev"
+# The site, for the links the answers carry.
+SITE = "https://atlascybernetics.ai"
+# The model and how hard it thinks. grok-4.5, 4.6 and 4.7 take low, medium, high
+# or xhigh. The trials in README.md are how these two were chosen.
+PRIME_MODEL = "grok-4.7"
+PRIME_EFFORT = "low"
+# Money. The Worker adds up what xAI charges (the API reports it to the tick)
+# and refuses new conversations once a day's spend passes this, so a burst of
+# traffic or a script cannot run up a bill. Raise it when the traffic is real.
+PRIME_DAILY_BUDGET_USD = "10"
+# Speed bumps, per address: turns a minute, and turns a day.
+PRIME_RATE_PER_MINUTE = "8"
+PRIME_RATE_PER_DAY = "120"
+# How many times one answer may call a tool before it has to write.
+PRIME_MAX_ROUNDS = "4"
+# A stream that sends nothing for this long is dropped and asked once more.
+# The trial saw xAI take a minute to its first token, once; normal is under two seconds.
+PRIME_FIRST_TOKEN_TIMEOUT_MS = "20000"
+# Where a lead goes when a visitor asks to be contacted: the forms Worker's
+# /lead address. Empty keeps the lead in this Worker's own KV instead.
+FORMS_ENDPOINT = ""
+# How long a telemetry record is kept, in days. No message text is ever stored.
+LOG_TTL_DAYS = "30"
+
+# Required. `npx wrangler@4 kv namespace create PRIME`, then paste the id. It
+# holds the knowledge base (uploaded by scripts/prime/corpus.mjs), the spend
+# counters, the rate limits and the telemetry.
+[[kv_namespaces]]
+binding = "PRIME"
+id = "PASTE_THE_ID_HERE"
+
+# Secrets are never written here. Set them with `npx wrangler@4 secret put <NAME>`,
+# or for a local run put them in .dev.vars (ignored by git):
+#   XAI_API_KEY          required. An xAI API key, from console.x.ai.
+#   PRIME_PARTNER_CODE   optional. Unlocks the partner tier of the knowledge base
+#                        (the deck and the plan) for a visitor who types it.
+#   PRIME_ADMIN_CODE     optional. Lets GET /stats?code=... read the telemetry.

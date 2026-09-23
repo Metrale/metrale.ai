@@ -1,0 +1,89 @@
+# The one way the site is built in CI. pr.yml, deploy.yml and prime-worker.yml all
+# call this, so a preview, a deploy and the guide's knowledge base come from the same
+# inputs:
+#   atlas-recipes (public)   the model list, AVAROK_RECIPES_ROOT, and the installers
+#   atlas (public)           benchmark records, gate descriptors, the ladder, the
+#                            changelog and the baselines, AVAROK_ENGINE_ROOT, at the
+#                            commit in site/engine.ref
+# It writes site/build, with build/version.txt holding the commit it was built from.
+
+name: Build the site
+description: Check out the engine inputs, install, build site/build and stamp it.
+
+inputs:
+  commit:
+    description: The commit written to build/version.txt
+    required: true
+  github-token:
+    description: Token for the star and contributor generators (public data only)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+      with:
+        bun-version: latest
+    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      with:
+        node-version: '22'
+
+    - name: Read the engine pin
+      id: engine
+      shell: bash
+      run: echo "ref=$(tr -d '[:space:]' < site/engine.ref)" >> "$GITHUB_OUTPUT"
+
+    - name: Checkout atlas-recipes
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        repository: Avarok-Cybersecurity/atlas-recipes
+        path: .inputs/atlas-recipes
+        persist-credentials: false
+
+    # Treeless, with history: the gate generator walks commit ancestry, the files
+    # it reads are only the sparse paths below.
+    - name: Checkout atlas at the pinned commit
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        repository: Avarok-Cybersecurity/atlas
+        ref: ${{ steps.engine.outputs.ref }}
+        path: .inputs/atlas
+        fetch-depth: 0
+        filter: blob:none
+        persist-credentials: false
+        sparse-checkout-cone-mode: false
+        sparse-checkout: |
+          /CHANGELOG.md
+          /bench/ladder38/
+          /.benchmarks/
+          /crates/avarok-plugin/src/benchmarks/
+          /tests/baselines/
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: site
+      run: bun install --frozen-lockfile
+
+    - name: Copy the installers from atlas-recipes
+      shell: bash
+      run: |
+        for f in install.sh install.ps1; do
+          cp ".inputs/atlas-recipes/scripts/$f" "site/static/$f"
+          chmod 0755 "site/static/$f"
+        done
+
+    - name: Build
+      shell: bash
+      working-directory: site
+      env:
+        AVAROK_RECIPES_ROOT: ${{ github.workspace }}/.inputs/atlas-recipes/recipes
+        AVAROK_ENGINE_ROOT: ${{ github.workspace }}/.inputs/atlas
+        AVAROK_BASELINES_ROOT: ${{ github.workspace }}/.inputs/atlas/tests/baselines
+        GH_TOKEN: ${{ inputs.github-token }}
+      run: bun x --bun vite build
+
+    - name: Stamp the build
+      shell: bash
+      env:
+        COMMIT: ${{ inputs.commit }}
+      run: printf '%s\n' "$COMMIT" > site/build/version.txt
