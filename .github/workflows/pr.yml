@@ -112,7 +112,7 @@ jobs:
           stray=$(find site/src -name '*.test.*' -not -path '*/src/lib/*' | sort)
           if [ -n "$stray" ]; then
             echo "::error title=Test files outside the tested path::these are collected by no suite:"
-            printf '  %s\n' $stray
+            printf '%s\n' "$stray" | sed 's/^/  /'
             exit 1
           fi
       - name: Chevron-field contrast budget
@@ -201,7 +201,7 @@ jobs:
       # Internal links only, so the result depends on nothing outside the build.
       # External links are checked on a schedule by links-external.yml.
       - name: Internal links resolve
-        run: LINKS_COMMAND
+        run: lychee --config lychee.toml --offline 'site/build/**/*.html'
 
   lighthouse:
     name: lighthouse

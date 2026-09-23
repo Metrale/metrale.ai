@@ -35,4 +35,4 @@ jobs:
       - name: Every link resolves
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: EXTERNAL_LINKS_COMMAND
+        run: lychee --config lychee.toml 'site/build/**/*.html'
