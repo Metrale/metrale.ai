@@ -69,7 +69,7 @@ browser suite, and check the port is free: on Windows the process can outlive it
 
 | what | budget | what checks it |
 | --- | --- | --- |
-| Lighthouse, six gated pages | 100 in all four categories, no third party request | CI, `lighthouse/` |
+| Lighthouse, every public page | 100 in all four categories, no third party request | CI, `lighthouse/` |
 | Accessibility, every page | 100, no skipped heading level | `e2e/marketing.spec.js` |
 | Idle CPU, any page | under 5% of one core | `bun run perf:cpu -- <origin> <path>` |
 | Service worker precache | under 1 MB of static files, no media | `src/lib/sw/strategy.test.js` |

@@ -1,29 +1,36 @@
 # Lighthouse gate
 
-`index.html` must score **100 on all four categories**. That is the marketing
-page and there is no excuse for anything less.
+Every public page must score **100 in all four categories**: performance,
+accessibility, best-practices and SEO. No page makes a request to a third
+party. There are no exceptions and no audits switched off. A page that fails
+is fixed at the cause.
 
-`control.html` must score 100 on performance, accessibility and SEO, and is held
-to 90 on best-practices with `errors-in-console` switched off. That single
-exception is deliberate and worth stating rather than burying:
+`lighthouserc.json` holds the list and the assertions. Accessibility,
+best-practices and SEO are asserted on the median of five runs. Performance
+uses the `optimistic` aggregation over the same five runs, because CI machines
+are noisy. The thresholds are never lowered.
 
-The control plane's job is to find an agent on `ws://127.0.0.1:34333`. For any
-visitor without one — which is nearly all of them, and always the CI runner —
-that connection is refused, and Chrome writes
+## Which pages
 
-    WebSocket connection to 'ws://127.0.0.1:34333/ws' failed:
-    Error in connection establishment: net::ERR_CONNECTION_REFUSED
+A public page is every page in the sitemap (`src/routes/sitemap.xml`, built
+from the registry in `src/lib/content/index.js`) plus any other route with a
+`+page.svelte`, such as `/diligence`. The registry marks two routes
+`sitemap: false`, and only those stay out: `/broll`, the render page the media
+recorder drives, and `/404`.
 
-to the console itself. No application code produces it and none can suppress
-it: it is emitted by the network stack before any JavaScript sees the failure.
-Lighthouse counts it under `errors-in-console`.
+## Adding a page
 
-The alternatives were worse. Probing only after a click would remove the
-behaviour the page exists for — it advances on its own when you start an agent
-in a terminal. Probing once rather than with backoff would still log one error
-and still fail the audit. So the audit is disabled for this one URL, and the
-rest of best-practices stays enforced at 90 so a genuine regression still trips
-the gate.
+Add its built file to the `url` list in `lighthouserc.json`, as
+`http://localhost/<path>.html`. `src/lib/lighthouse-pages.test.js` fails until
+you do, and fails too if the list names a page that no longer exists.
 
-The home page keeps its 100 because its agent probe only runs when the user
-clicks Run.
+## Running it
+
+From the repository root, after a build:
+
+    bun x @lhci/cli@0.15 autorun --config=site/lighthouse/lighthouserc.json
+
+`/control` keeps its 100 on best-practices because it opens the agent socket
+on load only in a browser that has paired before. Anyone else, the CI runner
+included, gets the install invitation and a Connect button, so no refused
+connection reaches the console.
