@@ -59,6 +59,7 @@ gridline
 heiser
 hrefs
 huggingface
+hypercompiling
 hyperscale
 hyperscaler
 hyperscalers
@@ -101,6 +102,7 @@ mailtoast
 masterbrand
 mcopy
 mcube
+mdbook
 metacharacter
 metrale
 metron
@@ -168,6 +170,7 @@ rowb
 rrstesiak
 rsafier
 runn
+rustdoc
 sbio
 scriptblock
 sectorbar

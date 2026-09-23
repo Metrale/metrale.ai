@@ -1,0 +1,114 @@
+# The engine's book, published as Metrale's. docs/build.mjs copies the book
+# from the engine checkout the site pins (site/engine.ref), lays the Metrale
+# tokens, type and lockup over its skin, renames the words a reader sees
+# (docs/rebrand.mjs), builds it with mdBook, and docs/check.mjs proves the
+# result. A pull request that touches docs/, the shared tokens, the site's fonts
+# or the engine pin builds and checks it; a push to main deploys it to its
+# Cloudflare Pages project once the repository variable DOCS_PAGES_PROJECT names
+# one (the plan is `metrale-docs`, serving docs.metrale.ai), and checks the host
+# when DOCS_URL is set. Until then the deploy is skipped, not failed. The two
+# Cloudflare secrets are the ones the site's deploy uses.
+
+name: docs
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'web-shared/**'
+      - 'site/static/fonts/**'
+      - 'site/engine.ref'
+      - '.github/workflows/docs.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'web-shared/**'
+      - 'site/static/fonts/**'
+      - 'site/engine.ref'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and check the docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Read the engine pin
+        id: engine
+        run: echo "ref=$(tr -d '[:space:]' < site/engine.ref)" >> "$GITHUB_OUTPUT"
+      # Only the book, at the commit the site is built against.
+      - name: Checkout the engine's book
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: Avarok-Cybersecurity/atlas
+          ref: ${{ steps.engine.outputs.ref }}
+          path: .inputs/atlas
+          persist-credentials: false
+          sparse-checkout: book
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+      - name: Install mdBook
+        uses: peaceiris/actions-mdbook@ee69d230fe19748b7abf22df32acaa93833fad08 # v2
+        with:
+          mdbook-version: '0.4.40'
+      - name: Build
+        env:
+          AVAROK_ENGINE_ROOT: ${{ github.workspace }}/.inputs/atlas
+        run: node docs/build.mjs
+      - name: Check
+        run: node docs/check.mjs
+      - name: Keep the build for the deploy
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: docs-build
+          path: docs/build
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: build
+    if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && vars.DOCS_PAGES_PROJECT != '' }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: docs-deploy
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: docs-build
+          path: docs/build
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT: ${{ vars.DOCS_PAGES_PROJECT }}
+        run: >-
+          npx --yes wrangler@4 pages deploy docs/build
+          --project-name="$PROJECT" --branch=main
+          --commit-hash="$GITHUB_SHA" --commit-dirty=false
+      - name: The host serves this build
+        if: ${{ vars.DOCS_URL != '' }}
+        env:
+          URL: ${{ vars.DOCS_URL }}
+        run: |
+          for i in $(seq 1 30); do
+            served=$(curl -fsS --max-time 20 -H 'cache-control: no-cache' "$URL/version.txt?t=$GITHUB_RUN_ID-$i" 2>/dev/null | grep '^site ' | cut -d' ' -f2)
+            echo "attempt $i: version.txt says '${served}'"
+            if [ "$served" = "$GITHUB_SHA" ]; then echo "$URL serves $GITHUB_SHA"; exit 0; fi
+            sleep 10
+          done
+          echo "::error::$URL did not serve $GITHUB_SHA within five minutes"
+          exit 1

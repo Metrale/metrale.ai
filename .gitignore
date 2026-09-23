@@ -26,3 +26,7 @@ site/static/install.ps1
 
 # wrangler writes a cache wherever it is run
 .wrangler/
+
+# The docs: the book copied in from the engine checkout, and its build
+docs/.book/
+docs/build/

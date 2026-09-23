@@ -20,6 +20,9 @@ reading the code first.
 5. **[ECOSYSTEM.md](ECOSYSTEM.md)** if you are touching the control plane, its chat, the agent
    client under `src/lib/agent/` or the corpus: the plan for the loopback foundation, and the
    contracts the pieces are meant to share.
+6. **[../docs/README.md](../docs/README.md)** if you are touching the documentation site: the
+   engine's book, published as Metrale's from the pinned engine checkout, and
+   [`../docs/OUTLINE.md`](../docs/OUTLINE.md) for what the docs should become.
 
 ## How the site is put together
 
