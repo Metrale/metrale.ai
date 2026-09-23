@@ -176,8 +176,8 @@ model that has no recipe. Run any of them with `atlasctl run <id>`.
 - X: https://x.com/AtlasInferenceX
 - Site: https://metrale.ai
 - Developer page: https://metrale.ai/engine
-- Documentation: https://docs.atlascybernetics.ai — full book, also at /llms.txt
-- Engineering blog: https://blog.atlascybernetics.ai — also at /llms.txt
+- Documentation: https://docs.metrale.ai — full book, also at /llms.txt
+- Engineering blog: https://blog.metrale.ai — also at /llms.txt
 
 ## License
 
