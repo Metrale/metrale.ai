@@ -241,7 +241,7 @@
       </p>
       <p class="ctl-safety">
         Any web page can show you an install command. Check the address bar says
-        <strong>atlascybernetics.ai</strong> before running one.
+        <strong>metrale.ai</strong> before running one.
       </p>
 
       <details class="jg-tshoot" bind:open={detailsOpen} ontoggle={() => (touchedDetails = true)}>

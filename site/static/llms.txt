@@ -15,40 +15,40 @@ domain are the same ones. The legal entity is Metrale Corp.
 
 ## Pages
 
-- [Metrale, the inference economics platform](https://atlascybernetics.ai): Faster inference, stronger governance, a fraction of what you pay today. Metrale runs your models faster on GPUs you own, keeps every prompt inside your perimeter, and shows what each workload costs.
-- [Why Metrale · Metrale](https://atlascybernetics.ai/why-metrale): You invested in the datacenter. Now get the most out of it. Speed, security and governance, each explained, tested and delivered at your pace.
-- [Platform · Metrale](https://atlascybernetics.ai/platform): One platform for the whole inference lifecycle. Metrale Engine, Metrale Control and Metrale Economics share one request path.
-- [Metrale Engine · Metrale](https://atlascybernetics.ai/platform/engine): A compiled inference stack in Rust and CUDA. Hand tuned kernels per hardware, model and quantization. More tokens on the same silicon.
-- [Metrale Control · Metrale](https://atlascybernetics.ai/platform/control): The governance and control plane. Signed recipes, canary rollouts, GPU aware routing, autoscaling, node repair and fleet policy, never on the inference path.
-- [Metrale Economics · Metrale](https://atlascybernetics.ai/platform/economics): Every GPU, every workload, every dollar. Turn runtime telemetry into cost per workload, chargeback, stranded capacity and payback.
-- [Security · Metrale](https://atlascybernetics.ai/platform/security): One signed binary, no interpreter in the request path, links designed for a hostile network, nothing leaves your perimeter.
-- [Deployment · Metrale](https://atlascybernetics.ai/platform/deployment): Hosted with private connectivity, your cloud account, on premises or air gapped. Same binary, same recipes, same control plane.
-- [Hardware and models · Metrale](https://atlascybernetics.ai/platform/hardware): Verified silicon, targets in bring up, and every model recipe we ship, generated from the repository.
-- [Benchmarks · Metrale](https://atlascybernetics.ai/benchmarks): The concurrency ladder against vLLM and every gate record, generated from the repository. Reproduce any of them.
-- [Solutions · Metrale](https://atlascybernetics.ai/solutions): Built for the people who own the GPUs. Neoclouds, enterprises, banks, hospitals, government, police, cities, law firms, hyperscalers, labs and SMB.
-- [Neoclouds and GPU providers · Metrale](https://atlascybernetics.ai/solutions/neoclouds): Metrale for neoclouds and GPU providers. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
-- [Enterprise datacenters · Metrale](https://atlascybernetics.ai/solutions/enterprise-datacenter): Metrale for enterprise datacenters. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
-- [Financial services · Metrale](https://atlascybernetics.ai/solutions/financial-services): Metrale for financial services. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
-- [Healthcare · Metrale](https://atlascybernetics.ai/solutions/healthcare): Metrale for healthcare. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
-- [Government and defense · Metrale](https://atlascybernetics.ai/solutions/government-defense): Metrale for government and defense. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
-- [Police and public safety · Metrale](https://atlascybernetics.ai/solutions/public-safety): Metrale for police and public safety. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
-- [State and local government · Metrale](https://atlascybernetics.ai/solutions/local-government): Metrale for state and local government. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
-- [Legal and professional services · Metrale](https://atlascybernetics.ai/solutions/legal): Metrale for legal and professional services. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
-- [Hyperscalers and cloud platforms · Metrale](https://atlascybernetics.ai/solutions/hyperscalers): Metrale for hyperscalers and cloud platforms. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
-- [Research labs and AI safety · Metrale](https://atlascybernetics.ai/solutions/research): Metrale for research labs and AI safety. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
-- [SMB and edge · Metrale](https://atlascybernetics.ai/solutions/smb-edge): Metrale for SMB and edge. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
-- [Pricing · Metrale](https://atlascybernetics.ai/pricing): Priced against productive GPU capacity, not seats. Community, workstation, enterprise and proof of value, with a payback model you can edit.
-- [Book a demo · Metrale](https://atlascybernetics.ai/demo): A working session on your workload. The console on demo data, the published ladder, the payback model with your inputs, and a scoped proof of value.
-- [Community Edition waitlist · Metrale](https://atlascybernetics.ai/waitlist): The Community Edition of Metrale is not released yet. Leave an address and the hardware you run, and hear first when it is. The open source engine runs today.
-- [Resources · Metrale](https://atlascybernetics.ai/resources): Blog, documentation, product updates, benchmarks, open source, contributors, events and Metrale Labs.
-- [Product updates · Metrale](https://atlascybernetics.ai/resources/updates): What shipped, rendered from the repository changelog on every build.
-- [Events · Metrale](https://atlascybernetics.ai/resources/events): Where to meet the Metrale team, in person and online.
-- [Contributors · Metrale](https://atlascybernetics.ai/resources/contributors): Everyone who has landed code in the Metrale repository, called out by name.
-- [Metrale Labs · Metrale](https://atlascybernetics.ai/labs): The research arm. Kernels, compression, speculative decoding, memory, compilers, protocols, agentic benchmarks and day zero model bring ups.
-- [About · Metrale](https://atlascybernetics.ai/company): It started with two words. The story, the mission and the principles behind Metrale.
-- [Careers · Metrale](https://atlascybernetics.ai/company/careers): Build the layer between the GPU and the invoice. The first hires on the founding team.
-- [Contact · Metrale](https://atlascybernetics.ai/contact): Sales, technical, partnerships, security and press. Every path lands with a founder.
-- [Trust center · Metrale](https://atlascybernetics.ai/trust): Architecture, data handling, assurance and licensing. What we run, what we claim, and what we do not.
+- [Metrale, the inference economics platform](https://metrale.ai): Faster inference, stronger governance, a fraction of what you pay today. Metrale runs your models faster on GPUs you own, keeps every prompt inside your perimeter, and shows what each workload costs.
+- [Why Metrale · Metrale](https://metrale.ai/why-metrale): You invested in the datacenter. Now get the most out of it. Speed, security and governance, each explained, tested and delivered at your pace.
+- [Platform · Metrale](https://metrale.ai/platform): One platform for the whole inference lifecycle. Metrale Engine, Metrale Control and Metrale Economics share one request path.
+- [Metrale Engine · Metrale](https://metrale.ai/platform/engine): A compiled inference stack in Rust and CUDA. Hand tuned kernels per hardware, model and quantization. More tokens on the same silicon.
+- [Metrale Control · Metrale](https://metrale.ai/platform/control): The governance and control plane. Signed recipes, canary rollouts, GPU aware routing, autoscaling, node repair and fleet policy, never on the inference path.
+- [Metrale Economics · Metrale](https://metrale.ai/platform/economics): Every GPU, every workload, every dollar. Turn runtime telemetry into cost per workload, chargeback, stranded capacity and payback.
+- [Security · Metrale](https://metrale.ai/platform/security): One signed binary, no interpreter in the request path, links designed for a hostile network, nothing leaves your perimeter.
+- [Deployment · Metrale](https://metrale.ai/platform/deployment): Hosted with private connectivity, your cloud account, on premises or air gapped. Same binary, same recipes, same control plane.
+- [Hardware and models · Metrale](https://metrale.ai/platform/hardware): Verified silicon, targets in bring up, and every model recipe we ship, generated from the repository.
+- [Benchmarks · Metrale](https://metrale.ai/benchmarks): The concurrency ladder against vLLM and every gate record, generated from the repository. Reproduce any of them.
+- [Solutions · Metrale](https://metrale.ai/solutions): Built for the people who own the GPUs. Neoclouds, enterprises, banks, hospitals, government, police, cities, law firms, hyperscalers, labs and SMB.
+- [Neoclouds and GPU providers · Metrale](https://metrale.ai/solutions/neoclouds): Metrale for neoclouds and GPU providers. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [Enterprise datacenters · Metrale](https://metrale.ai/solutions/enterprise-datacenter): Metrale for enterprise datacenters. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [Financial services · Metrale](https://metrale.ai/solutions/financial-services): Metrale for financial services. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [Healthcare · Metrale](https://metrale.ai/solutions/healthcare): Metrale for healthcare. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [Government and defense · Metrale](https://metrale.ai/solutions/government-defense): Metrale for government and defense. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [Police and public safety · Metrale](https://metrale.ai/solutions/public-safety): Metrale for police and public safety. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [State and local government · Metrale](https://metrale.ai/solutions/local-government): Metrale for state and local government. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [Legal and professional services · Metrale](https://metrale.ai/solutions/legal): Metrale for legal and professional services. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [Hyperscalers and cloud platforms · Metrale](https://metrale.ai/solutions/hyperscalers): Metrale for hyperscalers and cloud platforms. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [Research labs and AI safety · Metrale](https://metrale.ai/solutions/research): Metrale for research labs and AI safety. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [SMB and edge · Metrale](https://metrale.ai/solutions/smb-edge): Metrale for SMB and edge. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [Pricing · Metrale](https://metrale.ai/pricing): Priced against productive GPU capacity, not seats. Community, workstation, enterprise and proof of value, with a payback model you can edit.
+- [Book a demo · Metrale](https://metrale.ai/demo): A working session on your workload. The console on demo data, the published ladder, the payback model with your inputs, and a scoped proof of value.
+- [Community Edition waitlist · Metrale](https://metrale.ai/waitlist): The Community Edition of Metrale is not released yet. Leave an address and the hardware you run, and hear first when it is. The open source engine runs today.
+- [Resources · Metrale](https://metrale.ai/resources): Blog, documentation, product updates, benchmarks, open source, contributors, events and Metrale Labs.
+- [Product updates · Metrale](https://metrale.ai/resources/updates): What shipped, rendered from the repository changelog on every build.
+- [Events · Metrale](https://metrale.ai/resources/events): Where to meet the Metrale team, in person and online.
+- [Contributors · Metrale](https://metrale.ai/resources/contributors): Everyone who has landed code in the Metrale repository, called out by name.
+- [Metrale Labs · Metrale](https://metrale.ai/labs): The research arm. Kernels, compression, speculative decoding, memory, compilers, protocols, agentic benchmarks and day zero model bring ups.
+- [About · Metrale](https://metrale.ai/company): It started with two words. The story, the mission and the principles behind Metrale.
+- [Careers · Metrale](https://metrale.ai/company/careers): Build the layer between the GPU and the invoice. The first hires on the founding team.
+- [Contact · Metrale](https://metrale.ai/contact): Sales, technical, partnerships, security and press. Every path lands with a founder.
+- [Trust center · Metrale](https://metrale.ai/trust): Architecture, data handling, assurance and licensing. What we run, what we claim, and what we do not.
 
 ## Pricing
 
@@ -101,7 +101,7 @@ Reproduce: python3 tests/run_all_models.py && python3 tests/gate_results.py --up
 ### Install
 
 ```sh
-curl -fsSL https://atlascybernetics.ai/install.sh | sh
+curl -fsSL https://metrale.ai/install.sh | sh
 ```
 
 Or without piping to a shell:
@@ -174,10 +174,10 @@ model that has no recipe. Run any of them with `atlasctl run <id>`.
 - Benchmark results: https://github.com/Avarok-Cybersecurity/atlas/blob/main/bench/ladder38/RESULTS.md
 - Discord: https://discord.gg/RQcGakU2jW
 - X: https://x.com/AtlasInferenceX
-- Site: https://atlascybernetics.ai
-- Developer page: https://atlascybernetics.ai/engine
-- Documentation: https://docs.atlascybernetics.ai — full book, also at /llms.txt
-- Engineering blog: https://blog.atlascybernetics.ai — also at /llms.txt
+- Site: https://metrale.ai
+- Developer page: https://metrale.ai/engine
+- Documentation: https://docs.metrale.ai — full book, also at /llms.txt
+- Engineering blog: https://blog.metrale.ai — also at /llms.txt
 
 ## License
 
