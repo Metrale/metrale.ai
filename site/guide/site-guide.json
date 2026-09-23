@@ -1,5 +1,5 @@
 {
- "revision": 14,
+ "revision": 15,
  "date": "2026-09-23",
  "changes": [
   {
@@ -235,6 +235,16 @@
    "base": "aedd046c5",
    "note": "Formatting and lint configuration",
    "touched": []
+  },
+  {
+   "rev": 15,
+   "date": "2026-09-23",
+   "base": "27508d895",
+   "note": "Legal entity is Metrale Corp.; footer names Metrale, Metrale AI and Metrale Engine",
+   "touched": [
+    "company.legal",
+    "footer.legal"
+   ]
   }
  ],
  "facts": [
@@ -428,9 +438,15 @@
   },
   {
    "key": "company.legal",
-   "value": "Atlas Cybernetics Corp.",
-   "rev": 1,
-   "date": "2026-09-18",
+   "value": "Metrale Corp.",
+   "rev": 2,
+   "date": "2026-09-23",
+   "was": [
+    {
+     "value": "Atlas Cybernetics Corp.",
+     "until": "2026-09-23"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -748,13 +764,17 @@
   },
   {
    "key": "footer.legal",
-   "value": "© 2026 Atlas Cybernetics Corp. Metrale and Metrale Engine are products of Atlas Cybernetics Corp.",
-   "rev": 2,
-   "date": "2026-09-21",
+   "value": "© 2026 Metrale Corp. Metrale, Metrale AI, and Metrale Engine are products of Metrale Corp.",
+   "rev": 3,
+   "date": "2026-09-23",
    "was": [
     {
      "value": "© 2026 Atlas Cybernetics Corp. Avarok and Avarok Engine are products of Atlas Cybernetics Corp.",
      "until": "2026-09-21"
+    },
+    {
+     "value": "© 2026 Atlas Cybernetics Corp. Metrale and Metrale Engine are products of Atlas Cybernetics Corp.",
+     "until": "2026-09-23"
     }
    ],
    "used": [
