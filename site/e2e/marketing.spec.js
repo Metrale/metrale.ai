@@ -660,3 +660,22 @@ test.describe('every page', () => {
     }
   });
 });
+
+test.describe('the verification deck', () => {
+  // The deck is a fixed stage over the ordinary page. The footer comes after
+  // it in the document and its badge fades in through opacity, which once let
+  // the badge paint through the cover headline on a wide window.
+  test('nothing from the page paints over the cover headline', async ({ page }, testInfo) => {
+    if (testInfo.project.name !== 'mobile') await page.setViewportSize({ width: 2036, height: 1100 });
+    await page.goto('/diligence#1');
+    const headline = page.locator('.dk h1').first();
+    await expect(headline).toBeVisible();
+    const top = await headline.evaluate((h) => {
+      const r = h.getBoundingClientRect();
+      const el = document.elementFromPoint(r.left + Math.min(120, r.width / 3), r.top + r.height * 0.7);
+      if (!el) return 'nothing';
+      return el.closest('.dk') ? 'the deck' : `${el.tagName.toLowerCase()}.${el.className}`;
+    });
+    expect(top).toBe('the deck');
+  });
+});
