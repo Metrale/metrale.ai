@@ -22,6 +22,7 @@ chev
 ciede
 clippy
 cloc
+coderag
 concs
 consentless
 controlonly
@@ -81,6 +82,7 @@ lede
 letterboxing
 libclang
 licenserc
+lighthouserc
 llms
 localappdata
 logbad
@@ -220,4 +222,3 @@ wordmark
 xlab
 ylab
 yourpoint
-lighthouserc
