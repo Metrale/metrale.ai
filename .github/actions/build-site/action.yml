@@ -1,14 +1,10 @@
 # The one way the site is built in CI. pr.yml, deploy.yml and prime-worker.yml all
-# call this, so a preview, a deploy and the guide's knowledge base come from the same
-# inputs:
-#   atlas-recipes (public)   the model list, AVAROK_RECIPES_ROOT, and the installers
-#   atlas (public)           benchmark records, gate descriptors, the ladder, the
-#                            changelog and the baselines, AVAROK_ENGINE_ROOT, at the
-#                            commit in site/engine.ref
-# It writes site/build, with build/version.txt holding the commit it was built from.
+# call this, so a preview, a deploy and the guide's knowledge base come from the
+# same inputs. It writes site/build, with build/version.txt holding the commit it
+# was built from.
 
 name: Build the site
-description: Check out the engine inputs, install, build site/build and stamp it.
+description: Set up, fetch the engine inputs, build site/build and stamp it.
 
 inputs:
   commit:
@@ -21,66 +17,38 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+    - uses: ./.github/actions/setup-site
+    - uses: ./.github/actions/engine-inputs
       with:
-        bun-version: latest
-    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-      with:
-        node-version: '22'
-
-    - name: Read the engine pin
-      id: engine
-      shell: bash
-      run: echo "ref=$(tr -d '[:space:]' < site/engine.ref)" >> "$GITHUB_OUTPUT"
-
-    - name: Checkout atlas-recipes
-      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      with:
-        repository: Avarok-Cybersecurity/atlas-recipes
-        path: .inputs/atlas-recipes
-        persist-credentials: false
-
-    # Treeless, with history: the gate generator walks commit ancestry, the files
-    # it reads are only the sparse paths below.
-    - name: Checkout atlas at the pinned commit
-      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      with:
-        repository: Avarok-Cybersecurity/atlas
-        ref: ${{ steps.engine.outputs.ref }}
-        path: .inputs/atlas
-        fetch-depth: 0
-        filter: blob:none
-        persist-credentials: false
-        sparse-checkout-cone-mode: false
-        sparse-checkout: |
-          /CHANGELOG.md
-          /bench/ladder38/
-          /.benchmarks/
-          /crates/avarok-plugin/src/benchmarks/
-          /tests/baselines/
-
-    - name: Install dependencies
-      shell: bash
-      working-directory: site
-      run: bun install --frozen-lockfile
-
-    - name: Copy the installers from atlas-recipes
-      shell: bash
-      run: |
-        for f in install.sh install.ps1; do
-          cp ".inputs/atlas-recipes/scripts/$f" "site/static/$f"
-          chmod 0755 "site/static/$f"
-        done
+        github-token: ${{ inputs.github-token }}
 
     - name: Build
       shell: bash
       working-directory: site
-      env:
-        AVAROK_RECIPES_ROOT: ${{ github.workspace }}/.inputs/atlas-recipes/recipes
-        AVAROK_ENGINE_ROOT: ${{ github.workspace }}/.inputs/atlas
-        AVAROK_BASELINES_ROOT: ${{ github.workspace }}/.inputs/atlas/tests/baselines
-        GH_TOKEN: ${{ inputs.github-token }}
       run: bun x --bun vite build
+
+    # A page's <title> can vanish while the rest of its head survives: a layout
+    # title and a page title compete for one head slot, and /control once shipped
+    # with the home page's title. Catch it before it deploys.
+    - name: Every route kept its own title
+      shell: bash
+      working-directory: site
+      run: |
+        fail=0
+        check() { # file  expected-substring
+          got=$(grep -o '<title>[^<]*' "build/$1" | head -1)
+          case "$got" in
+            *"$2"*) echo "ok   $1 -> $got" ;;
+            *) echo "::error::build/$1 has title \"$got\", expected one containing \"$2\""; fail=1 ;;
+          esac
+        }
+        check index.html       'Metrale, the inference economics platform'
+        check engine.html      'Metrale Engine, pure Rust inference'
+        check why-metrale.html 'Why Metrale'
+        check pricing.html     'Pricing'
+        check control.html     'Control plane'
+        check diligence.html   'Verification steps'
+        exit "$fail"
 
     - name: Stamp the build
       shell: bash

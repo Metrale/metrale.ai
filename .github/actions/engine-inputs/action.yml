@@ -1,0 +1,77 @@
+# What a build reads from outside this repository, both public:
+#   atlas-recipes            the model list (AVAROK_RECIPES_ROOT) and the installers
+#   atlas, at site/engine.ref benchmark records, gate descriptors, the ladder, the
+#                            changelog and the baselines (AVAROK_ENGINE_ROOT)
+# The variables are exported for the rest of the job, so `vite build` and the
+# browser suite (which builds on its own) see the same inputs.
+
+name: Engine inputs
+description: Check out atlas-recipes and the pinned atlas commit, and export the AVAROK_* variables.
+
+inputs:
+  github-token:
+    description: Token for the star and contributor generators (public data only)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Read the engine pin
+      id: engine
+      shell: bash
+      run: echo "ref=$(tr -d '[:space:]' < site/engine.ref)" >> "$GITHUB_OUTPUT"
+
+    - name: Checkout atlas-recipes
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        repository: Avarok-Cybersecurity/atlas-recipes
+        path: .inputs/atlas-recipes
+        persist-credentials: false
+
+    # Treeless, with history: the gate generator walks commit ancestry; the files
+    # it reads are only the sparse paths below.
+    - name: Checkout atlas at the pinned commit
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      with:
+        repository: Avarok-Cybersecurity/atlas
+        ref: ${{ steps.engine.outputs.ref }}
+        path: .inputs/atlas
+        fetch-depth: 0
+        filter: blob:none
+        persist-credentials: false
+        sparse-checkout-cone-mode: false
+        sparse-checkout: |
+          /CHANGELOG.md
+          /bench/ladder38/
+          /.benchmarks/
+          /crates/avarok-plugin/src/benchmarks/
+          /tests/baselines/
+
+    # The front page's install command is served from these files, so both are
+    # required: a missing one is a 404 for the headline instruction.
+    - name: Copy the installers from atlas-recipes
+      shell: bash
+      run: |
+        for f in install.sh install.ps1; do
+          cp ".inputs/atlas-recipes/scripts/$f" "site/static/$f"
+          chmod 0755 "site/static/$f"
+        done
+
+    - name: Export the build variables
+      shell: bash
+      env:
+        GH_TOKEN_IN: ${{ inputs.github-token }}
+      run: |
+        {
+          echo "AVAROK_RECIPES_ROOT=$GITHUB_WORKSPACE/.inputs/atlas-recipes/recipes"
+          echo "AVAROK_ENGINE_ROOT=$GITHUB_WORKSPACE/.inputs/atlas"
+          echo "AVAROK_BASELINES_ROOT=$GITHUB_WORKSPACE/.inputs/atlas/tests/baselines"
+          echo "GH_TOKEN=$GH_TOKEN_IN"
+        } >> "$GITHUB_ENV"
+
+    # The front page prints `atlasctl run <flagship>`; this ties that name to a
+    # recipe that exists in the corpus the build ships against.
+    - name: The advertised recipe exists
+      shell: bash
+      working-directory: site
+      run: bun scripts/check-flagship.mjs
