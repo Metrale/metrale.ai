@@ -51,4 +51,6 @@ same numbers. Moving it is a pull request like any other.
 The code is licensed under the [GNU Affero General Public License v3.0](LICENSE). The
 Metrale name, the wordmark and the artwork in `assets/brand/` are the company's marks and are
 not licensed for reuse. Third-party logos, fonts and media under `site/static/` keep their
-own terms, recorded beside them.
+own terms, recorded beside them. The commercial license under which Avarok Corp grants
+Metrale Corp rights to the Atlas engine free of AGPL-3.0 obligations is in
+[LICENSE-ENTERPRISE.md](LICENSE-ENTERPRISE.md).

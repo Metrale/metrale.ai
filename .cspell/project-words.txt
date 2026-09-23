@@ -187,6 +187,7 @@ stitle
 strix
 subcard
 sublabel
+sublicensable
 tablewrap
 targetable
 tbraun
