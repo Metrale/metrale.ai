@@ -34,24 +34,36 @@ export const hero = {
 };
 
 export const logoWall = {
-  label: 'Built by people who have stood up operations for',
-  // Official emblems of the two commands. Their artwork is a work of the United
-  // States government and in the public domain, but Department of Defense
-  // emblems are protected insignia: use that could suggest endorsement needs
-  // permission from the owning service, and the note under the wall carries the
-  // standard disclaimer for that reason. Set this to false and both entries
-  // render as set type again, with nothing else to change.
+  // `show = false` takes the wall off the page, marks and note together, and
+  // keeps its data: the owners asked on 2026-09-23 that it not show before
+  // funding, and may bring it back. Programs and partners stay up regardless.
+  // When it returns there is no line over it; the note under it says what the
+  // marks are (FACELIFT.md, item 14).
+  show: false,
+  // The command's official emblem. Its artwork is a work of the United States
+  // government and in the public domain, but Department of Defense emblems
+  // are protected insignia: use that could suggest endorsement needs
+  // permission from the owning service, and the note under the wall carries
+  // the standard disclaimer for that reason. Set this to false and the entry
+  // renders as set type again, with nothing else to change.
   emblems: true,
   // `file` names an SVG under static/logos, `emblem` a round WebP there.
   // static/logos/README.md records the source and the terms of every one.
+  // `href` is the organisation's own home page; the mark opens it in a new tab.
   items: [
-    { name: 'United States Cyber Command', short: 'U.S. Cyber Command', emblem: 'uscybercom', lines: ['United States', 'Cyber Command'] },
-    { name: 'Naval Special Warfare Command', short: 'Naval Special Warfare', emblem: 'nswc', lines: ['Naval Special', 'Warfare Command'] },
-    { name: 'Kraken', file: 'kraken' },
-    { name: 'Beyond Gravity', file: 'beyondgravity' },
-    { name: 'Anaconda', file: 'anaconda' },
-    { name: 'Google', file: 'google' },
-    { name: 'Toyota', file: 'toyota' },
+    {
+      name: 'United States Cyber Command',
+      short: 'U.S. Cyber Command',
+      emblem: 'uscybercom',
+      lines: ['United States', 'Cyber Command'],
+      href: 'https://www.cybercom.mil/',
+    },
+    { name: 'Kraken', file: 'kraken', href: 'https://www.kraken.com/' },
+    { name: 'Beyond Gravity', file: 'beyondgravity', href: 'https://www.beyondgravity.com/' },
+    { name: 'Anaconda', file: 'anaconda', href: 'https://www.anaconda.com/' },
+    { name: 'Google', file: 'google', href: 'https://www.google.com/' },
+    { name: 'Toyota', file: 'toyota', href: 'https://global.toyota/' },
+    { name: 'UPS', file: 'ups', href: 'https://www.ups.com/' },
   ],
   note: 'Prior roles of the founding team and core contributors. Listed for background, not as customers or endorsements. The appearance of U.S. Department of Defense visual information does not imply or constitute DoD endorsement.',
   programsLabel: 'Programs and partners',

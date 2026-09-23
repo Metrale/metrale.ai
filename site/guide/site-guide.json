@@ -1,5 +1,5 @@
 {
- "revision": 16,
+ "revision": 17,
  "date": "2026-09-23",
  "changes": [
   {
@@ -257,6 +257,16 @@
     "links.docs",
     "contacts.security",
     "og-image.png"
+   ]
+  },
+  {
+   "rev": 17,
+   "date": "2026-09-23",
+   "base": "b9271143f",
+   "note": "The wall of prior roles is switched off before funding, its data kept; UPS added to it, the Naval Special Warfare Command emblem removed; every mark links to its organisation",
+   "touched": [
+    "ups.svg",
+    "nswc.webp"
    ]
   }
  ],
@@ -2407,10 +2417,7 @@
    "bytes": 8024,
    "rev": 1,
    "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
   },
   {
    "path": "site/static/logos/beyondgravity.svg",
@@ -2418,10 +2425,7 @@
    "bytes": 4640,
    "rev": 1,
    "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
   },
   {
    "path": "site/static/logos/google.svg",
@@ -2429,10 +2433,7 @@
    "bytes": 1906,
    "rev": 1,
    "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
   },
   {
    "path": "site/static/logos/huggingface-dark.svg",
@@ -2462,10 +2463,7 @@
    "bytes": 3007,
    "rev": 1,
    "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
   },
   {
    "path": "site/static/logos/mlcommons-dark.svg",
@@ -2482,17 +2480,6 @@
    "path": "site/static/logos/mlcommons.svg",
    "sha": "4b54e1d2d8d9",
    "bytes": 3926,
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
-  },
-  {
-   "path": "site/static/logos/nswc.webp",
-   "sha": "61cd2d1338ca",
-   "bytes": 11090,
    "rev": 1,
    "date": "2026-09-18",
    "used": [
@@ -2539,10 +2526,15 @@
    "bytes": 1408,
    "rev": 1,
    "date": "2026-09-21",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
+  },
+  {
+   "path": "site/static/logos/ups.svg",
+   "sha": "948b165d6d9a",
+   "bytes": 20651,
+   "rev": 1,
+   "date": "2026-09-23",
+   "used": []
   },
   {
    "path": "site/static/logos/uscybercom.webp",
@@ -2550,10 +2542,7 @@
    "bytes": 11822,
    "rev": 1,
    "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
   },
   {
    "path": "site/static/media/about/exchange-before-dark.webp",

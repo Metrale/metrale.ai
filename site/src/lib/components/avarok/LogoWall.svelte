@@ -1,6 +1,9 @@
 <!--
-  "Built by people who have stood up operations for", and under it the programs
-  and partners. Every file is self hosted under static/logos, and
+  The marks of the organisations the founding team and core contributors have
+  worked for, with the note that says so under them, and below that the
+  programs and partners. The wall is a switch, `logoWall.show`: off, the
+  programs and partners stand alone, and in the compact form nothing renders
+  at all. Every file is self hosted under static/logos, and
   static/logos/README.md records where each one came from and on what terms.
 
   Three kinds of item, all data in `logoWall` (src/lib/content/home.js):
@@ -10,6 +13,8 @@
              organisation's name set beside it on two lines.
     text     the name alone, set in type. Setting `logoWall.emblems` to false
              turns every emblem back into this, in one edit.
+  An item with `href` is a link to the organisation's own home page, opened
+  in a new tab; the whole mark is the link.
 
   Programs show a partner's own logo in its own colours, through BrandMark.svelte,
   which the recognition cards on the front page use as well.
@@ -20,49 +25,58 @@
   let { compact = false } = $props();
 </script>
 
-<section class="av-section av-section-tight av-wall" class:is-compact={compact}>
-  <div class="av-container">
-    <p class="av-wall-label av-reveal">{logoWall.label}</p>
-    <ul class="av-logo-wall av-reveal" class:has-emblems={logoWall.emblems}>
-      {#each logoWall.items as it}
-        {#if it.emblem && logoWall.emblems}
-          <li class="av-logo has-emblem" title={it.name}>
-            <img src={`/logos/${it.emblem}.webp`} alt="" height="44" width="44" loading="lazy" />
-            <span class="av-logo-text av-logo-lines"
-              >{#each it.lines ?? [it.name] as line}<span>{line}</span>{/each}</span
-            >
-          </li>
-        {:else if it.file}
-          <li class="av-logo" title={it.name}>
-            <img src={`/logos/${it.file}.svg`} alt={it.name} class="is-dark-invert" height="30" width="120" loading="lazy" />
-          </li>
-        {:else}
-          <li class="av-logo" title={it.name}><span class="av-logo-text">{it.short ?? it.name}</span></li>
-        {/if}
-      {/each}
-    </ul>
-    <p class="av-wall-note">{logoWall.note}</p>
-    {#if !compact}
-      <p class="av-wall-label av-reveal" style="margin-top:2.6rem">{logoWall.programsLabel}</p>
-      <ul class="av-programs av-reveal">
-        {#each logoWall.programs as p}
-          <li>
-            <svelte:element
-              this={p.href ? 'a' : 'div'}
-              href={p.href}
-              target={p.href ? '_blank' : undefined}
-              rel={p.href ? 'noopener' : undefined}
-              class="av-program"
-            >
-              <BrandMark mark={p} />
-              <span class="av-program-b">{p.blurb}</span>
-            </svelte:element>
-          </li>
-        {/each}
-      </ul>
-    {/if}
-  </div>
-</section>
+{#if logoWall.show || !compact}
+  <section class="av-section av-section-tight av-wall" class:is-compact={compact}>
+    <div class="av-container">
+      {#if logoWall.show}
+        <ul class="av-logo-wall av-reveal" class:has-emblems={logoWall.emblems}>
+          {#each logoWall.items as it}
+            <li class="av-logo" class:has-emblem={it.emblem && logoWall.emblems} title={it.name}>
+              <svelte:element
+                this={it.href ? 'a' : 'span'}
+                href={it.href}
+                target={it.href ? '_blank' : undefined}
+                rel={it.href ? 'noopener noreferrer' : undefined}
+                class="av-logo-link"
+              >
+                {#if it.emblem && logoWall.emblems}
+                  <img src={`/logos/${it.emblem}.webp`} alt="" height="44" width="44" loading="lazy" />
+                  <span class="av-logo-text av-logo-lines"
+                    >{#each it.lines ?? [it.name] as line}<span>{line}</span>{/each}</span
+                  >
+                {:else if it.file}
+                  <img src={`/logos/${it.file}.svg`} alt={it.name} class="is-dark-invert" height="30" width="120" loading="lazy" />
+                {:else}
+                  <span class="av-logo-text">{it.short ?? it.name}</span>
+                {/if}
+              </svelte:element>
+            </li>
+          {/each}
+        </ul>
+        <p class="av-wall-note">{logoWall.note}</p>
+      {/if}
+      {#if !compact}
+        <p class="av-wall-label av-reveal" style={logoWall.show ? 'margin-top:2.6rem' : undefined}>{logoWall.programsLabel}</p>
+        <ul class="av-programs av-reveal">
+          {#each logoWall.programs as p}
+            <li>
+              <svelte:element
+                this={p.href ? 'a' : 'div'}
+                href={p.href}
+                target={p.href ? '_blank' : undefined}
+                rel={p.href ? 'noopener' : undefined}
+                class="av-program"
+              >
+                <BrandMark mark={p} />
+                <span class="av-program-b">{p.blurb}</span>
+              </svelte:element>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </div>
+  </section>
+{/if}
 
 <style>
   .av-wall {
@@ -75,6 +89,25 @@
     max-width: 900px;
     margin-inline: auto;
     row-gap: 1.7rem;
+  }
+  /* The link takes the row's own layout, so an emblem and its name keep their
+     gap, and the mark itself is the whole hit area. A keyboard visitor sees
+     the same lift a pointer gets, plus the ring. */
+  .av-logo-link {
+    display: flex;
+    align-items: center;
+    gap: inherit;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+  .av-logo:focus-within {
+    opacity: 1;
+  }
+  a.av-logo-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 6px;
   }
   .av-wall :global(.av-wall-note) {
     margin-top: 1.9rem;
