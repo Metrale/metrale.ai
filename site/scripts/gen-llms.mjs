@@ -68,7 +68,7 @@ push(
   home.hero.lede,
   '',
   `${company.name} was named Atlas until September 2026. The engine, the repository and the`,
-  'domain are the same ones. The legal entity is Atlas Cybernetics Corp.',
+  `domain are the same ones. The legal entity is ${company.legal}`,
   '',
   '## The platform',
   '',

@@ -5,7 +5,7 @@
 Metrale is the inference economics platform for the GPUs you already own. It runs your models faster on the same silicon, keeps every prompt inside your perimeter, and shows your CFO what each workload costs.
 
 Metrale was named Atlas until September 2026. The engine, the repository and the
-domain are the same ones. The legal entity is Atlas Cybernetics Corp.
+domain are the same ones. The legal entity is Metrale Corp.
 
 ## The platform
 
