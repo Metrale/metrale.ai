@@ -12,7 +12,7 @@ import { runTool, TOOLS } from '../../deploy/cloudflare/prime-worker/src/tools.j
 import { systemPrompt } from '../../deploy/cloudflare/prime-worker/src/prompt.js';
 import { fleetModel } from './economics.js';
 
-const ORIGIN = 'https://atlascybernetics.ai';
+const ORIGIN = 'https://metrale.ai';
 
 // ---- fakes -------------------------------------------------------------------------
 

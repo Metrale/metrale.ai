@@ -11,7 +11,7 @@ import worker, { clean, corsFor } from '../../deploy/cloudflare/forms-worker/src
 import { contacts, formEndpoint } from './content/brand.js';
 
 const WORKER_DIR = join(import.meta.dir, '..', '..', 'deploy', 'cloudflare', 'forms-worker');
-const ORIGIN = 'https://atlascybernetics.ai';
+const ORIGIN = 'https://metrale.ai';
 const baseEnv = () => ({
   ALLOWED_ORIGINS: `${ORIGIN},http://localhost:5173`,
   ALLOWED_ORIGIN_SUFFIXES: '.atlas-site.pages.dev',
@@ -117,7 +117,7 @@ test('only our own pages may post, and the answer names that origin and no other
   const preview = await worker.fetch(post(demo, { origin: 'https://facelift-preview.atlas-site.pages.dev' }), env);
   expect(preview.status).toBe(200);
   expect(preview.headers.get('access-control-allow-origin')).toBe('https://facelift-preview.atlas-site.pages.dev');
-  expect(corsFor('http://atlascybernetics.ai', env)).toBeNull(); // plain http is not us
+  expect(corsFor('http://metrale.ai', env)).toBeNull(); // plain http is not us
   expect(corsFor('https://atlas-site.pages.dev.evil.test', env)).toBeNull(); // a suffix must end the host
   const preflight = await worker.fetch(post(null, { method: 'OPTIONS' }), env);
   expect(preflight.status).toBe(204);

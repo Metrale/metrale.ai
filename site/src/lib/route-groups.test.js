@@ -2,7 +2,7 @@
 import { expect, test } from 'bun:test';
 import { crossesGroup, groupOf } from './route-groups.js';
 
-const ORIGIN = 'https://atlascybernetics.ai';
+const ORIGIN = 'https://metrale.ai';
 
 test('every developer page, in both spellings, is one group', () => {
   for (const p of ['/engine', '/engine/', '/engine.html', '/control', '/diligence', '/diligence.html'])

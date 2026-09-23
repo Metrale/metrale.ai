@@ -44,7 +44,7 @@ const { hero, githubUrl, recipesUrl, discordUrl, xUrl, guideUrl, hardware } = da
 
 // The marketing copy. These modules import nothing but each other, so they
 // load here exactly as the pages load them.
-const { pages, company, SITE } = await load('src/lib/content/index.js');
+const { pages, company, SITE, links } = await load('src/lib/content/index.js');
 const home = await load('src/lib/content/home.js');
 const pricing = await load('src/lib/content/pricing.js');
 if (!pages?.length) throw new Error('gen-llms: the page registry is empty');
@@ -68,7 +68,7 @@ push(
   home.hero.lede,
   '',
   `${company.name} was named Atlas until September 2026. The engine, the repository and the`,
-  'domain are the same ones. The legal entity is Atlas Cybernetics Corp.',
+  `domain are the same ones. The legal entity is ${company.legal}`,
   '',
   '## The platform',
   '',
@@ -171,10 +171,10 @@ push(
   `- Benchmark results: ${ladder.results_doc_url}`,
   `- Discord: ${discordUrl}`,
   `- X: ${xUrl}`,
-  '- Site: https://atlascybernetics.ai',
-  `- Developer page: https://atlascybernetics.ai${data.ENGINE}`,
-  '- Documentation: https://docs.atlascybernetics.ai — full book, also at /llms.txt',
-  '- Engineering blog: https://blog.atlascybernetics.ai — also at /llms.txt',
+  `- Site: ${SITE}`,
+  `- Developer page: ${SITE}${data.ENGINE}`,
+  `- Documentation: ${links.docs} — full book, also at /llms.txt`,
+  `- Engineering blog: ${links.blog} — also at /llms.txt`,
   '',
   '## License',
   '',

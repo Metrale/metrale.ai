@@ -234,6 +234,31 @@
       "base": "aedd046c5",
       "note": "Formatting and lint configuration",
       "touched": []
+    },
+    {
+      "rev": 15,
+      "date": "2026-09-23",
+      "base": "27508d895",
+      "note": "Legal entity is Metrale Corp.; footer names Metrale, Metrale AI and Metrale Engine",
+      "touched": [
+        "company.legal",
+        "footer.legal"
+      ]
+    },
+    {
+      "rev": 16,
+      "date": "2026-09-23",
+      "base": "59b745429",
+      "note": "The evening of 2026-09-23 in one change: the site's address, the guide live at its Worker, the blog and the docs named on the new domain, the security mailbox moved, the wall switched off before funding, the careers roles from one JSON Lines file",
+      "touched": [
+        "site.origin",
+        "links.blog",
+        "links.docs",
+        "contacts.security",
+        "ups.svg",
+        "og-image.png",
+        "nswc.webp"
+      ]
     }
   ],
   "facts": {
@@ -292,9 +317,15 @@
       "date": "2026-09-18"
     },
     "company.legal": {
-      "value": "Atlas Cybernetics Corp.",
-      "rev": 1,
-      "date": "2026-09-18"
+      "value": "Metrale Corp.",
+      "rev": 2,
+      "date": "2026-09-23",
+      "was": [
+        {
+          "value": "Atlas Cybernetics Corp.",
+          "until": "2026-09-23"
+        }
+      ]
     },
     "company.name": {
       "value": "Metrale",
@@ -393,9 +424,15 @@
       ]
     },
     "contacts.security": {
-      "value": "security@atlas.net",
-      "rev": 1,
-      "date": "2026-09-18"
+      "value": "security@metrale.com",
+      "rev": 2,
+      "date": "2026-09-23",
+      "was": [
+        {
+          "value": "security@atlas.net",
+          "until": "2026-09-23"
+        }
+      ]
     },
     "contacts.technical": {
       "value": "thomas@atlascybernetics.ai",
@@ -404,13 +441,17 @@
       "removed": "2026-09-21"
     },
     "footer.legal": {
-      "value": "© 2026 Atlas Cybernetics Corp. Metrale and Metrale Engine are products of Atlas Cybernetics Corp.",
-      "rev": 2,
-      "date": "2026-09-21",
+      "value": "© 2026 Metrale Corp. Metrale, Metrale AI, and Metrale Engine are products of Metrale Corp.",
+      "rev": 3,
+      "date": "2026-09-23",
       "was": [
         {
           "value": "© 2026 Atlas Cybernetics Corp. Avarok and Avarok Engine are products of Atlas Cybernetics Corp.",
           "until": "2026-09-21"
+        },
+        {
+          "value": "© 2026 Atlas Cybernetics Corp. Metrale and Metrale Engine are products of Atlas Cybernetics Corp.",
+          "until": "2026-09-23"
         }
       ]
     },
@@ -435,9 +476,15 @@
       "date": "2026-09-18"
     },
     "links.blog": {
-      "value": "https://blog.atlascybernetics.ai",
-      "rev": 1,
-      "date": "2026-09-18"
+      "value": "https://blog.metrale.ai",
+      "rev": 2,
+      "date": "2026-09-23",
+      "was": [
+        {
+          "value": "https://blog.atlascybernetics.ai",
+          "until": "2026-09-23"
+        }
+      ]
     },
     "links.changelog": {
       "value": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/CHANGELOG.md",
@@ -455,9 +502,15 @@
       "date": "2026-09-18"
     },
     "links.docs": {
-      "value": "https://docs.atlascybernetics.ai",
-      "rev": 1,
-      "date": "2026-09-18"
+      "value": "https://docs.metrale.ai",
+      "rev": 2,
+      "date": "2026-09-23",
+      "was": [
+        {
+          "value": "https://docs.atlascybernetics.ai",
+          "until": "2026-09-23"
+        }
+      ]
     },
     "links.github": {
       "value": "https://github.com/Avarok-Cybersecurity/atlas",
@@ -535,9 +588,15 @@
       "date": "2026-09-18"
     },
     "site.origin": {
-      "value": "https://atlascybernetics.ai",
-      "rev": 1,
-      "date": "2026-09-18"
+      "value": "https://metrale.ai",
+      "rev": 2,
+      "date": "2026-09-23",
+      "was": [
+        {
+          "value": "https://atlascybernetics.ai",
+          "until": "2026-09-23"
+        }
+      ]
     }
   },
   "assets": {
@@ -1309,7 +1368,8 @@
       "sha": "61cd2d1338ca",
       "bytes": 11090,
       "rev": 1,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "removed": "2026-09-23"
     },
     "site/static/logos/qwen.svg": {
       "sha": "cae4a6dc3fe9",
@@ -1341,6 +1401,12 @@
       "bytes": 1408,
       "rev": 1,
       "date": "2026-09-21"
+    },
+    "site/static/logos/ups.svg": {
+      "sha": "948b165d6d9a",
+      "bytes": 20651,
+      "rev": 1,
+      "date": "2026-09-23"
     },
     "site/static/logos/uscybercom.webp": {
       "sha": "56c4f5cebc1d",
@@ -1933,14 +1999,18 @@
       "date": "2026-09-18"
     },
     "site/static/og-image.png": {
-      "sha": "c82e41bac0fa",
-      "bytes": 104126,
-      "rev": 2,
-      "date": "2026-09-21",
+      "sha": "d6af820721ed",
+      "bytes": 102070,
+      "rev": 3,
+      "date": "2026-09-23",
       "was": [
         {
           "sha": "31c79ad12550",
           "until": "2026-09-21"
+        },
+        {
+          "sha": "c82e41bac0fa",
+          "until": "2026-09-23"
         }
       ]
     },

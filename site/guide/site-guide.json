@@ -1,5 +1,5 @@
 {
- "revision": 14,
+ "revision": 16,
  "date": "2026-09-23",
  "changes": [
   {
@@ -235,6 +235,31 @@
    "base": "aedd046c5",
    "note": "Formatting and lint configuration",
    "touched": []
+  },
+  {
+   "rev": 15,
+   "date": "2026-09-23",
+   "base": "27508d895",
+   "note": "Legal entity is Metrale Corp.; footer names Metrale, Metrale AI and Metrale Engine",
+   "touched": [
+    "company.legal",
+    "footer.legal"
+   ]
+  },
+  {
+   "rev": 16,
+   "date": "2026-09-23",
+   "base": "59b745429",
+   "note": "The evening of 2026-09-23 in one change: the site's address, the guide live at its Worker, the blog and the docs named on the new domain, the security mailbox moved, the wall switched off before funding, the careers roles from one JSON Lines file",
+   "touched": [
+    "site.origin",
+    "links.blog",
+    "links.docs",
+    "contacts.security",
+    "ups.svg",
+    "og-image.png",
+    "nswc.webp"
+   ]
   }
  ],
  "facts": [
@@ -428,9 +453,15 @@
   },
   {
    "key": "company.legal",
-   "value": "Atlas Cybernetics Corp.",
-   "rev": 1,
-   "date": "2026-09-18",
+   "value": "Metrale Corp.",
+   "rev": 2,
+   "date": "2026-09-23",
+   "was": [
+    {
+     "value": "Atlas Cybernetics Corp.",
+     "until": "2026-09-23"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -738,9 +769,15 @@
   },
   {
    "key": "contacts.security",
-   "value": "security@atlas.net",
-   "rev": 1,
-   "date": "2026-09-18",
+   "value": "security@metrale.com",
+   "rev": 2,
+   "date": "2026-09-23",
+   "was": [
+    {
+     "value": "security@atlas.net",
+     "until": "2026-09-23"
+    }
+   ],
    "used": [
     "/contact",
     "/trust"
@@ -748,13 +785,17 @@
   },
   {
    "key": "footer.legal",
-   "value": "© 2026 Atlas Cybernetics Corp. Metrale and Metrale Engine are products of Atlas Cybernetics Corp.",
-   "rev": 2,
-   "date": "2026-09-21",
+   "value": "© 2026 Metrale Corp. Metrale, Metrale AI, and Metrale Engine are products of Metrale Corp.",
+   "rev": 3,
+   "date": "2026-09-23",
    "was": [
     {
      "value": "© 2026 Atlas Cybernetics Corp. Avarok and Avarok Engine are products of Atlas Cybernetics Corp.",
      "until": "2026-09-21"
+    },
+    {
+     "value": "© 2026 Atlas Cybernetics Corp. Metrale and Metrale Engine are products of Atlas Cybernetics Corp.",
+     "until": "2026-09-23"
     }
    ],
    "used": [
@@ -941,9 +982,15 @@
   },
   {
    "key": "links.blog",
-   "value": "https://blog.atlascybernetics.ai",
-   "rev": 1,
-   "date": "2026-09-18",
+   "value": "https://blog.metrale.ai",
+   "rev": 2,
+   "date": "2026-09-23",
+   "was": [
+    {
+     "value": "https://blog.atlascybernetics.ai",
+     "until": "2026-09-23"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -1050,9 +1097,15 @@
   },
   {
    "key": "links.docs",
-   "value": "https://docs.atlascybernetics.ai",
-   "rev": 1,
-   "date": "2026-09-18",
+   "value": "https://docs.metrale.ai",
+   "rev": 2,
+   "date": "2026-09-23",
+   "was": [
+    {
+     "value": "https://docs.atlascybernetics.ai",
+     "until": "2026-09-23"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -1469,9 +1522,15 @@
   },
   {
    "key": "site.origin",
-   "value": "https://atlascybernetics.ai",
-   "rev": 1,
-   "date": "2026-09-18",
+   "value": "https://metrale.ai",
+   "rev": 2,
+   "date": "2026-09-23",
+   "was": [
+    {
+     "value": "https://atlascybernetics.ai",
+     "until": "2026-09-23"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -2350,10 +2409,7 @@
    "bytes": 8024,
    "rev": 1,
    "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
   },
   {
    "path": "site/static/logos/beyondgravity.svg",
@@ -2361,10 +2417,7 @@
    "bytes": 4640,
    "rev": 1,
    "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
   },
   {
    "path": "site/static/logos/google.svg",
@@ -2372,10 +2425,7 @@
    "bytes": 1906,
    "rev": 1,
    "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
   },
   {
    "path": "site/static/logos/huggingface-dark.svg",
@@ -2405,10 +2455,7 @@
    "bytes": 3007,
    "rev": 1,
    "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
   },
   {
    "path": "site/static/logos/mlcommons-dark.svg",
@@ -2425,17 +2472,6 @@
    "path": "site/static/logos/mlcommons.svg",
    "sha": "4b54e1d2d8d9",
    "bytes": 3926,
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
-  },
-  {
-   "path": "site/static/logos/nswc.webp",
-   "sha": "61cd2d1338ca",
-   "bytes": 11090,
    "rev": 1,
    "date": "2026-09-18",
    "used": [
@@ -2482,10 +2518,15 @@
    "bytes": 1408,
    "rev": 1,
    "date": "2026-09-21",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
+  },
+  {
+   "path": "site/static/logos/ups.svg",
+   "sha": "948b165d6d9a",
+   "bytes": 20651,
+   "rev": 1,
+   "date": "2026-09-23",
+   "used": []
   },
   {
    "path": "site/static/logos/uscybercom.webp",
@@ -2493,10 +2534,7 @@
    "bytes": 11822,
    "rev": 1,
    "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
+   "used": []
   },
   {
    "path": "site/static/media/about/exchange-before-dark.webp",
@@ -3355,14 +3393,18 @@
   },
   {
    "path": "site/static/og-image.png",
-   "sha": "c82e41bac0fa",
-   "bytes": 104126,
-   "rev": 2,
-   "date": "2026-09-21",
+   "sha": "d6af820721ed",
+   "bytes": 102070,
+   "rev": 3,
+   "date": "2026-09-23",
    "was": [
     {
      "sha": "31c79ad12550",
      "until": "2026-09-21"
+    },
+    {
+     "sha": "c82e41bac0fa",
+     "until": "2026-09-23"
     }
    ],
    "used": [
@@ -3565,12 +3607,12 @@
   {
    "menu": "Resources",
    "text": "Blog",
-   "href": "https://blog.atlascybernetics.ai"
+   "href": "https://blog.metrale.ai"
   },
   {
    "menu": "Resources",
    "text": "Documentation",
-   "href": "https://docs.atlascybernetics.ai"
+   "href": "https://docs.metrale.ai"
   },
   {
    "menu": "Resources",
@@ -3722,12 +3764,12 @@
   {
    "column": "Resources",
    "text": "Blog",
-   "href": "https://blog.atlascybernetics.ai"
+   "href": "https://blog.metrale.ai"
   },
   {
    "column": "Resources",
    "text": "Documentation",
-   "href": "https://docs.atlascybernetics.ai"
+   "href": "https://docs.metrale.ai"
   },
   {
    "column": "Resources",
@@ -4009,6 +4051,14 @@
       "artsFor",
       "heroClipFor"
      ]
+    },
+    {
+     "file": "src/lib/content/positions.js",
+     "exports": [
+      "filterPositions",
+      "statusLabel",
+      "teamsOf"
+     ]
     }
    ],
    "generated": false,
@@ -4069,6 +4119,11 @@
     }
    ],
    "controls": [
+    "All",
+    "Engine",
+    "Control",
+    "Customers",
+    "Go to market",
     "Send it"
    ],
    "forms": [
@@ -4156,8 +4211,8 @@
      "button": false
     },
     {
-     "text": "Report privately · security@atlas.net",
-     "href": "mailto:security@atlas.net",
+     "text": "Report privately · security@metrale.com",
+     "href": "mailto:security@metrale.com",
      "kind": "mail",
      "button": false
     },
@@ -5366,13 +5421,13 @@
    "links": [
     {
      "text": "Blog Kernel work, measured benchmarks and what it takes to run frontier models on hardware",
-     "href": "https://blog.atlascybernetics.ai",
+     "href": "https://blog.metrale.ai",
      "kind": "out",
      "button": false
     },
     {
      "text": "Documentation The Metrale book. Install, recipes, deployment, the control plane and the ga",
-     "href": "https://docs.atlascybernetics.ai",
+     "href": "https://docs.metrale.ai",
      "kind": "out",
      "button": false
     },
@@ -7322,7 +7377,7 @@
   }
  ],
  "outbound": {
-  "https://blog.atlascybernetics.ai": [
+  "https://blog.metrale.ai": [
    "/resources",
    "(every page: header or footer)"
   ],
@@ -7334,7 +7389,7 @@
    "/resources/events",
    "/waitlist"
   ],
-  "https://docs.atlascybernetics.ai": [
+  "https://docs.metrale.ai": [
    "/resources",
    "(every page: header or footer)"
   ],
@@ -7422,7 +7477,7 @@
    "/demo",
    "/pricing"
   ],
-  "security@atlas.net": [
+  "security@metrale.com": [
    "/contact"
   ]
  }

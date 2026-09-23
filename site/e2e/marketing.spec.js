@@ -15,6 +15,9 @@
 import { test, expect } from '@playwright/test';
 import { pages, routes } from '../src/lib/content/index.js';
 import { showTeam } from '../src/lib/content/company.js';
+import { logoWall } from '../src/lib/content/home.js';
+import { filterPositions } from '../src/lib/content/positions.js';
+import generated from '../src/lib/positions.generated.json';
 
 const isMobile = (testInfo) => testInfo.project.name === 'mobile';
 
@@ -484,7 +487,7 @@ test.describe('an email button always does something', () => {
       'Email engineering -> engineering@metrale.com',
       'Partnerships -> partnerships@metrale.com',
       'Community and open source -> community@metrale.com',
-      'Report privately -> security@atlas.net',
+      'Report privately -> security@metrale.com',
       'Email press and investors -> press@metrale.com',
     ]);
     // No founder's own address is published anywhere on the page.
@@ -557,7 +560,9 @@ test.describe('careers', () => {
     await expect(page.locator('.av-creed span')).toHaveCount(4);
     const role = page.locator('#roles details').first();
     await role.locator('summary').click();
-    await expect(role.locator('.av-role-more li')).toHaveCount(3);
+    // The work and what we look for, both as lists, from the first line of positions.jsonl.
+    const first = generated.positions[0];
+    await expect(role.locator('.av-role-more li')).toHaveCount(first.does.length + first.requirements.length);
     await expect(role.getByRole('link', { name: 'Apply by email' })).toHaveAttribute('href', /^mailto:careers@metrale\.com/);
     await expect(page.locator('#apply form')).toBeVisible();
     await expect(page.locator('#careers-role option')).toHaveCount(5);
@@ -565,7 +570,8 @@ test.describe('careers', () => {
 });
 
 test.describe('logos', () => {
-  test('the wall shows both emblems and every partner logo paints on either theme', async ({ page }) => {
+  test('the wall shows the emblem and every partner logo paints on either theme', async ({ page }) => {
+    test.skip(!logoWall.show, 'the wall is switched off');
     await page.goto('/');
     await page.locator('.av-wall').scrollIntoViewIfNeeded();
     const broken = async () =>
@@ -574,7 +580,7 @@ test.describe('logos', () => {
         .evaluateAll((imgs) =>
           imgs.filter((i) => i.offsetParent !== null && !(i.complete && i.naturalWidth > 0)).map((i) => i.getAttribute('src'))
         );
-    await expect(page.locator('.av-wall .has-emblem img')).toHaveCount(2);
+    await expect(page.locator('.av-wall .has-emblem img')).toHaveCount(1);
     await expect.poll(broken, { timeout: 15_000 }).toEqual([]);
     await page.evaluate(() =>
       document.documentElement.setAttribute(
@@ -584,6 +590,29 @@ test.describe('logos', () => {
     );
     await expect.poll(broken, { timeout: 15_000 }).toEqual([]);
     await expect(page.locator('.av-wall-note')).toContainText('does not imply or constitute DoD endorsement');
+  });
+
+  test('with the wall switched off, the programs still show and no mark does', async ({ page }) => {
+    test.skip(logoWall.show, 'the wall is switched on');
+    await page.goto('/');
+    await expect(page.locator('.av-logo-wall')).toHaveCount(0);
+    await expect(page.locator('.av-wall-note')).toHaveCount(0);
+    await expect(page.locator('.av-programs')).toBeVisible();
+  });
+
+  test('every mark on the wall links to its organisation, in a new tab', async ({ page }) => {
+    test.skip(!logoWall.show, 'the wall is switched off');
+    await page.goto('/');
+    const links = page.locator('.av-wall .av-logo a');
+    await expect(links).toHaveCount(await page.locator('.av-wall .av-logo').count());
+    for (const a of await links.all()) {
+      await expect(a).toHaveAttribute('href', /^https:\/\/[a-z0-9.-]+\/$/);
+      await expect(a).toHaveAttribute('target', '_blank');
+      await expect(a).toHaveAttribute('rel', /\bnoopener\b/);
+      // The link has a name a screen reader can say: the wordmark's alt text,
+      // or the name set beside an emblem.
+      expect((await a.evaluate((el) => el.textContent.trim() || el.querySelector('img')?.alt || '')).length).toBeGreaterThan(0);
+    }
   });
 });
 
@@ -658,5 +687,45 @@ test.describe('every page', () => {
       await expect(page.locator('.av-header')).toBeVisible();
       await expect(page.locator('.av-footer')).toHaveCount(1);
     }
+  });
+});
+
+test.describe('the verification deck', () => {
+  // The deck is a fixed stage over the ordinary page. The footer comes after
+  // it in the document and its badge fades in through opacity, which once let
+  // the badge paint through the cover headline on a wide window.
+  test('nothing from the page paints over the cover headline', async ({ page }, testInfo) => {
+    if (testInfo.project.name !== 'mobile') await page.setViewportSize({ width: 2036, height: 1100 });
+    await page.goto('/diligence#1');
+    const headline = page.locator('.dk h1').first();
+    await expect(headline).toBeVisible();
+    const top = await headline.evaluate((h) => {
+      const r = h.getBoundingClientRect();
+      const el = document.elementFromPoint(r.left + Math.min(120, r.width / 3), r.top + r.height * 0.7);
+      if (!el) return 'nothing';
+      return el.closest('.dk') ? 'the deck' : `${el.tagName.toLowerCase()}.${el.className}`;
+    });
+    expect(top).toBe('the deck');
+  });
+});
+
+test.describe('the roles on the careers page', () => {
+  const positions = generated.positions;
+  test('every role in the file is on the page, and the search and the team chips narrow them', async ({ page }) => {
+    await page.goto('/company/careers');
+    const rows = page.locator('#roles details');
+    await expect(rows).toHaveCount(positions.length);
+    const search = page.getByLabel('Search the roles');
+    await search.fill('kernel');
+    await expect(rows).toHaveCount(filterPositions(positions, { q: 'kernel' }).length);
+    await search.fill('zzzz-no-such-word');
+    await expect(rows).toHaveCount(0);
+    await page.getByRole('button', { name: 'Show every role' }).click();
+    await expect(rows).toHaveCount(positions.length);
+    const team = positions[0].team;
+    await page.getByRole('group', { name: 'Team' }).getByRole('button', { name: team, exact: true }).click();
+    await expect(rows).toHaveCount(filterPositions(positions, { team }).length);
+    // The form offers the same roles, plus the open answer.
+    await expect(page.locator('#careers-role option')).toHaveCount(positions.length + 1);
   });
 });

@@ -30,6 +30,9 @@ function avarokGenerators() {
       run('gen-ladder.mjs');
       // The product updates page renders CHANGELOG.md. Structural, like gen-gates.
       run('gen-changelog.mjs');
+      // The roles on the careers page, from positions.jsonl. Structural: a bad
+      // line stops the build rather than dropping a role.
+      run('gen-positions.mjs');
       // Reduces gates and models to the few counts the marketing pages print, so
       // none of them has to load the 1 MB gate record set. After gen-gates and
       // gen-models, which it reads.

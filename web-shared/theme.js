@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 //
-// One theme for atlascybernetics.ai and blog.atlascybernetics.ai.
+// One theme for metrale.ai and blog.metrale.ai.
 // The blocking boot script in each app.html must stay in lockstep with KEY
 // and the two ground colours here — theme-color.test.js pins the colours.
 

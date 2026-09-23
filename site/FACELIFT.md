@@ -111,7 +111,8 @@ a group's CSS to that group's pages.
 | Who is on a contact card | `contact.paths[].doors` in `src/lib/content/company.js`. Each door is a label and an address |
 | A team member's line, photo or profile | `team.people` in `company.js`, portraits in `static/team/`. Only on that person's word |
 | Offer the deck as a download | `team.deck.file` in `company.js`. Read open question 17 first |
-| The culture lines, a role's detail, the interest form | `careers` in `company.js` |
+| The culture lines, the interest form, the words around the roles | `careers` in `company.js` |
+| A role: title, team, location, status, summary, the work, what we look for | `positions.jsonl` beside it, one role per line, rendered at build |
 | The map of the site | Never by hand. `bun x --bun vite build`, then `bun run guide -- --note "what changed"` |
 | Where the forms post | `formEndpoint` in `src/lib/content/brand.js`, the address of the Worker in `deploy/cloudflare/forms-worker/`. Empty means they compose an email. The demo form and the waitlist form are one component, `DemoForm.svelte`, and each post carries a `source` |
 | A form's fields or wording | `demoPage.form` or `waitlistPage.form` in `src/lib/content/company.js` |
@@ -392,10 +393,26 @@ gate green.
 12. **Cloudflare Pages paths.** The build writes both `platform.html` and a
    `platform/` directory of child pages. Pages serves `/platform` from the
    file. Worth one look on the preview deployment.
-13. **Domain.** `atlascybernetics.ai` is unchanged. `SITE` in `brand.js` is the
-    one constant to move when DNS does.
-14. **The two command emblems.** They are on the wall because they were asked
-    for. Department of Defense emblems may not be used in a way that suggests
+13. **Domain.** `metrale.ai`, since 2026-09-23. `SITE` in `brand.js` was the one
+    constant to move; the installer addresses, the robots file, the two
+    Workers' allowed origins and the social card followed it. The blog has its
+    own name on the new domain (`blog.metrale.ai`, a Pages project of its own)
+    and the docs have one that redirects to where they are hosted today
+    (`docs.metrale.ai`, a rule in the zone) until they move. Still on the old
+    domain: the address the forms Worker sends from, which is the domain the
+    mail service has verified. The security mailbox moved to the
+    new domain with the other role addresses on 2026-09-23, at the owners'
+    word; the engine repository's `SECURITY.md` still names the old one until
+    that repository is next touched. The old domain should redirect to the
+    new one at its zone, so shared links and search results move too.
+14. **The wall of prior roles, and its emblem.** The whole wall is switched off
+    since 2026-09-23 (`logoWall.show`), at the owners' request, until after
+    funding; the data and the files stay, and Programs and partners stay up.
+    Naval Special Warfare Command's emblem was removed outright, file and all,
+    the line that stood over the wall went with it, and UPS was added to the
+    list. United States Cyber Command's emblem stays in the data, so the rest of
+    this item applies the day the wall returns.
+    Department of Defense emblems may not be used in a way that suggests
     endorsement, and a company normally needs the owning service's permission
     to show one. The wall carries the Department's standard disclaimer, which
     is not permission. Before launch, get it in writing or set
@@ -506,3 +523,24 @@ pages are confined to `src/routes/(marketing)`, `src/lib/content`,
 `src/routes/+page.svelte` and `+layout.svelte` from history returns the site to
 where it was. The lockup, the developer page rename and the blog rename are
 commits of their own for the same reason.
+
+## What still says Atlas, and what moves it
+
+Recorded 2026-09-23 so the next sweep is ready before it is asked for. The
+engine's repository is still `Avarok-Cybersecurity/atlas`, its binaries and its
+recipes still carry the name, and its published records name it. The site says
+Metrale wherever it speaks for itself and quotes the engine wherever it quotes
+the engine. One row per place: what a reader sees, and what changes it.
+
+| where | what a reader sees | what moves it |
+| --- | --- | --- |
+| `links` in `src/lib/content/brand.js`; `data.js`; `gates.js`; `chat/state.svelte.js`; the deck's `Evidence` and `Reproduce` acts; `ModelSlider.svelte`; the `gen-*` scripts; the guide's Worker prompt | links to `github.com/Avarok-Cybersecurity/atlas` and `atlas-recipes`: the repository, `SECURITY.md`, `LICENSE`, `CONTRIBUTING.md`, the deployment guide, issues and good first issues, the ladder results, the star and contributor counts, and the codebase chat's corpus on GitHub Pages | the repository move. GitHub redirects the old names, so nothing breaks on the day; the links change in one sweep after it, and `scripts/brand/rename.mjs` already knows the word boundaries to respect |
+| `site/engine.ref` and `.github/actions/engine-inputs` | nothing; it is which checkout the build reads | the same move: the repository names in the action |
+| the ladder, gate and benchmark records (`src/lib/*.generated.json`), the charts' tooltips, the deck's stamp | "Atlas · C=8 · 125.95 tok/s", "Atlas vs vLLM", "Atlas 1.0.0-beta-preview", "records published as Atlas, now Metrale" | nothing, on purpose: the records are evidence and keep the name they were published under. The charts' own series label already says Metrale. A display name for the engine in the generators would relabel the tooltips without touching a record, if the owners want that |
+| `alternateName` in the JSON-LD, `src/routes/+layout.svelte` | "Atlas Inference Engine", for a search engine that knows the old name | keep it for a while after the move, then drop it |
+| the commands on the developer pages | `atlasctl`, `atlas`, the recipe names | the engine's own rename of its binaries and recipes |
+| `links.docs` and the blog's `DOCS_SITE`; `links.blog` and `blogUrl` | the docs and the blog on the old hosts | a `docs.metrale.ai` name on the project that serves the docs (a custom domain on the Pages project, with the record in the zone), then one line each; the blog moves with its own pull request |
+| `security@atlas.net` on the contact page | the security mailbox | the engine repository's `SECURITY.md` publishes it; the two change together (item 13) |
+| `APP_TITLE` and the corpus address in `src/lib/chat/config.js` | the codebase chat's attribution header, and where its corpus comes from | the attribution now; the corpus with the repository move |
+| a testimonial on the front page | "Testing Atlas on a DGX Spark…" | nothing: a quotation keeps its words |
+| `.atlas-*` class names in the chart styles | nothing visible | rename at leisure |

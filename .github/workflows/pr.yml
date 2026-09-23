@@ -203,10 +203,20 @@ jobs:
       - name: Internal links resolve
         run: lychee --config lychee.toml --offline 'site/build/**/*.html'
 
-  lighthouse:
-    name: lighthouse
+  # Every page, 5 runs each, split across parallel shards so the gate takes minutes
+  # rather than most of an hour. The page list stays in lighthouserc.json: shard i
+  # takes every SHARDS-th URL from it, starting at i.
+  lighthouse-shard:
+    name: lighthouse shard ${{ matrix.shard }}
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
+    env:
+      SHARDS: 6
+      SHARD: ${{ matrix.shard }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -221,7 +231,30 @@ jobs:
       # 100 in performance, accessibility, best practices and SEO on every public
       # page, and no third-party request. site/lighthouse/README.md has the rules.
       - name: Lighthouse
-        run: npx --yes @lhci/cli@0.15.1 autorun --config=site/lighthouse/lighthouserc.json
+        run: |
+          mapfile -t urls < <(node -e '
+            const { ci } = require("./site/lighthouse/lighthouserc.json");
+            const n = Number(process.env.SHARDS), i = Number(process.env.SHARD);
+            ci.collect.url.filter((_, k) => k % n === i).forEach((u) => console.log(u));
+          ')
+          args=()
+          for u in "${urls[@]}"; do args+=("--collect.url=$u"); done
+          echo "shard $SHARD of $SHARDS: ${#urls[@]} pages"
+          npx --yes @lhci/cli@0.15.1 autorun --config=site/lighthouse/lighthouserc.json "${args[@]}"
+
+  # The required check. It passes only when every shard passed.
+  lighthouse:
+    name: lighthouse
+    needs: lighthouse-shard
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Every shard passed
+        env:
+          RESULT: ${{ needs.lighthouse-shard.result }}
+        run: |
+          echo "shards: $RESULT"
+          [ "$RESULT" = "success" ]
 
   # Not a required check: fork pull requests skip it, and they must still be
   # mergeable. Secrets are only read here, and only for this repository's branches.

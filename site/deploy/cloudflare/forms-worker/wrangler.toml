@@ -6,7 +6,7 @@ workers_dev = true
 
 [vars]
 # Who may post. Exact origins, then host suffixes for Pages preview deployments.
-ALLOWED_ORIGINS = "https://atlascybernetics.ai,https://www.atlascybernetics.ai,http://localhost:5173,http://127.0.0.1:5173"
+ALLOWED_ORIGINS = "https://metrale.ai,https://www.metrale.ai,https://metrale-ai.pages.dev,http://localhost:5173,http://127.0.0.1:5173"
 ALLOWED_ORIGIN_SUFFIXES = ".atlas-site.pages.dev,.avarok-site-80h.pages.dev"
 # Which inbox each form belongs to. Only used by the email channel. A test keeps
 # these equal to `contacts` in site/src/lib/content/brand.js.

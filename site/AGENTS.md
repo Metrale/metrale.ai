@@ -17,11 +17,17 @@ reading the code first.
 4. **[BRANDING.md](BRANDING.md)** and **[BRAND-CHANGE.md](BRAND-CHANGE.md)** if you are touching
    the name, the lockup, the palette or the type. `deploy/cloudflare/prime-worker/README.md` if
    you are touching Metrale Prime, the guide, and its `TRIALS.md` for what was measured.
+5. **[ECOSYSTEM.md](ECOSYSTEM.md)** if you are touching the control plane, its chat, the agent
+   client under `src/lib/agent/` or the corpus: the plan for the loopback foundation, and the
+   contracts the pieces are meant to share.
 
 ## How the site is put together
 
 - **Words are data.** Every sentence on a marketing page lives in `src/lib/content/*.js`.
   Components under `src/lib/components/avarok/` only draw. Change copy in content, never in markup.
+  The one file of another shape is `src/lib/content/positions.jsonl`, the roles on the careers
+  page, one role per line; `scripts/gen-positions.mjs` turns it into `src/lib/positions.generated.json`
+  on every build and stops the build on a bad line. Edit the JSONL, never the JSON.
 - **Facts are defined once.** Names, addresses, links and licence lines are in
   `src/lib/content/brand.js` (`company`, `links`, `contacts`, `footer`). Each has a revision
   and a date in `guide/ledger.json`. Change one and the unit suite fails until you record it.

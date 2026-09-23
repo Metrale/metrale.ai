@@ -15,11 +15,11 @@
 
 // The domain is unchanged by the rebrand (see PR #1101). When DNS moves, this
 // is the one constant to change. Everything absolute is built from it.
-export const SITE = 'https://atlascybernetics.ai';
+export const SITE = 'https://metrale.ai';
 
 export const company = {
   name: 'Metrale',
-  legal: 'Atlas Cybernetics Corp.',
+  legal: 'Metrale Corp.',
   // The product family. One masterbrand, descriptive product names beneath it,
   // the way Salesforce and Microsoft do it, so every layer sells the others.
   engine: 'Metrale Engine',
@@ -47,8 +47,8 @@ export const links = {
   github: 'https://github.com/Avarok-Cybersecurity/atlas',
   recipes: 'https://github.com/Avarok-Cybersecurity/atlas-recipes',
   discord: 'https://discord.gg/RQcGakU2jW',
-  blog: localBlog || 'https://blog.atlascybernetics.ai',
-  docs: 'https://docs.atlascybernetics.ai',
+  blog: localBlog || 'https://blog.metrale.ai',
+  docs: 'https://docs.metrale.ai',
   x: 'https://x.com/AtlasInferenceX',
   guide: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md',
   ladderLog: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/bench/ladder38/RESULTS.md',
@@ -79,7 +79,7 @@ export const formEndpoint = '';
 // request. Deploy the Worker (its README has the setup), paste its address here
 // without a path, then `bun run guide`. A build may also name it through
 // VITE_PRIME_ENDPOINT, which is how the browser tests and a local trial run it.
-export const primeEndpoint = '';
+export const primeEndpoint = 'https://metrale-prime.metrale.workers.dev';
 
 // Who answers what. One address per job, and the job is the key, so a change of
 // person is a change of one line. Since 2026-09-21 these are role mailboxes at
@@ -102,7 +102,7 @@ export const contacts = {
   community: 'community@metrale.com',
   press: 'press@metrale.com',
   careers: 'careers@metrale.com',
-  security: 'security@atlas.net',
+  security: 'security@metrale.com',
 };
 
 // The founders' own doors, as the site published them until 2026-09-21. Kept,
@@ -328,7 +328,7 @@ export const footer = {
       ],
     },
   ],
-  legal: `© 2026 ${company.legal} Metrale and Metrale Engine are products of ${company.legal}`,
+  legal: `© 2026 ${company.legal} Metrale, Metrale AI, and ${company.engine} are products of ${company.legal}`,
   license: 'Community Edition under AGPL-3.0. Enterprise Edition under a commercial license.',
   mlperf:
     'The MLPerf name and logo are registered and unregistered trademarks of MLCommons Association in the United States and other countries. All rights reserved. Unauthorized use strictly prohibited. See mlcommons.org for more information.',
