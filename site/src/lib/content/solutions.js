@@ -134,7 +134,7 @@ export const solutions = {
     ...base['government-defense'],
     eyebrow: 'Solutions · Government and defense',
     title: 'Air gapped by design. Signed by default. Nothing leaves.',
-    lede: 'Metrale was built by people who have stood up operations for cyber and special operations commands. It installs from local media, runs on an isolated network, and exports telemetry on your schedule or never.',
+    lede: 'Metrale was built by people who have stood up operations for a cyber command. It installs from local media, runs on an isolated network, and exports telemetry on your schedule or never.',
     fit: [
       'Classified and isolated networks with no route to the internet',
       'Supply chain requirements that reject runtime dependency resolution',

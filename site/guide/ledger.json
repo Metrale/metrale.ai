@@ -257,6 +257,16 @@
         "contacts.security",
         "og-image.png"
       ]
+    },
+    {
+      "rev": 17,
+      "date": "2026-09-23",
+      "base": "b9271143f",
+      "note": "The wall of prior roles is switched off before funding, its data kept; UPS added to it, the Naval Special Warfare Command emblem removed; every mark links to its organisation",
+      "touched": [
+        "ups.svg",
+        "nswc.webp"
+      ]
     }
   ],
   "facts": {
@@ -1366,7 +1376,8 @@
       "sha": "61cd2d1338ca",
       "bytes": 11090,
       "rev": 1,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "removed": "2026-09-23"
     },
     "site/static/logos/qwen.svg": {
       "sha": "cae4a6dc3fe9",
@@ -1398,6 +1409,12 @@
       "bytes": 1408,
       "rev": 1,
       "date": "2026-09-21"
+    },
+    "site/static/logos/ups.svg": {
+      "sha": "948b165d6d9a",
+      "bytes": 20651,
+      "rev": 1,
+      "date": "2026-09-23"
     },
     "site/static/logos/uscybercom.webp": {
       "sha": "56c4f5cebc1d",

@@ -15,6 +15,7 @@
 import { test, expect } from '@playwright/test';
 import { pages, routes } from '../src/lib/content/index.js';
 import { showTeam } from '../src/lib/content/company.js';
+import { logoWall } from '../src/lib/content/home.js';
 
 const isMobile = (testInfo) => testInfo.project.name === 'mobile';
 
@@ -565,7 +566,8 @@ test.describe('careers', () => {
 });
 
 test.describe('logos', () => {
-  test('the wall shows both emblems and every partner logo paints on either theme', async ({ page }) => {
+  test('the wall shows the emblem and every partner logo paints on either theme', async ({ page }) => {
+    test.skip(!logoWall.show, 'the wall is switched off');
     await page.goto('/');
     await page.locator('.av-wall').scrollIntoViewIfNeeded();
     const broken = async () =>
@@ -574,7 +576,7 @@ test.describe('logos', () => {
         .evaluateAll((imgs) =>
           imgs.filter((i) => i.offsetParent !== null && !(i.complete && i.naturalWidth > 0)).map((i) => i.getAttribute('src'))
         );
-    await expect(page.locator('.av-wall .has-emblem img')).toHaveCount(2);
+    await expect(page.locator('.av-wall .has-emblem img')).toHaveCount(1);
     await expect.poll(broken, { timeout: 15_000 }).toEqual([]);
     await page.evaluate(() =>
       document.documentElement.setAttribute(
@@ -584,6 +586,29 @@ test.describe('logos', () => {
     );
     await expect.poll(broken, { timeout: 15_000 }).toEqual([]);
     await expect(page.locator('.av-wall-note')).toContainText('does not imply or constitute DoD endorsement');
+  });
+
+  test('with the wall switched off, the programs still show and no mark does', async ({ page }) => {
+    test.skip(logoWall.show, 'the wall is switched on');
+    await page.goto('/');
+    await expect(page.locator('.av-logo-wall')).toHaveCount(0);
+    await expect(page.locator('.av-wall-note')).toHaveCount(0);
+    await expect(page.locator('.av-programs')).toBeVisible();
+  });
+
+  test('every mark on the wall links to its organisation, in a new tab', async ({ page }) => {
+    test.skip(!logoWall.show, 'the wall is switched off');
+    await page.goto('/');
+    const links = page.locator('.av-wall .av-logo a');
+    await expect(links).toHaveCount(await page.locator('.av-wall .av-logo').count());
+    for (const a of await links.all()) {
+      await expect(a).toHaveAttribute('href', /^https:\/\/[a-z0-9.-]+\/$/);
+      await expect(a).toHaveAttribute('target', '_blank');
+      await expect(a).toHaveAttribute('rel', /\bnoopener\b/);
+      // The link has a name a screen reader can say: the wordmark's alt text,
+      // or the name set beside an emblem.
+      expect((await a.evaluate((el) => el.textContent.trim() || el.querySelector('img')?.alt || '')).length).toBeGreaterThan(0);
+    }
   });
 });
 

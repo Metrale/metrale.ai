@@ -404,8 +404,14 @@ gate green.
     word; the engine repository's `SECURITY.md` still names the old one until
     that repository is next touched. The old domain should redirect to the
     new one at its zone, so shared links and search results move too.
-14. **The two command emblems.** They are on the wall because they were asked
-    for. Department of Defense emblems may not be used in a way that suggests
+14. **The wall of prior roles, and its emblem.** The whole wall is switched off
+    since 2026-09-23 (`logoWall.show`), at the owners' request, until after
+    funding; the data and the files stay, and Programs and partners stay up.
+    Naval Special Warfare Command's emblem was removed outright, file and all,
+    the line that stood over the wall went with it, and UPS was added to the
+    list. United States Cyber Command's emblem stays in the data, so the rest of
+    this item applies the day the wall returns.
+    Department of Defense emblems may not be used in a way that suggests
     endorsement, and a company normally needs the owning service's permission
     to show one. The wall carries the Department's standard disclaimer, which
     is not permission. Before launch, get it in writing or set
