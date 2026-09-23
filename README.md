@@ -9,6 +9,7 @@ the developer pages for the engine. SvelteKit on Vite, prerendered to static fil
 | path | what it is |
 | --- | --- |
 | [`site/`](site/) | the site. Start with [`site/AGENTS.md`](site/AGENTS.md), then [`site/README.md`](site/README.md) |
+| [`blog/`](blog/) | the blog, a second SvelteKit app on the same tokens. Start with [`blog/README.md`](blog/README.md) |
 | [`web-shared/`](web-shared/) | design tokens and components shared with the blog |
 | [`assets/brand/`](assets/brand/) | the brand kit the site draws its artwork and palette from |
 | [`.github/workflows/`](.github/workflows/) | the pull request checks, the deploy and the guide's Worker |
