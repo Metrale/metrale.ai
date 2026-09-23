@@ -522,3 +522,24 @@ pages are confined to `src/routes/(marketing)`, `src/lib/content`,
 `src/routes/+page.svelte` and `+layout.svelte` from history returns the site to
 where it was. The lockup, the developer page rename and the blog rename are
 commits of their own for the same reason.
+
+## What still says Atlas, and what moves it
+
+Recorded 2026-09-23 so the next sweep is ready before it is asked for. The
+engine's repository is still `Avarok-Cybersecurity/atlas`, its binaries and its
+recipes still carry the name, and its published records name it. The site says
+Metrale wherever it speaks for itself and quotes the engine wherever it quotes
+the engine. One row per place: what a reader sees, and what changes it.
+
+| where | what a reader sees | what moves it |
+| --- | --- | --- |
+| `links` in `src/lib/content/brand.js`; `data.js`; `gates.js`; `chat/state.svelte.js`; the deck's `Evidence` and `Reproduce` acts; `ModelSlider.svelte`; the `gen-*` scripts; the guide's Worker prompt | links to `github.com/Avarok-Cybersecurity/atlas` and `atlas-recipes`: the repository, `SECURITY.md`, `LICENSE`, `CONTRIBUTING.md`, the deployment guide, issues and good first issues, the ladder results, the star and contributor counts, and the codebase chat's corpus on GitHub Pages | the repository move. GitHub redirects the old names, so nothing breaks on the day; the links change in one sweep after it, and `scripts/brand/rename.mjs` already knows the word boundaries to respect |
+| `site/engine.ref` and `.github/actions/engine-inputs` | nothing; it is which checkout the build reads | the same move: the repository names in the action |
+| the ladder, gate and benchmark records (`src/lib/*.generated.json`), the charts' tooltips, the deck's stamp | "Atlas · C=8 · 125.95 tok/s", "Atlas vs vLLM", "Atlas 1.0.0-beta-preview", "records published as Atlas, now Metrale" | nothing, on purpose: the records are evidence and keep the name they were published under. The charts' own series label already says Metrale. A display name for the engine in the generators would relabel the tooltips without touching a record, if the owners want that |
+| `alternateName` in the JSON-LD, `src/routes/+layout.svelte` | "Atlas Inference Engine", for a search engine that knows the old name | keep it for a while after the move, then drop it |
+| the commands on the developer pages | `atlasctl`, `atlas`, the recipe names | the engine's own rename of its binaries and recipes |
+| `links.docs` and the blog's `DOCS_SITE`; `links.blog` and `blogUrl` | the docs and the blog on the old hosts | a `docs.metrale.ai` name on the project that serves the docs (a custom domain on the Pages project, with the record in the zone), then one line each; the blog moves with its own pull request |
+| `security@atlas.net` on the contact page | the security mailbox | the engine repository's `SECURITY.md` publishes it; the two change together (item 13) |
+| `APP_TITLE` and the corpus address in `src/lib/chat/config.js` | the codebase chat's attribution header, and where its corpus comes from | the attribution now; the corpus with the repository move |
+| a testimonial on the front page | "Testing Atlas on a DGX Spark…" | nothing: a quotation keeps its words |
+| `.atlas-*` class names in the chart styles | nothing visible | rename at leisure |
