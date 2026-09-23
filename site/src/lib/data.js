@@ -74,11 +74,11 @@ export const flagshipRecipe = 'qwen3.6-35b-a3b-fp8-mtp';
 export const quickInstall = 'cargo install atlasctl';
 /// Where install.sh is served from. One authority: the join one-liner in
 /// `joincommand.js` builds on this too, and a second copy is how the two drift.
-export const installerUrl = 'https://atlascybernetics.ai/install.sh';
+export const installerUrl = 'https://metrale.ai/install.sh';
 /// The Windows counterpart. Windows visitors were shown the `curl … | sh` line
 /// too, which cannot run there: PowerShell has no `sh`, and Git Bash reaches
 /// install.sh only to be refused by it.
-export const powershellInstallerUrl = 'https://atlascybernetics.ai/install.ps1';
+export const powershellInstallerUrl = 'https://metrale.ai/install.ps1';
 /// The shell one-liner, and the prerendered default. `currentInstall()` in
 /// `$lib/install/host.svelte.js` is what a page should print once it knows
 /// which machine it is talking to.
@@ -454,7 +454,7 @@ export const faq = {
     },
     {
       q: 'How do I install it?',
-      a: 'One command: curl -fsSL https://atlascybernetics.ai/install.sh | sh. It downloads a prebuilt atlasctl, verifies its checksum, and installs to ~/.local/bin. If you would rather not pipe curl to a shell, cargo install atlasctl does the same thing from source.',
+      a: 'One command: curl -fsSL https://metrale.ai/install.sh | sh. It downloads a prebuilt atlasctl, verifies its checksum, and installs to ~/.local/bin. If you would rather not pipe curl to a shell, cargo install atlasctl does the same thing from source.',
     },
     {
       q: 'Which models can I run?',

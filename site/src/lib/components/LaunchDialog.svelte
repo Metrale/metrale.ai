@@ -232,7 +232,7 @@
             Watching for it — this will continue on its own.
           </p>
           <p class="ld-caution">
-            Any web page can show you an install command. Check the address bar says <strong>atlascybernetics.ai</strong> before running one.
+            Any web page can show you an install command. Check the address bar says <strong>metrale.ai</strong> before running one.
           </p>
         {:else if launch.phase === 'pairing'}
           <p>The agent prints a token when it starts. Paste it once so it knows this browser is yours.</p>

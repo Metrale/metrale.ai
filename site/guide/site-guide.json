@@ -1,5 +1,5 @@
 {
- "revision": 15,
+ "revision": 16,
  "date": "2026-09-23",
  "changes": [
   {
@@ -244,6 +244,16 @@
    "touched": [
     "company.legal",
     "footer.legal"
+   ]
+  },
+  {
+   "rev": 16,
+   "date": "2026-09-23",
+   "base": "0e8ee14e9",
+   "note": "The site's address is metrale.ai; the installers, the Workers' origins and the social card follow it",
+   "touched": [
+    "site.origin",
+    "og-image.png"
    ]
   }
  ],
@@ -1489,9 +1499,15 @@
   },
   {
    "key": "site.origin",
-   "value": "https://atlascybernetics.ai",
-   "rev": 1,
-   "date": "2026-09-18",
+   "value": "https://metrale.ai",
+   "rev": 2,
+   "date": "2026-09-23",
+   "was": [
+    {
+     "value": "https://atlascybernetics.ai",
+     "until": "2026-09-23"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -3375,14 +3391,18 @@
   },
   {
    "path": "site/static/og-image.png",
-   "sha": "c82e41bac0fa",
-   "bytes": 104126,
-   "rev": 2,
-   "date": "2026-09-21",
+   "sha": "d6af820721ed",
+   "bytes": 102070,
+   "rev": 3,
+   "date": "2026-09-23",
    "was": [
     {
      "sha": "31c79ad12550",
      "until": "2026-09-21"
+    },
+    {
+     "sha": "c82e41bac0fa",
+     "until": "2026-09-23"
     }
    ],
    "used": [

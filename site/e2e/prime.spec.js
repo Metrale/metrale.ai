@@ -21,7 +21,7 @@ const CORS = {
 // The last line is a real hazard: an unbreakable URL longer than the panel, and
 // a long code span. Real answers carry both, and on 2026-09-21 they widened the
 // column and clipped every line at the panel's edge.
-const LONG_URL = 'https://atlascybernetics.ai/benchmarks#qwen38-27b-nvfp4-concurrency-ladder-eight-rungs-measured-on-one-gb10-round-eleven';
+const LONG_URL = 'https://metrale.ai/benchmarks#qwen38-27b-nvfp4-concurrency-ladder-eight-rungs-measured-on-one-gb10-round-eleven';
 const ANSWER = [
   'The ladder has **eight rungs** and Metrale wins every one [1].',
   '',

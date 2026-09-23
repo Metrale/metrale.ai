@@ -167,7 +167,7 @@ jobs:
           URL: ${{ vars.PRIME_WORKER_URL }}
         run: |
           out=$(curl -sS --max-time 120 -N "$URL/chat" \
-            -H 'content-type: application/json' -H 'origin: https://atlascybernetics.ai' \
+            -H 'content-type: application/json' -H 'origin: https://metrale.ai' \
             -d '{"messages":[{"role":"user","content":"In one sentence, what is Metrale?"}],"audience":"","page":"/"}')
           echo "$out" | tail -c 1200
           echo "$out" | grep -q '^event: done' || { echo "::error::the stream did not finish"; exit 1; }

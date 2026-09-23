@@ -15,7 +15,7 @@
 
 // The domain is unchanged by the rebrand (see PR #1101). When DNS moves, this
 // is the one constant to change. Everything absolute is built from it.
-export const SITE = 'https://atlascybernetics.ai';
+export const SITE = 'https://metrale.ai';
 
 export const company = {
   name: 'Metrale',

@@ -7,10 +7,10 @@ workers_dev = true
 
 [vars]
 # Who may call it. Exact origins, then host suffixes for Pages preview deployments.
-ALLOWED_ORIGINS = "https://atlascybernetics.ai,https://www.atlascybernetics.ai,http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173"
-ALLOWED_ORIGIN_SUFFIXES = ".atlas-site.pages.dev,.avarok-site-80h.pages.dev"
+ALLOWED_ORIGINS = "https://metrale.ai,https://www.metrale.ai,https://metrale-ai.pages.dev,http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,http://127.0.0.1:4173"
+ALLOWED_ORIGIN_SUFFIXES = ".metrale-ai.pages.dev"
 # The site, for the links the answers carry.
-SITE = "https://atlascybernetics.ai"
+SITE = "https://metrale.ai"
 # The model and how hard it thinks. grok-4.5, 4.6 and 4.7 take low, medium, high
 # or xhigh. The trials in README.md are how these two were chosen.
 PRIME_MODEL = "grok-4.7"

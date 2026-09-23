@@ -392,8 +392,15 @@ gate green.
 12. **Cloudflare Pages paths.** The build writes both `platform.html` and a
    `platform/` directory of child pages. Pages serves `/platform` from the
    file. Worth one look on the preview deployment.
-13. **Domain.** `atlascybernetics.ai` is unchanged. `SITE` in `brand.js` is the
-    one constant to move when DNS does.
+13. **Domain.** `metrale.ai`, since 2026-09-23. `SITE` in `brand.js` was the one
+    constant to move; the installer addresses, the robots file, the two
+    Workers' allowed origins and the social card followed it. Still on the old
+    domain, each for a reason of its own: the blog and the docs, which are
+    hosted there; the address the forms Worker sends from, which is the domain
+    the mail service has verified; and the security mailbox, which the engine
+    repository's `SECURITY.md` publishes, so the two change together. The old
+    domain should redirect to the new one at the zone, so shared links and
+    search results move too.
 14. **The two command emblems.** They are on the wall because they were asked
     for. Department of Defense emblems may not be used in a way that suggests
     endorsement, and a company normally needs the owning service's permission

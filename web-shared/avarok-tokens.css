@@ -2,7 +2,7 @@
    Metrale design tokens — the single authoritative copy.
 
    Imported by BOTH web properties:
-     site/src/routes/+layout.svelte  -> atlascybernetics.ai
+     site/src/routes/+layout.svelte  -> metrale.ai
      blog/src/app.css                -> blog.atlascybernetics.ai
 
    Values come from the brand kit (assets/brand/tokens/brand.json, and the
