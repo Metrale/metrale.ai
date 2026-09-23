@@ -111,7 +111,8 @@ a group's CSS to that group's pages.
 | Who is on a contact card | `contact.paths[].doors` in `src/lib/content/company.js`. Each door is a label and an address |
 | A team member's line, photo or profile | `team.people` in `company.js`, portraits in `static/team/`. Only on that person's word |
 | Offer the deck as a download | `team.deck.file` in `company.js`. Read open question 17 first |
-| The culture lines, a role's detail, the interest form | `careers` in `company.js` |
+| The culture lines, the interest form, the words around the roles | `careers` in `company.js` |
+| A role: title, team, location, status, summary, the work, what we look for | `positions.jsonl` beside it, one role per line, rendered at build |
 | The map of the site | Never by hand. `bun x --bun vite build`, then `bun run guide -- --note "what changed"` |
 | Where the forms post | `formEndpoint` in `src/lib/content/brand.js`, the address of the Worker in `deploy/cloudflare/forms-worker/`. Empty means they compose an email. The demo form and the waitlist form are one component, `DemoForm.svelte`, and each post carries a `source` |
 | A form's fields or wording | `demoPage.form` or `waitlistPage.form` in `src/lib/content/company.js` |

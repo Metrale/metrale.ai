@@ -1,5 +1,5 @@
 {
- "revision": 15,
+ "revision": 16,
  "date": "2026-09-23",
  "changes": [
   {
@@ -245,6 +245,13 @@
     "company.legal",
     "footer.legal"
    ]
+  },
+  {
+   "rev": 16,
+   "date": "2026-09-23",
+   "base": "327006fbc",
+   "note": "The roles on the careers page come from positions.jsonl, one per line, with a search and team chips over them",
+   "touched": []
   }
  ],
  "facts": [
@@ -4029,6 +4036,14 @@
       "artsFor",
       "heroClipFor"
      ]
+    },
+    {
+     "file": "src/lib/content/positions.js",
+     "exports": [
+      "filterPositions",
+      "statusLabel",
+      "teamsOf"
+     ]
     }
    ],
    "generated": false,
@@ -4089,6 +4104,11 @@
     }
    ],
    "controls": [
+    "All",
+    "Engine",
+    "Control",
+    "Customers",
+    "Go to market",
     "Send it"
    ],
    "forms": [

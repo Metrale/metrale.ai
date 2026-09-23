@@ -22,6 +22,9 @@ reading the code first.
 
 - **Words are data.** Every sentence on a marketing page lives in `src/lib/content/*.js`.
   Components under `src/lib/components/avarok/` only draw. Change copy in content, never in markup.
+  The one file of another shape is `src/lib/content/positions.jsonl`, the roles on the careers
+  page, one role per line; `scripts/gen-positions.mjs` turns it into `src/lib/positions.generated.json`
+  on every build and stops the build on a bad line. Edit the JSONL, never the JSON.
 - **Facts are defined once.** Names, addresses, links and licence lines are in
   `src/lib/content/brand.js` (`company`, `links`, `contacts`, `footer`). Each has a revision
   and a date in `guide/ledger.json`. Change one and the unit suite fails until you record it.

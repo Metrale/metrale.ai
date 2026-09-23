@@ -15,6 +15,8 @@
 import { test, expect } from '@playwright/test';
 import { pages, routes } from '../src/lib/content/index.js';
 import { showTeam } from '../src/lib/content/company.js';
+import { filterPositions } from '../src/lib/content/positions.js';
+import generated from '../src/lib/positions.generated.json';
 
 const isMobile = (testInfo) => testInfo.project.name === 'mobile';
 
@@ -557,7 +559,9 @@ test.describe('careers', () => {
     await expect(page.locator('.av-creed span')).toHaveCount(4);
     const role = page.locator('#roles details').first();
     await role.locator('summary').click();
-    await expect(role.locator('.av-role-more li')).toHaveCount(3);
+    // The work and what we look for, both as lists, from the first line of positions.jsonl.
+    const first = generated.positions[0];
+    await expect(role.locator('.av-role-more li')).toHaveCount(first.does.length + first.requirements.length);
     await expect(role.getByRole('link', { name: 'Apply by email' })).toHaveAttribute('href', /^mailto:careers@metrale\.com/);
     await expect(page.locator('#apply form')).toBeVisible();
     await expect(page.locator('#careers-role option')).toHaveCount(5);
@@ -658,5 +662,26 @@ test.describe('every page', () => {
       await expect(page.locator('.av-header')).toBeVisible();
       await expect(page.locator('.av-footer')).toHaveCount(1);
     }
+  });
+});
+
+test.describe('the roles on the careers page', () => {
+  const positions = generated.positions;
+  test('every role in the file is on the page, and the search and the team chips narrow them', async ({ page }) => {
+    await page.goto('/company/careers');
+    const rows = page.locator('#roles details');
+    await expect(rows).toHaveCount(positions.length);
+    const search = page.getByLabel('Search the roles');
+    await search.fill('kernel');
+    await expect(rows).toHaveCount(filterPositions(positions, { q: 'kernel' }).length);
+    await search.fill('zzzz-no-such-word');
+    await expect(rows).toHaveCount(0);
+    await page.getByRole('button', { name: 'Show every role' }).click();
+    await expect(rows).toHaveCount(positions.length);
+    const team = positions[0].team;
+    await page.getByRole('group', { name: 'Team' }).getByRole('button', { name: team, exact: true }).click();
+    await expect(rows).toHaveCount(filterPositions(positions, { team }).length);
+    // The form offers the same roles, plus the open answer.
+    await expect(page.locator('#careers-role option')).toHaveCount(positions.length + 1);
   });
 });
