@@ -19,7 +19,7 @@ export const SITE = 'https://atlascybernetics.ai';
 
 export const company = {
   name: 'Metrale',
-  legal: 'Atlas Cybernetics Corp.',
+  legal: 'Metrale Corp.',
   // The product family. One masterbrand, descriptive product names beneath it,
   // the way Salesforce and Microsoft do it, so every layer sells the others.
   engine: 'Metrale Engine',
@@ -328,7 +328,7 @@ export const footer = {
       ],
     },
   ],
-  legal: `© 2026 ${company.legal} Metrale and Metrale Engine are products of ${company.legal}`,
+  legal: `© 2026 ${company.legal} Metrale, Metrale AI, and ${company.engine} are products of ${company.legal}`,
   license: 'Community Edition under AGPL-3.0. Enterprise Edition under a commercial license.',
   mlperf:
     'The MLPerf name and logo are registered and unregistered trademarks of MLCommons Association in the United States and other countries. All rights reserved. Unauthorized use strictly prohibited. See mlcommons.org for more information.',
