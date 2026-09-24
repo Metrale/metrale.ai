@@ -13,7 +13,7 @@
   import { setContext } from 'svelte';
   import { browser } from '$app/environment';
   import { replaceState } from '$app/navigation';
-  import Chevrons from './Chevrons.svelte';
+  import AtlasLockup from '$shared/components/AtlasLockup.svelte';
 
   let { title = 'Verification steps', stamp = '', children } = $props();
 
@@ -142,7 +142,7 @@
   </div>
 
   <div class="dk-chrome">
-    <a class="dk-mark" href="/" aria-label="Metrale home"><Chevrons /></a>
+    <a class="dk-mark" href="/" aria-label="Metrale home"><AtlasLockup kind="mark" /></a>
     <span class="dk-stamp mono">{stamp}</span>
     <span class="dk-count mono">{String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</span>
   </div>
@@ -208,7 +208,7 @@
     will-change: transform;
   }
 
-  /* Edge navigation, drawn as one chevron of the mark. Quiet until the pointer
+  /* Edge navigation, a plain chevron each side. Quiet until the pointer
      is near, because a control that shouts on every slide becomes furniture. */
   .dk-edge {
     position: absolute;
@@ -300,8 +300,13 @@
   }
   .dk-mark {
     display: block;
-    width: 34px;
+    width: 30px;
     opacity: 0.9;
+  }
+  .dk-mark :global(svg) {
+    width: 100%;
+    height: auto;
+    display: block;
   }
   .dk-stamp {
     flex: 1;

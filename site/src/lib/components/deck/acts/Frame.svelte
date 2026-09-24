@@ -3,14 +3,16 @@
   // the limits slide comes before any evidence, because a claim whose edges are
   // stated first is read differently from one whose edges have to be dug out.
   import Slide from '../Slide.svelte';
-  import Chevrons from '../Chevrons.svelte';
+  import AtlasLockup from '$shared/components/AtlasLockup.svelte';
   import Kv from '../Kv.svelte';
   import { claim, fragile, stamp } from '$lib/deck/content.js';
 </script>
 
 <Slide act="violet" wide>
+  <!-- Laid out like the kit's title slide: the wordmark at the top left, the
+       title under it, the stamp as the footer line. -->
   <div class="cover">
-    <div class="cover-mark"><Chevrons id="dk-cover" /></div>
+    <div class="cover-mark"><AtlasLockup kind="wordmark" /></div>
     <div>
       <p class="cover-kicker mono">Verification steps</p>
       <h1 class="cover-title">Reproduce the ladder<br />before you believe it.</h1>
@@ -127,11 +129,11 @@
       </p>
     </div>
     <aside class="warn at" style="--n: 2">
-      <p class="warn-h mono">Where Atlas sits on that path</p>
+      <p class="warn-h mono">Where Metrale Engine sits on that path</p>
       <p>
         Same Blackwell architecture, same CUDA stack, same OpenAI-compatible surface — a workload validated on GB10 moves up the line rather
-        than starting over. Atlas ships its GB10 kernel target today, and the kernel system is already three-dimensional (hardware × model ×
-        quant): another hardware arm is a target to add, not an engine to rewrite.
+        than starting over. Metrale Engine ships its GB10 kernel target today, and the kernel system is already three-dimensional (hardware
+        × model × quant): another hardware arm is a target to add, not an engine to rewrite.
       </p>
     </aside>
   </div>
@@ -140,14 +142,18 @@
 <style>
   .cover {
     display: grid;
-    grid-template-columns: calc(12 * var(--u)) 1fr;
-    gap: calc(3.4 * var(--u));
-    align-items: center;
+    align-content: center;
+    gap: calc(4 * var(--u));
     height: 100%;
     padding-bottom: calc(4 * var(--u));
   }
   .cover-mark {
+    width: calc(30 * var(--u));
+  }
+  .cover-mark :global(svg) {
     width: 100%;
+    height: auto;
+    display: block;
   }
   .cover-kicker {
     font-size: 0.85em;
