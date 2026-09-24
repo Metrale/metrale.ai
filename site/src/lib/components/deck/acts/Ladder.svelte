@@ -172,7 +172,7 @@
       <p class="lead">
         A matched cap-32 pair, adopted in good faith to dodge a hardware hazard, produced
         <strong>0.975×</strong> and inverted the true ordering. Measured again at the certified cap-128 configuration on the same box the
-        same day: <strong>1.007×</strong>, with non-overlapping distributions — Atlas's worst rep beat vLLM's best.
+        same day: <strong>1.007×</strong>, with non-overlapping distributions — Metrale Engine's worst rep beat vLLM's best.
       </p>
       <p class="lead">
         The certified table pins cap 128 on both engines at <em>every</em> rung, independently of the concurrency being driven. That pin is load-bearing.
@@ -211,8 +211,9 @@
     <article class="at" style="--n: 3">
       <h3>Why C=128 is the widest rung</h3>
       <p>
-        It is not that Atlas gets faster — it is that vLLM's C=128 falls <em>below</em> its own C=64 when speculation stays on at high concurrency.
-        Atlas's ladder has already switched it off. The margin is a scheduling decision, and it is reproducible for that reason.
+        It is not that Metrale Engine gets faster — it is that vLLM's C=128 falls <em>below</em> its own C=64 when speculation stays on at high
+        concurrency. Metrale Engine's ladder has already switched it off. The margin is a scheduling decision, and it is reproducible for that
+        reason.
       </p>
     </article>
   </div>
