@@ -7,38 +7,15 @@
 // there are customers, and the copy is written so it will not need to change
 // when they arrive.
 // =============================================================================
-import { routes, industries } from './brand.js';
+import { routes, industries, parkedIndustries } from './brand.js';
 
 export const solutionsIndex = {
   eyebrow: 'Solutions',
   title: 'Built for the people who own the GPUs.',
-  lede: 'Three kinds of buyer open their wallets for inference economics. Operators who resell GPU time, enterprises that run AI on their own estate, and teams that need a box under a desk. Pick your industry.',
-  deploymentsTitle: 'By deployment',
-  deployments: [
-    {
-      name: 'Enterprise datacenter',
-      body: 'Owned GPU fleet, existing serving stack, a CFO who wants the bill explained.',
-      href: `${routes.solutions}/enterprise-datacenter`,
-    },
-    {
-      name: 'Neocloud and GPU provider',
-      body: 'Tokens are cost of goods sold. More tokens per GPU is margin.',
-      href: `${routes.solutions}/neoclouds`,
-    },
-    {
-      name: 'Air gapped and sovereign',
-      body: 'Nothing leaves. Signed artifacts, local install, telemetry that stays home.',
-      href: `${routes.solutions}/government-defense`,
-    },
-    {
-      name: 'Workstation and SMB',
-      body: 'One box, one license, the same engine. Stop renting tokens.',
-      href: `${routes.solutions}/smb-edge`,
-    },
-  ],
+  lede: 'Two kinds of buyer, for now: operators who resell GPU time, and small teams that run a box or two. Pick yours.',
 };
 
-const base = Object.fromEntries(industries.map((i) => [i.slug, i]));
+const base = Object.fromEntries([...industries, ...parkedIndustries].map((i) => [i.slug, i]));
 
 export const solutions = {
   neoclouds: {

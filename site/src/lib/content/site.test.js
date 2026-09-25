@@ -9,7 +9,7 @@ import { expect, test } from 'bun:test';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { pages, routes, industries, solutionHref } from './index.js';
-import { nav, footer } from './brand.js';
+import { nav, footer, parkedIndustries } from './brand.js';
 import { allClips, media } from './media.js';
 import * as home from './home.js';
 import * as why from './why.js';
@@ -195,11 +195,13 @@ test('the hero poster is small enough to be the largest paint on the front page'
 });
 
 test('every installed still exists, has alt text, and sits on pages that exist', () => {
+  // A still made for a held-back solution page stays installed; it returns with the page.
+  const held = new Set(parkedIndustries.map((i) => solutionHref(i.slug)));
   const problems = [];
   for (const art of Object.values(media.art)) {
     if (!existsSync(join(STATIC_DIR, art.src))) problems.push(`${art.slot}: ${art.src} is missing`);
     if (!art.alt || art.alt.length < 20) problems.push(`${art.slot}: needs alt text`);
-    for (const p of art.pages) if (!registry.has(p)) problems.push(`${art.slot}: ${p} is not a page`);
+    for (const p of art.pages) if (!registry.has(p) && !held.has(p)) problems.push(`${art.slot}: ${p} is not a page`);
   }
   expect(problems).toEqual([]);
 });

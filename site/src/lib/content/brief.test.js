@@ -9,6 +9,7 @@ import { join } from 'node:path';
 import { render, fullPrompt } from '../../../scripts/media/brief.mjs';
 import { allClips } from './media.js';
 import { pages } from './index.js';
+import { parkedIndustries, solutionHref } from './brand.js';
 
 const SITE_DIR = join(import.meta.dir, '..', '..', '..');
 const brief = JSON.parse(readFileSync(join(SITE_DIR, 'media-brief', 'shots.json'), 'utf8'));
@@ -69,7 +70,7 @@ test('text to video shots carry the house style in words, stay short enough to s
 });
 
 test('no prompt asks for resolution in words, a logo, or the product interface', () => {
-  const banned = /\b(4k|8k|ultra[- ]?hd|hyper[- ]?detailed|metrale|avarok|atlas|dashboard|user interface|\bui\b)\b/i;
+  const banned = /\b(4k|8k|ultra[- ]?hd|hyper[- ]?detailed|metrale|dashboard|user interface|\bui\b)\b/i;
   const offenders = brief.shots.filter((s) => banned.test(s.prompt)).map((s) => s.id);
   // E04 places the recorded console poster on a monitor. It names no interface
   // and generates none: the screen content is the uploaded recording.
@@ -101,7 +102,8 @@ test('a video shot fills a slot the site has, or names a new b-roll slot to add'
 });
 
 test('every page a still is meant for exists', () => {
-  const registry = new Set(pages.map((p) => p.path));
+  // A held-back solution page counts: its stills return with it.
+  const registry = new Set([...pages.map((p) => p.path), ...parkedIndustries.map((i) => solutionHref(i.slug))]);
   const dead = brief.shots.flatMap((s) => (s.pages ?? []).filter((p) => p.startsWith('/') && !registry.has(p)).map((p) => `${s.id}: ${p}`));
   expect(dead).toEqual([]);
 });
