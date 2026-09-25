@@ -57,7 +57,6 @@
         ><a href="#top">Back to top ↑</a></span
       >
     </div>
-    <p class="av-footer-tm">{footer.mlperf}</p>
   </div>
 </footer>
 
@@ -187,14 +186,6 @@
   .av-footer-links a:hover {
     color: var(--accent);
   }
-  .av-footer-tm {
-    max-width: 1180px;
-    margin: 0.8rem auto 0;
-    padding: 0 24px 1.5rem;
-    font-size: 0.66rem;
-    color: var(--t3);
-    line-height: 1.5;
-  }
   @media (max-width: 1000px) {
     .av-footer-in {
       grid-template-columns: 1fr 1fr 1fr;
@@ -208,8 +199,7 @@
       grid-template-columns: 1fr 1fr;
       padding: 2.5rem 16px 2rem;
     }
-    .av-footer-legal-row,
-    .av-footer-tm {
+    .av-footer-legal-row {
       padding-inline: 16px;
     }
   }

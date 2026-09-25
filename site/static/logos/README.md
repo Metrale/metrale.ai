@@ -48,9 +48,6 @@ Shown in their own colours. A logo drawn in dark ink has a second file for the d
 | file | source | note |
 | --- | --- | --- |
 | `amd.svg`, `amd-dark.svg` | Commons, File:AMD Logo.svg | Public domain (not copyrightable), trademarked. The dark file is the same path filled white |
-| `mlcommons.svg`, `mlcommons-dark.svg` | mlcommons.org, `ML-Commons-Logo.svg` and `ML-Commons-Logo-white.svg` from the site theme | MLCommons' own light and dark logos, unaltered |
-| `huggingface.svg`, `huggingface-dark.svg` | huggingface.co/datasets/huggingface/brand-assets, `hf-logo-with-title.svg` | From Hugging Face's published brand assets. The dark file changes only the title's fill, from `#000B1B` to white |
-| `qwen.svg` | Commons, File:Qwen Logo.svg, from github.com/QwenLM/Qwen | Apache License 2.0, trademarked. One file serves both themes |
 | `scale.svg`, `scale-dark.svg` | docs.scale-lang.com, `logo_white.svg` | Spectral Compute's mark for SCALE. The dark file is the original. The light file is the same path filled `#14171c`. The mark has no wordmark, so the name is set beside it |
 
 The NVIDIA Inception badge is `static/nvidia-inception.webp`, the badge the program gives its members.

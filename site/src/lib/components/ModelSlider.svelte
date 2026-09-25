@@ -159,13 +159,5 @@
       <a href={recipesUrl} class="link" target="_blank" rel="noopener">atlas-recipes</a>, so the site cannot list a model we do not ship.
       EP=2 is Expert Parallelism across two GB10 nodes.
     </div>
-
-    <div class="qwen-block">
-      {mcopy.qwen.kernel}
-      <a href={mcopy.qwen.kernelUrl} target="_blank" rel="noopener">transformers #46423</a> ·
-      <a href={mcopy.qwen.hubUrl} target="_blank" rel="noopener">{mcopy.qwen.hubText}</a>.
-      {mcopy.qwen.ambassador}
-      <a href={mcopy.qwen.ambassadorUrl} target="_blank" rel="noopener">Qwen ambassadors ↗</a>
-    </div>
   </div>
 </section>

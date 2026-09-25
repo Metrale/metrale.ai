@@ -18,7 +18,6 @@
   import { routes, links } from '$lib/content/brand.js';
   import { live, ladderData as ladder } from '$lib/content/live.js';
   import bench from '$lib/benchmarks.generated.json';
-  import mlperf from '$lib/mlperf.json';
   import { hardwarePage } from '$lib/content/platform.js';
 
   let activeTab = $state(tabs[0]?.id);
@@ -43,12 +42,6 @@
     return out;
   });
   const src = gateData.sources;
-  const mlperfLine = {
-    preparing: 'MLPerf Inference v6.1 submission in preparation.',
-    submitted:
-      'MLPerf Inference v6.1 submitted, closed edge division, on both GB10 and gfx1151 from the same CUDA source. Results are under embargo until MLCommons publishes them, and they render here the moment that happens.',
-    published: 'Published in MLPerf Inference v6.1 across NVIDIA GB10 and AMD gfx1151.',
-  }[mlperf.status];
 </script>
 
 <PageShell path={routes.benchmarks}>
@@ -129,25 +122,19 @@
       <div class="av-head av-reveal">
         <p class="av-eyebrow">Architectures</p>
         <h2 class="av-h2">Verified, in bring up, and next.</h2>
-        <p class="av-lede">{mlperfLine}</p>
       </div>
       <div class="av-grid av-grid-3 av-reveal">
         {#each [...hardwarePage.verified, ...hardwarePage.bringup] as h}
           <div class="av-card">
             <div class="av-row" style="justify-content:space-between;margin-bottom:0.5rem">
               <p class="av-card-tag" style="margin:0">{h.chip}</p>
-              <span class="av-chip {h.status === 'Verified' || h.status === 'MLPerf submitted' ? 'av-chip-green' : 'av-chip-gold'}"
-                >{h.status}</span
-              >
+              <span class="av-chip {h.status === 'Verified' ? 'av-chip-green' : 'av-chip-gold'}">{h.status}</span>
             </div>
             <h3 style="font-size:1rem">{h.name}</h3>
             <p style="font-size:0.9rem">{h.body}</p>
           </div>
         {/each}
       </div>
-      <p class="av-small av-reveal" style="margin-top:1.2rem">
-        The MLPerf name and logo are trademarks of MLCommons Association. See the footer.
-      </p>
     </div>
   </section>
 

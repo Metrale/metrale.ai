@@ -52,11 +52,8 @@ export const links = {
   x: 'https://x.com/AtlasInferenceX',
   guide: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md',
   ladderLog: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/bench/ladder38/RESULTS.md',
-  transformersPr: 'https://github.com/huggingface/transformers/pull/46423',
-  mlcommons: 'https://mlcommons.org/2026/07/mlperf-inference-v61-edge-agentic/',
   inception: 'https://www.nvidia.com/en-us/startups/',
   scale: 'https://docs.scale-lang.com/stable/',
-  qwenAmbassador: 'https://qwen.ai/ambassador',
   llamaCppPr: 'https://github.com/ggml-org/llama.cpp/pull/18680',
   securityPolicy: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/SECURITY.md',
   license: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/LICENSE',
@@ -330,6 +327,4 @@ export const footer = {
   ],
   legal: `© 2026 ${company.legal} Metrale, Metrale AI, and ${company.engine} are products of ${company.legal}`,
   license: 'Community Edition under AGPL-3.0. Enterprise Edition under a commercial license.',
-  mlperf:
-    'The MLPerf name and logo are registered and unregistered trademarks of MLCommons Association in the United States and other countries. All rights reserved. Unauthorized use strictly prohibited. See mlcommons.org for more information.',
 };

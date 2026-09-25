@@ -40,7 +40,7 @@ that order, one component per beat, in `src/lib/components/avarok/home/`:
 | Speed, security, governance | `ValueBand` | One card each, each linking to its page |
 | Proof | `Proof` | The published ladder, live from the repository |
 | The console | `Tour` | Five recorded clips, one tab each: ask, queue, fleet, economics, governance |
-| Recognition | `Recognition` | NVIDIA Inception, MLCommons, Hugging Face, AMD |
+| Recognition | `Recognition` | NVIDIA Inception, AMD |
 | Three differences | `Differences` | Claims a buyer can test |
 | The chain | `Chain` | Each layer earns the next |
 | Deliveries | `Deliveries` | Week one, months one to six, at renewal |
@@ -185,6 +185,15 @@ only how the work is done, which the repository shows, and role locations
 read "by agreement". Contributor roles are the ones people state about
 themselves on the blog. Delivery timing uses the brief's own frame: week one,
 months one to six, at renewal.
+
+**Four claims are withdrawn.** On 2026-09-24 the owners withdrew claims the
+site had carried: that the fused Gated DeltaNet kernel was merged into Hugging
+Face Transformers (the merged pull request adds a path that loads the kernel
+from the Hub, which is not the same thing), that the team are Qwen Dev
+Ambassadors, any MLPerf or MLCommons contribution, submission or result, and
+the notice that Sparkrun was retired. They are gone from every page, the
+guide's prompt, llms.txt and the logo files, and they do not come back
+without a primary source the owners confirm.
 
 **Attributed quotes are verbatim.** Two community quotes use the engine's old
 name. They stay as written, with a note under them. A quote is never edited to

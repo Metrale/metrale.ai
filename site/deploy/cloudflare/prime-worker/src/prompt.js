@@ -18,7 +18,7 @@ export const AUDIENCES = {
   investor: {
     label: 'I am evaluating an investment',
     brief:
-      'The visitor is doing diligence: an investor, an analyst, a strategic partner. They want the team and its history, the traction that is public (the repository, releases, the MLCommons contribution, the Hugging Face merge, AMD and NVIDIA Inception), how the product is positioned and priced, what is measured against what is claimed, and the open source strategy. Be exact about what is measured, modeled or proposed. The deck and the verification walkthrough are available from the CEO on request; offer that path.',
+      'The visitor is doing diligence: an investor, an analyst, a strategic partner. They want the team and its history, the traction that is public (the repository, releases, AMD and NVIDIA Inception), how the product is positioned and priced, what is measured against what is claimed, and the open source strategy. Be exact about what is measured, modeled or proposed. The deck and the verification walkthrough are available from the CEO on request; offer that path.',
   },
   contributor: {
     label: 'I want to contribute',

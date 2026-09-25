@@ -259,6 +259,23 @@
         "og-image.png",
         "nswc.webp"
       ]
+    },
+    {
+      "rev": 17,
+      "date": "2026-09-24",
+      "base": "4ee46955f",
+      "note": "Withdrawn claims: the Transformers merge, Qwen Dev Ambassadors, MLPerf and MLCommons, and the Sparkrun notice",
+      "touched": [
+        "footer.mlperf",
+        "links.mlcommons",
+        "links.qwenAmbassador",
+        "links.transformersPr",
+        "huggingface-dark.svg",
+        "huggingface.svg",
+        "mlcommons-dark.svg",
+        "mlcommons.svg",
+        "qwen.svg"
+      ]
     }
   ],
   "facts": {
@@ -463,7 +480,8 @@
     "footer.mlperf": {
       "value": "The MLPerf name and logo are registered and unregistered trademarks of MLCommons Association in the United States and other countries. All rights reserved. Unauthorized use strictly prohibited. See mlcommons.org for more information.",
       "rev": 1,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "removed": "2026-09-24"
     },
     "footer.slogan": {
       "value": "Same silicon. Smarter inference. Stronger scalability.",
@@ -550,12 +568,14 @@
     "links.mlcommons": {
       "value": "https://mlcommons.org/2026/07/mlperf-inference-v61-edge-agentic/",
       "rev": 1,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "removed": "2026-09-24"
     },
     "links.qwenAmbassador": {
       "value": "https://qwen.ai/ambassador",
       "rev": 1,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "removed": "2026-09-24"
     },
     "links.recipes": {
       "value": "https://github.com/Avarok-Cybersecurity/atlas-recipes",
@@ -580,7 +600,8 @@
     "links.transformersPr": {
       "value": "https://github.com/huggingface/transformers/pull/46423",
       "rev": 1,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "removed": "2026-09-24"
     },
     "links.x": {
       "value": "https://x.com/AtlasInferenceX",
@@ -1338,13 +1359,15 @@
       "sha": "fb35e3e6cdfb",
       "bytes": 23961,
       "rev": 1,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "removed": "2026-09-24"
     },
     "site/static/logos/huggingface.svg": {
       "sha": "f17722a56d88",
       "bytes": 23990,
       "rev": 1,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "removed": "2026-09-24"
     },
     "site/static/logos/kraken.svg": {
       "sha": "cd3c8afe2c6e",
@@ -1356,13 +1379,15 @@
       "sha": "963df8ef860d",
       "bytes": 1683,
       "rev": 1,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "removed": "2026-09-24"
     },
     "site/static/logos/mlcommons.svg": {
       "sha": "4b54e1d2d8d9",
       "bytes": 3926,
       "rev": 1,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "removed": "2026-09-24"
     },
     "site/static/logos/nswc.webp": {
       "sha": "61cd2d1338ca",
@@ -1375,7 +1400,8 @@
       "sha": "cae4a6dc3fe9",
       "bytes": 4734,
       "rev": 1,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "removed": "2026-09-24"
     },
     "site/static/logos/scale-dark.svg": {
       "sha": "66ef9b3138e7",

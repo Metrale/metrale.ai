@@ -44,14 +44,8 @@ export const goodFirstIssuesUrl = 'https://github.com/Avarok-Cybersecurity/atlas
 export const contactEmails = ['engineering@metrale.com']; // the role mailbox; see contacts in content/brand.js
 
 // third-party artifacts (link-or-cut, each verified live July 2026)
-export const transformersPrUrl = 'https://github.com/huggingface/transformers/pull/46423';
-export const hubKernelUrl = 'https://huggingface.co/kernels/Atlas-Inference/gdn';
 export const scaleUrl = 'https://docs.scale-lang.com/stable/';
-export const qwenAmbassadorUrl = 'https://qwen.ai/ambassador';
 export const strixPrUrl = 'https://github.com/Avarok-Cybersecurity/atlas/pull/187';
-export const mlperfResultsUrl = 'https://mlcommons.org/benchmarks/inference-datacenter/';
-export const mlcommonsEndpointsPrUrl = 'https://github.com/mlcommons/endpoints/pull/346';
-export const mlcommonsArticleUrl = 'https://mlcommons.org/2026/07/mlperf-inference-v61-edge-agentic/';
 export const nvidiaInceptionUrl = 'https://www.nvidia.com/en-us/startups/';
 
 // --- brand -------------------------------------------------------------------
@@ -106,17 +100,10 @@ export const announcement = {
   sub: '',
   ctaText: '',
   ctaUrl: '',
-  // A second line, kept to one sentence. The band sits above the hero on every
-  // page: it earns its height by saying what changed, not by explaining it.
-  // "In active development" is stated rather than implied — an operator who
-  // reads this and then finds an unfinished fleet manager was misled by us, not
-  // by their own optimism.
-  note: 'Sparkrun has been retired: Metrale now ships atlasctl, our own control plane for enterprise fleet management and telemetry. In active development.',
-  // A third row rather than a longer second one, for the same reason the note
-  // is its own row: the launcher change and the browser client are separate
-  // pieces of news, and running them together reads as one long sentence about
-  // neither. The ask for feedback is only honest if it is easy to act on, so it
-  // carries the link rather than the words "let us know".
+  // `note` would be a second row; there is none, and the component skips a
+  // row with no words. The browser client's row is its own piece of news. The
+  // ask for feedback is only honest if it is easy to act on, so it carries the
+  // link rather than the words "let us know".
   pwa: 'Metrale Fleet Manager, the PWA that runs models straight from your browser, is still under development. Feedback is welcome.',
   pwaCtaText: 'Open an issue',
   pwaCtaUrl: issuesUrl,
@@ -155,46 +142,25 @@ export const hero = {
 // --- proof strip (prominent, right under the hero) ---------------------------
 export const proof = {
   label: '// receipts, not adjectives',
-  items: [
-    { text: 'Merged into Hugging Face Transformers', url: transformersPrUrl },
-    { text: 'Qwen Dev Ambassadors', url: qwenAmbassadorUrl },
-    { text: 'MLPerf Edge Agentic task force', url: mlcommonsArticleUrl },
-    { text: 'Built with SCALE by Spectral Compute', url: scaleUrl },
-  ],
+  items: [{ text: 'Built with SCALE by Spectral Compute', url: scaleUrl }],
 };
 
 // --- news band ----------------------------------------------------------------
-// Newest first. Every card points at a primary source, no numbers before
-// MLCommons publishes. See CLAIM POLICY at the top of this file.
+// Newest first. Every card points at a primary source. See CLAIM POLICY at the
+// top of this file.
 export const news = {
   label: '// 03 · news',
   title: 'What just happened.',
-  sub: 'Three things landed this month and every card links straight to the primary source.',
+  sub: 'Every card links straight to the primary source.',
   items: [
-    {
-      tag: 'MLCommons',
-      date: 'July 2026',
-      featured: true,
-      title: 'We helped build the MLPerf Edge Agentic benchmark',
-      body: 'MLCommons published the new MLPerf Inference v6.1 edge agentic benchmark and names us as a contributor alongside NVIDIA, under our former name, Atlas Inference. It measures multi turn agentic LLMs on a single edge accelerator, BFCL v4 for accuracy and replayed agentic coding trajectories for performance. We helped shape it because it is the benchmark that actually looks like the work.',
-      cta: 'Read the MLCommons announcement',
-      url: mlcommonsArticleUrl,
-    },
     {
       tag: 'AMD',
       date: 'July 2026',
+      featured: true,
       title: 'Metrale Engine running on AMD Strix Halo',
-      body: 'AMD provided a Strix Halo desktop and we brought the engine to it through SCALE, custom kernels and all. That machine is the box we ran and submitted MLPerf on. One codebase now covers both vendors with no HIP port and no second kernel tree.',
+      body: 'AMD provided a Strix Halo desktop and we brought the engine to it through SCALE, custom kernels and all. One codebase now covers both vendors with no HIP port and no second kernel tree.',
       cta: 'See the post on X',
       url: xUrl,
-    },
-    {
-      tag: 'MLPerf v6.1',
-      date: 'Submitted',
-      title: 'Our MLPerf submission is in',
-      body: 'Metrale Engine is submitted to MLPerf Inference v6.1 in the closed edge division, the same CUDA source across NVIDIA GB10 and AMD gfx1151. Results stay under embargo until MLCommons publishes.',
-      cta: 'Follow along in Discord',
-      url: discordUrl,
     },
   ],
 };
@@ -247,9 +213,8 @@ export const verified = {
   label: '// 02 · verified',
   title: 'Every number is a receipt.',
   sub: 'The website is a build artifact of the repo. Models come from recipes, performance comes from committed gate enforced baselines, stamped with commit and date. If a number is not in the repo, it is not on this page.',
-  pendingHeadline: 'MLPerf v6.1 submitted',
-  pendingBody:
-    'Our MLPerf Inference v6.1 submission is in, closed edge division, on both GB10 and gfx1151. The numbers render right here in this receipt the moment MLCommons publishes them, gate enforced, reproducible, stamped. Until then the release gate holds every image to liveness and coherence, and you can reproduce any run yourself.',
+  pendingHeadline: 'Throughput baselines pending',
+  pendingBody: 'The release gate holds every image to liveness and coherence, and you can reproduce any run yourself.',
   mechanism: 'A release that ships slower than the committed baseline fails our gate. That one sentence is the whole positioning.',
   reproLead: 'Reproduce the matrix',
   challengeLine: 'Beat these numbers or catch a regression, open an issue and we will feature it.',
@@ -261,23 +226,6 @@ export const verified = {
     tail: 'That gap is the whole thesis. An engine that flattens under load caps how many agents you can actually run, on any hardware you put it on. Holding the curve is what turns one accelerator into a swarm, and it is why the same engine is worth running on a rack.',
   },
 };
-
-export const mlperfCopy = {
-  preparing:
-    'We are prepping a submission to MLPerf Inference v6.1, the same CUDA source submitted across NVIDIA GB10 and AMD gfx1151. Aiming to be the first to run identical CUDA on both.',
-  submitted:
-    'Submitted to MLPerf Inference v6.1 in the closed edge division, the same CUDA source across NVIDIA GB10 and AMD gfx1151. Results are under embargo until MLCommons publishes them.',
-  published: 'Published in MLPerf Inference v6.1 across NVIDIA GB10 and AMD gfx1151.',
-};
-
-export const mlcommons = {
-  line: 'Metrale is a member of MLCommons and sits on the Edge LLM taskforce, where we helped shape the new v6.1 edge agentic benchmark. MLCommons names us as a contributor in the announcement, under our former name, Atlas Inference.',
-  linkText: 'read the announcement',
-  url: mlcommonsArticleUrl,
-};
-
-export const mlperfTrademark =
-  'The MLPerf name and logo are registered and unregistered trademarks of MLCommons Association in the United States and other countries. All rights reserved. Unauthorized use strictly prohibited. See mlcommons.org for more information.';
 
 // --- hardware ----------------------------------------------------------------
 export const hardware = {
@@ -296,9 +244,9 @@ export const hardware = {
     {
       name: 'AMD Strix Halo',
       chip: 'gfx1151 · RDNA 3.5',
-      status: 'verified',
-      statusText: 'MLPerf submitted',
-      body: 'One codebase, both vendors. Our CUDA kernels compile straight for AMD gfx1151 with SCALE by Spectral Compute. No HIP port, no second kernel tree. AMD provided the Strix Halo desktop we ran and submitted our MLPerf Inference v6.1 numbers on.',
+      status: 'bringup',
+      statusText: 'Runs through SCALE',
+      body: 'One codebase, both vendors. Our CUDA kernels compile straight for AMD gfx1151 with SCALE by Spectral Compute. No HIP port, no second kernel tree. AMD provided the Strix Halo desktop it runs on.',
       cta: { text: 'Join the bring up, PR #187', url: strixPrUrl },
       scale: { text: 'Built with SCALE by Spectral Compute', url: scaleUrl },
     },
@@ -310,14 +258,6 @@ export const models = {
   label: '// 05 · models',
   title: 'Every model here has a recipe.',
   sub: 'Pick a vendor, then a family. Every card maps to one recipe in atlas-recipes, so the site cannot list a model we do not ship. Copy the command and run it as is. Qwen3.6 leads because it is our flagship.',
-  qwen: {
-    kernel: 'Our fused Qwen3.6 Gated DeltaNet kernel ships in Hugging Face Transformers.',
-    kernelUrl: transformersPrUrl,
-    hubText: 'kernel repo on the Hub',
-    hubUrl: hubKernelUrl,
-    ambassador: 'We are Qwen Dev Ambassadors and we ship a recipe for every Qwen release.',
-    ambassadorUrl: qwenAmbassadorUrl,
-  },
 };
 
 // --- get running -------------------------------------------------------------
@@ -398,24 +338,10 @@ export const roadmap = {
     },
     {
       title: 'AMD Strix Halo',
-      status: 'MLPerf submitted',
+      status: 'Runs through SCALE',
       body: 'Native gfx1151 through SCALE. AMD provided a Strix Halo desktop and we brought the engine to it, custom kernels and all.',
       cta: 'PR #187',
       url: strixPrUrl,
-    },
-    {
-      title: 'MLPerf Inference v6.1',
-      status: 'Submitted',
-      body: 'The same CUDA source submitted across GB10 and gfx1151, closed edge division. No numbers until MLCommons publishes.',
-      cta: 'Read the benchmark announcement',
-      url: mlcommonsArticleUrl,
-    },
-    {
-      title: 'Qwen GDN kernel upstream',
-      status: 'Merged',
-      body: 'Our fused Gated DeltaNet kernel for Qwen3.6 landed in Hugging Face Transformers.',
-      cta: 'transformers #46423',
-      url: transformersPrUrl,
     },
     {
       title: 'Bigger model support',
@@ -446,7 +372,7 @@ export const faq = {
     },
     {
       q: 'What hardware does Metrale Engine run on?',
-      a: 'NVIDIA DGX Spark (GB10) is verified today, and AMD Strix Halo (gfx1151) runs the same CUDA source compiled through SCALE by Spectral Compute — one codebase, no HIP port. Both were submitted to MLPerf Inference v6.1 in the closed edge division.',
+      a: 'NVIDIA DGX Spark (GB10) is verified today, and AMD Strix Halo (gfx1151) runs the same CUDA source compiled through SCALE by Spectral Compute — one codebase, no HIP port.',
     },
     {
       q: 'Is Metrale Engine faster than vLLM on a DGX Spark?',

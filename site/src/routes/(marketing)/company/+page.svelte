@@ -70,8 +70,8 @@
             </figcaption>
           </figure>
           <p class="av-body" style="margin-top:1.5rem">
-            {live.stars} stars later, the repository those two words started runs on hardware from NVIDIA and AMD, merged a kernel into Hugging
-            Face Transformers, and out serves the incumbent on the published ladder. The answer to the question is this website.
+            {live.stars} stars later, the repository those two words started runs on hardware from NVIDIA and AMD and out serves the incumbent
+            on the published ladder. The answer to the question is this website.
           </p>
         </div>
         <div class="av-timeline av-reveal">

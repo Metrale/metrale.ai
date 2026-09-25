@@ -34,8 +34,8 @@ export const story = {
     },
     {
       when: 'July 2026',
-      title: 'Receipts',
-      body: 'The fused Qwen Gated DeltaNet kernel merged into Hugging Face Transformers. MLCommons named the project a contributor to the new MLPerf edge agentic benchmark. AMD provided a Strix Halo desktop and the MLPerf submission went in from the same CUDA source on both vendors.',
+      title: 'Two vendors',
+      body: 'AMD provided a Strix Halo desktop, and the engine ran on it from the same CUDA source as on the Spark, compiled through SCALE.',
     },
     {
       when: 'August 2026',
