@@ -1,5 +1,5 @@
 {
- "revision": 1,
+ "revision": 2,
  "date": "2026-09-24",
  "changes": [
   {
@@ -50,6 +50,14 @@
     "footer.license",
     "form.endpoint"
    ]
+  },
+  {
+   "rev": 2,
+   "date": "2026-09-24",
+   "pr": 21,
+   "base": "f9d6f597a",
+   "note": "The security contact is published at /.well-known/security.txt, and the Solutions page describes the two kinds of buyer.",
+   "touched": []
   }
  ],
  "facts": [
