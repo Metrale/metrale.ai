@@ -5,3 +5,18 @@
 /src/history.git/* https://github.com/Avarok-Cybersecurity/atlas.git/:splat 302
 /src/history/* https://github.com/Avarok-Cybersecurity/atlas/:splat 302
 /src/history https://github.com/Avarok-Cybersecurity/atlas 302
+
+# Solution pages held back for now (parkedIndustries in src/lib/content/brand.js).
+# Pages keeps answering a deleted page's address from an old copy, so each one
+# redirects to the Solutions index until it returns. A unit test holds this list
+# equal to the held-back one: a page moved back into `industries` fails it until
+# its line here goes.
+/solutions/enterprise-datacenter /solutions 302
+/solutions/financial-services /solutions 302
+/solutions/healthcare /solutions 302
+/solutions/government-defense /solutions 302
+/solutions/public-safety /solutions 302
+/solutions/local-government /solutions 302
+/solutions/legal /solutions 302
+/solutions/hyperscalers /solutions 302
+/solutions/research /solutions 302

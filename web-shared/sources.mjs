@@ -22,7 +22,8 @@ export const HISTORY_SLUG = 'Avarok-Cybersecurity/atlas';
  * Names that belong to other projects, not to Metrale. Nothing a visitor reads
  * may carry them: site/src/lib/content/other-names.test.js reads the site, the
  * blog and the shared files with this, and docs/check.mjs reads the built book.
- * This file and the history redirects are the only places they are written down.
+ * This file, the site's history redirects and the blog's redirect for one post's
+ * previous address are the only places they are written down.
  */
 export const OTHER_NAMES = /\b(?:atlas|avarok)\b/i;
 
