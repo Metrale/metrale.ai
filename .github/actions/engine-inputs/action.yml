@@ -2,9 +2,8 @@
 #   Metrale/metrale-inference-alpha, at site/engine.ref
 #                            benchmark records, gate descriptors, the ladder, the
 #                            changelog and the baselines (METRALE_ENGINE_ROOT)
-#   Metrale/metralectl       the recipe registry, the model list (METRALE_RECIPES_ROOT)
-#   the installers           install.sh and install.ps1, for today's command
-#                            (web-shared/sources.mjs, CLI; FACELIFT.md, "What still moves")
+#   Metrale/metralectl       the recipe registry, the model list (METRALE_RECIPES_ROOT),
+#                            and the installers install.sh and install.ps1
 # The variables are exported for the rest of the job, so `vite build` and the
 # browser suite (which builds on its own) see the same inputs.
 
@@ -61,22 +60,13 @@ runs:
           /tests/baselines/
 
     # The install command the site prints is served from these two files, so both
-    # are required: a missing one is a 404 for the headline instruction. They
-    # install today's command; they move to the registry's own installers with its
-    # first downloadable release.
-    - name: Checkout the installers
-      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      with:
-        repository: Avarok-Cybersecurity/atlas-recipes
-        path: .inputs/installers
-        persist-credentials: false
-        sparse-checkout: scripts
-
+    # are required: a missing one is a 404 for the headline instruction. They come
+    # from the registry checkout above, beside the command they install.
     - name: Copy the installers
       shell: bash
       run: |
         for f in install.sh install.ps1; do
-          cp ".inputs/installers/scripts/$f" "site/static/$f"
+          cp ".inputs/registry/scripts/$f" "site/static/$f"
           chmod 0755 "site/static/$f"
         done
 

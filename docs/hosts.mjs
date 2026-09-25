@@ -1,12 +1,13 @@
 // The hosts the engine's book names, and where they move when it is published
 // from here.
 //
-// The engine team publishes the book at book.dev.metrale.ai, its blog at
-// blog.dev.metrale.ai and its project site at dev.metrale.ai. Published from
+// The engine team publishes the book at book.dev.metrale.ai. Published from
 // this repository the book is docs.metrale.ai, so its canonical addresses and
-// llms.txt name that host, and its links to the blog and the project site go to
-// the company's own. The API reference, docs.dev.metrale.ai, is published only
-// there and keeps its address.
+// llms.txt name that host. blog.dev.metrale.ai and dev.metrale.ai are retired:
+// they redirect to blog.metrale.ai and metrale.ai/engine, and a book at an
+// older engine commit that still links them is moved here to the company's own.
+// The API reference, docs.dev.metrale.ai, is published only there and keeps its
+// address.
 //
 // Plain ESM with no imports, so the unit runner and the build script share it.
 

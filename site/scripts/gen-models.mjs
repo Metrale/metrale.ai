@@ -217,16 +217,7 @@ function recipeDisplay(stem) {
 }
 
 // --- main --------------------------------------------------------------------
-// Recipes the command people install today cannot run: it carries its own copy
-// of the registry, compiled in, where these have other names. A card for one
-// would print a command that fails, so they wait for the registry's own command
-// (`CLI` in web-shared/sources.mjs; site/FACELIFT.md, "What still moves").
-const HELD = new Set(['qwen3.5-0.8b-bf16-metrale']);
-const stemOf = (file) => basename(file).replace(/\.(ya?ml)$/, '');
-const found = walkYaml(RECIPES_ROOT).sort();
-const files = found.filter((f) => !HELD.has(stemOf(f)));
-if (found.length !== files.length)
-  console.log(`gen-models: ${found.length - files.length} recipe(s) held back until the registry's own command ships`);
+const files = walkYaml(RECIPES_ROOT).sort();
 if (files.length === 0) {
   console.error(`No recipe YAML files found under ${RECIPES_ROOT}`);
   process.exit(1);

@@ -251,18 +251,17 @@ land on the post.
 Metrale is its own company and Metrale Engine its own engine; the guide says
 so when asked, without repeating another project's name.
 
-Three things still point at the open source code Metrale Engine builds on, by
-design, and none of them is words on a page. "What
-still moves", at the end, has each one and what retires it:
+One thing still points at the open source code Metrale Engine builds on, by
+design, and it is not words on a page. "What still moves", at the end, has it
+and what retires it:
 
-- **The command people install.** `CLI` in `web-shared/sources.mjs`, until the
-  registry's own command ships a release and the site speaks its agent
-  protocol.
 - **The measured commits.** The published records name commits in that open
   source history, which `metrale.ai/src/history` redirects to. The deck's
   reproduction clones from that address.
-- **The installers.** `install.sh` and `install.ps1` are copied in at build
-  from the recipe registry that command comes from.
+
+The command people install is `metralectl` (`CLI` in `web-shared/sources.mjs`),
+and `install.sh` and `install.ps1` are copied in at build from its registry,
+Metrale/metralectl.
 
 The artwork: the kit is a generator (`assets/brand/gen.js` with its geometry and
 letter outlines), and the site draws every lockup from that geometry through
@@ -558,8 +557,6 @@ open source code Metrale Engine builds on, and each has one place to change.
 
 | where | what it is | what retires it |
 | --- | --- | --- |
-| `CLI` in `web-shared/sources.mjs`, and `HELD` in `scripts/gen-models.mjs` | the command the install, run and agent instructions print, and what `install.sh` and `install.ps1` install; one recipe the command knows by another name is held off the model list | the registry's own command, `metralectl`, shipping a release, and the site's agent client speaking its protocol (4; the site speaks 2) |
-| the installer checkout in `.github/actions/engine-inputs/action.yml` | where `install.sh` and `install.ps1` are copied from at build | the same release, whose installers replace them |
 | `HISTORY` in `web-shared/sources.mjs` and `/src/history` in `static/_redirects` | the open source history: the commits the published records name, and the AMD pull request; the deck's reproduction clones from it | nothing while the published ladder names a commit there. If that history is ever brought into the Metrale organisation, the three redirect lines change and nothing else does |
 | `HISTORY_SLUG` in `web-shared/sources.mjs` | the contributor wall also counts the people who wrote that open source code, from the GitHub API at build | the same change of address |
 | `LATTICE_RELEASES` in `web-shared/sources.mjs` | where the codebase chat's in-browser database is downloaded from, by pinned release and checksum | a release of it published under the Metrale organisation |
