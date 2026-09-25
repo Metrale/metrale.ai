@@ -11,10 +11,10 @@ of ambition.
 
 Three pieces exist and work. The plan builds on them rather than beside them.
 
-**The agent.** `atlasctl-agent` listens on `127.0.0.1:34333`, loopback only,
+**The agent.** The installed command's agent listens on `127.0.0.1:34333`, loopback only,
 so no firewall applies to it. The page reaches it over a WebSocket and the
-wire contract is protocol 2 (`site/src/lib/agent/protocol.js`, mirroring
-`crates/atlasctl-protocol`): a closed set of message types, no raw command
+wire contract is protocol 2 (`site/src/lib/agent/protocol.js`, mirroring the
+agent's protocol crate; the registry's `metralectl` speaks 4): a closed set of message types, no raw command
 verb, no relay of opaque bytes, and one scoped exception, the seven control
 verbs that may carry an `on` target for one hop toward a machine the agent
 has pinned and that has granted control. Pairing is two phase (exchange, then
@@ -98,15 +98,15 @@ Extends the manifest `coderag.yml` already writes.
   "format": "lattice-jsonl",
   "version": 2,
   "tier": "code",
-  "source": { "repo": "Avarok-Cybersecurity/atlas", "commit": "6cd39ba0", "ref": "main" },
+  "source": { "repo": "Metrale/metrale-inference-alpha", "commit": "2988586", "ref": "main" },
   "model": "nvidia/llama-nemotron-embed-vl-1b-v2:free",
   "dim": 2048,
   "points": 5831,
   "generated_at": "2026-09-23T18:00:00Z",
   "cadence_s": 300,
-  "full": { "url": ".../atlas-coderag.jsonl.gz", "sha256": "…", "gz_bytes": 98625375 },
-  "delta": { "since": "5f1c2e9", "url": ".../atlas-coderag.delta.jsonl.gz", "removed": ["…"] },
-  "cite": "https://github.com/Avarok-Cybersecurity/atlas/blob/{commit}/{path}#L{start}-L{end}",
+  "full": { "url": ".../metrale-coderag.jsonl.gz", "sha256": "…", "gz_bytes": 98625375 },
+  "delta": { "since": "5f1c2e9", "url": ".../metrale-coderag.delta.jsonl.gz", "removed": ["…"] },
+  "cite": "https://github.com/Metrale/metrale-inference-alpha/blob/{commit}/{path}#L{start}-L{end}",
   "license": "AGPL-3.0-only"
 }
 ```
@@ -121,7 +121,7 @@ the template every citation from this corpus resolves through.
 One line of the JSONL.
 
 ```json
-{ "id": "crates/atlas-core/src/scheduler.rs#L120-L168@6cd39ba0", "path": "crates/atlas-core/src/scheduler.rs",
+{ "id": "crates/metrale-core/src/scheduler.rs#L120-L168@2988586", "path": "crates/metrale-core/src/scheduler.rs",
   "lang": "rust", "start": 120, "end": 168, "sha": "…", "text": "…", "vector": [ … ] }
 ```
 

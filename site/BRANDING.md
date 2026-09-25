@@ -1,16 +1,13 @@
 # Metrale website branding
 
-The brand is Metrale. It was Atlas until September 2026, and for a few days on
-an unmerged branch it was Avarok, a name no visitor saw. The kit landed on
-2026-09-21 and this site applies it. The full guidelines are
+The brand is Metrale. The kit landed on 2026-09-21 and this site applies it. The full guidelines are
 `assets/brand/BRAND-GUIDELINES.md`, the kit's own text. This file says how the
 website applies them, and `BRAND-CHANGE.md` is the runbook for the next change.
 
 ## The logo
 
 One component draws every logo on the site, the blog and the product mockup:
-`web-shared/components/AtlasLockup.svelte`. The file keeps its old name so the
-imports across two apps did not have to move with the kit. It draws from
+`web-shared/components/MetraleLockup.svelte`. It draws from
 `web-shared/brand-art.js`, which `scripts/brand/lockup.mjs` writes from the
 kit's own geometry (`assets/brand/src/geometry.js` and `src/paths.json`), and
 `src/lib/lockup-artwork.test.js` fails if the module is behind the geometry or
@@ -43,7 +40,7 @@ it. `media-brief/README.md` repeats this for anyone making imagery.
 
 ## Colour
 
-`web-shared/avarok-tokens.css` is the single source, for this site and the
+`web-shared/metrale-tokens.css` is the single source, for this site and the
 blog, and `src/lib/brand-tokens.test.js` holds it equal to the kit's
 `assets/brand/tokens/brand.json`. The ground is `#0E1318`, the only dark
 background the kit allows, with the surfaces stepped off it. The inks are the
@@ -52,7 +49,7 @@ dark; `#15181F` on light. The accent is the M's violet: pale (`#CDBFF1`) as
 text on dark, `#9F8DD8` as a fill, and the ink on a filled accent is the
 ground, never white (`--on-accent`: white on that violet is 2.9:1, the ground
 is 6.5:1). `data-theme` is set before first paint from `localStorage`
-(`avarok-theme`) or the system preference. The contrast gate
+(`metrale-theme`) or the system preference. The contrast gate
 (`.contrast-check.mjs`) runs in CI.
 
 On the marketing pages each of the three promises has a hue, used

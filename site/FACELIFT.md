@@ -1,6 +1,6 @@
 # The Metrale facelift: handoff
 
-September 2026. Branch `site/avarok-facelift`.
+September 2026. The source is `Metrale/metrale.ai`; each change landed there as a pull request.
 
 This document is for whoever touches the marketing site next: a person, a
 different model, a team of agents, or someone deciding to throw it all away. It
@@ -28,7 +28,7 @@ with the site.
 
 The brief asked for a site that tells a buyer or an investor an immediate
 story, modelled on how artemissecurity.com is laid out. The front page runs in
-that order, one component per beat, in `src/lib/components/avarok/home/`:
+that order, one component per beat, in `src/lib/components/marketing/home/`:
 
 | Beat | Component | What it has to do |
 | --- | --- | --- |
@@ -76,14 +76,14 @@ site/src/lib/content/        every word, link and price. Edit here, not in compo
   home.js why.js platform.js solutions.js pricing.js company.js resources.js faq.js
   live.js                    the generated numbers the copy prints, and fill()
   media.js  art.json         video slots, and stills installed from the prompt pack
-site/src/lib/components/avarok/   the marketing components, prefix av-
+site/src/lib/components/marketing/   the marketing components, prefix av-
 site/src/lib/economics.js    the payback model, pure functions, tested
 site/src/lib/prime/          Metrale Prime on the page: state, the stream reader, the renderer, the panel
 site/deploy/cloudflare/prime-worker/   the Worker behind it: the model, the tools, the knowledge base, the receipts
 site/scripts/prime/          cuts the knowledge base from the build; the trial that chose the model
 site/scripts/brand/          the rename script. BRAND-CHANGE.md is its runbook
 site/src/lib/broll/          procedural ambient loops
-site/src/styles/avarok.css   the marketing design system
+site/src/styles/metrale.css   the marketing design system
 site/src/routes/(marketing)/ the marketing pages, thin: they pick content and components
 site/src/routes/(engine)/    the developer pages, unchanged apart from the header
 site/src/routes/(app)/       full viewport render pages for the media pipeline
@@ -94,7 +94,7 @@ assets/brand/                vector masters
 ```
 
 The three route groups exist so two stylesheets never meet. The developer pages
-load `app.css`, the marketing pages load `avarok.css`, and SvelteKit only ships
+load `app.css`, the marketing pages load `metrale.css`, and SvelteKit only ships
 a group's CSS to that group's pages.
 
 ## How to change things
@@ -126,8 +126,8 @@ a group's CSS to that group's pages.
 | Which clip opens a page | `heroClips` in `src/lib/content/media.js` |
 | The film | `media-brief/reel.json`, then `bun run reel` |
 | A page hero image | Same command with an image. It registers itself in `art.json` |
-| A colour | `web-shared/avarok-tokens.css`. Both themes. The blog reads it too. `BRAND-CHANGE.md` section 3 for a whole palette |
-| The logo | `assets/brand/` masters, then `web-shared/components/AtlasLockup.svelte`. `BRAND-CHANGE.md` section 2 for a new kit |
+| A colour | `web-shared/metrale-tokens.css`. Both themes. The blog reads it too. `BRAND-CHANGE.md` section 3 for a whole palette |
+| The logo | `assets/brand/` masters, then `web-shared/components/MetraleLockup.svelte`. `BRAND-CHANGE.md` section 2 for a new kit |
 | The brand name | `node scripts/brand/rename.mjs --from X --to Y --apply`, then `BRAND-CHANGE.md` section 1 |
 | What the guide says or offers | `src/lib/prime/copy.js` for its words and starters, `deploy/cloudflare/prime-worker/src/prompt.js` for its rules and audiences, `src/tools.js` for what it can do |
 | What the guide knows | Nothing by hand. `bun x --bun vite build`, then `node scripts/prime/corpus.mjs --upload --remote` |
@@ -239,22 +239,26 @@ the public site links to an interactive console, and a test checks that.
 
 ## The brand
 
-The engine was named Atlas until September 2026. The company is Metrale, and its
-kit landed on 2026-09-21. The rebrand reached every marketing page, the developer
-pages' visible copy, the blog's chrome, the lockup and every icon, the social
-cards, the film's title cards, `llms.txt`, the JSON-LD and the web manifest.
+The company is Metrale, its brand is Metrale AI, the engine is Metrale Engine,
+and the legal entity is Metrale Corp. The kit landed on 2026-09-21. Every page,
+the blog (its posts included, in the engine team's own text), the docs, the
+diligence deck, the social cards, the film's title cards, `llms.txt`, the
+JSON-LD and the web manifest say Metrale, and nothing a visitor reads names
+anything earlier: `RETIRED` in `web-shared/sources.mjs` lists the retired names,
+and `src/lib/content/retired.test.js` and `docs/check.mjs` fail on them.
 
-It deliberately did not reach:
+Three things still point at the engine as it was before its move into the
+Metrale organisation, by design, and none of them is words on a page. "What
+still moves", at the end, has each one and what retires it:
 
-- **Blog posts.** Dated articles with permanent URLs keep the name they were
-  written under. Only the blog's chrome changed.
-- **The diligence deck's evidence labels.** They mirror published campaign
-  records that say Atlas. The deck's stamp says so on every slide.
-- **Commands, crates, images, URLs.** `atlasctl`, `avarok/atlas-gb10`, the
-  repository, the GitHub organisation and the domain are what they are until
-  someone renames them, and that is a decision for the engine's maintainers.
-- **The legal entity.** Atlas Cybernetics Corp., in the footer, until the
-  company says otherwise.
+- **The command people install.** `CLI` in `web-shared/sources.mjs`, until the
+  registry's own command ships a release and the site speaks its agent
+  protocol.
+- **The measured commits.** The published records name commits in the
+  engine's history, which `metrale.ai/src/history` redirects to. The deck's
+  reproduction clones from that address.
+- **The installers.** `install.sh` and `install.ps1` are copied in at build
+  from the recipe registry that command comes from.
 
 The artwork: the kit is a generator (`assets/brand/gen.js` with its geometry and
 letter outlines), and the site draws every lockup from that geometry through
@@ -324,7 +328,7 @@ gate green.
 - **Element resets use `:where()`.** `.av p { margin: 0 }` outranks any single
   class, so for a while the eyebrow, the lede and seven other classes lost the
   margins they ask for. The link reset had the same fault earlier. A reset in
-  `avarok.css` must never carry the weight of a class.
+  `metrale.css` must never carry the weight of a class.
 - **The ring around a screen is turned, not repainted.** It was a conic gradient whose
   angle was animated through a registered custom property, with a blurred copy behind it.
   That repaints and re-blurs every frame: 38% of a core on the idle front page, measured.
@@ -368,52 +372,43 @@ gate green.
 ## Open questions for the team
 
 1. **Prices.** Are the proposed list prices approved to be public?
-2. **Sales contact.** The site uses Kyle's direct address at
-   `atlascybernetics.ai`. A `sales@` alias would keep a personal inbox off a
-   public page. One line in `brand.js`. The security address is still the one
-   `SECURITY.md` publishes, on purpose: change both together, and only to a
-   mailbox that exists.
+2. **Mail at metrale.com.** Every contact door but security is a role mailbox
+   at metrale.com (item 29), and metrale.com has no mail records at all, so
+   each of them bounces today. metrale.ai has mail, and the security address,
+   `security@metrale.ai`, is there, the one the engine's `SECURITY.md` names.
+   Either give metrale.com mail and the mailboxes, or move `contacts` in
+   `brand.js` to metrale.ai addresses that exist; the forms Worker's `TO_*`
+   follow, and a test holds them equal.
 3. **Form endpoint.** Do we want demo requests in a CRM? Then set `formEndpoint`.
-4. **The legal name.** The corporate lockup sets the wordmark over "Cybernetics
-   Corp", so it now reads "Metrale Cybernetics Corp", which is not the entity's
-   name. It is therefore rendered nowhere: the README header and the blog
-   footer use the full lockup. If the company adopts that name, switch both
-   back to `kind="corp"` and the corp masters. The footers still say Atlas
-   Cybernetics Corp. in text, which is true today.
-5. **Author titles on the blog.** Changed from Atlas to Metrale. The people
-   named should confirm their own.
+4. **The legal entity.** Metrale Corp., as the company wrote it: in the
+   footers, the trust page's "Who you contract with" and the facts on /company.
+   The jurisdiction, the registered address, the formation date and who signs
+   are the company's to add; the site states none of them until it does.
+5. **Author titles on the blog.** The people named should confirm their own.
 6. **Founders section.** Skipped for now on instruction. The company page has
    the story, not the people.
-7. **Repository README and docs book.** Still say Atlas. Out of scope here.
-8. **GitHub social preview images** in `assets/brand/` still show the old
-   wordmark. `scripts/media/og.mjs` is the pattern to regenerate them.
+7. **The codebase chat is off** until the engine publishes its own code index (item 33).
+8. **The GitHub social preview** is the kit's, in `assets/brand/social/`, and is
+   uploaded by hand in the repository settings.
 9. **"jev".** The brief names it beside Bend as a Labs topic. Nothing in the
    source material says what it is, so it is not on the page. Bend is. One
    line in `labs.tracks` in `src/lib/content/resources.js` adds it.
 10. **Raw video takes.** About 34 MB of generated footage sits uncommitted in
     `media-brief/takes/`. Committing it means LFS. The team's call.
-11. **The standby origin.** `deploy/nginx/atlascybernetics.ai.conf` rewrites clean
-    URLs for three routes by name: `engine`, `control`, `diligence`. CI does not
-    deploy that file, and I did not edit infrastructure I cannot test. Cloudflare
-    Pages, which serves the site, needs nothing. If the standby ever takes
-    traffic, the thirty new routes need the same rewrite there, for example
-    `rewrite ^/([a-z0-9-]+(/[a-z0-9-]+)*)$ /$1.html break;` after excluding
-    `_app`, `media`, `fonts`, `logos`, `brand` and `lattice`.
+11. **No standby origin.** The nginx configs for the previous hosts went with
+    them. Cloudflare Pages needs none; `deploy/cloudflare/README.md` has what does
+    their job now.
 12. **Cloudflare Pages paths.** The build writes both `platform.html` and a
    `platform/` directory of child pages. Pages serves `/platform` from the
    file. Worth one look on the preview deployment.
 13. **Domain.** `metrale.ai`, since 2026-09-23. `SITE` in `brand.js` was the one
     constant to move; the installer addresses, the robots file, the two
-    Workers' allowed origins and the social card followed it. The blog has its
-    own name on the new domain (`blog.metrale.ai`, a Pages project of its own)
-    and the docs have one that redirects to where they are hosted today
-    (`docs.metrale.ai`, a rule in the zone) until they move. Still on the old
-    domain: the address the forms Worker sends from, which is the domain the
-    mail service has verified. The security mailbox moved to the
-    new domain with the other role addresses on 2026-09-23, at the owners'
-    word; the engine repository's `SECURITY.md` still names the old one until
-    that repository is next touched. The old domain should redirect to the
-    new one at its zone, so shared links and search results move too.
+    Workers' allowed origins and the social card followed it. The blog is
+    `blog.metrale.ai` and the docs are `docs.metrale.ai`, each a Pages project
+    of its own. The forms Worker sends from `forms@metrale.ai` once that domain is
+    verified with the mail service. The previous domains are in another
+    Cloudflare account and still serve their own copies; they should redirect to
+    the new ones at their zones, so shared links and search results move too.
 14. **The wall of prior roles, and its emblem.** The whole wall is switched off
     since 2026-09-23 (`logoWall.show`), at the owners' request, until after
     funding; the data and the files stay, and Programs and partners stay up.
@@ -458,17 +453,16 @@ gate green.
     in (or the energy in joules over it, which is the same thing), and which boundary it was
     read at, the GPU rail or the wall. The harness today reads `power.draw` once, as a rep
     starts, which is a sample and not a mean. When `scripts/gen-ladder.mjs` writes that
-    draw into `ladder.generated.json` as `atlas_watts` on a row and `watts` on each
+    draw into `ladder.generated.json` as `engine_watts` on a row and `watts` on each
     baseline, `efficiencyLadder()` and `energyInputsFrom()` use it, and the labels, the
     starting draw and the graph's caption turn to `MEASURED` with no edit to the site. If
     the field names come out different, those two functions are the only place to change.
-21. **Deploy Metrale Prime's Worker and name it.** The guide in the corner of every
-    marketing page is written, tested with the model faked, and tried against the real
-    model (`deploy/cloudflare/prime-worker/TRIALS.md`). It is off until someone with the
-    Cloudflare account and an xAI key deploys `deploy/cloudflare/prime-worker/` (its README,
-    about fifteen minutes) and pastes its address into `primeEndpoint` in `brand.js`. The
-    daily budget in `wrangler.toml` starts at ten dollars; the trial put an answer at about
-    a cent and a half.
+21. **Metrale Prime is live.** Its Worker, `metrale-prime`, runs in the team's
+    Cloudflare account and `primeEndpoint` in `brand.js` names it. It was tried
+    against the real model first (`deploy/cloudflare/prime-worker/TRIALS.md`);
+    its README has the secrets, the knowledge base and how to redeploy. The
+    daily budget in `wrangler.toml` started at ten dollars; the trial put an
+    answer at about a cent and a half.
 22. **The partner tier.** The knowledge base can hold documents that are not in the
     repository (the deck, the plan) behind a code a visitor types into the panel. It is a
     gate, not a security boundary, and it is empty until someone builds the base with
@@ -498,15 +492,12 @@ gate green.
     repository in case they are wanted back.
 
 29. **Role mailboxes at metrale.com.** On 2026-09-21 the founders asked for the team to be held
-    back from the site for now, so every published door is a role mailbox at metrale.com
-    (`contacts` in `brand.js`: sales, partnerships, engineering, community, press, careers),
-    and the forms Worker sends the demo, waitlist and careers forms there (`TO_*` in its
-    `wrangler.toml`; a test holds the two equal). None of those mailboxes exists yet, and the
-    Worker still sends from <forms@atlascybernetics.ai>, which is the domain Resend has verified.
-    Before launch: create the six mailboxes, or point `contacts` back at people
-    (`contactsDirect` in the same file keeps the founders' addresses), and verify metrale.com
-    in Resend if the sending address moves too. The security address is the repository's own
-    and is unchanged.
+    back from the site for now, so every published door but security is a role mailbox at
+    metrale.com (`contacts` in `brand.js`: sales, partnerships, engineering, community, press,
+    careers), and the forms Worker sends the demo, waitlist and careers forms there (`TO_*` in its
+    `wrangler.toml`; a test holds the two equal). metrale.com has no mail records, so none of
+    those mailboxes can receive yet (item 2). The Worker sends from `forms@metrale.ai`, which the
+    mail service has to verify before the email channel is used.
 30. **The team is held back.** `showTeam` in `company.js` is `false`, so the About page shows
     no portraits, titles or links; everything is kept in the file. The guide follows the
     site: without the team on a public page it will say the team is not published, and only
@@ -522,34 +513,45 @@ gate green.
     `/pricing#metering` all carry "Proposed" in their note and date the brief. They are the
     products and features of the brief, not its internals. When the brief is published or
     revised, revisit each note; when a piece ships, move it out of "proposed".
+33. **The codebase chat.** Off (`codeChat.enabled` in `src/lib/data.js`). The engine's
+    repository has the workflow that builds its code index (`.github/workflows/coderag.yml`
+    there), and it runs, but it publishes to GitHub Pages, which is not switched on in that
+    repository, and its embedding key has to be one of that repository's secrets. Once the
+    index is served at the address in `src/lib/chat/config.js`, flip the switch; the browser
+    suites follow it (`CHAT_ON`, held equal by a unit test).
+34. **Solutions held back.** Solutions shows neoclouds and GPU providers, and small teams and
+    the edge. The other nine industry pages are kept as data (`parkedIndustries` in
+    `brand.js`), not built and not linked, with their stills installed. Moving an entry back
+    into `industries` restores its page, its menu entry and its place in the sector bar.
+35. **`www.metrale.ai`** has no DNS record and does not resolve. `deploy/cloudflare/README.md`
+    has the redirect rule to add, and why it must not be a custom domain on the Pages project.
+36. **What the trust page does not claim.** "What we do not claim" says no security
+    certification is held yet, names no customer, limits the ladder to the hardware it was
+    measured on and says the Community Edition is not released. Each line changes when the
+    fact does.
 
 ## How to throw it away
 
 The old front page is in git history at the commit before this branch. The new
 pages are confined to `src/routes/(marketing)`, `src/lib/content`,
-`src/lib/components/avarok`, `src/lib/broll`, `src/styles/avarok.css`,
+`src/lib/components/marketing`, `src/lib/broll`, `src/styles/metrale.css`,
 `scripts/media` and `media-brief`. Deleting those and restoring
 `src/routes/+page.svelte` and `+layout.svelte` from history returns the site to
 where it was. The lockup, the developer page rename and the blog rename are
 commits of their own for the same reason.
 
-## What still says Atlas, and what moves it
+## What still moves
 
-Recorded 2026-09-23 so the next sweep is ready before it is asked for. The
-engine's repository is still `Avarok-Cybersecurity/atlas`, its binaries and its
-recipes still carry the name, and its published records name it. The site says
-Metrale wherever it speaks for itself and quotes the engine wherever it quotes
-the engine. One row per place: what a reader sees, and what changes it.
+Recorded so the next sweep is ready before it is asked for. Nothing here is
+words a visitor reads. Each row is an address or a command that points at the
+engine as it was before its move into the Metrale organisation, and each has one
+place to change.
 
-| where | what a reader sees | what moves it |
+| where | what it is | what retires it |
 | --- | --- | --- |
-| `links` in `src/lib/content/brand.js`; `data.js`; `gates.js`; `chat/state.svelte.js`; the deck's `Evidence` and `Reproduce` acts; `ModelSlider.svelte`; the `gen-*` scripts; the guide's Worker prompt | links to `github.com/Avarok-Cybersecurity/atlas` and `atlas-recipes`: the repository, `SECURITY.md`, `LICENSE`, `CONTRIBUTING.md`, the deployment guide, issues and good first issues, the ladder results, the star and contributor counts, and the codebase chat's corpus on GitHub Pages | the repository move. GitHub redirects the old names, so nothing breaks on the day; the links change in one sweep after it, and `scripts/brand/rename.mjs` already knows the word boundaries to respect |
-| `site/engine.ref` and `.github/actions/engine-inputs` | nothing; it is which checkout the build reads | the same move: the repository names in the action |
-| the ladder, gate and benchmark records (`src/lib/*.generated.json`), the charts' tooltips, the deck's stamp | "Atlas · C=8 · 125.95 tok/s", "Atlas vs vLLM", "Atlas 1.0.0-beta-preview", "records published as Atlas, now Metrale" | nothing, on purpose: the records are evidence and keep the name they were published under. The charts' own series label already says Metrale. A display name for the engine in the generators would relabel the tooltips without touching a record, if the owners want that |
-| `alternateName` in the JSON-LD, `src/routes/+layout.svelte` | "Atlas Inference Engine", for a search engine that knows the old name | keep it for a while after the move, then drop it |
-| the commands on the developer pages | `atlasctl`, `atlas`, the recipe names | the engine's own rename of its binaries and recipes |
-| the book's chapters, published at `docs.metrale.ai` from `docs/` | nothing a reader sees: `docs/rebrand.mjs` renames the words at build time; the commands, crates and repository addresses in the text keep their names | the engine repository's rename, after which the rename pass finds nothing and can be deleted; the blog moved with #12 |
-| `security@atlas.net` on the contact page | the security mailbox | the engine repository's `SECURITY.md` publishes it; the two change together (item 13) |
-| `APP_TITLE` and the corpus address in `src/lib/chat/config.js` | the codebase chat's attribution header, and where its corpus comes from | the attribution now; the corpus with the repository move |
-| a testimonial on the front page | "Testing Atlas on a DGX Spark…" | nothing: a quotation keeps its words |
-| `.atlas-*` class names in the chart styles | nothing visible | rename at leisure |
+| `CLI` in `web-shared/sources.mjs`, and `HELD` in `scripts/gen-models.mjs` | the command the install, run and agent instructions print, and what `install.sh` and `install.ps1` install; one recipe the command knows by another name is held off the model list | the registry's own command, `metralectl`, shipping a release, and the site's agent client speaking its protocol (4; the site speaks 2) |
+| the installer checkout in `.github/actions/engine-inputs/action.yml` | where `install.sh` and `install.ps1` are copied from at build | the same release, whose installers replace them |
+| `HISTORY` in `web-shared/sources.mjs` and `/src/history` in `static/_redirects` | the engine's history: the commits the published records name, and the AMD pull request; the deck's reproduction clones from it | nothing while the published ladder names a commit there. If the history is ever brought into the Metrale organisation, the three redirect lines change and nothing else does |
+| `HISTORY_SLUG` in `web-shared/sources.mjs` | the contributor wall counts the people who built the engine before the move, from the GitHub API at build | the same move of the history |
+| `LATTICE_RELEASES` in `web-shared/sources.mjs` | where the codebase chat's in-browser database is downloaded from, by pinned release and checksum | a release of it published under the Metrale organisation |
+| `codeChat.enabled` in `src/lib/data.js` | the codebase chat, off | the engine's code index being served (item 33) |

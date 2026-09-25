@@ -10,8 +10,8 @@ path. The zone and the Pages project are in the Metrale Cloudflare account.
 | `metrale-ai` | `metrale.ai` | `metrale-ai.pages.dev` |
 
 It is a **Direct Upload** project, not Pages' git integration. The build in
-`.github/actions/build-site` needs checkouts of `atlas-recipes` and of the engine
-at `site/engine.ref`, and it carries gates a Pages-native build would bypass:
+`.github/actions/build-site` needs checkouts of the recipe registry and of the
+engine at `site/engine.ref` (`.github/actions/engine-inputs`), and it carries gates a Pages-native build would bypass:
 the flagship-recipe check and the per-route `<title>` check. CI builds, CI
 uploads the gated output: `deploy.yml` on every merge to `main`, and `pr.yml`'s
 `preview` job for pull requests from this repository's branches. The apex is a
@@ -24,7 +24,7 @@ deploy went green and the site is stale".
 
 ## The forms
 
-The site's three forms post to a small Worker, `avarok-forms`, kept in
+The site's three forms post to a small Worker, `metrale-forms`, kept in
 [`forms-worker/`](forms-worker/README.md). It is deployed by hand with `wrangler deploy`,
 apart from the site, so nothing about it can take a page down. Until it is deployed and
 its address is set as `formEndpoint` in `src/lib/content/brand.js`, each form drafts an
@@ -41,10 +41,9 @@ holds nothing but the Worker's address (`primeEndpoint` in
 that directory; the README says which secrets it needs and how they were
 handled while it was built.
 
-## What replaced the nginx config
+## What an origin server would have done
 
-`../nginx/atlascybernetics.ai.conf` is kept because the origin is still mirrored
-to as a warm standby. On Pages the same behaviour comes from:
+There is no origin server. What an nginx vhost would do comes from two files:
 
 - **`static/_headers`** — the security headers and the cache policy. Read the
   note at the top of that file before editing it; Pages concatenates a
@@ -55,57 +54,31 @@ to as a warm standby. On Pages the same behaviour comes from:
   with index.html and a **200**, so broken links return the front page and
   crawlers index unbounded soft-404s.
 
-## www -> apex, and why `www` is deliberately NOT a custom domain
+## www -> apex, when it is added
 
-The nginx `if ($host = www...)` block has no in-repo Pages equivalent.
-`_redirects` path rules work (verified: a path-only rule redirects correctly)
-but the documented absolute-URL form does **not** match on these projects
-(verified: `https://www.atlascybernetics.ai/* ...` never fired). A path rule is
-useless here anyway, since it would bounce the apex too.
+`www.metrale.ai` has no DNS record today, so it does not resolve. When it is
+added, do it as a zone-level Redirect Rule on `metrale.ai`, not as a custom
+domain on the Pages project:
 
-So it is a zone-level Redirect Rule on `atlascybernetics.ai`:
-
-    expression: (http.host eq "www.atlascybernetics.ai")
+    expression: (http.host eq "www.metrale.ai")
     action:     redirect, 301
-    target:     concat("https://atlascybernetics.ai", http.request.uri.path)
+    target:     concat("https://metrale.ai", http.request.uri.path)
     preserve query string: yes
 
-**`www.atlascybernetics.ai` must stay OFF the Pages project for that rule to
-run.** It was attached at first, and the rule — stored, enabled, correct
-expression — did nothing: every request still returned 200 with the site.
-A Pages custom domain is served by the Pages edge and never reaches the zone's
-ruleset engine. The tell is in the response headers: the apex returns
-`cf-cache-status: DYNAMIC` and `www` returned no `cf-cache-status` at all.
-Detaching it made the redirect fire on the first request afterwards.
+with `www` as a proxied CNAME to the apex. It needs no origin and no Pages
+binding, because a redirect rule is evaluated before Cloudflare resolves one.
 
-The `www` DNS record stays a proxied CNAME to the apex. It needs no origin and
-no Pages binding, because a redirect rule is evaluated before Cloudflare
-resolves one — the request never looks for something to serve.
+Why not the other ways, measured on the previous hosts: `_redirects` path rules
+work, but the documented absolute-URL form does **not** match on these projects,
+and a path rule would bounce the apex too. And a hostname attached to the Pages
+project as a custom domain is served by the Pages edge and never reaches the
+zone's ruleset engine: the rule, stored, enabled and correct, did nothing until
+the hostname was detached. The tell is in the response headers: the apex
+returns `cf-cache-status: DYNAMIC` and an attached `www` returned no
+`cf-cache-status` at all.
 
 Creating or editing the rule over the API needs a token with **Zone -> Dynamic
 Redirect -> Edit**, on top of the Pages, DNS and Cache Purge permissions the
 rest of this setup uses. A token holding only some of those fails with
 `request is not authorized` on the ruleset write while still listing rulesets
 happily, which reads like a bug and is not one.
-
-## atlasinference.io -> atlascybernetics.ai
-
-`atlasinference.io` is a legacy hostname on the same `avarok-site` Pages
-project. It still answers 200 with the marketing site, including
-`/engine`. The public developer URL is `https://atlascybernetics.ai/engine`.
-
-`_redirects` host rules do not fire here (same measurement as `www`). Do
-this in the **atlasinference.io zone**, not in the Pages project:
-
-    expression: (http.host eq "atlasinference.io") or (http.host eq "www.atlasinference.io")
-    action:     redirect, 301
-    target:     concat("https://atlascybernetics.ai", http.request.uri.path)
-    preserve query string: yes
-
-**`atlasinference.io` and `www.atlasinference.io` must be detached from
-the Pages project** or the rule never runs — every request keeps returning
-200 with the site. After detaching, keep the DNS records as proxied CNAMEs
-onto `atlascybernetics.ai` (or the Pages `pages.dev`) so the rule sees the
-request.
-
-The origin standby vhost is `../nginx/atlasinference.io.conf`.

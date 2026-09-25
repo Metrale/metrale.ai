@@ -9,14 +9,14 @@ Read `FACELIFT.md` for what is where and why. This file is the commands.
 ## Run it
 
 You need [git](https://git-scm.com), [bun](https://bun.sh), and clones of
-[atlas-recipes](https://github.com/Avarok-Cybersecurity/atlas-recipes), which
-the build reads the model list from, and of
-[atlas](https://github.com/Avarok-Cybersecurity/atlas), the engine, whose
-benchmark records, ladder and changelog the pages print. The root
+[metralectl](https://github.com/Metrale/metralectl), whose `recipes/` the
+build reads the model list from, and of
+[metrale-inference-alpha](https://github.com/Metrale/metrale-inference-alpha),
+the engine, whose benchmark records, ladder and changelog the pages print. The root
 [README](../README.md) has the commands; `engine.ref` names the engine commit CI
 builds against.
 
-The three `AVAROK_*` variables there are the only settings. Everything the pages show is in the
+The three `METRALE_*` variables there are the only settings. Everything the pages show is in the
 repository: the fonts, the logos, the product clips, the film and the generated
 stills are ordinary files under `static/`, not Git LFS pointers, so a plain
 clone has them. This was checked from a clean clone with no GitHub login.
@@ -36,7 +36,7 @@ the star history and the contributor list. Without it those two fall back to
 the committed files and the build says so without failing.
 
 On Windows use Git Bash, and give the variable a forward slash path
-(`/c/Users/you/atlas-recipes/recipes`).
+(`/c/Users/you/metralectl/recipes`).
 
 ## Test it
 
@@ -80,12 +80,12 @@ artwork, the palette or the type without breaking a gate.
 
 ```text
 src/lib/content/             copy, routes, nav, prices, page registry
-src/lib/components/avarok/   marketing components
+src/lib/components/marketing/   marketing components
 src/lib/components/          developer page components
 src/routes/(marketing)/      marketing pages
 src/routes/(engine)/         /engine, /control, /diligence
 src/routes/(app)/            render pages for the media pipeline
-src/styles/avarok.css        marketing design system
+src/styles/metrale.css        marketing design system
 scripts/                     generators, run by the build
 scripts/media/               media pipeline
 media-brief/                 prompt pack and reel storyboard

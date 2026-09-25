@@ -40,7 +40,7 @@ back. The mockup lays out correctly at that size.
 | 0:43 to 0:50 | `console-governance`, the policy switching on, the provenance panel | Every token has a receipt. |
 | 0:50 to 0:54 | `V04`, the sealed room | Nothing leaves your perimeter. |
 | 0:54 to 0:58 | `V01`, the push down the aisle | Week one. Months one to six. At renewal. |
-| 0:58 to 1:03 | Lockup on the ground colour | Book a working session. atlascybernetics.ai |
+| 0:58 to 1:03 | Lockup on the ground colour | Book a working session. metrale.ai/demo |
 
 ## Rules for the cut
 

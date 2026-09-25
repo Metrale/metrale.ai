@@ -4,10 +4,8 @@ aiohttp
 alexi
 artemissecurity
 atlasctl
-atlascybernetics
 autoshop
 avarok
-avarokctl
 baselining
 basenames
 battlemage
@@ -105,6 +103,7 @@ mcube
 mdbook
 metacharacter
 metrale
+metralectl
 metron
 microbenchmark
 midchunk
@@ -157,6 +156,7 @@ rdma
 rdna
 rdparty
 reachout
+rehost
 remint
 rephase
 replayable

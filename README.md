@@ -10,7 +10,7 @@ the developer pages for the engine. SvelteKit on Vite, prerendered to static fil
 | --- | --- |
 | [`site/`](site/) | the site. Start with [`site/AGENTS.md`](site/AGENTS.md), then [`site/README.md`](site/README.md) |
 | [`blog/`](blog/) | the blog, a second SvelteKit app on the same tokens. Start with [`blog/README.md`](blog/README.md) |
-| [`docs/`](docs/) | the engine's book published as Metrale's, at docs.metrale.ai. Start with [`docs/README.md`](docs/README.md) |
+| [`docs/`](docs/) | the engine's book, published at docs.metrale.ai. Start with [`docs/README.md`](docs/README.md) |
 | [`web-shared/`](web-shared/) | design tokens and components shared with the blog |
 | [`assets/brand/`](assets/brand/) | the brand kit the site draws its artwork and palette from |
 | [`.github/workflows/`](.github/workflows/) | the pull request checks, the deploy and the guide's Worker |
@@ -21,20 +21,20 @@ The build reads its model list and its measurements from two public repositories
 check them out beside this one first:
 
 ```sh
-git clone https://github.com/Avarok-Cybersecurity/atlas-recipes.git
-git clone --filter=blob:none https://github.com/Avarok-Cybersecurity/atlas.git
+git clone https://github.com/Metrale/metralectl.git
+git clone --filter=blob:none https://github.com/Metrale/metrale-inference-alpha.git
 
 cd metrale.ai/site
 bun install
-export AVAROK_RECIPES_ROOT="$(cd ../../atlas-recipes/recipes && pwd)"
-export AVAROK_ENGINE_ROOT="$(cd ../../atlas && pwd)"
-export AVAROK_BASELINES_ROOT="$AVAROK_ENGINE_ROOT/tests/baselines"
+export METRALE_RECIPES_ROOT="$(cd ../../metralectl/recipes && pwd)"
+export METRALE_ENGINE_ROOT="$(cd ../../metrale-inference-alpha && pwd)"
+export METRALE_BASELINES_ROOT="$METRALE_ENGINE_ROOT/tests/baselines"
 bun x --bun vite build        # writes site/build
 bun x --bun vite preview      # serves it on http://localhost:4173
 ```
 
 CI checks out the engine at the commit in [`site/engine.ref`](site/engine.ref)
-(`git -C ../../atlas checkout $(cat engine.ref)`); use the same commit locally to get the
+(`git -C ../../metrale-inference-alpha checkout $(cat engine.ref)`); use the same commit locally to get the
 same numbers. Moving it is a pull request like any other.
 
 ## How it ships
