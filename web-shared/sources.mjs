@@ -30,9 +30,5 @@ export const OTHER_NAMES = /\b(?:atlas|avarok)\b/i;
 /** The in-browser vector database the codebase chat loads, by release. */
 export const LATTICE_RELEASES = 'https://github.com/Avarok-Cybersecurity/lattice-db/releases/download';
 
-/**
- * The command people install today. The registry's own command replaces it
- * once it ships a downloadable release and the site's control plane speaks its
- * agent protocol; site/FACELIFT.md, "What still moves", has the checklist.
- */
-export const CLI = 'atlasctl';
+/** The command the install, run and agent instructions print: the registry's own. */
+export const CLI = 'metralectl';

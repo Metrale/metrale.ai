@@ -5,9 +5,8 @@
 // the source a contributor reads, so this reads the site, the blog, the shared
 // files, the docs tooling and the notes as text and fails on one (`OTHER_NAMES`
 // in web-shared/sources.mjs). The only files that may carry one are those that
-// point at where the open source history lives, the blog's redirect for one
-// post's previous address, and the installers copied in at build from the
-// registry of the command people install today.
+// point at where the open source history lives and the blog's redirect for one
+// post's previous address.
 
 import { expect, test } from 'bun:test';
 import { execFileSync } from 'node:child_process';
@@ -18,13 +17,7 @@ import { OTHER_NAMES } from '../../../../web-shared/sources.mjs';
 
 const REPO = fileURLToPath(new URL('../../../../', import.meta.url));
 const ROOTS = ['README.md', 'site', 'blog', 'web-shared', 'docs', 'assets/brand'];
-const KEEP = new Set([
-  'web-shared/sources.mjs',
-  'site/static/_redirects',
-  'blog/static/_redirects',
-  'site/static/install.sh',
-  'site/static/install.ps1',
-]);
+const KEEP = new Set(['web-shared/sources.mjs', 'site/static/_redirects', 'blog/static/_redirects']);
 const TEXT = /\.(js|mjs|cjs|ts|svelte|css|html|md|json|jsonl|txt|toml|yml|yaml|xml|svg|webmanifest|sh|ps1)$|(^|\/)_(headers|redirects)$/;
 
 // What the repository holds: tracked files and new ones, never what git ignores

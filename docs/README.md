@@ -16,11 +16,13 @@ docs address, at the commit the site is built against.
    alone does not have. This repository keeps the same files at the same paths,
    so each link is replaced by the file it names, from here. The docs, the site
    and the blog share one palette and one set of faces that way.
-2. **The hosts.** The engine team publishes the book at `book.dev.metrale.ai`,
-   its blog at `blog.dev.metrale.ai` and its project site at `dev.metrale.ai`.
-   `docs/hosts.mjs` moves those to `docs.metrale.ai`, `blog.metrale.ai` and
-   `metrale.ai`, so the canonical addresses and `llms.txt` name this host. The
-   API reference, `docs.dev.metrale.ai`, keeps its address. The unit test beside
+2. **The hosts.** The engine team publishes the book at `book.dev.metrale.ai`.
+   Its former blog and project site hosts, `blog.dev.metrale.ai` and
+   `dev.metrale.ai`, are retired and redirect to `blog.metrale.ai` and
+   `metrale.ai/engine`. `docs/hosts.mjs` moves all three to `docs.metrale.ai`,
+   `blog.metrale.ai` and `metrale.ai`, so the canonical addresses and `llms.txt`
+   name this host whichever engine commit the book comes from. The API
+   reference, `docs.dev.metrale.ai`, keeps its address. The unit test beside
    the site's (`site/src/lib/docs-hosts.test.js`) pins the map.
 
 Then mdBook 0.4.40 builds it, the book's own two scripts add `llms.txt` and the
