@@ -30,7 +30,7 @@ export const story = {
     {
       when: 'May 2026',
       title: 'One Reddit post',
-      body: 'A stable 102 tokens per second on a DGX Spark, posted to r/LocalLLaMA. The star count went from a few dozen to a few hundred in a week and the Discord became the test fleet.',
+      body: 'A stable 102 tokens per second on a DGX Spark, posted to r/LocalLLaMA. The Discord became the test fleet.',
     },
     {
       when: 'July 2026',
@@ -45,7 +45,7 @@ export const story = {
     {
       when: 'September 2026',
       title: 'Metrale',
-      body: 'The company took a new name, built on metron, the Greek word for measure, brought in commercial leadership that had scaled Anaconda, and set out to sell what the engine had proved. The industry measures inference in tokens per second. Metrale measures what that performance is worth.',
+      body: 'The company was named Metrale, built on metron, the Greek word for measure. It brought in commercial leadership that had scaled Anaconda and set out to sell what the engine had proved. The industry measures inference in tokens per second. Metrale measures what that performance is worth.',
     },
   ],
 };
@@ -76,8 +76,8 @@ export const mission = {
       body: 'Every performance number on this site is generated from a record in the repository. If it is not in the repo, it is not on the page.',
     },
     {
-      title: 'AI first, human accountable',
-      body: 'AI authored is the default in the repository. Certified benchmarks gate every kernel change. People decide what ships.',
+      title: 'A person decides what ships',
+      body: 'Certified benchmarks gate every kernel change, and a person with merge authority decides what ships. Agents draft much of the work.',
     },
     {
       title: 'Own the request path',
@@ -194,7 +194,7 @@ export const exchange = {
 export const careers = {
   eyebrow: 'Careers',
   title: 'Build the layer between the GPU and the invoice.',
-  lede: 'We are a small founding team with an AI first repository, hardware from NVIDIA and AMD on the bench, and buyers who want receipts. The first hires shape the company.',
+  lede: 'We are a small founding team with a public repository, hardware from NVIDIA and AMD on the bench, and buyers who want receipts. The first hires shape the company.',
   how: `Send a note and a link to something you built to ${contacts.careers}. Code beats resumes. A pull request against the engine beats both.`,
   // How the work is done, all of it visible in the repository. Deliberately not
   // here: equity, equipment, location or remote policy. Those are terms of
@@ -202,8 +202,8 @@ export const careers = {
   // entitled to rely on anything this page promised.
   benefits: [
     {
-      title: 'Agents draft, you decide',
-      body: 'The repository is AI first. Agents write the first pass, certified benchmarks gate the merge, and a person decides what ships.',
+      title: 'A person decides what ships',
+      body: 'Certified benchmarks gate every merge, and a person with merge authority decides what ships. Agents draft much of the first pass.',
     },
     {
       title: 'Hardware you can touch',
@@ -224,7 +224,7 @@ export const careers = {
     eyebrow: 'How we work',
     lines: [
       'Ship the number, then talk about it.',
-      'AI writes the first draft. A person owns the result.',
+      'Agents draft. People decide.',
       'If it is not measured, it is an opinion.',
       'Small team. Real hardware. No theatre.',
     ],
@@ -444,6 +444,14 @@ export const trust = {
   lede: 'The security policy in the repository says which controls are automated and which are human review, and claims nothing it does not run. This page is the same posture, for the people who sign.',
   sections: [
     {
+      title: 'Who you contract with',
+      items: [
+        `Contracts are with ${company.legal} Metrale, Metrale AI and ${company.engine} are its products.`,
+        `Security reports go to ${contacts.security}, acknowledged within 48 hours.`,
+        'The engine, its benchmark records, its contributor agreement and its security policy are public on GitHub, under the Metrale organization.',
+      ],
+    },
+    {
       title: 'Architecture',
       items: [
         'One signed binary of about 75 MB in Rust and CUDA. No Python, no PyTorch, no runtime compilation in the request path.',
@@ -478,13 +486,39 @@ export const trust = {
         'Third party names on this site belong to their owners and appear for background or as primary sources, never as endorsements.',
       ],
     },
+    {
+      title: 'What we do not claim',
+      items: [
+        'No security certification is held yet. SOC 2 readiness documentation comes with the first SLA engagements.',
+        'No customer is named on this site.',
+        'No ratio is claimed beyond the hardware it was measured on. The published ladder was measured on NVIDIA GB10. The engine also runs on AMD Strix Halo through SCALE, and Hopper and Blackwell are the next campaigns.',
+        'The Community Edition is not released yet. The open source engine runs today.',
+      ],
+    },
   ],
   disclosure: {
     title: 'Responsible disclosure',
     body: `Do not open a public issue for a vulnerability. Email ${contacts.security} with a description, reproduction steps, environment and the affected component. We acknowledge within 48 hours and give an initial assessment within seven days, then merge the fix, tag a release and credit the reporter unless anonymity is requested.`,
-    href: links.securityPolicy,
+    href: links.securityPolicyDoc,
     cta: 'Read the policy',
   },
+};
+
+// The company in one place, for the reader who is checking. Only what the site
+// or the engine repository already states; the rest is the company's to add.
+export const facts = {
+  eyebrow: 'The company',
+  title: 'The facts, in one place.',
+  rows: [
+    ['Legal entity', company.legal],
+    ['Products', `Metrale, Metrale AI and ${company.engine}`],
+    ['Started', 'January 2026'],
+    ['Engine source', links.github.replace('https://', ''), links.github],
+    ['License', 'AGPL-3.0-only for the Community Edition, commercial for the Enterprise Edition'],
+    ['Recipe registry', links.recipes.replace('https://', ''), links.recipes],
+    ['Security', contacts.security, `mailto:${contacts.security}`],
+    ['Verification', 'Reproduce the published ladder, step by step', routes.diligence],
+  ],
 };
 
 export const companyCta = {

@@ -1,11 +1,10 @@
 <script>
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import PageHero from '$lib/components/avarok/PageHero.svelte';
-  import LogoWall from '$lib/components/avarok/LogoWall.svelte';
-  import CtaBand from '$lib/components/avarok/CtaBand.svelte';
-  import { story, name, mission, showTeam, team, exchange, companyCta } from '$lib/content/company.js';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import PageHero from '$lib/components/marketing/PageHero.svelte';
+  import LogoWall from '$lib/components/marketing/LogoWall.svelte';
+  import CtaBand from '$lib/components/marketing/CtaBand.svelte';
+  import { story, name, mission, showTeam, team, exchange, companyCta, facts } from '$lib/content/company.js';
   import { routes, links } from '$lib/content/brand.js';
-  import { live } from '$lib/content/live.js';
 </script>
 
 <PageShell path={routes.company}>
@@ -70,8 +69,8 @@
             </figcaption>
           </figure>
           <p class="av-body" style="margin-top:1.5rem">
-            {live.stars} stars later, the repository those two words started runs on hardware from NVIDIA and AMD and out serves the incumbent
-            on the published ladder. The answer to the question is this website.
+            Months later, the repository those two words started runs on hardware from NVIDIA and AMD and out serves the incumbent on the
+            published ladder. The answer to the question is this website.
           </p>
         </div>
         <div class="av-timeline av-reveal">
@@ -117,6 +116,25 @@
           </div>
         {/each}
       </div>
+    </div>
+  </section>
+
+  <section class="av-section" id="facts">
+    <div class="av-container">
+      <div class="av-head av-reveal">
+        <p class="av-eyebrow">{facts.eyebrow}</p>
+        <h2 class="av-h2">{facts.title}</h2>
+      </div>
+      <dl class="av-facts av-reveal">
+        {#each facts.rows as [label, value, href] (label)}
+          <dt>{label}</dt>
+          <dd>
+            {#if href?.startsWith('http')}<a class="av-link" {href} target="_blank" rel="noopener">{value}</a>
+            {:else if href}<a class="av-link" {href}>{value}</a>
+            {:else}{value}{/if}
+          </dd>
+        {/each}
+      </dl>
     </div>
   </section>
 
@@ -181,6 +199,40 @@
 </PageShell>
 
 <style>
+  /* The facts: label beside value, one row each, stacked on a phone. */
+  .av-facts {
+    display: grid;
+    grid-template-columns: minmax(9rem, max-content) minmax(0, 1fr);
+    gap: 0.75rem 1.6rem;
+    max-width: 52rem;
+    margin: 0;
+    padding: 1.4rem 1.6rem;
+    border: 1px solid var(--border);
+    border-radius: var(--av-radius);
+    background: var(--card);
+  }
+  .av-facts dt {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--t3);
+    padding-top: 0.2rem;
+  }
+  .av-facts dd {
+    margin: 0;
+    color: var(--t1);
+    overflow-wrap: anywhere;
+  }
+  @media (max-width: 560px) {
+    .av-facts {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.2rem;
+    }
+    .av-facts dd {
+      margin-bottom: 0.75rem;
+    }
+  }
   /* The real thread, as GitHub drew it. One picture per theme, and the hidden one
      is display:none with loading=lazy, so only the one in use is fetched. */
   .av-shot {

@@ -1,6 +1,6 @@
 <script>
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import PageHero from '$lib/components/avarok/PageHero.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import PageHero from '$lib/components/marketing/PageHero.svelte';
   import { contact as c } from '$lib/content/company.js';
   import { routes, links } from '$lib/content/brand.js';
 </script>
@@ -19,7 +19,7 @@
               {#each p.doors as d}<a class="av-link" href={`mailto:${d.email}`}>{d.label} · {d.email}</a>{/each}
               {#if p.demo}<a class="av-link" href={routes.demoForm}>Or book a working session <span class="av-arrow">→</span></a>{/if}
               {#if p.discord}<a class="av-link" href={links.discord} target="_blank" rel="noopener">Or find us in Discord ↗</a>{/if}
-              {#if p.href}<a class="av-link" href={p.href} target="_blank" rel="noopener">Disclosure policy ↗</a>{/if}
+              {#if p.href}<a class="av-link" href={p.href}>Disclosure policy</a>{/if}
             </div>
           </div>
         {/each}
