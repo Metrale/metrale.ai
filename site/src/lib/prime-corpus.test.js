@@ -12,6 +12,8 @@ import {
   slug,
   markdownSections,
   frontMatter,
+  withdraw,
+  isWithdrawn,
 } from '../../scripts/prime/chunk.mjs';
 
 test('html becomes the words a visitor reads, with entities decoded once', () => {
@@ -96,4 +98,32 @@ test('small sub sections under one parent become one passage, each led by its he
   // Too big to merge stays apart.
   const big = mergeSmallSiblings(sectionsFromHtml('<h2>A</h2><p>x</p><h3>B</h3><p>' + 'y'.repeat(2000) + '</p>'));
   expect(big.map((s) => s.heading)).toEqual(['A', 'B']);
+});
+
+// ---- withdrawn claims ------------------------------------------------------------
+
+test('a sentence that makes a withdrawn claim leaves the passage, and the rest stays', () => {
+  expect(withdraw('Metrale runs on GB10. We submitted to MLPerf v6.1. It is fast.')).toBe('Metrale runs on GB10. It is fast.');
+  expect(withdraw('We are Qwen Dev Ambassadors. A recipe for every release.')).toBe('A recipe for every release.');
+  expect(withdraw('The fused kernel merged into Hugging Face Transformers. Next.')).toBe('Next.');
+  expect(withdraw('NVIDIA Inception member, upstream merge into Hugging Face Transformers, AMD-provided hardware')).toBe('');
+  expect(withdraw('MLCommons named the project a contributor.')).toBe('');
+  expect(withdraw('Sparkrun has been retired: Metrale now ships atlasctl.')).toBe('');
+});
+
+test('a commit title is a line, and goes as a whole', () => {
+  const history = '2026-07-24 tbraun96: site: news band, MLPerf v6.1 and AMD Strix desktop (#367)\n2026-07-25 weschera: docs: typo';
+  expect(withdraw(history)).toBe('2026-07-25 weschera: docs: typo');
+});
+
+test('what is not a withdrawn claim is left alone', () => {
+  for (const s of [
+    'Weights download from the Hugging Face Hub into ~/.cache/huggingface.',
+    'The Qwen3.6 recipe ships with every release.',
+    'A brand ambassador can be playful.',
+    'AMD provided a Strix Halo desktop, and the engine runs on it through SCALE.',
+  ]) {
+    expect(isWithdrawn(s)).toBe(false);
+    expect(withdraw(s)).toBe(s);
+  }
 });

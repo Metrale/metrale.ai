@@ -32,7 +32,17 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { basename, dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { htmlToText, sectionsFromHtml, mergeSmallSiblings, chunkText, slug, markdownSections, frontMatter } from './chunk.mjs';
+import {
+  htmlToText,
+  sectionsFromHtml,
+  mergeSmallSiblings,
+  chunkText,
+  slug,
+  markdownSections,
+  frontMatter,
+  withdraw,
+  isWithdrawn,
+} from './chunk.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const SITE_DIR = resolve(here, '..', '..');
@@ -70,7 +80,7 @@ const ladder = readJson(join(SITE_DIR, 'src', 'lib', 'ladder.generated.json'));
 
 const docs = [];
 const add = (doc) => {
-  const text = String(doc.text ?? '').trim();
+  const text = withdraw(String(doc.text ?? ''));
   if (text.length < 40) return;
   docs.push({
     id: `${doc.kind}:${id(doc.url ?? doc.title, doc.section ?? '', text.slice(0, 200))}`,
@@ -229,6 +239,16 @@ if (GH !== 'skip') {
     }
   }
 }
+// A commit, pull request or release whose title makes a withdrawn claim is left
+// out of the history the guide reads, the passages and the structured half alike.
+if (history) {
+  history = {
+    ...history,
+    commits: history.commits.filter((c) => !isWithdrawn(c.message)),
+    pulls: history.pulls.filter((p) => !isWithdrawn(p.title)),
+    releases: history.releases.map((r) => ({ ...r, notes: withdraw(r.notes ?? '') })).filter((r) => !isWithdrawn(r.name ?? '')),
+  };
+}
 if (history) {
   const s = history.summary;
   const people = history.contributors.filter((c) => !c.login.endsWith('[bot]'));
@@ -322,7 +342,7 @@ if (PRIVATE) {
           ?.trim()
           .slice(0, 80) ?? '';
       for (const chunk of chunkText(text, { max: 1800 })) {
-        const t = chunk.trim();
+        const t = withdraw(chunk);
         if (t.length < 40) continue;
         partnerDocs.push({
           id: `${kind}:${id(f, String(i), t.slice(0, 200))}`,
