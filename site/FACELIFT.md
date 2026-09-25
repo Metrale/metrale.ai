@@ -372,13 +372,15 @@ gate green.
 ## Open questions for the team
 
 1. **Prices.** Are the proposed list prices approved to be public?
-2. **Mail at metrale.com.** Every contact door but security is a role mailbox
-   at metrale.com (item 29), and metrale.com has no mail records at all, so
-   each of them bounces today. metrale.ai has mail, and the security address,
-   `security@metrale.ai`, is there, the one the engine's `SECURITY.md` names.
-   Either give metrale.com mail and the mailboxes, or move `contacts` in
-   `brand.js` to metrale.ai addresses that exist; the forms Worker's `TO_*`
-   follow, and a test holds them equal.
+2. **Mail.** Every contact door but security is a role mailbox at metrale.com
+   (item 29), and metrale.com has no mail records at all, so each of them
+   bounces until the company sets its mail up. The security address,
+   `security@metrale.ai`, is on metrale.ai, which receives mail through Google
+   Workspace and publishes SPF and DKIM but no DMARC record. Whether a mailbox
+   or group named security exists is set in the Workspace admin console, which
+   this work could not reach, so it is unconfirmed. `/.well-known/security.txt`
+   publishes the address, and `src/lib/security-txt.test.js` holds it equal to
+   `contacts.security` and fails before the file lapses.
 3. **Form endpoint.** Do we want demo requests in a CRM? Then set `formEndpoint`.
 4. **The legal entity.** Metrale Corp., as the company wrote it: in the
    footers, the trust page's "Who you contract with" and the facts on /company.
@@ -523,8 +525,9 @@ gate green.
     the edge. The other nine industry pages are kept as data (`parkedIndustries` in
     `brand.js`), not built and not linked, with their stills installed. Moving an entry back
     into `industries` restores its page, its menu entry and its place in the sector bar.
-35. **`www.metrale.ai`** has no DNS record and does not resolve. `deploy/cloudflare/README.md`
-    has the redirect rule to add, and why it must not be a custom domain on the Pages project.
+35. **`www.metrale.ai`** redirects to the apex with a 301, path and query kept, since
+    2026-09-24: a proxied CNAME and a rule in the zone's redirect ruleset, never a custom
+    domain on the Pages project. `deploy/cloudflare/README.md` has why.
 36. **What the trust page does not claim.** "What we do not claim" says no security
     certification is held yet, names no customer, limits the ladder to the hardware it was
     measured on and says the Community Edition is not released. Each line changes when the

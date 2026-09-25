@@ -54,19 +54,20 @@ There is no origin server. What an nginx vhost would do comes from two files:
   with index.html and a **200**, so broken links return the front page and
   crawlers index unbounded soft-404s.
 
-## www -> apex, when it is added
+## www -> apex
 
-`www.metrale.ai` has no DNS record today, so it does not resolve. When it is
-added, do it as a zone-level Redirect Rule on `metrale.ai`, not as a custom
-domain on the Pages project:
+Since 2026-09-24 `www.metrale.ai` is a proxied CNAME to the apex, and a rule in
+the zone's dynamic redirect ruleset (`redirects`) sends every request for it to
+the apex, path and query kept:
 
     expression: (http.host eq "www.metrale.ai")
     action:     redirect, 301
     target:     concat("https://metrale.ai", http.request.uri.path)
     preserve query string: yes
 
-with `www` as a proxied CNAME to the apex. It needs no origin and no Pages
-binding, because a redirect rule is evaluated before Cloudflare resolves one.
+It needs no origin and no Pages binding, because a redirect rule is evaluated
+before Cloudflare resolves one. Keep `www` off the Pages project's custom
+domains, or the rule stops running.
 
 Why not the other ways, measured on the previous hosts: `_redirects` path rules
 work, but the documented absolute-URL form does **not** match on these projects,

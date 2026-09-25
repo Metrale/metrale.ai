@@ -1,0 +1,5 @@
+Contact: mailto:security@metrale.ai
+Expires: 2027-09-23T00:00:00.000Z
+Policy: https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md
+Preferred-Languages: en
+Canonical: https://metrale.ai/.well-known/security.txt
