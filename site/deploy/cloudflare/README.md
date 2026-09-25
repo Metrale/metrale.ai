@@ -54,6 +54,16 @@ There is no origin server. What an nginx vhost would do comes from two files:
   with index.html and a **200**, so broken links return the front page and
   crawlers index unbounded soft-404s.
 
+## A deleted page keeps answering
+
+Removing a page from the build does not take it off the site. Pages keeps
+answering the extensionless address of a deleted page from an old copy: seen on
+2026-09-25 with an `Age` of more than a day, while the same address with any
+query string returned the proper 404. So a page that leaves the build gets a
+line in `static/_redirects`, which Pages applies before it looks for a file. The
+held-back solution pages are the example; the blog's `_redirects` does the same
+for a post whose address changed.
+
 ## www -> apex
 
 Since 2026-09-24 `www.metrale.ai` is a proxied CNAME to the apex, and a rule in

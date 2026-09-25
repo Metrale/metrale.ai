@@ -246,6 +246,8 @@ diligence deck, the social cards, the film's title cards, `llms.txt`, the
 JSON-LD and the web manifest say Metrale, and nothing a visitor reads names
 another project: `OTHER_NAMES` in `web-shared/sources.mjs` lists those names,
 and `src/lib/content/other-names.test.js` and `docs/check.mjs` fail on them.
+The blog's `static/_redirects` holds one post's previous address, so old links
+land on the post.
 Metrale is its own company and Metrale Engine its own engine; the guide says
 so when asked, without repeating another project's name.
 
@@ -526,7 +528,10 @@ gate green.
 34. **Solutions held back.** Solutions shows neoclouds and GPU providers, and small teams and
     the edge. The other nine industry pages are kept as data (`parkedIndustries` in
     `brand.js`), not built and not linked, with their stills installed. Moving an entry back
-    into `industries` restores its page, its menu entry and its place in the sector bar.
+    into `industries` restores its page, its menu entry and its place in the sector bar,
+    once its line in `static/_redirects` goes: each held-back address redirects to /solutions
+    because Pages keeps serving a deleted page's old copy, and `held-solutions.test.js`
+    holds the two lists equal.
 35. **`www.metrale.ai`** redirects to the apex with a 301, path and query kept, since
     2026-09-24: a proxied CNAME and a rule in the zone's redirect ruleset, never a custom
     domain on the Pages project. `deploy/cloudflare/README.md` has why.
