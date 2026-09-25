@@ -27,6 +27,7 @@
 //   --gh refreshes the history snapshot, --no-gh skips it.
 // =============================================================================
 
+import { ENGINE_SLUG } from '../../../web-shared/sources.mjs';
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -50,7 +51,7 @@ const REPO = resolve(SITE_DIR, '..');
 const BUILD = join(SITE_DIR, 'build');
 const WORKER = join(SITE_DIR, 'deploy', 'cloudflare', 'prime-worker');
 const CACHE = join(SITE_DIR, 'scripts', '.cache');
-const REPO_SLUG = 'Avarok-Cybersecurity/atlas';
+const REPO_SLUG = ENGINE_SLUG;
 const BLOB = `https://github.com/${REPO_SLUG}/blob/main/`;
 
 const args = process.argv.slice(2);
@@ -369,7 +370,7 @@ const rows = [...(ladder.rows ?? [])]
   .sort((a, b) => a.c - b.c)
   .map((r) => {
     const m = r.baselines?.find((b) => b.id === r.best_baseline_id) ?? r.baselines?.[0] ?? {};
-    return { c: r.c, atlas: r.atlas, baseline: m.label ?? '', baseline_tok_s: m.tok_s ?? null, ratio: r.ratio_vs_best ?? null };
+    return { c: r.c, engine: r.engine, baseline: m.label ?? '', baseline_tok_s: m.tok_s ?? null, ratio: r.ratio_vs_best ?? null };
   });
 const data = {
   built: new Date().toISOString(),

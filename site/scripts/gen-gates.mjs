@@ -14,7 +14,7 @@
 //   (see gen-stars.mjs for the bug that rule comes from).
 //
 // The registered benchmark list is derived from the descriptor SSOT
-// (crates/avarok-plugin/src/benchmarks/**: `id: "<bench-id>"`), so the UI can
+// (crates/metrale-plugin/src/benchmarks/**: `id: "<bench-id>"`), so the UI can
 // name gated-but-not-yet-published benchmarks without hardcoding them.
 //
 // Records are slimmed for the page: `closure` (per-kernel hashes, ~10x the
@@ -36,7 +36,7 @@ import { engineRoot } from './lib/engine-root.mjs';
 const here = dirname(fileURLToPath(import.meta.url));
 const REPO = engineRoot();
 const RECORDS_ROOT = resolve(REPO, '.benchmarks');
-const DESCRIPTOR_ROOT = resolve(REPO, 'crates', 'avarok-plugin', 'src', 'benchmarks');
+const DESCRIPTOR_ROOT = resolve(REPO, 'crates', 'metrale-plugin', 'src', 'benchmarks');
 const OUT = resolve(here, '..', 'src', 'lib', 'gates.generated.json');
 
 function git(args, opts = {}) {
@@ -138,7 +138,7 @@ function slim(raw, branch) {
     recorded_at: raw.recorded_at,
     target_model: raw.target_model,
     served_by: raw.served_by,
-    atlas_version: raw.atlas_version,
+    engine_version: raw.metrale_version ?? raw.engine_version ?? '',
     hardware: raw.hardware,
     perf_class: raw.hardware_state?.perf_class ?? '',
     machine_id: raw.hardware_state?.before?.machine?.machine_id ?? raw.hardware_state?.after?.machine?.machine_id ?? '',
@@ -160,7 +160,7 @@ if (existsSync(RECORDS_ROOT)) {
     if (!statSync(dir).isDirectory()) continue;
     for (const f of readdirSync(dir).filter((f) => f.endsWith('.json'))) {
       const raw = JSON.parse(readFileSync(join(dir, f), 'utf8'));
-      records.set(`.benchmarks/${bench}/${f}`, slim(raw, ''));
+      records.set(`.benchmarks/${bench}/${f}`, { ...slim(raw, ''), path: `.benchmarks/${bench}/${f}` });
     }
   }
 }
@@ -218,7 +218,7 @@ try {
         if (records.has(p)) continue;
         try {
           const raw = JSON.parse(git(['show', `${ref}:${p}`]));
-          records.set(p, slim(raw, ref.replace(`${remote}/`, '')));
+          records.set(p, { ...slim(raw, ref.replace(`${remote}/`, '')), path: p });
           fromBranches += 1;
         } catch {
           /* unreadable blob on a foreign branch — skip, never fail the build */

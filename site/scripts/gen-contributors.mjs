@@ -10,30 +10,35 @@
 // No avatars are stored or hotlinked: the page renders initials, so it makes
 // no third party request and the Lighthouse third-party budget stays at zero.
 // =============================================================================
+import { ENGINE_SLUG, HISTORY_SLUG } from '../../web-shared/sources.mjs';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const out = resolve(here, '..', 'src/lib/contributors.generated.json');
-const REPO = 'Avarok-Cybersecurity/atlas';
+// The engine's contributors, counted across its history and its current home.
+const REPOS = [HISTORY_SLUG, ENGINE_SLUG];
 const BOTS = /\[bot\]$|^dependabot|^github-actions/i;
 
 async function fetchAll() {
-  const headers = { 'User-Agent': 'avarok-site-gen', Accept: 'application/vnd.github+json' };
+  const headers = { 'User-Agent': 'metrale-site-gen', Accept: 'application/vnd.github+json' };
   if (process.env.GH_TOKEN) headers.Authorization = `Bearer ${process.env.GH_TOKEN}`;
-  const all = [];
-  for (let page = 1; page <= 5; page++) {
-    const res = await fetch(`https://api.github.com/repos/${REPO}/contributors?per_page=100&page=${page}`, { headers });
-    if (!res.ok) throw new Error(`GitHub ${res.status}`);
-    const batch = await res.json();
-    all.push(...batch);
-    if (batch.length < 100) break;
+  const byLogin = new Map();
+  for (const repo of REPOS) {
+    for (let page = 1; page <= 5; page++) {
+      const res = await fetch(`https://api.github.com/repos/${repo}/contributors?per_page=100&page=${page}`, { headers });
+      if (!res.ok) throw new Error(`GitHub ${res.status}`);
+      const batch = await res.json();
+      for (const c of batch) {
+        if (c.type !== 'User' || BOTS.test(c.login)) continue;
+        const prev = byLogin.get(c.login);
+        byLogin.set(c.login, { login: c.login, url: c.html_url, contributions: (prev?.contributions ?? 0) + c.contributions });
+      }
+      if (batch.length < 100) break;
+    }
   }
-  return all
-    .filter((c) => c.type === 'User' && !BOTS.test(c.login))
-    .map((c) => ({ login: c.login, url: c.html_url, contributions: c.contributions }))
-    .sort((a, b) => b.contributions - a.contributions);
+  return [...byLogin.values()].sort((a, b) => b.contributions - a.contributions);
 }
 
 try {
@@ -41,7 +46,7 @@ try {
   if (contributors.length === 0) throw new Error('empty contributor list');
   const json = {
     generated_date: new Date().toISOString().slice(0, 10),
-    repo: REPO,
+    repo: ENGINE_SLUG,
     total_contributions: contributors.reduce((n, c) => n + c.contributions, 0),
     contributors,
   };

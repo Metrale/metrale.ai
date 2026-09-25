@@ -1,6 +1,6 @@
 {
-  "count": 682,
-  "url": "https://github.com/Avarok-Cybersecurity/atlas",
+  "count": 0,
+  "url": "https://github.com/Metrale/metrale-inference-alpha",
   "history": [
     {
       "date": "2026-05-06",
@@ -241,7 +241,11 @@
     {
       "date": "2026-09-14",
       "stars": 682
+    },
+    {
+      "date": "2026-09-24",
+      "stars": 0
     }
   ],
-  "generated_date": "2026-09-16"
+  "generated_date": "2026-09-24"
 }

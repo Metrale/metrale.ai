@@ -5,7 +5,7 @@
 // llms.txt is what an answer engine reads when it wants the short version of a
 //   site. That makes it a claim surface, so it is generated rather than typed:
 //   the model list comes from models.generated.json (itself generated from
-//   atlas-recipes), and the competitive numbers from ladder.generated.json.
+//   the recipe registry), and the competitive numbers from ladder.generated.json.
 //   Nothing here can drift from the page,
 //   because there is no second copy to drift.
 //
@@ -22,6 +22,7 @@
 // No third-party deps: Node builtins only.
 // =============================================================================
 
+import { CLI } from '../../web-shared/sources.mjs';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -66,8 +67,7 @@ push(
   '',
   home.hero.lede,
   '',
-  `${company.name} was named Atlas until September 2026. The engine, the repository and the`,
-  `domain are the same ones. The legal entity is ${company.legal}`,
+  `The legal entity is ${company.legal}`,
   '',
   '## The platform',
   '',
@@ -119,7 +119,7 @@ push(
 );
 for (const r of ladder.rows) {
   const best = r.baselines.find((b) => b.id === r.best_baseline_id);
-  push(`| ${r.c} | ${r.atlas.toFixed(2)} | ${best.tok_s.toFixed(2)} (${best.label}) | ${fmt(r.ratio_vs_best)}x |`);
+  push(`| ${r.c} | ${r.engine.toFixed(2)} | ${best.tok_s.toFixed(2)} (${best.label}) | ${fmt(r.ratio_vs_best)}x |`);
 }
 push(
   '',
@@ -148,8 +148,8 @@ push(
 push(
   `### Models (${recipes.length} recipes)`,
   '',
-  'Every model below maps to one recipe in atlas-recipes; the site cannot list a',
-  'model that has no recipe. Run any of them with `atlasctl run <id>`.',
+  'Every model below maps to one recipe in the recipe registry; the site cannot list a',
+  `model that has no recipe. Run any of them with \`${CLI} run <id>\`.`,
   ''
 );
 for (const vendor of [...new Set(recipes.map((r) => r.vendor))]) {

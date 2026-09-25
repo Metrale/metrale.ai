@@ -55,17 +55,6 @@
         "name": "Qwen3.5",
         "recipes": [
           {
-            "displayName": "Qwen3.5 0.8B BF16 Atlas",
-            "hfId": "Qwen/Qwen3.5-0.8B",
-            "params": "0.8B",
-            "quant": "none",
-            "topology": "single",
-            "recipeStem": "qwen3.5-0.8b-bf16-atlas",
-            "recipeId": "qwen3.5-0.8b-bf16-atlas",
-            "runnable": true,
-            "command": "atlasctl run qwen3.5-0.8b-bf16-atlas"
-          },
-          {
             "displayName": "Qwen3.5 122B A10B NVFP4 EP=2",
             "hfId": "Sehyo/Qwen3.5-122B-A10B-NVFP4",
             "params": "122B",

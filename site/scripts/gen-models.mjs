@@ -2,10 +2,9 @@
 // =============================================================================
 // gen-models.mjs — generate src/lib/models.generated.json from the recipe SSOT
 // -----------------------------------------------------------------------------
-// SSOT: https://github.com/Avarok-Cybersecurity/atlas-recipes
-//   (read-only mirror expected at /workspace/atlas-recipes/recipes on the host
-//    that runs this script — that public repo is the single source of truth for
-//    every supported model + its canonical `atlasctl run` command).
+// SSOT: the recipe registry, https://github.com/Metrale/metralectl
+//   (a checkout's recipes/ directory, METRALE_RECIPES_ROOT — that public repo is
+//    the single source of truth for every supported model and its run command).
 //
 // Regenerate with:   node site/scripts/gen-models.mjs
 //
@@ -22,12 +21,13 @@
 // plus a `description: |` literal block, and a `defaults:` scalar block.
 // =============================================================================
 
+import { CLI, REGISTRY_REPO } from '../../web-shared/sources.mjs';
 import { readdirSync, statSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname, basename, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const RECIPES_ROOT = process.env.AVAROK_RECIPES_ROOT || '/workspace/atlas-recipes/recipes';
-const SSOT_URL = 'https://github.com/Avarok-Cybersecurity/atlas-recipes';
+const RECIPES_ROOT = process.env.METRALE_RECIPES_ROOT || '/workspace/metralectl/recipes';
+const SSOT_URL = REGISTRY_REPO;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT = resolve(here, '..', 'src', 'lib', 'models.generated.json');
@@ -196,7 +196,7 @@ function inferTopology(stem, top) {
 // --- per-recipe display label ------------------------------------------------
 function recipeDisplay(stem) {
   // humanize the file stem into a short variant label
-  const parts = stem.replace(/-avarok$/, '').split('-');
+  const parts = stem.split('-');
   const out = parts.map((p) => {
     const lp = p.toLowerCase();
     if (lp === 'nvfp4a16' || lp === 'nvfp4') return 'NVFP4';
@@ -217,7 +217,15 @@ function recipeDisplay(stem) {
 }
 
 // --- main --------------------------------------------------------------------
-const files = walkYaml(RECIPES_ROOT).sort();
+// Recipes the command people install today cannot run: it carries its own copy
+// of the registry, compiled in, where these have other names. A card for one
+// would print a command that fails, so they wait for the registry's own command
+// (`CLI` in web-shared/sources.mjs; site/FACELIFT.md, "What still moves").
+const HELD = new Set(['qwen3.5-0.8b-bf16-metrale']);
+const stemOf = (file) => basename(file).replace(/\.(ya?ml)$/, '');
+const found = walkYaml(RECIPES_ROOT).sort();
+const files = found.filter((f) => !HELD.has(stemOf(f)));
+if (found.length !== files.length) console.log(`gen-models: ${found.length - files.length} recipe(s) held back until the registry's own command ships`);
 if (files.length === 0) {
   console.error(`No recipe YAML files found under ${RECIPES_ROOT}`);
   process.exit(1);
@@ -237,9 +245,9 @@ for (const file of files) {
 
   // A single-node recipe is one command. A multi-node recipe needs one
   // invocation per node, so the card shows the head's; the docs carry the rest.
-  // atlasctl refuses to launch a multi-node recipe on one node rather than
+  // The command refuses to launch a multi-node recipe on one node rather than
   // quietly serving something smaller than the recipe describes.
-  const command = topology === 'single' ? `atlasctl run ${stem}` : `atlasctl run ${stem} --rank 0 --world-size 2 --master-addr <spark-1>`;
+  const command = topology === 'single' ? `${CLI} run ${stem}` : `${CLI} run ${stem} --rank 0 --world-size 2 --master-addr <spark-1>`;
   const recipe = {
     displayName: recipeDisplay(stem),
     hfId: top.model || '',

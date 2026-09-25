@@ -26,6 +26,7 @@
 // No third-party deps: Node builtins only.
 // =============================================================================
 
+import { ENGINE_REPO } from '../../web-shared/sources.mjs';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { writeStable } from './lib/write-stable.mjs';
@@ -114,10 +115,10 @@ if (!matched) die('no matched-parity baseline');
 
 // `variant`: another configuration of the SUBJECT engine (e.g. a different
 // drafter). Drawn on the chart, and deliberately absent from `rows`,
-// `ratio_vs_best`, `wins` and `summary` below: the published claim is Atlas
-// against the matched vLLM baseline, and admitting a second Atlas
+// `ratio_vs_best`, `wins` and `summary` below: the published claim is the
+// engine against the matched vLLM baseline, and admitting a second engine
 // configuration would change what that number means. A variant is evidence
-// about Atlas, not evidence about the comparison.
+// about the engine, not evidence about the comparison.
 //
 // It IS held to the same rung coverage as a baseline, for the same reason: a
 // line that stops partway along a log2 axis reads as a measurement, not as a
@@ -135,10 +136,21 @@ for (const s2 of series) {
 
 const at = (s, c) => s.rungs.find((r) => r.c === c);
 
-// Every rung the subject measured must exist in every baseline, or the
+// A baseline measured at only some of the subject's rungs (the energy leg, for
+// one) stays out of the per-rung comparison, so every published ratio means the
+// same thing at every rung. It is still in `series`, for the charts and for the
+// economics that read its joules. The matched baseline must cover every rung.
+const covers = (s) => subject.rungs.every((row) => at(s, row.c));
+if (!covers(matched)) die(`the matched baseline ${matched.id} does not cover every rung`);
+const compared = baselines.filter(covers);
+for (const b of baselines.filter((b) => !covers(b))) {
+  console.warn(`gen-ladder: baseline ${b.id} covers ${b.rungs.length} of ${subject.rungs.length} rungs; left out of the comparison`);
+}
+
+// Every rung the subject measured must exist in every compared baseline, or the
 // comparison silently changes shape partway along the x-axis.
 const rows = subject.rungs.map((row) => {
-  const perBaseline = baselines.map((b) => {
+  const perBaseline = compared.map((b) => {
     const r = at(b, row.c);
     if (!r) die(`baseline ${b.id} is missing rung C=${row.c}`);
     return { id: b.id, label: b.label, parity: b.parity, tok_s: r.tok_s };
@@ -147,7 +159,7 @@ const rows = subject.rungs.map((row) => {
   const m = perBaseline.find((b) => b.id === matched.id);
   return {
     c: row.c,
-    atlas: row.tok_s,
+    engine: row.tok_s,
     baselines: perBaseline,
     best_baseline_id: m.id,
     ratio_vs_best: r3(row.tok_s / m.tok_s),
@@ -174,7 +186,7 @@ const out = {
   subtitle: manifest.subtitle,
   aggregate: manifest.aggregate,
   results_doc: manifest.results_doc,
-  results_doc_url: `https://github.com/Avarok-Cybersecurity/atlas/blob/main/${manifest.results_doc}`,
+  results_doc_url: `${ENGINE_REPO}/blob/main/${manifest.results_doc}`,
   workload: manifest.workload,
   box: manifest.box,
   harness_shas: manifest.harness_shas,

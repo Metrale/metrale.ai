@@ -413,7 +413,7 @@ for (const p of pages) {
   if (p.copy.length)
     L.push(`- copy: ${p.copy.map((c) => `\`${c.file}\`${c.exports.length ? ` (${c.exports.join(', ')})` : ''}`).join(', ')}`);
   if (p.forms.length)
-    L.push(`- forms: ${p.forms.map((f) => `\`${f}\``).join(', ')} (one component, \`src/lib/components/avarok/DemoForm.svelte\`)`);
+    L.push(`- forms: ${p.forms.map((f) => `\`${f}\``).join(', ')} (one component, \`src/lib/components/marketing/DemoForm.svelte\`)`);
   if (p.controls.length)
     L.push(
       `- controls: ${p.controls
