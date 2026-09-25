@@ -1,44 +1,42 @@
 # The docs
 
-`docs.metrale.ai`: the engine's book, published as Metrale's. The book itself
-(37 chapters, an mdBook) is written and kept in the engine's repository, under
-`book/` beside the crates, by the engine team. Nothing here changes it there.
-This directory publishes it under the Metrale brand, at the commit the site is
-built against, and it is the one place to look when the docs need a change of
-dress rather than a change of words.
+`docs.metrale.ai`: the engine's book. The book itself (an mdBook) is written and
+kept in the engine's repository, `Metrale/metrale-inference-alpha`, under
+`book/` beside the crates, by the engine team, skin and wordmark included.
+Nothing here changes it there. This directory publishes it at the company's
+docs address, at the commit the site is built against.
 
 ## How a build works
 
-`docs/build.mjs`, in four moves over a fresh copy of the book in `docs/.book`:
+`docs/build.mjs`, over a fresh copy of the book in `docs/.book`:
 
-1. **The tokens.** This repository's `web-shared/avarok-tokens.css` replaces the
-   copy the book links, so the docs, the site and the blog share one palette.
-2. **The type.** The site's Urbanist and IBM Plex Mono, self hosted beside the
-   pages (`fonts/fonts.css` is written by the build), in place of the system
-   stacks the book falls back to.
-3. **The layer.** `docs/theme/metrale.css` and `metrale.js` put the lockup in the
-   menu bar, linked to the front page, with "Engine docs" beside it. The book's
-   own skin (`theme/css/avarok.css`, the engine's) keeps every rule it has.
-4. **The words.** `docs/rebrand.mjs` renames what a reader sees and nothing
-   else. The pairs are listed longest first and applied with the same word
-   boundary the site's rename uses (`site/scripts/brand/rename.mjs`), so
-   `atlasctl`, `atlas serve`, `atlas-recipes`, `AtlasConfig`, `ATLAS_HOME` and
-   `github.com/Avarok-Cybersecurity/atlas` stay exactly as they are. Hosts move
-   as hosts, inside addresses. The unit test beside the site's
-   (`site/src/lib/docs-rebrand.test.js`) pins both halves of that rule.
+1. **The links.** The book links its tokens, its fonts and their licences to
+   files outside `book/` (`web-shared/metrale-tokens.css` and
+   `site/static/fonts/` in the engine's repository), which a checkout of `book/`
+   alone does not have. This repository keeps the same files at the same paths,
+   so each link is replaced by the file it names, from here. The docs, the site
+   and the blog share one palette and one set of faces that way.
+2. **The hosts.** The engine team publishes the book at `book.dev.metrale.ai`,
+   its blog at `blog.dev.metrale.ai` and its project site at `dev.metrale.ai`.
+   `docs/hosts.mjs` moves those to `docs.metrale.ai`, `blog.metrale.ai` and
+   `metrale.ai`, so the canonical addresses and `llms.txt` name this host. The
+   API reference, `docs.dev.metrale.ai`, keeps its address. The unit test beside
+   the site's (`site/src/lib/docs-hosts.test.js`) pins the map.
 
 Then mdBook 0.4.40 builds it, the book's own two scripts add `llms.txt` and the
 per-page social metadata, and the icons, the card, the Pages headers and a
 `version.txt` (the engine commit and this repository's) are copied in.
 `docs/check.mjs` then reads every built page the way a reader would, without
-its scripts, code and markup, and fails on any "Atlas" left, any old host, a
-missing title, layer, font or file.
+its scripts and markup, and fails on a name the company no longer uses (the list
+is `RETIRED` in `web-shared/sources.mjs`), on a host the build should have
+moved, on a missing title, skin, font or file, and on a link shipped as the
+text of its path.
 
 ```sh
 # from the repository root, with a checkout of the engine beside it
-AVAROK_ENGINE_ROOT=../atlas node docs/build.mjs    # needs mdbook 0.4.40 on PATH
+METRALE_ENGINE_ROOT=../metrale-inference-alpha node docs/build.mjs   # needs mdbook 0.4.40 on PATH
 node docs/check.mjs
-npx serve docs/build                              # or any static server
+npx serve docs/build                                                 # or any static server
 ```
 
 `MDBOOK=/path/to/mdbook` names the binary when it is not on the PATH. The
@@ -64,20 +62,20 @@ step waits until the host serves the commit it just published, read from
 
 The docs follow `site/engine.ref`, the same pin the site's numbers come from.
 Moving it is a pull request like any other; this workflow runs on it, so a
-chapter the engine team added or renamed shows up in the check before it is
-published. When the engine's repository itself renames, every pair in
-`rebrand.mjs` stops matching and the pass becomes a no-op; delete the list then,
-and the checkout step's repository name in the workflow.
+chapter the engine team added or renamed, a link the book grew, or a host it
+started naming shows up in the check before it is published.
 
 ## What is deliberately not here
 
 - **The chapters.** They belong with the code they describe. A wrong sentence in
   the docs is a pull request against the engine's `book/`, and it reaches
   `docs.metrale.ai` when the pin moves.
+- **The skin.** The book carries its own (`theme/css/metrale.css`, the wordmark
+  in `theme/metrale.js` and `wordmark.css`). A change of dress is a pull request
+  there too.
 - **A new outline.** The book is organised around the engine's internals. What
   Metrale's documentation should look like, starting from the reader, is
   proposed in [`OUTLINE.md`](OUTLINE.md) for the team to decide on; nothing of
   it is built until they do.
-- **The API reference** (`/api/`, rustdoc), which the engine's own workflow
-  builds from the crates. The book's redirect to it stays; the pages behind it
-  come with a later step, or a link to where the engine publishes them.
+- **The API reference** (rustdoc), which the engine team publishes at
+  `docs.dev.metrale.ai`.

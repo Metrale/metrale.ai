@@ -69,8 +69,8 @@ lists what is measured on it and what is not.
 
 ### 6. Reference
 
-- `atlasctl` and the engine's commands, every flag. (New as a single page;
-  today they are spread through the book.)
+- The command people install and the engine's own commands, every flag. (New
+  as a single page; today they are spread through the book.)
 - Configuration files and environment.
 - The OpenAI-compatible API, with the extensions.
 - The agent protocol, version by version.
@@ -113,7 +113,8 @@ cut from those the way the guide's knowledge base is cut from the built site.
    knows how to do for the book alone).
 2. Who owns parts 3 and 4: the engine team writes the agent's pages, or the site
    team drafts them from the module headers for the engine team to correct.
-3. Naming in the reference: the commands are still `atlasctl` and `atlas`, and
-   the docs should say so plainly until the engine renames them.
-4. When: after the engine's repository move, so the outline is built once,
-   under the final names.
+3. Naming in the reference: the engine's server is `met`, and the command people
+   install becomes `metralectl` when the registry ships its release. The
+   reference names whichever a reader actually runs.
+4. When: once that release ships, so the reference is written once, under the
+   names people run.
