@@ -717,7 +717,7 @@ nav:not(.av-nav) {
   font-size: 0.98rem;
   line-height: 1.55;
 }
-.mlperf-note {
+.gate-note {
   margin-top: 1.5rem;
   font-size: 0.9rem;
   color: var(--t2);
@@ -772,13 +772,6 @@ nav:not(.av-nav) {
   .scale-note {
     padding: 1.2rem 1.1rem;
   }
-}
-.trademark {
-  font-size: 0.68rem;
-  color: var(--t3);
-  line-height: 1.5;
-  margin-top: 0.9rem;
-  max-width: 62ch;
 }
 .repro {
   display: flex;
@@ -1606,28 +1599,6 @@ nav:not(.av-nav) {
 .ms-foot .link {
   font-weight: 600;
 }
-.qwen-block {
-  margin-top: 1.5rem;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 8px;
-  padding: 1rem 1.25rem;
-  font-size: 0.86rem;
-  color: var(--t2);
-  line-height: 1.6;
-}
-.qwen-block a {
-  color: var(--accent);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
-  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
-}
-.qwen-block a:hover {
-  text-decoration-color: var(--accent);
-}
 
 /* ---- get running ---------------------------------------------------------- */
 .run-grid {
@@ -1928,9 +1899,6 @@ footer {
   font-size: 0.68rem;
   color: var(--t3);
   line-height: 1.6;
-}
-.footer-legal .tm {
-  margin-top: 0.6rem;
 }
 
 /* ---- responsive -----------------------------------------------------------

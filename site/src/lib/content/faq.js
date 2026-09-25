@@ -30,7 +30,7 @@ export const faq = [
   {
     tags: ['home', 'hardware'],
     q: 'What hardware does it run on?',
-    a: 'NVIDIA DGX Spark (GB10) is verified today, and AMD Strix Halo (gfx1151) runs the same CUDA source compiled through SCALE, with both submitted to MLPerf Inference v6.1. Hopper and Blackwell datacenter targets are in active bring up with receipts in the changelog. Expert parallelism across two nodes ships as recipes and a three node topology is being wired up.',
+    a: 'NVIDIA DGX Spark (GB10) is verified today, and AMD Strix Halo (gfx1151) runs the same CUDA source compiled through SCALE. Hopper and Blackwell datacenter targets are in active bring up with receipts in the changelog. Expert parallelism across two nodes ships as recipes and a three node topology is being wired up.',
   },
   {
     tags: ['home', 'security', 'deploy'],

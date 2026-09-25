@@ -462,8 +462,8 @@ export const hardwarePage = {
     {
       name: 'AMD Strix Halo',
       chip: 'gfx1151 · RDNA 3.5',
-      status: 'MLPerf submitted',
-      body: 'One codebase, both vendors. The CUDA kernels compile straight for gfx1151 through SCALE by Spectral Compute. AMD provided the Strix Halo desktop the MLPerf Inference v6.1 numbers were submitted on.',
+      status: 'Runs through SCALE',
+      body: 'One codebase, both vendors. The CUDA kernels compile straight for gfx1151 through SCALE by Spectral Compute. AMD provided the Strix Halo desktop it runs on.',
       href: links.scale,
       cta: 'About SCALE',
     },

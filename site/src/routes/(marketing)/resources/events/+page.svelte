@@ -5,7 +5,7 @@
   import { events as e } from '$lib/content/resources.js';
   import { routes, links } from '$lib/content/brand.js';
 
-  const WHEN = { daily: 'Every day', request: 'By request', pending: 'Date set by MLCommons' };
+  const WHEN = { daily: 'Every day', request: 'By request' };
   const fmt = (d) =>
     WHEN[d]
       ? WHEN[d]

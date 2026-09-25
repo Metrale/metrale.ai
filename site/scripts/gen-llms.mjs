@@ -5,8 +5,8 @@
 // llms.txt is what an answer engine reads when it wants the short version of a
 //   site. That makes it a claim surface, so it is generated rather than typed:
 //   the model list comes from models.generated.json (itself generated from
-//   atlas-recipes), the competitive numbers from ladder.generated.json, and the
-//   MLPerf status from mlperf.json. Nothing here can drift from the page,
+//   atlas-recipes), and the competitive numbers from ladder.generated.json.
+//   Nothing here can drift from the page,
 //   because there is no second copy to drift.
 //
 // Prose that is genuinely editorial (what the engine is, what it is not) is read
@@ -34,7 +34,6 @@ const load = (p) => import(pathToFileURL(resolve(site, p)).href);
 
 const models = read('src/lib/models.generated.json');
 const ladder = read('src/lib/ladder.generated.json');
-const mlperf = read('src/lib/mlperf.json');
 const bench = read('src/lib/benchmarks.generated.json');
 
 // data.js is an ES module of plain exports; importing it keeps the copy in one
@@ -125,7 +124,6 @@ for (const r of ladder.rows) {
 push(
   '',
   `Full campaign log including every rung lost on the way: ${ladder.results_doc_url}`,
-  `MLPerf Inference v6.1: ${mlperf.status}, closed edge division, on both GB10 and gfx1151.`,
   `Release gate: ${bench.methodology}`,
   `Reproduce: ${bench.repro_cmd}`,
   ''

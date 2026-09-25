@@ -70,7 +70,7 @@ deployments across nodes.
 ### What it runs on
 
 - NVIDIA DGX Spark (GB10 · SM121) — Verified today. One multi model binary serves a full matrix of hand tuned targets on a single GB10. NVFP4 and FP8, MTP speculative decoding, EP=2 across two Sparks. Every target passes the serve matrix before we cut an image.
-- AMD Strix Halo (gfx1151 · RDNA 3.5) — MLPerf submitted. One codebase, both vendors. Our CUDA kernels compile straight for AMD gfx1151 with SCALE by Spectral Compute. No HIP port, no second kernel tree. AMD provided the Strix Halo desktop we ran and submitted our MLPerf Inference v6.1 numbers on.
+- AMD Strix Halo (gfx1151 · RDNA 3.5) — Runs through SCALE. One codebase, both vendors. Our CUDA kernels compile straight for AMD gfx1151 with SCALE by Spectral Compute. No HIP port, no second kernel tree. AMD provided the Strix Halo desktop it runs on.
 
 ### Measured performance
 
@@ -94,7 +94,6 @@ against the matched vLLM + MTP configuration at each concurrency.
 | 128 | 478.11 | 358.57 (vLLM + MTP) | 1.333x |
 
 Full campaign log including every rung lost on the way: https://github.com/Avarok-Cybersecurity/atlas/blob/main/bench/ladder38/RESULTS.md
-MLPerf Inference v6.1: submitted, closed edge division, on both GB10 and gfx1151.
 Release gate: An Atlas image ships only after the serve matrix passes: every model boots, stays coherent (greedy determinism, no token leakage, tool reliability), and holds throughput within 10% of its committed baseline.
 Reproduce: python3 tests/run_all_models.py && python3 tests/gate_results.py --update-baselines
 

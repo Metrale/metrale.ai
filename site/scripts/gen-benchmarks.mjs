@@ -16,10 +16,6 @@
 //                            source_path, repro_cmd }] }
 //   status: "pending" when zero baselines exist, else "verified".
 //
-// MLPerf numbers are deliberately NOT sourced here — those live in the
-// hand-edited src/lib/mlperf.json and only appear once officially published,
-// in MLCommons citation format.
-//
 // No third-party deps: Node builtins + `git` (via child_process) for the stamp.
 // =============================================================================
 

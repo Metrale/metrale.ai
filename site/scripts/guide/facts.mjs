@@ -37,7 +37,6 @@ export async function collectFacts(brandFile = join(SITE_DIR, 'src', 'lib', 'con
   facts['footer.slogan'] = brand.footer.slogan;
   facts['footer.legal'] = brand.footer.legal;
   facts['footer.license'] = brand.footer.license;
-  facts['footer.mlperf'] = brand.footer.mlperf;
   facts['form.endpoint'] = brand.formEndpoint || '(none: forms draft an email)';
   return facts;
 }

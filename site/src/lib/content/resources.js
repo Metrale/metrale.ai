@@ -88,16 +88,6 @@ export const events = {
       cta: 'Book a session',
     },
     {
-      // MLCommons sets this date and has not published it: src/lib/mlperf.json
-      // leaves expected_publish_date empty. Do not type one in.
-      date: 'pending',
-      title: 'MLPerf Inference v6.1 results',
-      place: 'Published by MLCommons',
-      body: 'Our submission is in the closed edge division on both GB10 and gfx1151 from the same CUDA source. The numbers render on the benchmarks page the moment MLCommons publishes them.',
-      href: links.mlcommons,
-      cta: 'The benchmark announcement',
-    },
-    {
       date: 'daily',
       title: 'Discord, every day',
       place: 'discord.gg/RQcGakU2jW',
@@ -161,7 +151,7 @@ export const labs = {
     },
     {
       title: 'Agentic benchmarks',
-      body: 'Contributor to the MLPerf edge agentic benchmark. BFCL and replayed agentic trajectories as gates, because a benchmark should look like the work.',
+      body: 'BFCL and replayed agentic trajectories as gates, because a benchmark should look like the work.',
       color: 'cyan',
     },
     {

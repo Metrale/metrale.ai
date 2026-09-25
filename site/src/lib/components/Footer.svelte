@@ -1,5 +1,5 @@
 <script>
-  import { footer, contactEmails, discordUrl, xUrl, mlperfTrademark, nvidiaInceptionUrl } from '$lib/data.js';
+  import { footer, contactEmails, discordUrl, xUrl, nvidiaInceptionUrl } from '$lib/data.js';
   import AtlasLockup from '$shared/components/AtlasLockup.svelte';
   import DiscordIcon from './DiscordIcon.svelte';
   import XIcon from './XIcon.svelte';
@@ -43,6 +43,5 @@
 
   <div class="footer-legal">
     <div>© Metrale · Pure Rust + CUDA · Community Edition AGPLv3.</div>
-    <div class="tm">{mlperfTrademark}</div>
   </div>
 </footer>

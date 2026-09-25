@@ -61,11 +61,6 @@
         <span class="name">{ladder.summary.won}/{ladder.summary.rungs} rungs</span>
         <span class="val">{ladder.summary.min_ratio.toFixed(3)}–{ladder.summary.max_ratio.toFixed(3)}×</span>
       </div>
-      <div class="receipt-row">
-        <span class="ok pending">◷</span>
-        <span class="name">MLPerf v6.1</span>
-        <span class="val">submitted</span>
-      </div>
     {:else}
       <div class="receipt-pending">
         <span class="tag">▷ {verified.pendingHeadline}</span>

@@ -1,6 +1,6 @@
 {
- "revision": 16,
- "date": "2026-09-23",
+ "revision": 17,
+ "date": "2026-09-24",
  "changes": [
   {
    "rev": 1,
@@ -259,6 +259,23 @@
     "ups.svg",
     "og-image.png",
     "nswc.webp"
+   ]
+  },
+  {
+   "rev": 17,
+   "date": "2026-09-24",
+   "base": "4ee46955f",
+   "note": "Withdrawn claims: the Transformers merge, Qwen Dev Ambassadors, MLPerf and MLCommons, and the Sparkrun notice",
+   "touched": [
+    "footer.mlperf",
+    "links.mlcommons",
+    "links.qwenAmbassador",
+    "links.transformersPr",
+    "huggingface-dark.svg",
+    "huggingface.svg",
+    "mlcommons-dark.svg",
+    "mlcommons.svg",
+    "qwen.svg"
    ]
   }
  ],
@@ -884,51 +901,6 @@
    ]
   },
   {
-   "key": "footer.mlperf",
-   "value": "The MLPerf name and logo are registered and unregistered trademarks of MLCommons Association in the United States and other countries. All rights reserved. Unauthorized use strictly prohibited. See mlcommons.org for more information.",
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/benchmarks",
-    "/company",
-    "/company/careers",
-    "/contact",
-    "/control",
-    "/demo",
-    "/diligence",
-    "/engine",
-    "/",
-    "/labs",
-    "/platform",
-    "/platform/control",
-    "/platform/deployment",
-    "/platform/economics",
-    "/platform/engine",
-    "/platform/hardware",
-    "/platform/security",
-    "/pricing",
-    "/resources",
-    "/resources/contributors",
-    "/resources/events",
-    "/resources/updates",
-    "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
-    "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
-    "/solutions/smb-edge",
-    "/trust",
-    "/waitlist",
-    "/why-metrale"
-   ]
-  },
-  {
    "key": "footer.slogan",
    "value": "Same silicon. Smarter inference. Stronger scalability.",
    "rev": 1,
@@ -1333,29 +1305,6 @@
    ]
   },
   {
-   "key": "links.mlcommons",
-   "value": "https://mlcommons.org/2026/07/mlperf-inference-v61-edge-agentic/",
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/engine",
-    "/",
-    "/resources/events"
-   ]
-  },
-  {
-   "key": "links.qwenAmbassador",
-   "value": "https://qwen.ai/ambassador",
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/engine",
-    "/"
-   ]
-  },
-  {
    "key": "links.recipes",
    "value": "https://github.com/Avarok-Cybersecurity/atlas-recipes",
    "rev": 1,
@@ -1463,17 +1412,6 @@
    "rev": 1,
    "date": "2026-09-18",
    "used": []
-  },
-  {
-   "key": "links.transformersPr",
-   "value": "https://github.com/huggingface/transformers/pull/46423",
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/engine",
-    "/"
-   ]
   },
   {
    "key": "links.x",
@@ -2428,67 +2366,12 @@
    "used": []
   },
   {
-   "path": "site/static/logos/huggingface-dark.svg",
-   "sha": "fb35e3e6cdfb",
-   "bytes": 23961,
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
-  },
-  {
-   "path": "site/static/logos/huggingface.svg",
-   "sha": "f17722a56d88",
-   "bytes": 23990,
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
-  },
-  {
    "path": "site/static/logos/kraken.svg",
    "sha": "cd3c8afe2c6e",
    "bytes": 3007,
    "rev": 1,
    "date": "2026-09-18",
    "used": []
-  },
-  {
-   "path": "site/static/logos/mlcommons-dark.svg",
-   "sha": "963df8ef860d",
-   "bytes": 1683,
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
-  },
-  {
-   "path": "site/static/logos/mlcommons.svg",
-   "sha": "4b54e1d2d8d9",
-   "bytes": 3926,
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
-  },
-  {
-   "path": "site/static/logos/qwen.svg",
-   "sha": "cae4a6dc3fe9",
-   "bytes": 4734,
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/company",
-    "/"
-   ]
   },
   {
    "path": "site/static/logos/scale-dark.svg",
@@ -3975,24 +3858,6 @@
      "button": false
     },
     {
-     "text": "Named contributor to the MLPerf edge agentic benchmark.",
-     "href": "https://mlcommons.org/2026/07/mlperf-inference-v61-edge-agentic/",
-     "kind": "out",
-     "button": false
-    },
-    {
-     "text": "Fused Qwen GDN kernel merged into Transformers.",
-     "href": "https://github.com/huggingface/transformers/pull/46423",
-     "kind": "out",
-     "button": false
-    },
-    {
-     "text": "Dev Ambassadors. A recipe for every release.",
-     "href": "https://qwen.ai/ambassador",
-     "kind": "out",
-     "button": false
-    },
-    {
      "text": "SCALE by Spectral Compute One CUDA source, NVIDIA and AMD.",
      "href": "https://docs.scale-lang.com/stable/",
      "kind": "out",
@@ -4349,9 +4214,6 @@
       "hardware",
       "hero",
       "mission",
-      "mlcommons",
-      "mlperfCopy",
-      "mlperfTrademark",
       "models",
       "nav",
       "news",
@@ -4477,24 +4339,6 @@
      "button": false
     },
     {
-     "text": "Named contributor to the MLPerf edge agentic benchmark.",
-     "href": "https://mlcommons.org/2026/07/mlperf-inference-v61-edge-agentic/",
-     "kind": "out",
-     "button": false
-    },
-    {
-     "text": "Fused Qwen GDN kernel merged into Transformers.",
-     "href": "https://github.com/huggingface/transformers/pull/46423",
-     "kind": "out",
-     "button": false
-    },
-    {
-     "text": "Dev Ambassadors. A recipe for every release.",
-     "href": "https://qwen.ai/ambassador",
-     "kind": "out",
-     "button": false
-    },
-    {
      "text": "SCALE by Spectral Compute One CUDA source, NVIDIA and AMD.",
      "href": "https://docs.scale-lang.com/stable/",
      "kind": "out",
@@ -4561,19 +4405,7 @@
      "button": false
     },
     {
-     "text": "July 2026 Named contributor to the MLPerf Inference v6.1 edge agentic benchmark Read the a",
-     "href": "https://mlcommons.org/2026/07/mlperf-inference-v61-edge-agentic/",
-     "kind": "out",
-     "button": false
-    },
-    {
-     "text": "July 2026 Fused Qwen Gated DeltaNet kernel merged into Transformers See the pull request g",
-     "href": "https://github.com/huggingface/transformers/pull/46423",
-     "kind": "out",
-     "button": false
-    },
-    {
-     "text": "July 2026 Strix Halo hardware provided. MLPerf v6.1 submitted from the same CUDA source Se",
+     "text": "July 2026 Strix Halo hardware provided for the gfx1151 bring up See the post x.com",
      "href": "https://x.com/AtlasInferenceX",
      "kind": "out",
      "button": false
@@ -5578,12 +5410,6 @@
      "text": "Book a session",
      "href": "/demo#book",
      "kind": "page",
-     "button": false
-    },
-    {
-     "text": "The benchmark announcement",
-     "href": "https://mlcommons.org/2026/07/mlperf-inference-v61-edge-agentic/",
-     "kind": "out",
      "button": false
     },
     {
@@ -7431,19 +7257,6 @@
   ],
   "https://github.com/ggml-org/llama.cpp/pull/18680": [
    "/company"
-  ],
-  "https://github.com/huggingface/transformers/pull/46423": [
-   "/company",
-   "/"
-  ],
-  "https://mlcommons.org/2026/07/mlperf-inference-v61-edge-agentic/": [
-   "/company",
-   "/",
-   "/resources/events"
-  ],
-  "https://qwen.ai/ambassador": [
-   "/company",
-   "/"
   ],
   "https://www.nvidia.com/en-us/startups/": [
    "/company",
