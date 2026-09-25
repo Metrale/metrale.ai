@@ -232,3 +232,38 @@ export function frontMatter(md) {
   }
   return { meta, body: m[2] };
 }
+
+// ---- claims the company has withdrawn ----------------------------------------
+// FACELIFT.md, "Four claims are withdrawn". A sentence that makes one of them is
+// dropped from every passage the guide reads, in every tier, so an older page, a
+// commit title or a partner document cannot put the claim back in the guide's
+// mouth. The patterns are case-insensitive and carry no /g flag, so `test` has
+// no state between calls.
+export const WITHDRAWN = [
+  /\bMLPerf\b/i,
+  /\bMLCommons\b/i,
+  /\bDev\s+Ambassadors?\b|\bQwen\b[^.\n]*\bambassadors?\b/i,
+  /Hugging\s*Face\s+Transformers|\b(merged?|landed|ships?)\b[^.\n]{0,40}\b(into|in)\s+(Hugging\s*Face|Transformers)\b|upstream\s+merge|transformers(\/pull\/|\s*#)46423/i,
+  /\bSparkrun\b[^.\n]*\bretired\b/i,
+];
+
+/** True when the text makes a withdrawn claim. */
+export const isWithdrawn = (text) => WITHDRAWN.some((re) => re.test(String(text)));
+
+/** The text without any sentence that makes a withdrawn claim. Lines stay
+ *  lines; a line left with no sentence is dropped, blank lines are kept. */
+export function withdraw(text) {
+  const out = [];
+  for (const line of String(text).split('\n')) {
+    if (!line.trim()) {
+      out.push(line);
+      continue;
+    }
+    const kept = line.split(/(?<=[.!?])\s+/).filter((s) => !isWithdrawn(s));
+    if (kept.length) out.push(kept.join(' '));
+  }
+  return out
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
