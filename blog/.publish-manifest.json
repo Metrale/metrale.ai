@@ -35,6 +35,18 @@
         "medium": null,
         "x": null
       }
+    },
+    {
+      "slug": "leveraging-the-stack",
+      "title": "Wholistic services dealing locally",
+      "published_at": "2026-09-18",
+      "topics": ["engineering", "design"],
+      "urls": {
+        "blog": "https://blog.metrale.ai/posts/leveraging-the-stack",
+        "devto": null,
+        "medium": null,
+        "x": null
+      }
     }
   ]
 }

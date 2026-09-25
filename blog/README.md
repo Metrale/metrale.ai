@@ -56,6 +56,12 @@ links and search results move; that zone is in another account.
 
 The posts are the engine team's own, as they keep them under `blog/` in the
 engine's repository, with their links pointed at this blog and the site rather
-than at the engine team's hosts. The share card, `static/og-image.png`, is drawn by the
-site's renderer: `node scripts/media/og.mjs --blog` from `site/`, after a site
-build.
+than at the engine team's hosts. Posts written for this blog start here, as
+markdown unless the form needs more: `leveraging-the-stack.svelte` turns each
+line into the measurement under it as the reader scrolls, which markdown cannot
+say. A post may carry a `description` beside its `dek`, for search, share cards,
+the feed and `llms.txt`, when the dek is written for a reader rather than as a
+summary.
+
+The share card, `static/og-image.png`, is drawn by the site's renderer:
+`node scripts/media/og.mjs --blog` from `site/`, after a site build.
