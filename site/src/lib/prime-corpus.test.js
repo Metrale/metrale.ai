@@ -112,8 +112,8 @@ test('a sentence that makes a withdrawn claim leaves the passage, and the rest s
 });
 
 test('a commit title is a line, and goes as a whole', () => {
-  const history = '2026-07-24 tbraun96: site: news band, MLPerf v6.1 and AMD Strix desktop (#367)\n2026-07-25 weschera: docs: typo';
-  expect(withdraw(history)).toBe('2026-07-25 weschera: docs: typo');
+  const history = '2026-07-24 tbraun96: site: news band, MLPerf v6.1 and AMD Strix desktop (#367)\n2026-07-25 contributor: docs: typo';
+  expect(withdraw(history)).toBe('2026-07-25 contributor: docs: typo');
 });
 
 test('what is not a withdrawn claim is left alone', () => {
