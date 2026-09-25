@@ -2,16 +2,16 @@
 
 // The cluster-launch flow against a real local agent.
 //
-// @live because it needs `atlasctl agent run` on this machine with at least one
+// @live because it needs the local agent running on this machine with at least one
 // paired peer. Without that there is nothing to launch across, and a mocked
 // agent would only prove the mock agrees with itself.
 //
-// Run it as:  atlasctl agent run --dev-origins
+// Run the agent with its --dev-origins flag.
 //
 // The --dev-origins flag is not optional here and its absence does not look
 // like a configuration problem. The agent's origin allowlist is
 // ALLOWED_ORIGINS = ["https://metrale.ai"] and nothing else unless that
-// flag is passed (atlasctl-agent/src/guard.rs). Playwright serves this suite
+// flag is passed (the agent's origin guard). Playwright serves this suite
 // from http://127.0.0.1:4173, which is in DEV_ORIGINS but gated behind the
 // flag -- so a default agent answers the WebSocket upgrade with 403 before any
 // token is read. The browser cannot expose a handshake response body, so the
@@ -20,19 +20,19 @@
 
 import { expect, test } from '@playwright/test';
 
-const TOKEN = process.env.AVAROKCTL_TOKEN ?? '';
+const TOKEN = process.env.METRALE_AGENT_TOKEN ?? '';
 
 test.describe('@live cluster launch', () => {
-  test.skip(!TOKEN, 'needs AVAROKCTL_TOKEN and a running agent');
+  test.skip(!TOKEN, 'needs METRALE_AGENT_TOKEN and a running agent');
 
   test.beforeEach(async ({ page }) => {
     await page.addInitScript((t) => {
       // The key the app actually reads (`TOKEN_KEY` in protocol.js). It was
-      // 'atlasctl.token' here, which stores a value nothing looks for: the page
+      // a different key here once, which stores a value nothing looks for: the page
       // never dials, `fleet.mode` never reaches 'live', and every assertion
       // below times out waiting for a surface that cannot mount. A @live spec
       // that cannot pass is worse than no spec, because it reads as coverage.
-      window.localStorage.setItem('atlas.agent.token', t);
+      window.localStorage.setItem('metrale.agent.token', t);
     }, TOKEN);
   });
 

@@ -1,8 +1,8 @@
 <script>
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import PageHero from '$lib/components/avarok/PageHero.svelte';
-  import DemoForm from '$lib/components/avarok/DemoForm.svelte';
-  import VideoClip from '$lib/components/avarok/VideoClip.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import PageHero from '$lib/components/marketing/PageHero.svelte';
+  import DemoForm from '$lib/components/marketing/DemoForm.svelte';
+  import VideoClip from '$lib/components/marketing/VideoClip.svelte';
   import { demoPage as d } from '$lib/content/company.js';
   import { media } from '$lib/content/media.js';
   import { routes, links, contacts } from '$lib/content/brand.js';

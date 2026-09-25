@@ -1,8 +1,8 @@
 <script>
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import PageHero from '$lib/components/avarok/PageHero.svelte';
-  import FaqList from '$lib/components/avarok/FaqList.svelte';
-  import CtaBand from '$lib/components/avarok/CtaBand.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import PageHero from '$lib/components/marketing/PageHero.svelte';
+  import FaqList from '$lib/components/marketing/FaqList.svelte';
+  import CtaBand from '$lib/components/marketing/CtaBand.svelte';
   import { trust as t } from '$lib/content/company.js';
   import { faqFor } from '$lib/content/faq.js';
   import { routes } from '$lib/content/brand.js';
@@ -22,7 +22,7 @@
       <h2 class="av-sr">Posture by area</h2>
       <div class="av-grid av-grid-2 av-reveal">
         {#each t.sections as s, i}
-          <div class="av-card av-card-accent av-sx-{['violet', 'cyan', 'green', 'gold'][i]}">
+          <div class="av-card av-card-accent av-sx-{['violet', 'cyan', 'green', 'gold'][i % 4]}">
             <h3>{s.title}</h3>
             <ul class="av-list-check" style="margin-top:0.8rem">
               {#each s.items as it}<li>{it}</li>{/each}
@@ -30,7 +30,7 @@
           </div>
         {/each}
       </div>
-      <div class="av-bridge av-reveal">
+      <div class="av-bridge av-reveal" id="disclosure">
         <h3>{t.disclosure.title}</h3>
         <p>{t.disclosure.body}</p>
       </div>

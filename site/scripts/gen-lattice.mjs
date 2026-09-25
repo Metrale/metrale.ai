@@ -2,7 +2,8 @@
 // =============================================================================
 // gen-lattice.mjs — vendor the LatticeDB wasm build into static/lattice/
 // -----------------------------------------------------------------------------
-// SSOT: the pinned v0.3.3 release of Avarok-Cybersecurity/lattice-db.
+// SSOT: the pinned v0.3.3 release of LatticeDB (LATTICE_RELEASES in
+// web-shared/sources.mjs names where its releases are published).
 //   The loader (lattice_server.js) references exactly one sibling asset,
 //   `lattice_server_bg.wasm` (verified against the release tarball — there is
 //   no wasm-bindgen snippets/ dir), so those two files are the complete set.
@@ -20,9 +21,10 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { LATTICE_RELEASES } from '../../web-shared/sources.mjs';
 
 const VERSION = 'v0.3.3';
-const BASE_URL = `https://github.com/Avarok-Cybersecurity/lattice-db/releases/download/${VERSION}`;
+const BASE_URL = `${LATTICE_RELEASES}/${VERSION}`;
 
 // sha256 pins computed from the v0.3.3 release assets (identical bytes ship
 // both as standalone assets and inside lattice-db-wasm.tar.gz).

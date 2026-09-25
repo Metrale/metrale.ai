@@ -55,7 +55,7 @@ function arg(name) {
 }
 const only = arg('only');
 const wanted = only ? new Set(only.split(',').map((s) => s.trim())) : null;
-const consoleOrigin = (arg('console-origin') || process.env.AVAROK_CONSOLE_ORIGIN || '').replace(/\/$/, '');
+const consoleOrigin = (arg('console-origin') || process.env.METRALE_CONSOLE_ORIGIN || '').replace(/\/$/, '');
 
 if (!existsSync(resolve(BUILD, 'index.html'))) {
   console.error(`record: no build at ${BUILD}. Run \`bun x --bun vite build\` in site/ first.`);

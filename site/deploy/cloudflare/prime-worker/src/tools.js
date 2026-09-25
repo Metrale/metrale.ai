@@ -280,7 +280,7 @@ export async function runTool(name, rawArgs, ctx) {
         generated_utc: l.generated_utc,
         rows: (l.rows ?? []).map((r) => ({
           concurrency: r.c,
-          metrale_tok_s: r.atlas,
+          metrale_tok_s: r.engine,
           matched_baseline: r.baseline,
           matched_baseline_tok_s: r.baseline_tok_s,
           ratio: r.ratio,
@@ -323,7 +323,7 @@ export async function runTool(name, rawArgs, ctx) {
         };
       }
       if (scenario === 'api') {
-        const used = { ...API_DEFAULTS, ...(top ? { boxTokensPerSecond: top.atlas } : {}), ...inputs };
+        const used = { ...API_DEFAULTS, ...(top ? { boxTokensPerSecond: top.engine } : {}), ...inputs };
         return {
           cite_as: n,
           scenario,
@@ -341,7 +341,7 @@ export async function runTool(name, rawArgs, ctx) {
       if (scenario === 'energy') {
         const ladderRows = rows.map((r) => ({
           c: r.c,
-          atlas: r.atlas,
+          engine: r.engine,
           best_baseline_id: 'm',
           baselines: [{ id: 'm', tok_s: r.baseline_tok_s }],
         }));
@@ -389,7 +389,7 @@ export async function runTool(name, rawArgs, ctx) {
       const h = data.history;
       if (!h) return { error: 'The repository history is not in the knowledge base.' };
       const limit = Math.max(1, Math.min(40, num(args.limit, 12)));
-      const repo = data.links?.github ?? 'https://github.com/Avarok-Cybersecurity/atlas';
+      const repo = data.links?.github ?? 'https://github.com/Metrale/metrale-inference-alpha';
       const kind = ['releases', 'commits', 'pulls', 'contributors'].includes(args.kind) ? args.kind : 'summary';
       const n = cite(ctx, {
         id: `tool:repo:${kind}`,

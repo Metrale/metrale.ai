@@ -99,7 +99,7 @@ export const enginePage = {
   ],
   stats: [
     { value: '{ratio}', label: 'the matched vLLM configuration at C={c}, same GB10' },
-    { value: '{atlasTop}', unit: 'tok/s', label: 'aggregate at C={c}, {checkpoint}' },
+    { value: '{engineTop}', unit: 'tok/s', label: 'aggregate at C={c}, {checkpoint}' },
     { value: '~75 MB', label: 'one binary, no Python, no PyTorch, no runtime compilation' },
     { value: '{recipes}', label: 'model recipes, every one verified before it is listed' },
   ],
@@ -181,7 +181,7 @@ export const controlPage = {
     ],
   },
   stats: [
-    { value: 'Live', label: 'the LAN fleet manager ships today as atlasctl, in early access', href: routes.controlPlane },
+    { value: 'Live', label: 'the LAN fleet manager ships today, in early access', href: routes.controlPlane },
     { value: '4', label: 'release channels, promoted by digest' },
     { value: '0', label: 'inference requests that pass through the control plane' },
     { value: '5 → 25 → 100', label: 'percent, the canary ladder every release climbs' },
@@ -359,7 +359,7 @@ export const securityPage = {
     { value: '48 h', label: 'acknowledgement window for a reported vulnerability' },
     { value: 'AGPL + commercial', label: 'dual licensed, so legal knows exactly what it signed' },
   ],
-  disclosure: { text: 'Read the security policy and disclosure process', href: links.securityPolicy },
+  disclosure: { text: 'Read the security policy and disclosure process', href: links.securityPolicyDoc },
   faqTag: 'security',
   cta: { text: 'Visit the trust center', href: routes.trust },
   cta2: { text: 'Book a security review', href: routes.demoForm },
@@ -496,7 +496,7 @@ export const hardwarePage = {
   ],
   modelsTitle: 'Every model here has a recipe.',
   modelsLede:
-    'Pick a vendor, then a family. Every card maps to one recipe in atlas-recipes, so the site cannot list a model it does not ship.',
+    'Pick a vendor, then a family. Every card maps to one recipe in the recipe registry, so the site cannot list a model it does not ship.',
   faqTag: 'hardware',
   cta: { text: 'Bring us your hardware', href: routes.contact },
   cta2: { text: 'Every recipe on GitHub', href: links.recipes, external: true },

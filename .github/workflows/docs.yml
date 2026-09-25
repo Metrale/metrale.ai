@@ -1,8 +1,8 @@
-# The engine's book, published as Metrale's. docs/build.mjs copies the book
-# from the engine checkout the site pins (site/engine.ref), lays the Metrale
-# tokens, type and lockup over its skin, renames the words a reader sees
-# (docs/rebrand.mjs), builds it with mdBook, and docs/check.mjs proves the
-# result. A pull request that touches docs/, the shared tokens, the site's fonts
+# The engine's book, at docs.metrale.ai. docs/build.mjs copies the book from
+# the engine checkout the site pins (site/engine.ref), replaces the links it
+# makes to files outside book/ with this repository's copies, moves the engine
+# team's hosts to the company's (docs/hosts.mjs), builds it with mdBook, and
+# docs/check.mjs proves the result. A pull request that touches docs/, the shared tokens, the site's fonts
 # or the engine pin builds and checks it; a push to main deploys it to its
 # Cloudflare Pages project once the repository variable DOCS_PAGES_PROJECT names
 # one (the plan is `metrale-docs`, serving docs.metrale.ai), and checks the host
@@ -51,9 +51,9 @@ jobs:
       - name: Checkout the engine's book
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          repository: Avarok-Cybersecurity/atlas
+          repository: Metrale/metrale-inference-alpha
           ref: ${{ steps.engine.outputs.ref }}
-          path: .inputs/atlas
+          path: .inputs/engine
           persist-credentials: false
           sparse-checkout: book
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -65,7 +65,7 @@ jobs:
           mdbook-version: '0.4.40'
       - name: Build
         env:
-          AVAROK_ENGINE_ROOT: ${{ github.workspace }}/.inputs/atlas
+          METRALE_ENGINE_ROOT: ${{ github.workspace }}/.inputs/engine
         run: node docs/build.mjs
       - name: Check
         run: node docs/check.mjs

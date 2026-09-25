@@ -19,7 +19,7 @@
 <script>
   import { page } from '$app/state';
   import { nav, routes } from '$lib/content/brand.js';
-  import AtlasLockup from '$shared/components/AtlasLockup.svelte';
+  import MetraleLockup from '$shared/components/MetraleLockup.svelte';
   import ThemeToggle from '$shared/components/ThemeToggle.svelte';
 
   let open = $state(null); // label of the open mega menu
@@ -69,7 +69,7 @@
 <header class="av-header" class:is-drawer={drawer}>
   <div class="av-header-in">
     <a class="av-brand" href={routes.home} aria-label="Metrale home" data-sveltekit-reload>
-      <AtlasLockup kind="wordmark" width={152} />
+      <MetraleLockup kind="wordmark" width={152} />
     </a>
 
     <nav class="av-nav" aria-label="Main">

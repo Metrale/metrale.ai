@@ -1,13 +1,13 @@
 <!-- The global footer. Columns from `footer` in src/lib/content/brand.js. -->
 <script>
   import { footer, links, routes } from '$lib/content/brand.js';
-  import AtlasLockup from '$shared/components/AtlasLockup.svelte';
+  import MetraleLockup from '$shared/components/MetraleLockup.svelte';
 </script>
 
 <footer class="av-footer">
   <div class="av-footer-in">
     <div class="av-footer-brand">
-      <a href={routes.home} aria-label="Metrale home" data-sveltekit-reload><AtlasLockup kind="wordmark" width={244} /></a>
+      <a href={routes.home} aria-label="Metrale home" data-sveltekit-reload><MetraleLockup kind="wordmark" width={244} /></a>
       <p class="av-footer-slogan">{footer.slogan}</p>
       <p class="av-footer-lic">{footer.license}</p>
       <div class="av-footer-social">
@@ -23,11 +23,6 @@
             ><path
               d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.2.4a13.3 13.3 0 0 1 4.5 2.3 15.9 15.9 0 0 0-15.4 0A13.3 13.3 0 0 1 8.8 3.4L8.6 3a19.8 19.8 0 0 0-4.9 1.4C.6 9 0 13.4.3 17.8a20 20 0 0 0 6 3l1.3-2a12.5 12.5 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 11.8 0l.5.4a12.5 12.5 0 0 1-2 1l1.3 2a20 20 0 0 0 6-3c.4-5-.7-9.4-3.4-13.4ZM8.5 15.2c-1.2 0-2.1-1.1-2.1-2.4s1-2.4 2.1-2.4 2.2 1.1 2.1 2.4c0 1.3-.9 2.4-2.1 2.4Zm7 0c-1.2 0-2.1-1.1-2.1-2.4s1-2.4 2.1-2.4 2.2 1.1 2.1 2.4c0 1.3-.9 2.4-2.1 2.4Z"
             /></svg
-          >
-        </a>
-        <a href={links.x} aria-label="Metrale on X" target="_blank" rel="noopener">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
-            ><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-7-6.1 7H1.4l7.9-9L1 2h7l4.8 6.4L18.2 2Zm-1.2 18h1.9L7.1 3.9H5.1L17 20Z" /></svg
           >
         </a>
       </div>
@@ -51,9 +46,7 @@
       <span>{footer.legal}</span>
       <span class="av-footer-links"
         ><a href={routes.trust}>Trust center</a><a href={links.license} target="_blank" rel="noopener">License</a><a
-          href={links.securityPolicy}
-          target="_blank"
-          rel="noopener">Security</a
+          href={links.securityPolicy}>Security</a
         ><a href="#top">Back to top ↑</a></span
       >
     </div>

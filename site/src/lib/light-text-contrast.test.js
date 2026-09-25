@@ -21,7 +21,7 @@ import { readFileSync } from 'node:fs';
  */
 const FLOOR = 4.5;
 
-const tokens = readFileSync(new URL('../../../web-shared/avarok-tokens.css', import.meta.url), 'utf8');
+const tokens = readFileSync(new URL('../../../web-shared/metrale-tokens.css', import.meta.url), 'utf8');
 
 /**
  * Both themes declare the same token names, so a match has to be scoped to one
@@ -30,7 +30,7 @@ const tokens = readFileSync(new URL('../../../web-shared/avarok-tokens.css', imp
  */
 const block = (selector) => {
   const m = tokens.match(new RegExp(`${selector}\\s*\\{([\\s\\S]*?)\\n\\}`));
-  if (!m) throw new Error(`${selector} is not in web-shared/avarok-tokens.css`);
+  if (!m) throw new Error(`${selector} is not in web-shared/metrale-tokens.css`);
   return m[1];
 };
 const DARK = block(':root');
@@ -38,7 +38,7 @@ const LIGHT = block('\\[data-theme="light"\\]');
 
 const declaration = (src, where, name) => {
   const m = src.match(new RegExp(`--${name}:\\s*([^;]+);`));
-  if (!m) throw new Error(`--${name} is not in the ${where} block of web-shared/avarok-tokens.css`);
+  if (!m) throw new Error(`--${name} is not in the ${where} block of web-shared/metrale-tokens.css`);
   return m[1].trim();
 };
 const lightHex = (name) => {

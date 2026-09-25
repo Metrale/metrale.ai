@@ -28,7 +28,7 @@
 
   let tab = $state('fleet');
   let f = $state({ ...FLEET_DEFAULTS });
-  let a = $state({ ...API_DEFAULTS, boxTokensPerSecond: Number(live.atlasTop) });
+  let a = $state({ ...API_DEFAULTS, boxTokensPerSecond: Number(live.engineTop) });
   let e = $state(energyInputsFrom(ladderData.rows));
   const fr = $derived(fleetModel(f));
   const ar = $derived(apiModel(a));
@@ -48,7 +48,7 @@
     PT = 14,
     PB = 30;
   const maxC = $derived(Math.max(...curve.points.map((p) => p.c), 2));
-  const axis = $derived(axisFor(Math.max(0, ...curve.points.map((p) => Math.max(p.avarok, p.baseline)))));
+  const axis = $derived(axisFor(Math.max(0, ...curve.points.map((p) => Math.max(p.engine, p.baseline)))));
   const x = (c) => PL + (Math.log2(c) / Math.log2(maxC)) * (W - PL - PR);
   const y = (v) => PT + (1 - v / axis.top) * (H - PT - PB);
   const path = (key) => curve.points.map((p, i) => `${i ? 'L' : 'M'}${x(p.c).toFixed(1)} ${y(p[key]).toFixed(1)}`).join(' ');
@@ -434,7 +434,7 @@
             viewBox={`0 0 ${W} ${H}`}
             class="av-effchart"
             role="img"
-            aria-label={`Tokens per joule from C=1 to C=${maxC}. At C=${last?.c}, Metrale ${num(last?.avarok ?? 0, 2)} and ${live.baselineLabel} ${num(last?.baseline ?? 0, 2)}.`}
+            aria-label={`Tokens per joule from C=1 to C=${maxC}. At C=${last?.c}, Metrale ${num(last?.engine ?? 0, 2)} and ${live.baselineLabel} ${num(last?.baseline ?? 0, 2)}.`}
           >
             {#each axis.ticks as t}
               <line x1={PL} x2={W - PR} y1={y(t)} y2={y(t)} class="grid" />
@@ -444,15 +444,15 @@
               <text x={x(p.c)} y={H - 8} text-anchor="middle" class="axis">C={p.c}</text>
             {/each}
             <path d={path('baseline')} class="base" />
-            <path d={path('avarok')} class="atlas" />
+            <path d={path('engine')} class="engine" />
             {#each curve.points as p}
-              <circle cx={x(p.c)} cy={y(p.avarok)} r="4" class="atlas-dot" />
+              <circle cx={x(p.c)} cy={y(p.engine)} r="4" class="engine-dot" />
             {/each}
             <!-- The key sits top left, the one corner two rising lines never reach. -->
             {#if last}
-              <line x1={PL + 10} x2={PL + 32} y1={PT + 10} y2={PT + 10} class="atlas" />
-              <circle cx={PL + 21} cy={PT + 10} r="4" class="atlas-dot" />
-              <text x={PL + 40} y={PT + 14} class="lab atlas-lab">Metrale {num(last.avarok, 2)}{keyUnit}</text>
+              <line x1={PL + 10} x2={PL + 32} y1={PT + 10} y2={PT + 10} class="engine" />
+              <circle cx={PL + 21} cy={PT + 10} r="4" class="engine-dot" />
+              <text x={PL + 40} y={PT + 14} class="lab engine-lab">Metrale {num(last.engine, 2)}{keyUnit}</text>
               <line x1={PL + 10} x2={PL + 32} y1={PT + 30} y2={PT + 30} class="base" />
               <text x={PL + 40} y={PT + 34} class="lab base-lab">{live.baselineLabel} {num(last.baseline, 2)}{keyUnit}</text>
             {/if}
@@ -628,12 +628,12 @@
     stroke-width: 2;
     stroke-dasharray: 5 4;
   }
-  .av-effchart .atlas {
+  .av-effchart .engine {
     fill: none;
     stroke: var(--accent);
     stroke-width: 3;
   }
-  .av-effchart .atlas-dot {
+  .av-effchart .engine-dot {
     fill: var(--accent);
   }
   .av-effchart .lab {
@@ -641,7 +641,7 @@
     font-size: 11px;
     font-weight: 700;
   }
-  .av-effchart .atlas-lab {
+  .av-effchart .engine-lab {
     fill: var(--accent);
   }
   .av-effchart .base-lab {

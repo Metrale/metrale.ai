@@ -20,12 +20,12 @@ import { embedText } from './embed.mjs';
 
 const OUT_DIR = dirname(fileURLToPath(import.meta.url));
 const DIM = 8;
-const REPO = 'Avarok-Cybersecurity/atlas';
+const REPO = 'Metrale/metrale-inference-alpha';
 const COMMIT = 'a3f9c1e7b2d84056917e2c3a4b5d6f7089abcde1';
 const GENERATED_AT = '2026-08-16T00:00:00Z';
 const MODEL = 'nvidia/llama-nemotron-embed-vl-1b-v2:free';
 
-// ~20 realistic Atlas-flavored chunks (Rust engine + CUDA kernels + docs).
+// ~20 realistic engine-flavored chunks (Rust engine + CUDA kernels + docs).
 // path / language / start_line / body.
 const CHUNKS = [
   [
@@ -232,7 +232,7 @@ fn encode_e2m1(x: f32) -> u8 {
     'src/engine/mod.rs',
     'rust',
     1,
-    `//! Atlas engine core: request lifecycle from tokenize -> prefill -> decode
+    `//! Engine core: request lifecycle from tokenize -> prefill -> decode
 //! -> detokenize. The engine owns the scheduler, the KV pool, and the model
 //! runner; everything above it (HTTP, metrics) is stateless.
 pub mod runner;
@@ -257,9 +257,9 @@ pub fn sample_batch(logits: &Tensor, params: &[SamplingParams]) -> Vec<TokenId> 
     'docs/architecture.md',
     'markdown',
     1,
-    `# Atlas architecture
+    `# Engine architecture
 
-Atlas is a single-node inference engine for DGX Spark (GB10). The serving
+The engine is a single-node inference engine for DGX Spark (GB10). The serving
 path is: HTTP front door -> tokenizer -> batch scheduler (continuous
 batching, chunked prefill) -> model runner (CUDA graphs per batch shape) ->
 sampler -> SSE stream. NVFP4 weights ride CUTLASS SM120 kernels with a
@@ -345,7 +345,7 @@ const header = {
   format: 'lattice-jsonl',
   version: 1,
   config: {
-    name: 'atlas-code',
+    name: 'metrale-code',
     vectors: { size: DIM, distance: 'Cosine' },
     hnsw: { m: 16, m0: 32, ml: 0.36067376022224085, ef: 50, ef_construction: 200 },
     relations: {},

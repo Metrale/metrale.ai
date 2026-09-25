@@ -1,9 +1,9 @@
 <script>
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import PageHero from '$lib/components/avarok/PageHero.svelte';
-  import PaybackCalculator from '$lib/components/avarok/PaybackCalculator.svelte';
-  import FaqList from '$lib/components/avarok/FaqList.svelte';
-  import CtaBand from '$lib/components/avarok/CtaBand.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import PageHero from '$lib/components/marketing/PageHero.svelte';
+  import PaybackCalculator from '$lib/components/marketing/PaybackCalculator.svelte';
+  import FaqList from '$lib/components/marketing/FaqList.svelte';
+  import CtaBand from '$lib/components/marketing/CtaBand.svelte';
   import { pricingHero, tiers, anchors, contractEconomics, metering, paybackCopy, pricingCta } from '$lib/content/pricing.js';
   import { faqFor } from '$lib/content/faq.js';
   import { routes } from '$lib/content/brand.js';

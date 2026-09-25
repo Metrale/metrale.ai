@@ -28,14 +28,14 @@ const recipeCount = counts.recipes;
 const gatePass = counts.gates.concurrencyPass;
 
 const fleet = fleetModel();
-const api = apiModel({ boxTokensPerSecond: top.atlas });
+const api = apiModel({ boxTokensPerSecond: top.engine });
 
 export const live = {
   engine: company.engine,
   ratio: `${highlight.ratio.toFixed(3)}×`,
   ratioPlain: highlight.ratio.toFixed(3),
   c: String(highlight.concurrency),
-  atlasTop: top.atlas.toFixed(2),
+  engineTop: top.engine.toFixed(2),
   baselineTop: highlight.baseline.toFixed(2),
   baselineLabel: highlight.baselineLabel,
   won: String(ladder.summary?.won ?? rows.length),

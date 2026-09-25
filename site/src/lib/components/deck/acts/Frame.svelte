@@ -3,7 +3,7 @@
   // the limits slide comes before any evidence, because a claim whose edges are
   // stated first is read differently from one whose edges have to be dug out.
   import Slide from '../Slide.svelte';
-  import AtlasLockup from '$shared/components/AtlasLockup.svelte';
+  import MetraleLockup from '$shared/components/MetraleLockup.svelte';
   import Kv from '../Kv.svelte';
   import { claim, fragile, stamp } from '$lib/deck/content.js';
 </script>
@@ -12,7 +12,7 @@
   <!-- Laid out like the kit's title slide: the wordmark at the top left, the
        title under it, the stamp as the footer line. -->
   <div class="cover">
-    <div class="cover-mark"><AtlasLockup kind="wordmark" /></div>
+    <div class="cover-mark"><MetraleLockup kind="wordmark" /></div>
     <div>
       <p class="cover-kicker mono">Verification steps</p>
       <h1 class="cover-title">Reproduce the ladder<br />before you believe it.</h1>

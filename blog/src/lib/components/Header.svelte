@@ -2,7 +2,7 @@
   import { page } from '$app/state';
   import { nav, githubUrl, MAIN_SITE, navCurrent } from '$lib/content.js';
   import GithubIcon from './GithubIcon.svelte';
-  import AtlasLockup from '$shared/components/AtlasLockup.svelte';
+  import MetraleLockup from '$shared/components/MetraleLockup.svelte';
   import ThemeToggle from '$shared/components/ThemeToggle.svelte';
 
   const current = (href) => navCurrent(page.url.pathname, href);
@@ -14,7 +14,7 @@
   <div class="hdr-in">
     <div class="brand">
       <a class="brand-mark" href={landing} aria-label="Metrale home">
-        <AtlasLockup kind="wordmark" />
+        <MetraleLockup kind="wordmark" />
       </a>
       <span class="brand-div" aria-hidden="true"></span>
       <a class="brand-sub" href="/" aria-current={current('/') ? 'page' : undefined}>Blog</a>

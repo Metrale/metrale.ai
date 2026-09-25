@@ -1,6 +1,6 @@
 # Logos on the wall
 
-Every mark the front page and the company page show, self hosted so the site makes no third party request. The wall and the programs row render from `logoWall` in `src/lib/content/home.js`, through `src/lib/components/avarok/LogoWall.svelte`. A test in `src/lib/content/site.test.js` fails if a file here is not listed in this document.
+Every mark the front page and the company page show, self hosted so the site makes no third party request. The wall and the programs row render from `logoWall` in `src/lib/content/home.js`, through `src/lib/components/marketing/LogoWall.svelte`. A test in `src/lib/content/site.test.js` fails if a file here is not listed in this document.
 
 Each mark is a trademark of its owner. They are used to name a prior employer of the team, or a program the company takes part in. None is an endorsement, and the note under the wall says so.
 

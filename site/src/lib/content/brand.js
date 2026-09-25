@@ -3,7 +3,7 @@
 //
 // This directory is the single source of truth for every word on the
 // marketing routes (everything except /engine, /control and /diligence, which
-// still read src/lib/data.js). Components under src/lib/components/avarok are
+// still read src/lib/data.js). Components under src/lib/components/marketing are
 // presentation only. Change copy here, never in markup.
 //
 // VOICE: plain, confident, buyer to buyer. Commas and periods. No em dashes,
@@ -15,6 +15,7 @@
 
 // The domain is unchanged by the rebrand (see PR #1101). When DNS moves, this
 // is the one constant to change. Everything absolute is built from it.
+import { ENGINE_REPO, HISTORY, REGISTRY_REPO } from '../../../../web-shared/sources.mjs';
 export const SITE = 'https://metrale.ai';
 
 export const company = {
@@ -32,7 +33,6 @@ export const company = {
   // Only what is sourced. The engine started in January 2026. Where the company
   // is based and how it works are the company's to state, not the site's to guess.
   founded: 'Started in 2026.',
-  x: '@AtlasInferenceX',
 };
 
 // For a local demo of both apps. The live blog deploys from main, so until this
@@ -44,22 +44,23 @@ export const company = {
 const localBlog = (import.meta.env ?? {}).VITE_BLOG_ORIGIN;
 
 export const links = {
-  github: 'https://github.com/Avarok-Cybersecurity/atlas',
-  recipes: 'https://github.com/Avarok-Cybersecurity/atlas-recipes',
+  github: ENGINE_REPO,
+  recipes: REGISTRY_REPO,
   discord: 'https://discord.gg/RQcGakU2jW',
   blog: localBlog || 'https://blog.metrale.ai',
   docs: 'https://docs.metrale.ai',
-  x: 'https://x.com/AtlasInferenceX',
-  guide: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md',
-  ladderLog: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/bench/ladder38/RESULTS.md',
+  guide: `${ENGINE_REPO}/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md`,
+  ladderLog: `${ENGINE_REPO}/blob/main/bench/ladder38/RESULTS.md`,
+  strixPr: `${HISTORY}/pull/187`,
   inception: 'https://www.nvidia.com/en-us/startups/',
   scale: 'https://docs.scale-lang.com/stable/',
   llamaCppPr: 'https://github.com/ggml-org/llama.cpp/pull/18680',
-  securityPolicy: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/SECURITY.md',
-  license: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/LICENSE',
-  contributing: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/CONTRIBUTING.md',
-  changelog: 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/CHANGELOG.md',
-  issues: 'https://github.com/Avarok-Cybersecurity/atlas/issues',
+  securityPolicy: '/trust#disclosure',
+  securityPolicyDoc: `${ENGINE_REPO}/blob/main/SECURITY.md`,
+  license: `${ENGINE_REPO}/blob/main/LICENSE`,
+  contributing: `${ENGINE_REPO}/blob/main/CONTRIBUTING.md`,
+  changelog: `${ENGINE_REPO}/blob/main/CHANGELOG.md`,
+  issues: `${ENGINE_REPO}/issues`,
   sequoiaPatel: 'https://sequoiacap.com/podcast/dylan-patel-of-semianalysis-why-hardware-software-co-design-is-ais-real-100x',
 };
 
@@ -99,18 +100,7 @@ export const contacts = {
   community: 'community@metrale.com',
   press: 'press@metrale.com',
   careers: 'careers@metrale.com',
-  security: 'security@metrale.com',
-};
-
-// The founders' own doors, as the site published them until 2026-09-21. Kept,
-// unused, so putting a person back on a card is one edit: sales was Eric,
-// business Kyle, technical Thomas, operations Peter, collaboration Tom.
-export const contactsDirect = {
-  sales: 'eric@atlascybernetics.ai',
-  business: 'kyle@atlascybernetics.ai',
-  technical: 'thomas@atlascybernetics.ai',
-  operations: 'peter@atlascybernetics.ai',
-  collaboration: 'tom@atlascybernetics.ai',
+  security: 'security@metrale.ai',
 };
 
 // Routes. Every internal href on the site comes from here so a rename is one
@@ -148,8 +138,14 @@ export const routes = {
   diligence: '/diligence',
 };
 
+// The solutions the site publishes. Held to the two the company sells to today,
+// at the owners' word; the rest are kept below as data, not built and not
+// linked, until there is a customer or a pilot to point at.
 export const industries = [
   { slug: 'neoclouds', name: 'Neoclouds and GPU providers', short: 'GPU clouds' },
+  { slug: 'smb-edge', name: 'SMB and edge', short: 'SMB and edge' },
+];
+export const parkedIndustries = [
   { slug: 'enterprise-datacenter', name: 'Enterprise datacenters', short: 'Enterprise' },
   { slug: 'financial-services', name: 'Financial services', short: 'Banks' },
   { slug: 'healthcare', name: 'Healthcare', short: 'Hospitals' },
@@ -159,40 +155,19 @@ export const industries = [
   { slug: 'legal', name: 'Legal and professional services', short: 'Law firms' },
   { slug: 'hyperscalers', name: 'Hyperscalers and cloud platforms', short: 'Hyperscale' },
   { slug: 'research', name: 'Research labs and AI safety', short: 'Research' },
-  { slug: 'smb-edge', name: 'SMB and edge', short: 'SMB and edge' },
 ];
 
 export const solutionHref = (slug) => `${routes.solutions}/${slug}`;
 export const industryBySlug = (slug) => industries.find((i) => i.slug === slug);
 
-// The industries, grouped the way a buyer thinks of themselves. The Solutions
-// menu and the solutions page both walk these, in this order. Grouped on
-// 2026-09-21 at the founders' request: the people who own the GPUs first, then
-// the regulated buyers, then the public sector, then research and the edge.
+// The Solutions menu and the solutions page walk these. One group while there
+// are two solutions; the grouping by sector returns with the held-back pages.
 export const sectors = [
   {
-    id: 'infrastructure',
-    label: 'Own the GPUs',
-    blurb: 'Fleets that sell or run capacity, and the datacenters that hold it.',
-    industries: ['neoclouds', 'enterprise-datacenter', 'hyperscalers'],
-  },
-  {
-    id: 'regulated',
-    label: 'Regulated industries',
-    blurb: 'Where the prompt cannot leave the building and the auditor reads the log.',
-    industries: ['financial-services', 'healthcare', 'legal'],
-  },
-  {
-    id: 'public-sector',
-    label: 'Public sector',
-    blurb: 'Government, defense, police and city halls, on networks of their own.',
-    industries: ['government-defense', 'public-safety', 'local-government'],
-  },
-  {
-    id: 'research-edge',
-    label: 'Research and edge',
-    blurb: 'Labs that need every token they can get from a box, and small teams with a box or two.',
-    industries: ['research', 'smb-edge'],
+    id: 'who',
+    label: 'Who it is for',
+    blurb: 'The clouds that sell GPU time, and small teams with a box or two.',
+    industries: ['neoclouds', 'smb-edge'],
   },
 ];
 

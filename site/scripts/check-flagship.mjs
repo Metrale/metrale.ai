@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 //
-// The front page prints `atlasctl run <flagshipRecipe>` as its headline
+// The front page prints `<command> run <flagshipRecipe>` as its headline
 // instruction. Nothing tied that name to the recipe corpus, so retiring or
-// renaming a recipe in atlas-recipes would leave the site confidently
+// renaming a recipe in the registry would leave the site confidently
 // advertising a command that fails on the visitor's machine — silently, and
 // only for them.
 //
@@ -11,13 +11,14 @@
 // regenerates by hand, which is precisely not the moment a recipe gets
 // retired: the guard would have missed the event it exists for.
 //
-// It reads the corpus CI actually ships against — the atlas-recipes checkout
-// the build already makes for install.sh — rather than whatever branch a local
+// It reads the corpus CI actually ships against — the registry checkout the
+// build already makes — rather than whatever branch a local
 // mirror happens to be sitting on.
 
 import { readdirSync, statSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { CLI } from '../../web-shared/sources.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 // Required, not defaulted. A fallback to a machine-specific path meant this
@@ -25,10 +26,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 // on — the exact failure its own header disclaims, reached by forgetting an
 // env var rather than by intent. CI sets it (site.yml); a human running this by
 // hand should have to say which corpus they mean.
-const root = process.env.AVAROK_RECIPES_ROOT;
+const root = process.env.METRALE_RECIPES_ROOT;
 if (!root) {
-  console.error('AVAROK_RECIPES_ROOT is not set.');
-  console.error('Point it at a checkout of atlas-recipes/recipes — the corpus this');
+  console.error('METRALE_RECIPES_ROOT is not set.');
+  console.error('Point it at a checkout of the recipe registry, metralectl/recipes — the corpus this');
   console.error('site is being built against, not whichever one happens to be nearby.');
   process.exit(1);
 }
@@ -55,7 +56,7 @@ try {
   stems = recipeStems(root);
 } catch (e) {
   console.error(`could not read the recipe corpus at ${root}: ${e.message}`);
-  console.error('Set AVAROK_RECIPES_ROOT to a checkout of atlas-recipes/recipes.');
+  console.error('Set METRALE_RECIPES_ROOT to a checkout of metralectl/recipes.');
   process.exit(1);
 }
 
@@ -68,7 +69,7 @@ if (stems.length === 0) {
 
 const problems = [];
 if (!stems.includes(flagshipRecipe)) {
-  problems.push(`data.js advertises \`atlasctl run ${flagshipRecipe}\`, and no such recipe exists in the corpus.`);
+  problems.push(`data.js advertises \`${CLI} run ${flagshipRecipe}\`, and no such recipe exists in the corpus.`);
 }
 // The pasteable command is checked too, because it is a second place the name
 // can be written and the two have already drifted once. A non-string here is a

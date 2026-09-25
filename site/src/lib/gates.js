@@ -4,11 +4,14 @@
 // This module is the SSOT for how benchmarks map to tabs, panels and colors —
 // components render what these specs say and add nothing of their own.
 // =============================================================================
+import { ENGINE_REPO } from '../../../web-shared/sources.mjs';
 import gates from '$lib/gates.generated.json';
 import { splitByVariant } from './gate-variants.js';
 
 export const gateData = gates;
-export const GH_COMMIT = 'https://github.com/Avarok-Cybersecurity/atlas/commit/';
+// A record links to its own file in the engine repository, on the branch it was
+// found on: the record is the evidence, and it outlives the commit it names.
+export const recordUrl = (r) => (r?.path ? `${ENGINE_REPO}/blob/${r.branch || 'main'}/${r.path}` : ENGINE_REPO);
 
 export { MODEL_COLORS, UNKNOWN_MODEL_COLOR, colorFor } from './series-colors.js';
 export { dashFor, groupFor, groupRecords, groupedBenches, isLatestOfVariant, splitByVariant, variantLabel } from './gate-variants.js';

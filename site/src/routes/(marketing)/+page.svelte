@@ -9,22 +9,21 @@
   import { routes } from '$lib/content/brand.js';
   import { faqFor } from '$lib/content/faq.js';
   import { cta } from '$lib/content/home.js';
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import Announcement from '$lib/components/avarok/home/Announcement.svelte';
-  import Hero from '$lib/components/avarok/home/Hero.svelte';
-  import LogoWall from '$lib/components/avarok/LogoWall.svelte';
-  import Problem from '$lib/components/avarok/home/Problem.svelte';
-  import Solution from '$lib/components/avarok/home/Solution.svelte';
-  import ValueBand from '$lib/components/avarok/home/ValueBand.svelte';
-  import Proof from '$lib/components/avarok/home/Proof.svelte';
-  import Tour from '$lib/components/avarok/home/Tour.svelte';
-  import Recognition from '$lib/components/avarok/home/Recognition.svelte';
-  import Differences from '$lib/components/avarok/home/Differences.svelte';
-  import Chain from '$lib/components/avarok/home/Chain.svelte';
-  import Deliveries from '$lib/components/avarok/home/Deliveries.svelte';
-  import Voices from '$lib/components/avarok/home/Voices.svelte';
-  import FaqList from '$lib/components/avarok/FaqList.svelte';
-  import CtaBand from '$lib/components/avarok/CtaBand.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import Announcement from '$lib/components/marketing/home/Announcement.svelte';
+  import Hero from '$lib/components/marketing/home/Hero.svelte';
+  import LogoWall from '$lib/components/marketing/LogoWall.svelte';
+  import Problem from '$lib/components/marketing/home/Problem.svelte';
+  import Solution from '$lib/components/marketing/home/Solution.svelte';
+  import ValueBand from '$lib/components/marketing/home/ValueBand.svelte';
+  import Proof from '$lib/components/marketing/home/Proof.svelte';
+  import Tour from '$lib/components/marketing/home/Tour.svelte';
+  import Recognition from '$lib/components/marketing/home/Recognition.svelte';
+  import Differences from '$lib/components/marketing/home/Differences.svelte';
+  import Chain from '$lib/components/marketing/home/Chain.svelte';
+  import Deliveries from '$lib/components/marketing/home/Deliveries.svelte';
+  import FaqList from '$lib/components/marketing/FaqList.svelte';
+  import CtaBand from '$lib/components/marketing/CtaBand.svelte';
 
   function forward({ hash, search }) {
     const destination = legacyEngineDestination(hash, search);
@@ -50,7 +49,6 @@
   <Differences />
   <Chain />
   <Deliveries />
-  <Voices />
   <FaqList items={faqFor('home')} />
   <CtaBand eyebrow={cta.eyebrow} title={cta.title} body={cta.body} primary={cta.primary} secondary={cta.secondary} />
 </PageShell>

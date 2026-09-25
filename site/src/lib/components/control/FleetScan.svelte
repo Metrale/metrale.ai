@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-only -->
 <script>
+  import { CLI } from '$lib/data.js';
   // What the operator sees while the fleet is still being assembled.
   //
   // Three things, because they are three halves of one question — "where are my
@@ -163,8 +164,8 @@
       </div>
       <p class="fs-note">
         The port is optional — 34334 is assumed. For the code, run
-        <code class="mono">atlasctl agent pair</code> on that machine. If its agent is already running it holds that port, so use "Show me how"
-        above instead — that way round, the code comes from here and you carry one line to it.
+        <code class="mono">{CLI} agent pair</code> on that machine. If its agent is already running it holds that port, so use "Show me how" above
+        instead — that way round, the code comes from here and you carry one line to it.
       </p>
       {#if targetProblem}<p class="fs-bad">{targetProblem}</p>{/if}
     </form>

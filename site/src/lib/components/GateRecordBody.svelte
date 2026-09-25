@@ -5,7 +5,7 @@
   // Split out of GatePointCard so a card standing for a GROUP of runs can swap
   // this whole block per tab, rather than the card growing a second rendering
   // path for the aggregated case. One receipt renders one way, always.
-  import { GH_COMMIT, colorFor, fmtDateTime, sampleCount } from '$lib/gates.js';
+  import { recordUrl, colorFor, fmtDateTime, sampleCount } from '$lib/gates.js';
 
   let { record } = $props();
   const r = $derived(record);
@@ -24,7 +24,7 @@
 <dl class="gpc-rows">
   <dt>commit</dt>
   <dd>
-    <a href="{GH_COMMIT}{r.git_sha}" target="_blank" rel="noopener">{r.git_sha}</a>
+    <a href={recordUrl(r)} target="_blank" rel="noopener" title="The record in the engine repository">{r.git_sha}</a>
     {#if r.branch}<span class="gpc-branch"> · source {r.branch}</span>{/if}
     {#if r.generated_ancestry === 'no'}<span class="gpc-branch"> · not in dashboard commit history</span>{/if}
     {#if r.generated_ancestry === 'unknown'}<span class="gpc-branch"> · commit history unavailable</span>{/if}
@@ -41,8 +41,8 @@
     <dt>n</dt>
     <dd>{sampleCount(r)}</dd>
   {/if}
-  <dt>avarok</dt>
-  <dd>{r.atlas_version}</dd>
+  <dt>engine</dt>
+  <dd>{r.engine_version}</dd>
 </dl>
 
 <div class="gpc-section">metrics</div>

@@ -1,22 +1,21 @@
 # Changing the brand
 
 How the name, the wordmark, the mark, the swatches and the derived files change,
-in the order that keeps every gate green. Written while moving the site from
-Avarok to Metrale, then applying the Metrale kit the same day, and meant to be
-followed again the next time.
+in the order that keeps every gate green. Written while applying the Metrale
+kit, and meant to be followed again the next time.
 
 The rule behind it: a visitor reads words, sees artwork and sees colour. Those
 three change. Identifiers, paths, class prefixes, repository names, crate
-names and environment variables are not the brand, and they stay, the way
-`avarok-tokens.css` and the `av-` prefix stay through this change. Renaming
-those is a code refactor with its own review, never part of a brand change.
+names and environment variables are not the brand; renaming those is a code
+refactor with its own review, never part of a brand change. Section 6 lists
+them.
 
 ## 1. The name
 
 ```sh
 cd site
-node scripts/brand/rename.mjs --from Avarok --to Metrale          # the report
-node scripts/brand/rename.mjs --from Avarok --to Metrale --apply  # the change
+node scripts/brand/rename.mjs --from Metrale --to Newname          # the report
+node scripts/brand/rename.mjs --from Metrale --to Newname --apply  # the change
 ```
 
 The script rewrites the name only where it is a word: content modules, page
@@ -30,9 +29,9 @@ the handoff documents that need a person.
 Read the report's two hand lists before building:
 
 - **history lines**: sentences that say what the brand was called before. The
-  public history is Atlas, then Metrale, because the Avarok name never reached
-  a visitor: it lived on an unmerged branch and in crate names. Those
-  sentences stay as "named Atlas until September 2026".
+  site keeps none: a visitor reads the current name only. Add the old name to
+  `OTHER_NAMES` in `web-shared/sources.mjs`, and `src/lib/content/other-names.test.js`
+  and `docs/check.mjs` keep it off the pages from then on.
 - **docs**: `README.md`, `FACELIFT.md`, `AGENTS.md`, `BRANDING.md`,
   `assets/brand/BRAND-GUIDELINES.md`, `media-brief/`. Reread each. A document
   that explains the previous rename explains this one after the same edit.
@@ -50,11 +49,10 @@ bun x --bun playwright test                             # titles, menus, the hea
 Add the new name to its list, or a still will be generated with the name in it.
 
 Last, read the built pages, not the source. Strip the tags and look for the old
-name in what a visitor would read; the organisation name in repository links
-is the one mention that stays:
+name in what a visitor would read:
 
 ```sh
-for f in build/*.html; do sed 's/<[^>]*>/ /g' "$f" | grep -o 'Avarok[^ <]*'; done | grep -v Avarok-Cybersecurity | sort | uniq -c
+OLD=Oldname; for f in build/*.html; do sed 's/<[^>]*>/ /g' "$f" | grep -o "$OLD[^ <]*"; done | sort | uniq -c
 ```
 
 On 2026-09-21 this found three sentences the script's first boundary had
@@ -77,7 +75,7 @@ from the same geometry rather than from a traced copy:
    and the plain wordmark masters `assets/brand/svg/wordmark*.svg`, which the
    kit does not ship as files. `src/lib/lockup-artwork.test.js` recomputes
    the module from the geometry: a module behind it is a failing test.
-3. `web-shared/components/AtlasLockup.svelte` draws the module through four
+3. `web-shared/components/MetraleLockup.svelte` draws the module through four
    token gradients (`--m-ink-hi/lo`, `--m-lavender/--m-violet`, `--m-cyan-hi/lo`,
    `--m-gold-hi/lo`) in the kit's directions. Kinds: `wordmark`, `mark`,
    `compact`; the previous kinds still resolve to the wordmark.
@@ -98,13 +96,13 @@ run the two card scripts and the film, and read `BRANDING.md` for the sizes.
 
 Done on 2026-09-21 with the Metrale kit. One file is the source:
 `assets/brand/tokens/brand.json`, which the kit's generator writes. The CSS
-custom properties in `web-shared/avarok-tokens.css` restate it for both sites,
+custom properties in `web-shared/metrale-tokens.css` restate it for both sites,
 and `src/lib/brand-tokens.test.js` fails naming every token that has to follow
 a change in the JSON.
 
 1. Put the kit's `tokens/brand.json` in place: the two grounds, the inks per
    ground, the three hues as gradient pairs, the product gray.
-2. In `avarok-tokens.css`, the tokens the test names follow mechanically:
+2. In `metrale-tokens.css`, the tokens the test names follow mechanically:
    `--bg`, `--t1`, `--t2`, `--t3`, the `--m-*` set, `--ch-violet`, `--ch-cyan`,
    `--ch-gold`, `--accent-fill`. Then by hand: the surfaces stepped off the
    ground, the `-text` twins of the hues in the light theme (lightness lowered
@@ -159,9 +157,10 @@ receipts and code stay in IBM Plex Mono.
 ## 5. What else names the brand
 
 - The domain. `SITE` in `src/lib/content/brand.js` is the one constant. The
-  blog's `MAIN_SITE` and `blog/src/app.html` follow it. DNS, Cloudflare Pages
-  and the standby mirror are outside this repository.
-- The X handle, `company.x` in `brand.js`, and the `twitter:site` meta tag.
+  blog's `MAIN_SITE` and `blog/src/app.html` follow it. DNS and Cloudflare Pages
+  are outside this repository.
+- The social profiles, `sameAs` in `src/routes/+layout.svelte`. No handle is
+  published in the pages' meta tags today.
 - Email. `contacts` in `brand.js`, and `TO_*` in the forms Worker's
   `wrangler.toml` (a test holds them equal).
 - The Worker names in `deploy/cloudflare/*/wrangler.toml` are internals.
@@ -169,9 +168,9 @@ receipts and code stay in IBM Plex Mono.
 
 ## 6. What is not part of a brand change
 
-The `av-` class prefix, `src/lib/components/avarok/`, `avarok-tokens.css`, the
-`avarok-theme` storage key, the `Avarok-Cybersecurity` GitHub organisation, the
-`avarok-*` crates, the `AVAROK_*` environment variables and `avarokctl`. The
-first four are private to this repository and changing them buys nothing. The
-last four are public interfaces of the engine, and renaming them is a decision
-for its maintainers with a deprecation of its own.
+The `av-` class prefix, the component folders, the token file's name, the
+storage keys and the environment variables are private to this repository and
+follow the brand only when someone chooses to spend a refactor on them. The
+engine's repository, crates and commands are public interfaces of the engine:
+renaming them is its maintainers' decision, with a deprecation of its own, and
+`web-shared/sources.mjs` is the one file the site changes when they move.

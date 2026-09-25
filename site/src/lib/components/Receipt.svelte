@@ -75,7 +75,7 @@
     {/if}
 
     <div class="receipt-foot">
-      <span>atlas {bench.generated_sha}</span>
+      <span>engine {bench.generated_sha}</span>
       <span>{bench.generated_date}</span>
     </div>
   </div>

@@ -1,13 +1,13 @@
 /* =============================================================================
-   Atlas — deep violet workstation design system.
+   The developer pages' design system.
    One accent (violet), one verify (green), a near-black canvas, monospace
    instruments. The signature element is the gate receipt (.receipt). Boldness
    is spent there; the rest stays disciplined. Theme is committed dark.
    ========================================================================== */
-/* The :root token block lives in web-shared/avarok-tokens.css, which the blog
+/* The :root token block lives in web-shared/metrale-tokens.css, which the blog
    imports too. One copy, so metrale.ai and blog.metrale.ai
    cannot drift apart. Property-specific rules stay below. */
-@import '../../web-shared/avarok-tokens.css';
+@import '../../web-shared/metrale-tokens.css';
 
 *,
 *::before,
@@ -221,11 +221,6 @@ nav:not(.av-nav) {
 }
 .nav-star-btn:hover {
   background: var(--accent-fill-hover);
-}
-.nav-star-count {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  opacity: 0.9;
 }
 .nav-chat-btn {
   position: relative;
@@ -2193,7 +2188,7 @@ section {
 /* =============================================================================
    The ledger.
 
-   Atlas generates its numbers from gate output, so the page is a chain of
+   The engine's numbers come from gate output, so the page is a chain of
    custody rather than a landing page. Every section is an entry: an index, a
    chevron in that section's colour, the entry name, then the provenance stamp
    that says where the numbers under it came from. The three-chevron mark stops

@@ -108,7 +108,7 @@ test('a sentence that makes a withdrawn claim leaves the passage, and the rest s
   expect(withdraw('The fused kernel merged into Hugging Face Transformers. Next.')).toBe('Next.');
   expect(withdraw('NVIDIA Inception member, upstream merge into Hugging Face Transformers, AMD-provided hardware')).toBe('');
   expect(withdraw('MLCommons named the project a contributor.')).toBe('');
-  expect(withdraw('Sparkrun has been retired: Metrale now ships atlasctl.')).toBe('');
+  expect(withdraw('Sparkrun has been retired.')).toBe('');
 });
 
 test('a commit title is a line, and goes as a whole', () => {

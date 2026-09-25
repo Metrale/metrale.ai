@@ -5,10 +5,10 @@
   // is a number in the repository.
   import '../../../styles/dashboard.css';
   import '../../../styles/ladder.css';
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import PageHero from '$lib/components/avarok/PageHero.svelte';
-  import FaqList from '$lib/components/avarok/FaqList.svelte';
-  import CtaBand from '$lib/components/avarok/CtaBand.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import PageHero from '$lib/components/marketing/PageHero.svelte';
+  import FaqList from '$lib/components/marketing/FaqList.svelte';
+  import CtaBand from '$lib/components/marketing/CtaBand.svelte';
   import ConcurrencyLadder from '$lib/components/ConcurrencyLadder.svelte';
   import GateBenchSection from '$lib/components/GateBenchSection.svelte';
   import GatePointCard from '$lib/components/GatePointCard.svelte';
@@ -61,7 +61,7 @@
       </div>
       <div class="av-tile">
         <span class="av-tile-label">Aggregate</span>
-        <div class="av-num">{live.atlasTop}</div>
+        <div class="av-num">{live.engineTop}</div>
         <p>tok/s at C={live.c}, {live.checkpoint.split('/').pop()}</p>
       </div>
       <div class="av-tile">

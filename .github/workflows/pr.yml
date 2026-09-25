@@ -115,7 +115,7 @@ jobs:
             printf '%s\n' "$stray" | sed 's/^/  /'
             exit 1
           fi
-      - name: Chevron-field contrast budget
+      - name: Dark-theme text contrast
         run: bun .contrast-check.mjs
 
   e2e:
@@ -160,6 +160,9 @@ jobs:
           name: site-build
           path: site/build
           retention-days: 7
+          # .well-known/security.txt is a hidden folder, and the artifact leaves
+          # hidden files out unless asked; the preview and the link check need it.
+          include-hidden-files: true
           if-no-files-found: error
 
   guide:

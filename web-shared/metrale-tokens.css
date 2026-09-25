@@ -32,7 +32,7 @@
   --t1: #F7F7F9;          /* headings */
   --t2: #D9D9DE;          /* body */
   --t3: #8A8F99;          /* metadata */
-  /* The logo's own inks and hues. The lockup (web-shared/components/AtlasLockup.svelte)
+  /* The logo's own inks and hues. The lockup (web-shared/components/MetraleLockup.svelte)
      reads these and nothing else, so it follows the kit and not the text ramp.
      The M's ink is a soft vertical sheen, hi to lo; on the light ground both are
      the kit's single dark ink. Violet, cyan and gold are the same on both grounds. */

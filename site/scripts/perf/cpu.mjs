@@ -33,7 +33,7 @@ if (!origin) {
   process.exit(2);
 }
 const WINDOW_MS = 10_000;
-const TOKEN = 'avarokprobe' + Date.now();
+const TOKEN = 'metraleprobe' + Date.now();
 
 /** CPU seconds used so far by this browser's processes, keyed by process type. */
 function cpuByType() {

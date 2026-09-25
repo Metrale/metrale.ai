@@ -1,38 +1,50 @@
 #!/usr/bin/env node
 // =============================================================================
-// docs/build.mjs — publish the engine's book as Metrale's, into docs/build
+// docs/build.mjs — publish the engine's book at docs.metrale.ai, into docs/build
 // -----------------------------------------------------------------------------
 // The book lives in the engine's repository (book/ beside the crates), written
-// and kept by the engine team. This script does not change it there. It takes
-// the checkout the site already pins (AVAROK_ENGINE_ROOT, the same variable the
-// site's generators read), copies the book into docs/.book, and lays Metrale
-// over it in four moves:
+// and kept by the engine team, its Metrale skin and menu-bar wordmark included.
+// This script does not change it there. It takes the checkout the site already
+// pins (METRALE_ENGINE_ROOT, the same variable the site's generators read),
+// copies the book into docs/.book and makes two changes:
 //
-//   1. the tokens: this repository's web-shared/avarok-tokens.css replaces the
-//      copy the book links, so the docs, the site and the blog share one palette
-//   2. the type: the site's Urbanist and IBM Plex Mono, self hosted, in place of
-//      the system stacks the book falls back to
-//   3. the layer: docs/theme/metrale.css and metrale.js, which put the lockup in
-//      the menu bar; nothing in the book's own skin is edited
-//   4. the words: docs/rebrand.mjs renames what a reader sees, and nothing else
+//   1. the links: the book links its tokens, its fonts and their licences to
+//      files outside book/ (web-shared/ and site/static/fonts/ in the engine's
+//      repository), which a checkout of book/ alone does not have. This
+//      repository keeps the same files at the same paths, so each link is
+//      replaced by the file it names, from here
+//   2. the hosts: docs/hosts.mjs moves the engine team's hosts to the company's,
+//      so the canonical addresses and llms.txt name docs.metrale.ai
 //
 // Then mdBook builds it, the book's own scripts add llms.txt and the per-page
 // social metadata, and the icons, the card, the Pages headers and a version
 // stamp are copied in. docs/check.mjs proves the result before it ships.
 //
-//   AVAROK_ENGINE_ROOT=../atlas node docs/build.mjs     # needs mdbook on PATH
-//   MDBOOK=/path/to/mdbook node docs/build.mjs           # or name the binary
+//   METRALE_ENGINE_ROOT=../metrale-inference-alpha node docs/build.mjs   # needs mdbook on PATH
+//   MDBOOK=/path/to/mdbook node docs/build.mjs                           # or name the binary
 // =============================================================================
 
 import { execFileSync } from 'node:child_process';
-import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import {
+  copyFileSync,
+  cpSync,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  readlinkSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { rebrand } from './rebrand.mjs';
+import { rehost } from './hosts.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, '..');
-const ENGINE = resolve(process.env.AVAROK_ENGINE_ROOT || join(repo, '..', 'atlas'));
+const ENGINE = resolve(process.env.METRALE_ENGINE_ROOT || join(repo, '..', 'metrale-inference-alpha'));
 const BOOK = join(ENGINE, 'book');
 const WORK = join(here, '.book');
 const OUT = join(here, 'build');
@@ -42,80 +54,59 @@ const die = (msg) => {
   console.error(`docs: ${msg}`);
   process.exit(1);
 };
-if (!existsSync(join(BOOK, 'book.toml'))) die(`no book at ${BOOK}. Point AVAROK_ENGINE_ROOT at a checkout of the engine that has book/.`);
+if (!existsSync(join(BOOK, 'book.toml'))) die(`no book at ${BOOK}. Point METRALE_ENGINE_ROOT at a checkout of the engine that has book/.`);
 
 const walk = (dir) =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]));
 const rewrite = (file, fn) => writeFileSync(file, fn(readFileSync(file, 'utf8')));
 
-// ---- 1. a fresh copy of the book -------------------------------------------
+// ---- a fresh copy of the book ------------------------------------------------------
 rmSync(WORK, { recursive: true, force: true });
 mkdirSync(WORK, { recursive: true });
 for (const entry of ['book.toml', 'src', 'theme', 'scripts-gen-llms.mjs', 'scripts-inject-meta.mjs']) {
   if (!existsSync(join(BOOK, entry))) die(`the book has no ${entry}; the layout this script expects has changed`);
-  // Symlinks are kept as symlinks: the book links its tokens file to a path
-  // outside book/, which a sparse checkout of book/ alone does not have.
+  // Links are copied as links, so step 1 can read where each one points.
   cpSync(join(BOOK, entry), join(WORK, entry), { recursive: true, dereference: false });
 }
 
-// ---- the tokens ---------------------------------------------------------------
-const tokens = join(repo, 'web-shared', 'avarok-tokens.css');
-if (!existsSync(tokens)) die(`no tokens at ${tokens}`);
-const tokensAt = join(WORK, 'theme', 'css', 'avarok-tokens.css');
-mkdirSync(dirname(tokensAt), { recursive: true });
-rmSync(tokensAt, { force: true }); // the book's link, or the text a Windows checkout keeps in its place
-copyFileSync(tokens, tokensAt);
-
-// ---- 2. the type ------------------------------------------------------------------
-const FONTS = join(repo, 'site', 'static', 'fonts');
-const faces = [
-  ['urbanist-latin-wght-normal.woff2', "font-family: 'Urbanist'; font-style: normal; font-weight: 100 900"],
-  ['urbanist-latin-wght-italic.woff2', "font-family: 'Urbanist'; font-style: italic; font-weight: 100 900"],
-  ['ibm-plex-mono-latin-400-normal.woff2', "font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 400"],
-  ['ibm-plex-mono-latin-600-normal.woff2', "font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 600"],
-];
-mkdirSync(join(WORK, 'theme', 'fonts'), { recursive: true });
-const fontCss = ["/* The site's faces, self hosted beside the pages. Written by docs/build.mjs. */"];
-for (const [file, decl] of faces) {
-  if (!existsSync(join(FONTS, file))) die(`missing font ${file} under site/static/fonts`);
-  copyFileSync(join(FONTS, file), join(WORK, 'theme', 'fonts', file));
-  fontCss.push(`@font-face { ${decl}; font-display: swap; src: url('${file}') format('woff2'); }`);
+// ---- 1. the links ----------------------------------------------------------------------
+// A link is a symlink, or, in a checkout made without symlink support, a small
+// text file holding the path the link points to.
+const linkTarget = (file) => {
+  const st = lstatSync(file);
+  if (st.isSymbolicLink()) return readlinkSync(file);
+  if (st.size > 200) return null;
+  const text = readFileSync(file, 'utf8').trim();
+  return /^(?:\.\.\/)+[\w./-]+$/.test(text) ? text : null;
+};
+let links = 0;
+for (const file of walk(join(WORK, 'theme'))) {
+  const target = linkTarget(file);
+  if (!target) continue;
+  const inBook = relative(WORK, file);
+  const inEngine = relative(ENGINE, resolve(BOOK, dirname(inBook), target));
+  const ours = join(repo, inEngine);
+  if (inEngine.startsWith('..') || !existsSync(ours)) die(`the book links ${inBook} to ${inEngine.split(sep).join('/')}, which this repository does not have`);
+  rmSync(file, { force: true });
+  copyFileSync(ours, file);
+  links++;
 }
-writeFileSync(join(WORK, 'theme', 'fonts', 'fonts.css'), fontCss.join('\n') + '\n');
+if (!links) die('the book links nothing outside book/; look at theme/ before building, the tokens and the fonts may have moved');
 
-// ---- 3. the layer ------------------------------------------------------------------
-copyFileSync(join(here, 'theme', 'metrale.css'), join(WORK, 'theme', 'css', 'metrale.css'));
-const wordmark = readFileSync(join(repo, 'assets', 'brand', 'svg', 'wordmark-ondark.svg'), 'utf8')
-  .replace(/<\?xml[^>]*>\s*/, '')
-  .replace(/<!--[\s\S]*?-->/g, '')
-  .trim();
-writeFileSync(
-  join(WORK, 'theme', 'metrale.js'),
-  readFileSync(join(here, 'theme', 'metrale.js'), 'utf8').replaceAll('__WORDMARK__', JSON.stringify(wordmark))
-);
-
-rewrite(join(WORK, 'book.toml'), (t) => {
-  const line = 'additional-css = ["theme/css/avarok-tokens.css", "theme/css/avarok.css"]';
-  if (!t.includes(line)) die('book.toml no longer lists the two stylesheets this script layers on; look at it before building');
-  return rebrand(t.replace(line, `${line.slice(0, -1)}, "theme/css/metrale.css"]\nadditional-js = ["theme/metrale.js"]`));
-});
-
-// ---- 4. the words ------------------------------------------------------------------
-let pages = 0;
-for (const f of walk(join(WORK, 'src'))) {
-  if (!f.endsWith('.md')) continue;
-  rewrite(f, rebrand);
-  pages++;
+// ---- 2. the hosts ------------------------------------------------------------------------
+let moved = 0;
+for (const file of walk(WORK)) {
+  if (!/\.(md|hbs|mjs|js|toml|css|html|txt)$/.test(file)) continue;
+  const before = readFileSync(file, 'utf8');
+  const after = rehost(before);
+  if (after !== before) {
+    writeFileSync(file, after);
+    moved++;
+  }
 }
-// The company, where the book names it as the publisher, is Metrale, not the engine.
-rewrite(join(WORK, 'theme', 'head.hbs'), (t) => rebrand(t.replace('content="Atlas Inference"', 'content="Metrale"')));
-rewrite(join(WORK, 'scripts-inject-meta.mjs'), (t) => rebrand(t.replace("name: 'Atlas Inference'", "name: 'Metrale'")));
-rewrite(join(WORK, 'scripts-gen-llms.mjs'), rebrand);
 
-// ---- build ------------------------------------------------------------------------
-execFileSync(process.execPath, [join(WORK, 'scripts-gen-llms.mjs')], {
-  stdio: 'inherit',
-});
+// ---- build ------------------------------------------------------------------------------
+execFileSync(process.execPath, [join(WORK, 'scripts-gen-llms.mjs')], { stdio: 'inherit' });
 try {
   execFileSync(MDBOOK, ['build', WORK], { stdio: 'inherit' });
 } catch {
@@ -134,9 +125,7 @@ const headers = join(BOOK, 'deploy', 'cloudflare', '_headers');
 if (existsSync(headers)) copyFileSync(headers, join(OUT, '_headers'));
 const sha = (dir) => {
   try {
-    return execFileSync('git', ['-C', dir, 'rev-parse', 'HEAD'], {
-      encoding: 'utf8',
-    }).trim();
+    return execFileSync('git', ['-C', dir, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
   } catch {
     return 'unknown';
   }
@@ -144,7 +133,9 @@ const sha = (dir) => {
 writeFileSync(join(OUT, 'version.txt'), `engine ${sha(ENGINE)}\nsite ${sha(repo)}\n`);
 
 const html = walk(OUT).filter((f) => f.endsWith('.html')).length;
-console.log(`docs: ${pages} chapters renamed, ${html} pages built into ${OUT} (${(statSize(OUT) / 1024 / 1024).toFixed(1)} MB)`);
+console.log(
+  `docs: ${links} links resolved, ${moved} files rehosted, ${html} pages built into ${OUT} (${(statSize(OUT) / 1024 / 1024).toFixed(1)} MB)`
+);
 
 function statSize(dir) {
   return walk(dir).reduce((n, f) => n + statSync(f).size, 0);

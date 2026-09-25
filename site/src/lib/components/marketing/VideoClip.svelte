@@ -43,7 +43,7 @@
   let visible = $state(false); // the clip is on or near the screen
   let ready = $state(false); // the <video> element is in the DOM, and stays
   let playing = $state(false); // frames are on screen, the poster can go
-  // Longer than the tour's 0.28 s cross fade (av-tour-in in avarok.css).
+  // Longer than the tour's 0.28 s cross fade (av-tour-in in metrale.css).
   const REWIND_AFTER_MS = 450;
 
   onMount(() => {

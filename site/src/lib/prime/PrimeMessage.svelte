@@ -171,7 +171,7 @@
               <span class="pr-src-n">[{s.n}]</span>
               {#if s.url}<a
                   href={s.url}
-                  target={/^https?:\/\/(?!atlascybernetics\.ai)/.test(s.url) ? '_blank' : undefined}
+                  target={/^https?:\/\/(?!metrale\.ai)/.test(s.url) ? '_blank' : undefined}
                   rel={/^https?:/.test(s.url) ? 'noopener' : undefined}
                   >{s.title}{#if s.section}<span class="pr-src-sec"> · {s.section}</span>{/if}</a
                 >{:else}<span

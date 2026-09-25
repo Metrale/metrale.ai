@@ -19,7 +19,7 @@
           document.head.appendChild(l);
         }
         try {
-          var t = localStorage.getItem('avarok-theme');
+          var t = localStorage.getItem('metrale-theme');
           if (t !== 'light' && t !== 'dark') {
             t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
           }
@@ -59,12 +59,12 @@
           l.href = href;
           document.head.appendChild(l);
           try {
-            localStorage.setItem('avarok-fonts', '1');
+            localStorage.setItem('metrale-fonts', '1');
           } catch (e) {}
         }
         var warm = false;
         try {
-          warm = localStorage.getItem('avarok-fonts') === '1';
+          warm = localStorage.getItem('metrale-fonts') === '1';
         } catch (e) {}
         if (warm) return attach();
 
@@ -96,7 +96,7 @@
       })();
     </script>
     <noscript><link rel="stylesheet" href="%sveltekit.assets%/fonts/type.css" /></noscript>
-    <!-- Must equal --bg in web-shared/avarok-tokens.css. A meta tag cannot read a
+    <!-- Must equal --bg in web-shared/metrale-tokens.css. A meta tag cannot read a
          custom property, so this is the one unavoidable copy of the ground colour;
          theme-color.test.js fails the build if the two drift. -->
     <meta name="theme-color" content="#0E1318" />
@@ -132,8 +132,6 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@AtlasInferenceX" />
-    <meta name="twitter:creator" content="@AtlasInferenceX" />
     <meta name="twitter:title" content="Metrale, the inference economics platform" />
     <meta name="twitter:description" content="Faster inference, stronger governance, a fraction of what you pay today. Every number is a receipt." />
     <meta name="twitter:image" content="https://metrale.ai/og-image.png" />

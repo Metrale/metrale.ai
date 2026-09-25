@@ -1,6 +1,6 @@
 <script>
   import { footerCols, blog, MAIN_SITE } from '$lib/content.js';
-  import AtlasLockup from '$shared/components/AtlasLockup.svelte';
+  import MetraleLockup from '$shared/components/MetraleLockup.svelte';
   const year = 2026; // prerendered: a live clock would bake the build date in
 </script>
 
@@ -11,7 +11,7 @@
         <!-- The full lockup, not the corporate one. The corporate lockup sets the
              wordmark over "Cybernetics Corp", and with the wordmark now Metrale that
              reads as a legal name the company has not adopted. -->
-        <AtlasLockup kind="wordmark" />
+        <MetraleLockup kind="wordmark" />
       </a>
       <p>Zero-trust inference on hardware you own. Pure Rust and CUDA, built in North Carolina.</p>
     </div>

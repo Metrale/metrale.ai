@@ -52,11 +52,10 @@ Since 2026-09-23: the Pages project `metrale-blog`, the custom domain
 here. The old blog address should redirect to the new one at its zone, so shared
 links and search results move; that zone is in another account.
 
-## What stayed as it was
+## The posts
 
-The posts keep their words. The ones written before the name changed say
-"Atlas" for the engine; they are dated records, and a line over each of them
-says so (`blog.formerName` in `src/lib/content.js`). Their links into the site
-point at the new address. The share card, `static/og-image.png`, is drawn by the
+The posts are the engine team's own, as they keep them under `blog/` in the
+engine's repository, with their links pointed at this blog and the site rather
+than at the engine team's hosts. The share card, `static/og-image.png`, is drawn by the
 site's renderer: `node scripts/media/og.mjs --blog` from `site/`, after a site
 build.

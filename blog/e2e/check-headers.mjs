@@ -9,20 +9,13 @@
  * and a 404. It exists because the defect it guards against is invisible from
  * inside the config file — `add_header` does not accumulate across contexts, so
  * one location block setting Cache-Control silently discards every inherited
- * security header, and nginx reports nothing. See
- * blog/deploy/nginx/blog.atlascybernetics.ai.conf.
+ * security header, and nginx reports nothing.
  *
  * This is a live check, deliberately: the thing being tested is the deployed
  * server's behaviour, and nothing short of a request observes it.
  *
  * To watch it FAIL — which you should, before trusting it — point it at any
- * deployment carrying the concatenated-header defect. The first Pages
- * deployment of the blog still does, and is kept for exactly this reason:
- *
- *   bun blog/e2e/check-headers.mjs https://05ca5569.atlas-blog-3ja.pages.dev
- *
- * (The earlier control, docs.atlasinference.io with its location-level
- * add_header, is a 301 to the new domain now and no longer serves anything.)
+ * deployment carrying the concatenated-header defect.
  */
 
 const base = (process.argv[2] ?? 'https://blog.metrale.ai').replace(/\/$/, '');

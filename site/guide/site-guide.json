@@ -1,282 +1,63 @@
 {
- "revision": 17,
+ "revision": 2,
  "date": "2026-09-24",
  "changes": [
   {
    "rev": 1,
-   "date": "2026-09-18",
-   "pr": 1136,
-   "base": "d499f1457",
-   "note": "The ledger begins. Every tracked value and file as the branch stood at this commit."
-  },
-  {
-   "rev": 2,
-   "date": "2026-09-18",
-   "pr": 1136,
-   "base": "d499f1457",
-   "note": "Contacts keyed by job: sales to Eric, business and design partners to Kyle, operations to Peter, public collaboration to Tom. Team portraits and the real pull request exchange added.",
+   "date": "2026-09-24",
+   "pr": 21,
+   "base": "46f328dcc",
+   "note": "The ledger begins here: every tracked value and file as the site stood when it moved to the Metrale repositories.",
    "touched": [
-    "contacts.sales",
-    "contacts.business",
-    "contacts.operations",
-    "contacts.collaboration",
-    "contacts.press",
-    "exchange-before-dark.webp",
-    "exchange-before-light.webp",
-    "exchange-dark.webp",
-    "exchange-light.webp",
-    "eric-gonzalez.webp",
-    "kyle-croll.webp",
-    "peter-drybrough.webp",
-    "thomas-braun.webp",
-    "tom-turney.webp"
-   ]
-  },
-  {
-   "rev": 3,
-   "date": "2026-09-18",
-   "pr": 1136,
-   "base": "d499f1457",
-   "note": "Daylight stills for five industry pages, and three for the SMB and edge page to turn through. The desk box still now serves pricing only.",
-   "touched": [
-    "art-finance.webp",
-    "art-gov.webp",
-    "art-health.webp",
-    "art-legal.webp",
-    "art-research.webp",
-    "art-smb-autoshop.webp",
-    "art-smb-library.webp",
-    "art-smb-office.webp"
-   ]
-  },
-  {
-   "rev": 4,
-   "date": "2026-09-18",
-   "pr": 1136,
-   "base": "220a7e959",
-   "note": "The Press and investors card says Email the CEO. Business and design partners stays under Partnerships.",
-   "touched": []
-  },
-  {
-   "rev": 5,
-   "date": "2026-09-19",
-   "pr": 1136,
-   "base": "b283059ad",
-   "note": "Two team lines changed on their owners' word: Tom Turney's is his own wording, Thomas Braun's says patented and links the patent. A third payback scenario counts in tokens per joule, with a graph of every ladder rung.",
-   "touched": []
-  },
-  {
-   "rev": 6,
-   "date": "2026-09-21",
-   "pr": 1136,
-   "base": "c55767fcb",
-   "note": "Renamed to Metrale on every surface a visitor reads, with a placeholder wordmark until the kit lands. The old /why address redirects. Metrale Prime, the site's guide, is wired in behind primeEndpoint.",
-   "touched": [
+    "site.origin",
     "company.name",
+    "company.legal",
     "company.engine",
     "company.control",
     "company.economics",
     "company.console",
+    "company.category",
+    "company.tagline",
     "company.short",
-    "footer.legal"
-   ]
-  },
-  {
-   "rev": 7,
-   "date": "2026-09-21",
-   "pr": 1136,
-   "base": "c55767fcb",
-   "note": "The Metrale kit applied: the M mark and wordmark from the kit's own geometry, its ground, inks and three hues in the tokens, Urbanist for words with Plex Mono kept for numbers, the kit's icons and cards. Metrale Prime's glyph is the mark.",
-   "touched": [
-    "gen.js",
-    "github-social-preview-dark.png",
-    "github-social-preview-light.png",
-    "og-image-dark.png",
-    "geometry.js",
-    "ai-mark-mono-ondark.svg",
-    "ai-mark-mono.svg",
-    "ai-mark-onlight.svg",
-    "ai-mark.svg",
-    "app-icon-ai.svg",
-    "app-icon.svg",
-    "ancient-inscription.svg",
-    "ancient-seal.svg",
-    "ancient-stele.svg",
-    "github-social-preview-ai-dark.svg",
-    "github-social-preview-dark.svg",
-    "github-social-preview-full-stack-dark.svg",
-    "github-social-preview-ondark-transparent.svg",
-    "header-ai-dark.svg",
-    "header-ai-light.svg",
-    "header-dark.svg",
-    "header-full-stack-dark.svg",
-    "header-full-stack-light.svg",
-    "header-light.svg",
-    "icon-dark.svg",
-    "icon-light.svg",
-    "lockup-ai-inline-ondark.svg",
-    "lockup-ai-inline-type-ondark.svg",
-    "lockup-ai-inline-type.svg",
-    "lockup-ai-inline.svg",
-    "lockup-ai-mono-ondark.svg",
-    "lockup-ai-mono.svg",
-    "lockup-ai-ondark.svg",
-    "lockup-ai.svg",
-    "lockup-full-stack-inline-ondark.svg",
-    "lockup-full-stack-inline.svg",
-    "lockup-full-stack-mono-ondark.svg",
-    "lockup-full-stack-mono.svg",
-    "lockup-full-stack-ondark.svg",
-    "lockup-full-stack.svg"
-   ]
-  },
-  {
-   "rev": 8,
-   "date": "2026-09-21",
-   "pr": 1136,
-   "base": "c55767fcb",
-   "note": "Metrale kit applied: wordmark and mark drawn from the kit geometry, tokens, Urbanist, icons, social cards and the film's title cards re-rendered; Metrale Prime guide added",
-   "touched": [
-    "og-image.png",
-    "reel.mp4",
-    "reel.webm",
-    "reel.webp",
-    "og-image.png"
-   ]
-  },
-  {
-   "rev": 9,
-   "date": "2026-09-21",
-   "pr": 1136,
-   "base": "c55767fcb",
-   "note": "The film's closing button takes the kit's violet with ink text; light theme hue text darkened for the chips; developer nav Star button reads ink on violet",
-   "touched": [
-    "reel.mp4",
-    "reel.webm"
-   ]
-  },
-  {
-   "rev": 10,
-   "date": "2026-09-21",
-   "pr": 1136,
-   "base": "815779893",
-   "note": "The six console clips re-recorded from the mockup with the Metrale lockup; the film re-cut from them; the About page explains the name",
-   "touched": [
-    "console-ask.mp4",
-    "console-ask.webm",
-    "console-ask.webp",
-    "console-deploy.mp4",
-    "console-deploy.webm",
-    "console-deploy.webp",
-    "console-economics.mp4",
-    "console-economics.webm",
-    "console-economics.webp",
-    "console-fleet.mp4",
-    "console-fleet.webm",
-    "console-fleet.webp",
-    "console-governance.mp4",
-    "console-governance.webm",
-    "console-governance.webp",
-    "console-queue.mp4",
-    "console-queue.webm",
-    "console-queue.webp",
-    "reel.mp4",
-    "reel.webm",
-    "reel.webp"
-   ]
-  },
-  {
-   "rev": 11,
-   "date": "2026-09-21",
-   "pr": 1136,
-   "base": "70f564261",
-   "note": "Solutions grouped by sector with a jump bar; how the control plane is built and the economics arithmetic, proposed; the team and the founders' doors held back, role mailboxes at metrale.com; Toyota on the wall, Synopsys off it",
-   "touched": [
+    "company.founded",
+    "links.github",
+    "links.recipes",
+    "links.discord",
+    "links.blog",
+    "links.docs",
+    "links.guide",
+    "links.ladderLog",
+    "links.strixPr",
+    "links.inception",
+    "links.scale",
+    "links.llamaCppPr",
+    "links.securityPolicy",
+    "links.securityPolicyDoc",
+    "links.license",
+    "links.contributing",
+    "links.changelog",
+    "links.issues",
+    "links.sequoiaPatel",
     "contacts.sales",
     "contacts.partnerships",
     "contacts.engineering",
     "contacts.community",
     "contacts.press",
     "contacts.careers",
-    "contacts.business",
-    "contacts.collaboration",
-    "contacts.operations",
-    "contacts.technical",
-    "toyota.svg",
-    "synopsys.svg"
-   ]
-  },
-  {
-   "rev": 12,
-   "date": "2026-09-21",
-   "pr": 1136,
-   "base": "ac5a818f7",
-   "note": "Two public sector pages, police and local government, each with a still; the three owners table, the metering block and the operator view, proposed; the labs call to action lands on the booking form; the developer control page points into the platform",
-   "touched": [
-    "art-local-government.webp",
-    "art-public-safety.webp"
-   ]
-  },
-  {
-   "rev": 13,
-   "date": "2026-09-23",
-   "note": "Standalone repository: removed the unused static/brand links to the engine's old artwork and the blog's card, which lives with the blog",
-   "touched": [
-    "brand.scss",
-    "og-image.png",
-    "logo-full.svg",
-    "logo-horizontal.svg",
-    "mark-compact.svg"
-   ]
-  },
-  {
-   "rev": 14,
-   "date": "2026-09-23",
-   "base": "aedd046c5",
-   "note": "Formatting and lint configuration",
-   "touched": []
-  },
-  {
-   "rev": 15,
-   "date": "2026-09-23",
-   "base": "27508d895",
-   "note": "Legal entity is Metrale Corp.; footer names Metrale, Metrale AI and Metrale Engine",
-   "touched": [
-    "company.legal",
-    "footer.legal"
-   ]
-  },
-  {
-   "rev": 16,
-   "date": "2026-09-23",
-   "base": "59b745429",
-   "note": "The evening of 2026-09-23 in one change: the site's address, the guide live at its Worker, the blog and the docs named on the new domain, the security mailbox moved, the wall switched off before funding, the careers roles from one JSON Lines file",
-   "touched": [
-    "site.origin",
-    "links.blog",
-    "links.docs",
     "contacts.security",
-    "ups.svg",
-    "og-image.png",
-    "nswc.webp"
+    "footer.slogan",
+    "footer.legal",
+    "footer.license",
+    "form.endpoint"
    ]
   },
   {
-   "rev": 17,
+   "rev": 2,
    "date": "2026-09-24",
-   "base": "4ee46955f",
-   "note": "Withdrawn claims: the Transformers merge, Qwen Dev Ambassadors, MLPerf and MLCommons, and the Sparkrun notice",
-   "touched": [
-    "footer.mlperf",
-    "links.mlcommons",
-    "links.qwenAmbassador",
-    "links.transformersPr",
-    "huggingface-dark.svg",
-    "huggingface.svg",
-    "mlcommons-dark.svg",
-    "mlcommons.svg",
-    "qwen.svg"
-   ]
+   "pr": 21,
+   "base": "f9d6f597a",
+   "note": "The security contact is published at /.well-known/security.txt, and the Solutions page describes the two kinds of buyer.",
+   "touched": []
   }
  ],
  "facts": [
@@ -284,20 +65,14 @@
    "key": "company.category",
    "value": "The inference economics platform",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
    "key": "company.console",
    "value": "Metrale Console",
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "value": "Avarok Console",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/",
     "/platform",
@@ -311,14 +86,8 @@
   {
    "key": "company.control",
    "value": "Metrale Control",
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "value": "Avarok Control",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -343,16 +112,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -362,14 +122,8 @@
   {
    "key": "company.economics",
    "value": "Metrale Economics",
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "value": "Avarok Economics",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -394,16 +148,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -413,14 +158,8 @@
   {
    "key": "company.engine",
    "value": "Metrale Engine",
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "value": "Avarok Engine",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -445,16 +184,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -465,20 +195,14 @@
    "key": "company.founded",
    "value": "Started in 2026.",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
    "key": "company.legal",
    "value": "Metrale Corp.",
-   "rev": 2,
-   "date": "2026-09-23",
-   "was": [
-    {
-     "value": "Atlas Cybernetics Corp.",
-     "until": "2026-09-23"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -503,16 +227,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -522,14 +237,8 @@
   {
    "key": "company.name",
    "value": "Metrale",
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "value": "Avarok",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -554,16 +263,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -573,14 +273,8 @@
   {
    "key": "company.short",
    "value": "Metrale is the inference economics platform for GPUs you already own.",
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "value": "Avarok is the inference economics platform for GPUs you already own.",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -605,16 +299,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -625,7 +310,7 @@
    "key": "company.tagline",
    "value": "Same silicon. Smarter inference. Stronger scalability.",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -650,61 +335,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
-    "/solutions/smb-edge",
-    "/trust",
-    "/waitlist",
-    "/why-metrale"
-   ]
-  },
-  {
-   "key": "company.x",
-   "value": "@AtlasInferenceX",
-   "rev": 1,
-   "date": "2026-09-18",
-   "used": [
-    "/benchmarks",
-    "/company",
-    "/company/careers",
-    "/contact",
-    "/control",
-    "/demo",
-    "/diligence",
-    "/engine",
-    "/",
-    "/labs",
-    "/platform",
-    "/platform/control",
-    "/platform/deployment",
-    "/platform/economics",
-    "/platform/engine",
-    "/platform/hardware",
-    "/platform/security",
-    "/pricing",
-    "/resources",
-    "/resources/contributors",
-    "/resources/events",
-    "/resources/updates",
-    "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
-    "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -715,7 +346,7 @@
    "key": "contacts.careers",
    "value": "careers@metrale.com",
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": [
     "/company/careers"
    ]
@@ -724,7 +355,7 @@
    "key": "contacts.community",
    "value": "community@metrale.com",
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": [
     "/contact"
    ]
@@ -733,7 +364,7 @@
    "key": "contacts.engineering",
    "value": "engineering@metrale.com",
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": [
     "/contact",
     "/engine"
@@ -743,7 +374,7 @@
    "key": "contacts.partnerships",
    "value": "partnerships@metrale.com",
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": [
     "/contact"
    ]
@@ -751,14 +382,8 @@
   {
    "key": "contacts.press",
    "value": "press@metrale.com",
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "value": "kyle@atlascybernetics.ai",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/contact"
    ]
@@ -766,18 +391,8 @@
   {
    "key": "contacts.sales",
    "value": "sales@metrale.com",
-   "rev": 3,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "value": "kyle@atlascybernetics.ai",
-     "until": "2026-09-18"
-    },
-    {
-     "value": "eric@atlascybernetics.ai",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/contact",
     "/demo",
@@ -786,16 +401,11 @@
   },
   {
    "key": "contacts.security",
-   "value": "security@metrale.com",
-   "rev": 2,
-   "date": "2026-09-23",
-   "was": [
-    {
-     "value": "security@atlas.net",
-     "until": "2026-09-23"
-    }
-   ],
+   "value": "security@metrale.ai",
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
+    "/company",
     "/contact",
     "/trust"
    ]
@@ -803,18 +413,8 @@
   {
    "key": "footer.legal",
    "value": "© 2026 Metrale Corp. Metrale, Metrale AI, and Metrale Engine are products of Metrale Corp.",
-   "rev": 3,
-   "date": "2026-09-23",
-   "was": [
-    {
-     "value": "© 2026 Atlas Cybernetics Corp. Avarok and Avarok Engine are products of Atlas Cybernetics Corp.",
-     "until": "2026-09-21"
-    },
-    {
-     "value": "© 2026 Atlas Cybernetics Corp. Metrale and Metrale Engine are products of Atlas Cybernetics Corp.",
-     "until": "2026-09-23"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -839,16 +439,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -859,7 +450,7 @@
    "key": "footer.license",
    "value": "Community Edition under AGPL-3.0. Enterprise Edition under a commercial license.",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -884,16 +475,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -904,7 +486,7 @@
    "key": "footer.slogan",
    "value": "Same silicon. Smarter inference. Stronger scalability.",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -929,16 +511,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -949,20 +522,14 @@
    "key": "form.endpoint",
    "value": "(none: forms draft an email)",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
    "key": "links.blog",
    "value": "https://blog.metrale.ai",
-   "rev": 2,
-   "date": "2026-09-23",
-   "was": [
-    {
-     "value": "https://blog.atlascybernetics.ai",
-     "until": "2026-09-23"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -987,16 +554,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -1005,18 +563,18 @@
   },
   {
    "key": "links.changelog",
-   "value": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/CHANGELOG.md",
+   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CHANGELOG.md",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/resources/updates"
    ]
   },
   {
    "key": "links.contributing",
-   "value": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/CONTRIBUTING.md",
+   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CONTRIBUTING.md",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/company/careers",
     "/resources/contributors"
@@ -1026,7 +584,7 @@
    "key": "links.discord",
    "value": "https://discord.gg/RQcGakU2jW",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -1051,16 +609,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -1070,14 +619,8 @@
   {
    "key": "links.docs",
    "value": "https://docs.metrale.ai",
-   "rev": 2,
-   "date": "2026-09-23",
-   "was": [
-    {
-     "value": "https://docs.atlascybernetics.ai",
-     "until": "2026-09-23"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -1102,16 +645,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -1120,9 +654,9 @@
   },
   {
    "key": "links.github",
-   "value": "https://github.com/Avarok-Cybersecurity/atlas",
+   "value": "https://github.com/Metrale/metrale-inference-alpha",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -1147,16 +681,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -1165,9 +690,9 @@
   },
   {
    "key": "links.guide",
-   "value": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/diligence",
@@ -1188,7 +713,7 @@
    "key": "links.inception",
    "value": "https://www.nvidia.com/en-us/startups/",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -1213,16 +738,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -1231,18 +747,18 @@
   },
   {
    "key": "links.issues",
-   "value": "https://github.com/Avarok-Cybersecurity/atlas/issues",
+   "value": "https://github.com/Metrale/metrale-inference-alpha/issues",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/engine"
    ]
   },
   {
    "key": "links.ladderLog",
-   "value": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/bench/ladder38/RESULTS.md",
+   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/diligence",
@@ -1252,9 +768,9 @@
   },
   {
    "key": "links.license",
-   "value": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/LICENSE",
+   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -1279,16 +795,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -1299,16 +806,16 @@
    "key": "links.llamaCppPr",
    "value": "https://github.com/ggml-org/llama.cpp/pull/18680",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/company"
    ]
   },
   {
    "key": "links.recipes",
-   "value": "https://github.com/Avarok-Cybersecurity/atlas-recipes",
+   "value": "https://github.com/Metrale/metralectl",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -1333,16 +840,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -1353,7 +851,7 @@
    "key": "links.scale",
    "value": "https://docs.scale-lang.com/stable/",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/company",
     "/engine",
@@ -1363,9 +861,9 @@
   },
   {
    "key": "links.securityPolicy",
-   "value": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/SECURITY.md",
+   "value": "/trust#disclosure",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -1390,85 +888,45 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
+   ]
+  },
+  {
+   "key": "links.securityPolicyDoc",
+   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md",
+   "rev": 1,
+   "date": "2026-09-24",
+   "used": [
+    "/platform/security",
+    "/trust"
    ]
   },
   {
    "key": "links.sequoiaPatel",
    "value": "https://sequoiacap.com/podcast/dylan-patel-of-semianalysis-why-hardware-software-co-design-is-ais-real-100x",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
-   "key": "links.x",
-   "value": "https://x.com/AtlasInferenceX",
+   "key": "links.strixPr",
+   "value": "https://metrale.ai/src/history/pull/187",
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
-    "/benchmarks",
-    "/company",
-    "/company/careers",
-    "/contact",
-    "/control",
-    "/demo",
-    "/diligence",
     "/engine",
-    "/",
-    "/labs",
-    "/platform",
-    "/platform/control",
-    "/platform/deployment",
-    "/platform/economics",
-    "/platform/engine",
-    "/platform/hardware",
-    "/platform/security",
-    "/pricing",
-    "/resources",
-    "/resources/contributors",
-    "/resources/events",
-    "/resources/updates",
-    "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
-    "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
-    "/solutions/smb-edge",
-    "/trust",
-    "/waitlist",
-    "/why-metrale"
+    "/"
    ]
   },
   {
    "key": "site.origin",
    "value": "https://metrale.ai",
-   "rev": 2,
-   "date": "2026-09-23",
-   "was": [
-    {
-     "value": "https://atlascybernetics.ai",
-     "until": "2026-09-23"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -1493,16 +951,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -1516,7 +965,7 @@
    "sha": "b333381afa17",
    "bytes": 19338,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1524,7 +973,7 @@
    "sha": "0c4fe339bbd7",
    "bytes": 56159,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1532,7 +981,7 @@
    "sha": "0365bfe2a987",
    "bytes": 45091,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1540,7 +989,7 @@
    "sha": "a2ddf6b8a70a",
    "bytes": 53097,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1548,7 +997,7 @@
    "sha": "c4825d7c0eaf",
    "bytes": 14932,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1556,7 +1005,7 @@
    "sha": "33d42b5e3b62",
    "bytes": 9130,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1564,7 +1013,7 @@
    "sha": "b2b7cca2b8b6",
    "bytes": 9130,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1572,7 +1021,7 @@
    "sha": "aa1a11ab051f",
    "bytes": 9135,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1580,7 +1029,7 @@
    "sha": "a341ed623066",
    "bytes": 9135,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1588,7 +1037,7 @@
    "sha": "4c6b95c21a3b",
    "bytes": 9215,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1596,7 +1045,7 @@
    "sha": "11e336b8cbee",
    "bytes": 9117,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1604,7 +1053,7 @@
    "sha": "15e5a8c1b26c",
    "bytes": 17113,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1612,7 +1061,7 @@
    "sha": "bb64957cf657",
    "bytes": 27540,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1620,7 +1069,7 @@
    "sha": "ce8b296fcacc",
    "bytes": 26418,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1628,7 +1077,7 @@
    "sha": "6ad3ce6ee2c6",
    "bytes": 12842,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1636,7 +1085,7 @@
    "sha": "329f0b607452",
    "bytes": 12456,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1644,7 +1093,7 @@
    "sha": "5bed1a9f62b9",
    "bytes": 16116,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1652,7 +1101,7 @@
    "sha": "6026dba305ab",
    "bytes": 12395,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1660,7 +1109,7 @@
    "sha": "06c5ceebc421",
    "bytes": 12808,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1668,7 +1117,7 @@
    "sha": "f19fc72e8ea9",
    "bytes": 12808,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1676,7 +1125,7 @@
    "sha": "9ec8c1fb39bb",
    "bytes": 12471,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1684,7 +1133,7 @@
    "sha": "7a54732fb3e6",
    "bytes": 16387,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1692,7 +1141,7 @@
    "sha": "5056b48c9289",
    "bytes": 16387,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1700,7 +1149,7 @@
    "sha": "98a85592edc2",
    "bytes": 12471,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1708,7 +1157,7 @@
    "sha": "34fb304a11af",
    "bytes": 9120,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1716,7 +1165,7 @@
    "sha": "19ce4f1502ef",
    "bytes": 9120,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1724,7 +1173,7 @@
    "sha": "edd208b0eccc",
    "bytes": 12701,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1732,7 +1181,7 @@
    "sha": "fd4cf4344ff7",
    "bytes": 12880,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1740,7 +1189,7 @@
    "sha": "d97b743b3216",
    "bytes": 12880,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1748,7 +1197,7 @@
    "sha": "d9a839491814",
    "bytes": 12701,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1756,7 +1205,7 @@
    "sha": "ccb5f7c0cb92",
    "bytes": 12741,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1764,7 +1213,7 @@
    "sha": "fce72519172c",
    "bytes": 12741,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1772,7 +1221,7 @@
    "sha": "3a9ec211d0ae",
    "bytes": 12751,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1780,7 +1229,7 @@
    "sha": "8dd4b18c0d72",
    "bytes": 12751,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1788,7 +1237,7 @@
    "sha": "462594f5f4e3",
    "bytes": 16304,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1796,7 +1245,7 @@
    "sha": "08216fda8521",
    "bytes": 16304,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1804,7 +1253,7 @@
    "sha": "d03fd84fc43c",
    "bytes": 16028,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1812,7 +1261,7 @@
    "sha": "0e2312e49ec8",
    "bytes": 16028,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1820,7 +1269,7 @@
    "sha": "fafbeade3a57",
    "bytes": 16034,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1828,7 +1277,7 @@
    "sha": "920a9c3d537a",
    "bytes": 16034,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1836,7 +1285,7 @@
    "sha": "be4e1dea1277",
    "bytes": 8885,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1844,7 +1293,7 @@
    "sha": "aa7502d74119",
    "bytes": 9024,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1852,7 +1301,7 @@
    "sha": "f49a7da8fd64",
    "bytes": 9024,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1860,7 +1309,7 @@
    "sha": "f09894ef4cac",
    "bytes": 9028,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1868,7 +1317,7 @@
    "sha": "4d9e62650d26",
    "bytes": 9028,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1876,7 +1325,7 @@
    "sha": "0911f831c4a4",
    "bytes": 12841,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1884,7 +1333,7 @@
    "sha": "30036024e933",
    "bytes": 12841,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1892,7 +1341,7 @@
    "sha": "1c034669bff0",
    "bytes": 12455,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1900,7 +1349,7 @@
    "sha": "7916c5dea5f5",
    "bytes": 16116,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1908,7 +1357,7 @@
    "sha": "1cd79e186a55",
    "bytes": 16116,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1916,7 +1365,7 @@
    "sha": "21bc83ab83fb",
    "bytes": 12455,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1924,7 +1373,7 @@
    "sha": "e4bdfc2cac02",
    "bytes": 13378,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1932,7 +1381,7 @@
    "sha": "fa4a30611c86",
    "bytes": 13378,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1940,7 +1389,7 @@
    "sha": "7cbedd3cedc8",
    "bytes": 12991,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1948,7 +1397,7 @@
    "sha": "8387f976fcb2",
    "bytes": 16641,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1956,7 +1405,7 @@
    "sha": "dbd9fee28590",
    "bytes": 16641,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1964,7 +1413,7 @@
    "sha": "6812526905f8",
    "bytes": 12991,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1972,7 +1421,7 @@
    "sha": "4991eeb3db05",
    "bytes": 126226,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1980,7 +1429,7 @@
    "sha": "115c940657ec",
    "bytes": 13030,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1988,7 +1437,7 @@
    "sha": "bbd698c57b8f",
    "bytes": 91593,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -1996,7 +1445,7 @@
    "sha": "6bec09e27d84",
    "bytes": 22366,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2004,7 +1453,7 @@
    "sha": "f869b247e6be",
    "bytes": 12472,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2012,7 +1461,7 @@
    "sha": "18debdb29a5b",
    "bytes": 4505,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2020,7 +1469,7 @@
    "sha": "c70bbc025613",
    "bytes": 4505,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2028,7 +1477,7 @@
    "sha": "c5c5cc5e5a95",
    "bytes": 4511,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2036,7 +1485,7 @@
    "sha": "14c5a10b3a50",
    "bytes": 4511,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2044,21 +1493,15 @@
    "sha": "7c363a0d2e46",
    "bytes": 607,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "assets/brand/tokens/brand.scss",
    "sha": "d4cdfd31936e",
    "bytes": 461,
-   "rev": 2,
-   "date": "2026-09-23",
-   "was": [
-    {
-     "sha": "535a1da4a41f",
-     "until": "2026-09-23"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2066,21 +1509,15 @@
    "sha": "4b7ac5ca6658",
    "bytes": 376,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/apple-touch-icon.png",
    "sha": "c845319d18c4",
    "bytes": 11477,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "bd6fe104d278",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -2105,16 +1542,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -2125,14 +1553,8 @@
    "path": "site/static/favicon.ico",
    "sha": "05144ca27991",
    "bytes": 21023,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "de403885c52b",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -2157,16 +1579,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -2177,14 +1590,8 @@
    "path": "site/static/favicon.svg",
    "sha": "34fb304a11af",
    "bytes": 9120,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "4d7bf0d994b6",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -2209,16 +1616,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -2230,7 +1628,7 @@
    "sha": "23b0a9d0c6d3",
    "bytes": 5299,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2238,7 +1636,7 @@
    "sha": "ee1221b1c2d0",
    "bytes": 4385,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2246,7 +1644,7 @@
    "sha": "08949f728dc5",
    "bytes": 14708,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2254,7 +1652,7 @@
    "sha": "0d1f0b8d0722",
    "bytes": 15620,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2262,7 +1660,7 @@
    "sha": "6020a2f0e5af",
    "bytes": 1740,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -2287,16 +1685,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -2308,7 +1697,7 @@
    "sha": "163e60078a8a",
    "bytes": 29632,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2316,7 +1705,7 @@
    "sha": "7981ef90c246",
    "bytes": 27752,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2324,7 +1713,7 @@
    "sha": "831d1d6f2454",
    "bytes": 671,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/company",
     "/"
@@ -2335,7 +1724,7 @@
    "sha": "3c053303708c",
    "bytes": 659,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/company",
     "/"
@@ -2346,7 +1735,7 @@
    "sha": "459123da56a5",
    "bytes": 8024,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2354,7 +1743,7 @@
    "sha": "1ad28b68750e",
    "bytes": 4640,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2362,7 +1751,7 @@
    "sha": "a33a47a20c0e",
    "bytes": 1906,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2370,7 +1759,7 @@
    "sha": "cd3c8afe2c6e",
    "bytes": 3007,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2378,7 +1767,7 @@
    "sha": "66ef9b3138e7",
    "bytes": 2712,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/company",
     "/"
@@ -2389,7 +1778,7 @@
    "sha": "d12d21dd9319",
    "bytes": 2712,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/company",
     "/"
@@ -2400,7 +1789,7 @@
    "sha": "88ed357f4e30",
    "bytes": 1408,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2408,7 +1797,7 @@
    "sha": "948b165d6d9a",
    "bytes": 20651,
    "rev": 1,
-   "date": "2026-09-23",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2416,7 +1805,7 @@
    "sha": "56c4f5cebc1d",
    "bytes": 11822,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2424,7 +1813,7 @@
    "sha": "1c109119c134",
    "bytes": 176064,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/company"
    ]
@@ -2434,7 +1823,7 @@
    "sha": "a584fcf2e580",
    "bytes": 172468,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/company"
    ]
@@ -2444,7 +1833,7 @@
    "sha": "ac162684e414",
    "bytes": 36434,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/company"
    ]
@@ -2454,7 +1843,7 @@
    "sha": "6467ffb9c6ac",
    "bytes": 36916,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/company"
    ]
@@ -2464,7 +1853,7 @@
    "sha": "e3b0c44298fc",
    "bytes": 0,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2472,10 +1861,9 @@
    "sha": "6242a3613d7f",
    "bytes": 49498,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
-    "/platform/deployment",
-    "/solutions/enterprise-datacenter"
+    "/platform/deployment"
    ]
   },
   {
@@ -2483,7 +1871,7 @@
    "sha": "d9dabf05f679",
    "bytes": 23212,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/pricing"
    ]
@@ -2493,7 +1881,7 @@
    "sha": "8f29ab16b607",
    "bytes": 34962,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/platform/security"
    ]
@@ -2502,66 +1890,41 @@
    "path": "site/static/media/art/art-finance.webp",
    "sha": "1d9acadd099e",
    "bytes": 82850,
-   "rev": 2,
-   "date": "2026-09-18",
-   "was": [
-    {
-     "sha": "18cf9a3cdd5b",
-     "until": "2026-09-18"
-    }
-   ],
-   "used": [
-    "/solutions/financial-services"
-   ]
+   "rev": 1,
+   "date": "2026-09-24",
+   "used": []
   },
   {
    "path": "site/static/media/art/art-gov.webp",
    "sha": "3a7db8430b8b",
    "bytes": 74690,
-   "rev": 2,
-   "date": "2026-09-18",
-   "was": [
-    {
-     "sha": "33858bdffa60",
-     "until": "2026-09-18"
-    }
-   ],
-   "used": [
-    "/solutions/government-defense"
-   ]
+   "rev": 1,
+   "date": "2026-09-24",
+   "used": []
   },
   {
    "path": "site/static/media/art/art-grid.webp",
    "sha": "8c0c955dbc83",
    "bytes": 18740,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/art/art-health.webp",
    "sha": "6d3c422df667",
    "bytes": 59834,
-   "rev": 2,
-   "date": "2026-09-18",
-   "was": [
-    {
-     "sha": "f27b9a216b24",
-     "until": "2026-09-18"
-    }
-   ],
-   "used": [
-    "/solutions/healthcare"
-   ]
+   "rev": 1,
+   "date": "2026-09-24",
+   "used": []
   },
   {
    "path": "site/static/media/art/art-hyperscale.webp",
    "sha": "d426b1647073",
    "bytes": 59242,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
-    "/solutions/hyperscalers",
     "/solutions/neoclouds"
    ]
   },
@@ -2569,34 +1932,24 @@
    "path": "site/static/media/art/art-legal.webp",
    "sha": "5b8dc32754c5",
    "bytes": 54536,
-   "rev": 2,
-   "date": "2026-09-18",
-   "was": [
-    {
-     "sha": "e1099358dd7f",
-     "until": "2026-09-18"
-    }
-   ],
-   "used": [
-    "/solutions/legal"
-   ]
+   "rev": 1,
+   "date": "2026-09-24",
+   "used": []
   },
   {
    "path": "site/static/media/art/art-local-government.webp",
    "sha": "f3379db386ab",
    "bytes": 21276,
    "rev": 1,
-   "date": "2026-09-21",
-   "used": [
-    "/solutions/local-government"
-   ]
+   "date": "2026-09-24",
+   "used": []
   },
   {
    "path": "site/static/media/art/art-power.webp",
    "sha": "90effc2dcbcc",
    "bytes": 53910,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/platform/economics"
    ]
@@ -2606,7 +1959,7 @@
    "sha": "d080ffd4348b",
    "bytes": 47956,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/why-metrale"
    ]
@@ -2616,26 +1969,17 @@
    "sha": "c3baca0648ce",
    "bytes": 49780,
    "rev": 1,
-   "date": "2026-09-21",
-   "used": [
-    "/solutions/public-safety"
-   ]
+   "date": "2026-09-24",
+   "used": []
   },
   {
    "path": "site/static/media/art/art-research.webp",
    "sha": "67489380f2a5",
    "bytes": 54932,
-   "rev": 2,
-   "date": "2026-09-18",
-   "was": [
-    {
-     "sha": "cd68fa572790",
-     "until": "2026-09-18"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
-    "/labs",
-    "/solutions/research"
+    "/labs"
    ]
   },
   {
@@ -2643,7 +1987,7 @@
    "sha": "f03691bb1a31",
    "bytes": 103750,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/solutions/smb-edge"
    ]
@@ -2653,7 +1997,7 @@
    "sha": "ee032ff7c403",
    "bytes": 88452,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/solutions/smb-edge"
    ]
@@ -2663,7 +2007,7 @@
    "sha": "a6aaacce3d2e",
    "bytes": 60880,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/solutions/smb-edge"
    ]
@@ -2673,7 +2017,7 @@
    "sha": "b2ed92a45761",
    "bytes": 6709,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2681,7 +2025,7 @@
    "sha": "54e0fd7bada7",
    "bytes": 18796,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2689,7 +2033,7 @@
    "sha": "ad9946f85abe",
    "bytes": 22134,
    "rev": 1,
-   "date": "2026-09-21",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2697,7 +2041,7 @@
    "sha": "f2de0145c76d",
    "bytes": 268522,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2705,7 +2049,7 @@
    "sha": "bac084bdf3cd",
    "bytes": 150839,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2713,7 +2057,7 @@
    "sha": "f341d8f95092",
    "bytes": 22412,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2721,7 +2065,7 @@
    "sha": "350aa8002cc7",
    "bytes": 912778,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2729,7 +2073,7 @@
    "sha": "48a678c29fde",
    "bytes": 921285,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2737,7 +2081,7 @@
    "sha": "8efb4b0c2548",
    "bytes": 43384,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2745,7 +2089,7 @@
    "sha": "ab1340e7d0e8",
    "bytes": 1272239,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2753,7 +2097,7 @@
    "sha": "b965d46a321a",
    "bytes": 1444879,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2761,7 +2105,7 @@
    "sha": "348eed6eb8e2",
    "bytes": 44726,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2769,7 +2113,7 @@
    "sha": "172ad2d3049b",
    "bytes": 2089557,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2777,7 +2121,7 @@
    "sha": "fbc77fbecc28",
    "bytes": 2967888,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2785,7 +2129,7 @@
    "sha": "2afcee1ae691",
    "bytes": 76396,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/solutions"
    ]
@@ -2795,7 +2139,7 @@
    "sha": "f849026b8c81",
    "bytes": 570290,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2803,7 +2147,7 @@
    "sha": "82627f2fb389",
    "bytes": 597633,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2811,7 +2155,7 @@
    "sha": "26938ff4445d",
    "bytes": 48736,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2819,7 +2163,7 @@
    "sha": "e11feee3b5fd",
    "bytes": 1445771,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2827,7 +2171,7 @@
    "sha": "33ff55edaf15",
    "bytes": 1880056,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2835,7 +2179,7 @@
    "sha": "621f8ced7795",
    "bytes": 60952,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2843,7 +2187,7 @@
    "sha": "534b5ec59826",
    "bytes": 331844,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2851,7 +2195,7 @@
    "sha": "715675a91503",
    "bytes": 193495,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -2859,7 +2203,7 @@
    "sha": "696c4bb456cb",
    "bytes": 19352,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/platform/engine"
    ]
@@ -2868,42 +2212,24 @@
    "path": "site/static/media/console-ask.mp4",
    "sha": "5f09b7dff926",
    "bytes": 374510,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "8dd2e9bf94c4",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-ask.webm",
    "sha": "c12adaa6632b",
    "bytes": 619188,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "5a99623c4f5b",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-ask.webp",
    "sha": "2451fca71e88",
    "bytes": 79594,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "dce1de79fb0d",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -2928,16 +2254,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -2948,42 +2265,24 @@
    "path": "site/static/media/console-deploy.mp4",
    "sha": "6776369eb4ee",
    "bytes": 371494,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "54ef55eae1e3",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-deploy.webm",
    "sha": "9ed1877f8788",
    "bytes": 620691,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "6c910cbcf099",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-deploy.webp",
    "sha": "213927adc44e",
    "bytes": 67302,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "c405e5b04869",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/platform/deployment"
    ]
@@ -2992,42 +2291,24 @@
    "path": "site/static/media/console-economics.mp4",
    "sha": "77bf6cc36d22",
    "bytes": 324741,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "f5eda7c3fe32",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-economics.webm",
    "sha": "6c1934342e33",
    "bytes": 496862,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "c6dbdf52fd08",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-economics.webp",
    "sha": "63597aa77f20",
    "bytes": 55542,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "400d92ed015e",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/platform/economics"
    ]
@@ -3036,42 +2317,24 @@
    "path": "site/static/media/console-fleet.mp4",
    "sha": "48cde3f22dc4",
    "bytes": 396258,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "4cefadefed0e",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-fleet.webm",
    "sha": "bc6a1c357433",
    "bytes": 606882,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "16a0cb8ee625",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-fleet.webp",
    "sha": "e4147afa9f74",
    "bytes": 72564,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "000cf70f7898",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/platform/control"
    ]
@@ -3080,42 +2343,24 @@
    "path": "site/static/media/console-governance.mp4",
    "sha": "9cfa6b8f3ce3",
    "bytes": 394371,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "a7704e3fc443",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-governance.webm",
    "sha": "551e4df4a47c",
    "bytes": 623178,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "b0f97d2e4eed",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-governance.webp",
    "sha": "b7bd62c16355",
    "bytes": 72810,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "25d239005780",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/platform/security"
    ]
@@ -3124,42 +2369,24 @@
    "path": "site/static/media/console-queue.mp4",
    "sha": "4ef84684ce92",
    "bytes": 431535,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "3b6c0b0734d8",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-queue.webm",
    "sha": "e9744b4dc9b0",
    "bytes": 599721,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "d7dcc055185a",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/console-queue.webp",
    "sha": "bba7997b246d",
    "bytes": 65752,
-   "rev": 2,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "da399f842cb9",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/platform"
    ]
@@ -3168,62 +2395,24 @@
    "path": "site/static/media/reel.mp4",
    "sha": "ff65b5762d65",
    "bytes": 4879732,
-   "rev": 4,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "8459dfdc2f97",
-     "until": "2026-09-21"
-    },
-    {
-     "sha": "ffb12f413000",
-     "until": "2026-09-21"
-    },
-    {
-     "sha": "1139dcddccf8",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/reel.webm",
    "sha": "0f8e891738af",
    "bytes": 4715812,
-   "rev": 4,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "0ae13019aa72",
-     "until": "2026-09-21"
-    },
-    {
-     "sha": "8e5f71b62230",
-     "until": "2026-09-21"
-    },
-    {
-     "sha": "597c82880389",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": []
   },
   {
    "path": "site/static/media/reel.webp",
    "sha": "7211222cd189",
    "bytes": 18770,
-   "rev": 3,
-   "date": "2026-09-21",
-   "was": [
-    {
-     "sha": "17f73ff91c04",
-     "until": "2026-09-21"
-    },
-    {
-     "sha": "2c62490f43fe",
-     "until": "2026-09-21"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/demo"
    ]
@@ -3233,7 +2422,7 @@
    "sha": "2a62f1fc54b1",
    "bytes": 21352,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -3258,16 +2447,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -3278,18 +2458,8 @@
    "path": "site/static/og-image.png",
    "sha": "d6af820721ed",
    "bytes": 102070,
-   "rev": 3,
-   "date": "2026-09-23",
-   "was": [
-    {
-     "sha": "31c79ad12550",
-     "until": "2026-09-21"
-    },
-    {
-     "sha": "c82e41bac0fa",
-     "until": "2026-09-23"
-    }
-   ],
+   "rev": 1,
+   "date": "2026-09-24",
    "used": [
     "/benchmarks",
     "/company",
@@ -3314,16 +2484,7 @@
     "/resources/events",
     "/resources/updates",
     "/solutions",
-    "/solutions/enterprise-datacenter",
-    "/solutions/financial-services",
-    "/solutions/government-defense",
-    "/solutions/healthcare",
-    "/solutions/hyperscalers",
-    "/solutions/legal",
-    "/solutions/local-government",
     "/solutions/neoclouds",
-    "/solutions/public-safety",
-    "/solutions/research",
     "/solutions/smb-edge",
     "/trust",
     "/waitlist",
@@ -3335,7 +2496,7 @@
    "sha": "0b38045abdf1",
    "bytes": 9008,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -3343,7 +2504,7 @@
    "sha": "04f04b13e7df",
    "bytes": 7006,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -3351,7 +2512,7 @@
    "sha": "a6d2b477b370",
    "bytes": 6602,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -3359,7 +2520,7 @@
    "sha": "351041dbbb5d",
    "bytes": 12690,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   },
   {
@@ -3367,7 +2528,7 @@
    "sha": "859a25307e0c",
    "bytes": 11118,
    "rev": 1,
-   "date": "2026-09-18",
+   "date": "2026-09-24",
    "used": []
   }
  ],
@@ -3416,51 +2577,6 @@
    "menu": "Solutions",
    "text": "Neoclouds and GPU providers",
    "href": "/solutions/neoclouds"
-  },
-  {
-   "menu": "Solutions",
-   "text": "Enterprise datacenters",
-   "href": "/solutions/enterprise-datacenter"
-  },
-  {
-   "menu": "Solutions",
-   "text": "Hyperscalers and cloud platforms",
-   "href": "/solutions/hyperscalers"
-  },
-  {
-   "menu": "Solutions",
-   "text": "Financial services",
-   "href": "/solutions/financial-services"
-  },
-  {
-   "menu": "Solutions",
-   "text": "Healthcare",
-   "href": "/solutions/healthcare"
-  },
-  {
-   "menu": "Solutions",
-   "text": "Legal and professional services",
-   "href": "/solutions/legal"
-  },
-  {
-   "menu": "Solutions",
-   "text": "Government and defense",
-   "href": "/solutions/government-defense"
-  },
-  {
-   "menu": "Solutions",
-   "text": "Police and public safety",
-   "href": "/solutions/public-safety"
-  },
-  {
-   "menu": "Solutions",
-   "text": "State and local government",
-   "href": "/solutions/local-government"
-  },
-  {
-   "menu": "Solutions",
-   "text": "Research labs and AI safety",
-   "href": "/solutions/research"
   },
   {
    "menu": "Solutions",
@@ -3593,51 +2709,6 @@
    "column": "Solutions",
    "text": "Neoclouds and GPU providers",
    "href": "/solutions/neoclouds"
-  },
-  {
-   "column": "Solutions",
-   "text": "Enterprise datacenters",
-   "href": "/solutions/enterprise-datacenter"
-  },
-  {
-   "column": "Solutions",
-   "text": "Financial services",
-   "href": "/solutions/financial-services"
-  },
-  {
-   "column": "Solutions",
-   "text": "Healthcare",
-   "href": "/solutions/healthcare"
-  },
-  {
-   "column": "Solutions",
-   "text": "Government and defense",
-   "href": "/solutions/government-defense"
-  },
-  {
-   "column": "Solutions",
-   "text": "Police and public safety",
-   "href": "/solutions/public-safety"
-  },
-  {
-   "column": "Solutions",
-   "text": "State and local government",
-   "href": "/solutions/local-government"
-  },
-  {
-   "column": "Solutions",
-   "text": "Legal and professional services",
-   "href": "/solutions/legal"
-  },
-  {
-   "column": "Solutions",
-   "text": "Hyperscalers and cloud platforms",
-   "href": "/solutions/hyperscalers"
-  },
-  {
-   "column": "Solutions",
-   "text": "Research labs and AI safety",
-   "href": "/solutions/research"
   },
   {
    "column": "Solutions",
@@ -3791,6 +2862,7 @@
      "exports": [
       "companyCta",
       "exchange",
+      "facts",
       "mission",
       "name",
       "showTeam",
@@ -3809,12 +2881,6 @@
      "exports": [
       "SITE",
       "pages"
-     ]
-    },
-    {
-     "file": "src/lib/content/live.js",
-     "exports": [
-      "live"
      ]
     },
     {
@@ -3849,6 +2915,30 @@
      "text": "The whole thread",
      "href": "https://github.com/ggml-org/llama.cpp/pull/18680",
      "kind": "out",
+     "button": false
+    },
+    {
+     "text": "github.com/Metrale/metrale-inference-alpha",
+     "href": "https://github.com/Metrale/metrale-inference-alpha",
+     "kind": "out",
+     "button": false
+    },
+    {
+     "text": "github.com/Metrale/metralectl",
+     "href": "https://github.com/Metrale/metralectl",
+     "kind": "out",
+     "button": false
+    },
+    {
+     "text": "security@metrale.ai",
+     "href": "mailto:security@metrale.ai",
+     "kind": "mail",
+     "button": false
+    },
+    {
+     "text": "Reproduce the published ladder, step by step",
+     "href": "/diligence",
+     "kind": "page",
      "button": false
     },
     {
@@ -3936,19 +3026,19 @@
     },
     {
      "text": "The repository",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas",
+     "href": "https://github.com/Metrale/metrale-inference-alpha",
      "kind": "out",
      "button": true
     },
     {
      "text": "Good first issues",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/labels/good%20first%20issue",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/labels/good%20first%20issue",
      "kind": "out",
      "button": true
     },
     {
      "text": "How to contribute",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/CONTRIBUTING.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CONTRIBUTING.md",
      "kind": "out",
      "button": true
     },
@@ -4076,15 +3166,15 @@
      "button": false
     },
     {
-     "text": "Report privately · security@metrale.com",
-     "href": "mailto:security@metrale.com",
+     "text": "Report privately · security@metrale.ai",
+     "href": "mailto:security@metrale.ai",
      "kind": "mail",
      "button": false
     },
     {
      "text": "Disclosure policy",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/SECURITY.md",
-     "kind": "out",
+     "href": "/trust#disclosure",
+     "kind": "page",
      "button": false
     },
     {
@@ -4106,6 +3196,7 @@
     {
      "file": "src/lib/data.js",
      "exports": [
+      "CLI",
       "CONTROL",
       "codeChat",
       "githubUrl",
@@ -4200,6 +3291,7 @@
     {
      "file": "src/lib/data.js",
      "exports": [
+      "CLI",
       "CONTROL",
       "announcement",
       "codeChat",
@@ -4225,8 +3317,6 @@
       "runCommandRaw",
       "stars",
       "startAgentCommand",
-      "testimonials",
-      "testimonialsNote",
       "verified",
       "verifiedAnchor"
      ]
@@ -4275,8 +3365,7 @@
       "recognition",
       "solution",
       "tour",
-      "value",
-      "voices"
+      "value"
      ]
     },
     {
@@ -4382,7 +3471,7 @@
     },
     {
      "text": "Read the full campaign log",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/bench/ladder38/RESULTS.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md",
      "kind": "out",
      "button": true
     },
@@ -4405,8 +3494,8 @@
      "button": false
     },
     {
-     "text": "July 2026 Strix Halo hardware provided for the gfx1151 bring up See the post x.com",
-     "href": "https://x.com/AtlasInferenceX",
+     "text": "July 2026 Strix Halo hardware provided for the gfx1151 bring up See the pull request metra",
+     "href": "https://metrale.ai/src/history/pull/187",
      "kind": "out",
      "button": false
     },
@@ -4435,18 +3524,6 @@
      "button": false
     },
     {
-     "text": "Discord, #general",
-     "href": "https://discord.gg/RQcGakU2jW",
-     "kind": "out",
-     "button": false
-    },
-    {
-     "text": "r/LocalLLaMA",
-     "href": "https://www.reddit.com/r/LocalLLaMA/comments/1rmvxo3/",
-     "kind": "out",
-     "button": false
-    },
-    {
      "text": "Ask the rest in a working session",
      "href": "/demo#book",
      "kind": "page",
@@ -4454,7 +3531,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -4520,7 +3597,7 @@
     },
     {
      "text": "Open pull requests",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/pulls",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/pulls",
      "kind": "out",
      "button": true
     },
@@ -4697,7 +3774,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -4777,7 +3854,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -4789,7 +3866,7 @@
     },
     {
      "text": "Read the deployment guide",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": true
     }
@@ -4857,7 +3934,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -4943,7 +4020,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -5072,7 +4149,7 @@
    "links": [
     {
      "text": "Read the security policy and disclosure process",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/SECURITY.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md",
      "kind": "out",
      "button": false
     },
@@ -5084,7 +4161,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -5194,7 +4271,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -5313,7 +4390,7 @@
     },
     {
      "text": "Star on GitHub",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas",
+     "href": "https://github.com/Metrale/metrale-inference-alpha",
      "kind": "out",
      "button": true
     }
@@ -5507,115 +4584,13 @@
    "generated": false,
    "links": [
     {
-     "text": "Own the GPUs",
-     "href": "#infrastructure",
-     "kind": "anchor",
-     "button": false
-    },
-    {
-     "text": "Regulated industries",
-     "href": "#regulated",
-     "kind": "anchor",
-     "button": false
-    },
-    {
-     "text": "Public sector",
-     "href": "#public-sector",
-     "kind": "anchor",
-     "button": false
-    },
-    {
-     "text": "Research and edge",
-     "href": "#research-edge",
-     "kind": "anchor",
-     "button": false
-    },
-    {
      "text": "Neoclouds and GPU providers You sell GPU time. Metrale makes every hour of it produce more",
      "href": "/solutions/neoclouds",
      "kind": "page",
      "button": false
     },
     {
-     "text": "Enterprise datacenters You invested in the datacenter. Now get the most out of it. Read th",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "Hyperscalers and cloud platforms More effective capacity from the fleet you already bought",
-     "href": "/solutions/hyperscalers",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "Financial services Inference that stays inside the perimeter, with a ledger the auditors c",
-     "href": "/solutions/financial-services",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "Healthcare Clinical grade inference on hardware the hospital owns. Read the solution",
-     "href": "/solutions/healthcare",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "Legal and professional services Privileged work product stays privileged. Read the solutio",
-     "href": "/solutions/legal",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "Government and defense Air gapped by design. Signed by default. Nothing leaves. Read the s",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "Police and public safety Evidence stays in the evidence room. So does the model. Read the ",
-     "href": "/solutions/public-safety",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "State and local government The paperwork of a city, read by a model the city runs. Read th",
-     "href": "/solutions/local-government",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "Research labs and AI safety Run the new weights the week they drop, on hardware the lab co",
-     "href": "/solutions/research",
-     "kind": "page",
-     "button": false
-    },
-    {
      "text": "SMB and edge One box. One license. Stop renting tokens. Read the solution",
-     "href": "/solutions/smb-edge",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "Enterprise datacenter Owned GPU fleet, existing serving stack, a CFO who wants the bill ex",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "Neocloud and GPU provider Tokens are cost of goods sold. More tokens per GPU is margin. Op",
-     "href": "/solutions/neoclouds",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "Air gapped and sovereign Nothing leaves. Signed artifacts, local install, telemetry that s",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "Workstation and SMB One box, one license, the same engine. Stop renting tokens. Open",
      "href": "/solutions/smb-edge",
      "kind": "page",
      "button": false
@@ -5629,818 +4604,6 @@
     {
      "text": "See pricing",
      "href": "/pricing",
-     "kind": "page",
-     "button": true
-    }
-   ],
-   "controls": [],
-   "forms": []
-  },
-  {
-   "path": "/solutions/enterprise-datacenter",
-   "title": "Enterprise datacenters · Metrale",
-   "h1": "You invested in the datacenter. Now get the most out of it.",
-   "route": "src/routes/(marketing)/solutions/[slug]/+page.svelte",
-   "copy": [
-    {
-     "file": "src/lib/content/brand.js",
-     "exports": [
-      "footer",
-      "industries",
-      "links",
-      "nav",
-      "routes",
-      "solutionHref"
-     ]
-    },
-    {
-     "file": "src/lib/content/index.js",
-     "exports": [
-      "SITE",
-      "pages"
-     ]
-    },
-    {
-     "file": "src/lib/content/media.js",
-     "exports": [
-      "artsFor",
-      "heroClipFor"
-     ]
-    },
-    {
-     "file": "src/lib/content/solutions.js",
-     "exports": [
-      "solutionCta"
-     ]
-    }
-   ],
-   "generated": false,
-   "links": [
-    {
-     "text": "Model your fleet",
-     "href": "/demo#book",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "See pricing",
-     "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Neoclouds and GPU providers",
-     "href": "/solutions/neoclouds",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Financial services",
-     "href": "/solutions/financial-services",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Healthcare",
-     "href": "/solutions/healthcare",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Government and defense",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Police and public safety",
-     "href": "/solutions/public-safety",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "State and local government",
-     "href": "/solutions/local-government",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Legal and professional services",
-     "href": "/solutions/legal",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Hyperscalers and cloud platforms",
-     "href": "/solutions/hyperscalers",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Research labs and AI safety",
-     "href": "/solutions/research",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "SMB and edge",
-     "href": "/solutions/smb-edge",
-     "kind": "page",
-     "button": true
-    }
-   ],
-   "controls": [],
-   "forms": []
-  },
-  {
-   "path": "/solutions/financial-services",
-   "title": "Financial services · Metrale",
-   "h1": "Inference that stays inside the perimeter, with a ledger the auditors can read.",
-   "route": "src/routes/(marketing)/solutions/[slug]/+page.svelte",
-   "copy": [
-    {
-     "file": "src/lib/content/brand.js",
-     "exports": [
-      "footer",
-      "industries",
-      "links",
-      "nav",
-      "routes",
-      "solutionHref"
-     ]
-    },
-    {
-     "file": "src/lib/content/index.js",
-     "exports": [
-      "SITE",
-      "pages"
-     ]
-    },
-    {
-     "file": "src/lib/content/media.js",
-     "exports": [
-      "artsFor",
-      "heroClipFor"
-     ]
-    },
-    {
-     "file": "src/lib/content/solutions.js",
-     "exports": [
-      "solutionCta"
-     ]
-    }
-   ],
-   "generated": false,
-   "links": [
-    {
-     "text": "Book a security and compliance review",
-     "href": "/demo#book",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "See pricing",
-     "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Neoclouds and GPU providers",
-     "href": "/solutions/neoclouds",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Enterprise datacenters",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Healthcare",
-     "href": "/solutions/healthcare",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Government and defense",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Police and public safety",
-     "href": "/solutions/public-safety",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "State and local government",
-     "href": "/solutions/local-government",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Legal and professional services",
-     "href": "/solutions/legal",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Hyperscalers and cloud platforms",
-     "href": "/solutions/hyperscalers",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Research labs and AI safety",
-     "href": "/solutions/research",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "SMB and edge",
-     "href": "/solutions/smb-edge",
-     "kind": "page",
-     "button": true
-    }
-   ],
-   "controls": [],
-   "forms": []
-  },
-  {
-   "path": "/solutions/government-defense",
-   "title": "Government and defense · Metrale",
-   "h1": "Air gapped by design. Signed by default. Nothing leaves.",
-   "route": "src/routes/(marketing)/solutions/[slug]/+page.svelte",
-   "copy": [
-    {
-     "file": "src/lib/content/brand.js",
-     "exports": [
-      "footer",
-      "industries",
-      "links",
-      "nav",
-      "routes",
-      "solutionHref"
-     ]
-    },
-    {
-     "file": "src/lib/content/index.js",
-     "exports": [
-      "SITE",
-      "pages"
-     ]
-    },
-    {
-     "file": "src/lib/content/media.js",
-     "exports": [
-      "artsFor",
-      "heroClipFor"
-     ]
-    },
-    {
-     "file": "src/lib/content/solutions.js",
-     "exports": [
-      "solutionCta"
-     ]
-    }
-   ],
-   "generated": false,
-   "links": [
-    {
-     "text": "Request the air gapped brief",
-     "href": "/demo#book",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "See pricing",
-     "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Neoclouds and GPU providers",
-     "href": "/solutions/neoclouds",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Enterprise datacenters",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Financial services",
-     "href": "/solutions/financial-services",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Healthcare",
-     "href": "/solutions/healthcare",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Police and public safety",
-     "href": "/solutions/public-safety",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "State and local government",
-     "href": "/solutions/local-government",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Legal and professional services",
-     "href": "/solutions/legal",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Hyperscalers and cloud platforms",
-     "href": "/solutions/hyperscalers",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Research labs and AI safety",
-     "href": "/solutions/research",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "SMB and edge",
-     "href": "/solutions/smb-edge",
-     "kind": "page",
-     "button": true
-    }
-   ],
-   "controls": [],
-   "forms": []
-  },
-  {
-   "path": "/solutions/healthcare",
-   "title": "Healthcare · Metrale",
-   "h1": "Clinical grade inference on hardware the hospital owns.",
-   "route": "src/routes/(marketing)/solutions/[slug]/+page.svelte",
-   "copy": [
-    {
-     "file": "src/lib/content/brand.js",
-     "exports": [
-      "footer",
-      "industries",
-      "links",
-      "nav",
-      "routes",
-      "solutionHref"
-     ]
-    },
-    {
-     "file": "src/lib/content/index.js",
-     "exports": [
-      "SITE",
-      "pages"
-     ]
-    },
-    {
-     "file": "src/lib/content/media.js",
-     "exports": [
-      "artsFor",
-      "heroClipFor"
-     ]
-    },
-    {
-     "file": "src/lib/content/solutions.js",
-     "exports": [
-      "solutionCta"
-     ]
-    }
-   ],
-   "generated": false,
-   "links": [
-    {
-     "text": "Talk to us about a pilot",
-     "href": "/demo#book",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "See pricing",
-     "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Neoclouds and GPU providers",
-     "href": "/solutions/neoclouds",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Enterprise datacenters",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Financial services",
-     "href": "/solutions/financial-services",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Government and defense",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Police and public safety",
-     "href": "/solutions/public-safety",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "State and local government",
-     "href": "/solutions/local-government",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Legal and professional services",
-     "href": "/solutions/legal",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Hyperscalers and cloud platforms",
-     "href": "/solutions/hyperscalers",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Research labs and AI safety",
-     "href": "/solutions/research",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "SMB and edge",
-     "href": "/solutions/smb-edge",
-     "kind": "page",
-     "button": true
-    }
-   ],
-   "controls": [],
-   "forms": []
-  },
-  {
-   "path": "/solutions/hyperscalers",
-   "title": "Hyperscalers and cloud platforms · Metrale",
-   "h1": "More effective capacity from the fleet you already bought.",
-   "route": "src/routes/(marketing)/solutions/[slug]/+page.svelte",
-   "copy": [
-    {
-     "file": "src/lib/content/brand.js",
-     "exports": [
-      "footer",
-      "industries",
-      "links",
-      "nav",
-      "routes",
-      "solutionHref"
-     ]
-    },
-    {
-     "file": "src/lib/content/index.js",
-     "exports": [
-      "SITE",
-      "pages"
-     ]
-    },
-    {
-     "file": "src/lib/content/media.js",
-     "exports": [
-      "artsFor",
-      "heroClipFor"
-     ]
-    },
-    {
-     "file": "src/lib/content/solutions.js",
-     "exports": [
-      "solutionCta"
-     ]
-    }
-   ],
-   "generated": false,
-   "links": [
-    {
-     "text": "Open a design partnership",
-     "href": "/demo#book",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "See pricing",
-     "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Neoclouds and GPU providers",
-     "href": "/solutions/neoclouds",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Enterprise datacenters",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Financial services",
-     "href": "/solutions/financial-services",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Healthcare",
-     "href": "/solutions/healthcare",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Government and defense",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Police and public safety",
-     "href": "/solutions/public-safety",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "State and local government",
-     "href": "/solutions/local-government",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Legal and professional services",
-     "href": "/solutions/legal",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Research labs and AI safety",
-     "href": "/solutions/research",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "SMB and edge",
-     "href": "/solutions/smb-edge",
-     "kind": "page",
-     "button": true
-    }
-   ],
-   "controls": [],
-   "forms": []
-  },
-  {
-   "path": "/solutions/legal",
-   "title": "Legal and professional services · Metrale",
-   "h1": "Privileged work product stays privileged.",
-   "route": "src/routes/(marketing)/solutions/[slug]/+page.svelte",
-   "copy": [
-    {
-     "file": "src/lib/content/brand.js",
-     "exports": [
-      "footer",
-      "industries",
-      "links",
-      "nav",
-      "routes",
-      "solutionHref"
-     ]
-    },
-    {
-     "file": "src/lib/content/index.js",
-     "exports": [
-      "SITE",
-      "pages"
-     ]
-    },
-    {
-     "file": "src/lib/content/media.js",
-     "exports": [
-      "artsFor",
-      "heroClipFor"
-     ]
-    },
-    {
-     "file": "src/lib/content/solutions.js",
-     "exports": [
-      "solutionCta"
-     ]
-    }
-   ],
-   "generated": false,
-   "links": [
-    {
-     "text": "Price a box for the office",
-     "href": "/demo#book",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "See pricing",
-     "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Neoclouds and GPU providers",
-     "href": "/solutions/neoclouds",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Enterprise datacenters",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Financial services",
-     "href": "/solutions/financial-services",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Healthcare",
-     "href": "/solutions/healthcare",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Government and defense",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Police and public safety",
-     "href": "/solutions/public-safety",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "State and local government",
-     "href": "/solutions/local-government",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Hyperscalers and cloud platforms",
-     "href": "/solutions/hyperscalers",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Research labs and AI safety",
-     "href": "/solutions/research",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "SMB and edge",
-     "href": "/solutions/smb-edge",
-     "kind": "page",
-     "button": true
-    }
-   ],
-   "controls": [],
-   "forms": []
-  },
-  {
-   "path": "/solutions/local-government",
-   "title": "State and local government · Metrale",
-   "h1": "The paperwork of a city, read by a model the city runs.",
-   "route": "src/routes/(marketing)/solutions/[slug]/+page.svelte",
-   "copy": [
-    {
-     "file": "src/lib/content/brand.js",
-     "exports": [
-      "footer",
-      "industries",
-      "links",
-      "nav",
-      "routes",
-      "solutionHref"
-     ]
-    },
-    {
-     "file": "src/lib/content/index.js",
-     "exports": [
-      "SITE",
-      "pages"
-     ]
-    },
-    {
-     "file": "src/lib/content/media.js",
-     "exports": [
-      "artsFor",
-      "heroClipFor"
-     ]
-    },
-    {
-     "file": "src/lib/content/solutions.js",
-     "exports": [
-      "solutionCta"
-     ]
-    }
-   ],
-   "generated": false,
-   "links": [
-    {
-     "text": "Talk to us about a records workload",
-     "href": "/demo#book",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "See pricing",
-     "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Neoclouds and GPU providers",
-     "href": "/solutions/neoclouds",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Enterprise datacenters",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Financial services",
-     "href": "/solutions/financial-services",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Healthcare",
-     "href": "/solutions/healthcare",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Government and defense",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Police and public safety",
-     "href": "/solutions/public-safety",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Legal and professional services",
-     "href": "/solutions/legal",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Hyperscalers and cloud platforms",
-     "href": "/solutions/hyperscalers",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Research labs and AI safety",
-     "href": "/solutions/research",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "SMB and edge",
-     "href": "/solutions/smb-edge",
      "kind": "page",
      "button": true
     }
@@ -6497,292 +4660,6 @@
     {
      "text": "See pricing",
      "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Enterprise datacenters",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Financial services",
-     "href": "/solutions/financial-services",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Healthcare",
-     "href": "/solutions/healthcare",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Government and defense",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Police and public safety",
-     "href": "/solutions/public-safety",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "State and local government",
-     "href": "/solutions/local-government",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Legal and professional services",
-     "href": "/solutions/legal",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Hyperscalers and cloud platforms",
-     "href": "/solutions/hyperscalers",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Research labs and AI safety",
-     "href": "/solutions/research",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "SMB and edge",
-     "href": "/solutions/smb-edge",
-     "kind": "page",
-     "button": true
-    }
-   ],
-   "controls": [],
-   "forms": []
-  },
-  {
-   "path": "/solutions/public-safety",
-   "title": "Police and public safety · Metrale",
-   "h1": "Evidence stays in the evidence room. So does the model.",
-   "route": "src/routes/(marketing)/solutions/[slug]/+page.svelte",
-   "copy": [
-    {
-     "file": "src/lib/content/brand.js",
-     "exports": [
-      "footer",
-      "industries",
-      "links",
-      "nav",
-      "routes",
-      "solutionHref"
-     ]
-    },
-    {
-     "file": "src/lib/content/index.js",
-     "exports": [
-      "SITE",
-      "pages"
-     ]
-    },
-    {
-     "file": "src/lib/content/media.js",
-     "exports": [
-      "artsFor",
-      "heroClipFor"
-     ]
-    },
-    {
-     "file": "src/lib/content/solutions.js",
-     "exports": [
-      "solutionCta"
-     ]
-    }
-   ],
-   "generated": false,
-   "links": [
-    {
-     "text": "Talk to us about an evidence workload",
-     "href": "/demo#book",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "See pricing",
-     "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Neoclouds and GPU providers",
-     "href": "/solutions/neoclouds",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Enterprise datacenters",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Financial services",
-     "href": "/solutions/financial-services",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Healthcare",
-     "href": "/solutions/healthcare",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Government and defense",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "State and local government",
-     "href": "/solutions/local-government",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Legal and professional services",
-     "href": "/solutions/legal",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Hyperscalers and cloud platforms",
-     "href": "/solutions/hyperscalers",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Research labs and AI safety",
-     "href": "/solutions/research",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "SMB and edge",
-     "href": "/solutions/smb-edge",
-     "kind": "page",
-     "button": true
-    }
-   ],
-   "controls": [],
-   "forms": []
-  },
-  {
-   "path": "/solutions/research",
-   "title": "Research labs and AI safety · Metrale",
-   "h1": "Run the new weights the week they drop, on hardware the lab controls.",
-   "route": "src/routes/(marketing)/solutions/[slug]/+page.svelte",
-   "copy": [
-    {
-     "file": "src/lib/content/brand.js",
-     "exports": [
-      "footer",
-      "industries",
-      "links",
-      "nav",
-      "routes",
-      "solutionHref"
-     ]
-    },
-    {
-     "file": "src/lib/content/index.js",
-     "exports": [
-      "SITE",
-      "pages"
-     ]
-    },
-    {
-     "file": "src/lib/content/media.js",
-     "exports": [
-      "artsFor",
-      "heroClipFor"
-     ]
-    },
-    {
-     "file": "src/lib/content/solutions.js",
-     "exports": [
-      "solutionCta"
-     ]
-    }
-   ],
-   "generated": false,
-   "links": [
-    {
-     "text": "Set up a lab deployment",
-     "href": "/demo#book",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "See pricing",
-     "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Neoclouds and GPU providers",
-     "href": "/solutions/neoclouds",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Enterprise datacenters",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Financial services",
-     "href": "/solutions/financial-services",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Healthcare",
-     "href": "/solutions/healthcare",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Government and defense",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Police and public safety",
-     "href": "/solutions/public-safety",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "State and local government",
-     "href": "/solutions/local-government",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Legal and professional services",
-     "href": "/solutions/legal",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Hyperscalers and cloud platforms",
-     "href": "/solutions/hyperscalers",
      "kind": "page",
      "button": true
     },
@@ -6853,60 +4730,6 @@
      "href": "/solutions/neoclouds",
      "kind": "page",
      "button": true
-    },
-    {
-     "text": "Enterprise datacenters",
-     "href": "/solutions/enterprise-datacenter",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Financial services",
-     "href": "/solutions/financial-services",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Healthcare",
-     "href": "/solutions/healthcare",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Government and defense",
-     "href": "/solutions/government-defense",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Police and public safety",
-     "href": "/solutions/public-safety",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "State and local government",
-     "href": "/solutions/local-government",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Legal and professional services",
-     "href": "/solutions/legal",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Hyperscalers and cloud platforms",
-     "href": "/solutions/hyperscalers",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Research labs and AI safety",
-     "href": "/solutions/research",
-     "kind": "page",
-     "button": true
     }
    ],
    "controls": [],
@@ -6959,7 +4782,7 @@
    "links": [
     {
      "text": "Read the policy",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/SECURITY.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md",
      "kind": "out",
      "button": true
     },
@@ -6977,7 +4800,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -7187,13 +5010,13 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
     {
      "text": "Read the deployment guide",
-     "href": "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": true
     }
@@ -7210,7 +5033,6 @@
   "https://discord.gg/RQcGakU2jW": [
    "/contact",
    "/demo",
-   "/",
    "/platform/engine",
    "/resources/events",
    "/waitlist"
@@ -7223,22 +5045,22 @@
    "/company",
    "/"
   ],
-  "https://github.com/Avarok-Cybersecurity/atlas": [
+  "https://github.com/Metrale/metrale-inference-alpha": [
+   "/company",
    "/company/careers",
    "/resources"
   ],
-  "https://github.com/Avarok-Cybersecurity/atlas/blob/main/CONTRIBUTING.md": [
+  "https://github.com/Metrale/metrale-inference-alpha/blob/main/CONTRIBUTING.md": [
    "/company/careers"
   ],
-  "https://github.com/Avarok-Cybersecurity/atlas/blob/main/SECURITY.md": [
-   "/contact",
+  "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md": [
    "/platform/security",
    "/trust"
   ],
-  "https://github.com/Avarok-Cybersecurity/atlas/blob/main/bench/ladder38/RESULTS.md": [
+  "https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md": [
    "/"
   ],
-  "https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md": [
+  "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md": [
    "/",
    "/platform/control",
    "/platform/deployment",
@@ -7249,23 +5071,23 @@
    "/trust",
    "/why-metrale"
   ],
-  "https://github.com/Avarok-Cybersecurity/atlas/labels/good%20first%20issue": [
+  "https://github.com/Metrale/metrale-inference-alpha/labels/good%20first%20issue": [
    "/company/careers"
   ],
-  "https://github.com/Avarok-Cybersecurity/atlas/pulls": [
+  "https://github.com/Metrale/metrale-inference-alpha/pulls": [
    "/labs"
+  ],
+  "https://github.com/Metrale/metralectl": [
+   "/company"
   ],
   "https://github.com/ggml-org/llama.cpp/pull/18680": [
    "/company"
   ],
+  "https://metrale.ai/src/history/pull/187": [
+   "/"
+  ],
   "https://www.nvidia.com/en-us/startups/": [
    "/company",
-   "/"
-  ],
-  "https://www.reddit.com/r/LocalLLaMA/comments/1rmvxo3/": [
-   "/"
-  ],
-  "https://x.com/AtlasInferenceX": [
    "/"
   ]
  },
@@ -7290,7 +5112,8 @@
    "/demo",
    "/pricing"
   ],
-  "security@metrale.com": [
+  "security@metrale.ai": [
+   "/company",
    "/contact"
   ]
  }

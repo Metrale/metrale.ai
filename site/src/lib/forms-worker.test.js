@@ -14,7 +14,7 @@ const WORKER_DIR = join(import.meta.dir, '..', '..', 'deploy', 'cloudflare', 'fo
 const ORIGIN = 'https://metrale.ai';
 const baseEnv = () => ({
   ALLOWED_ORIGINS: `${ORIGIN},http://localhost:5173`,
-  ALLOWED_ORIGIN_SUFFIXES: '.atlas-site.pages.dev',
+  ALLOWED_ORIGIN_SUFFIXES: '.metrale-ai.pages.dev',
   TO_DEMO: 'sales@example.test',
   TO_WAITLIST: 'sales@example.test',
   TO_CAREERS: 'eng@example.test',
@@ -114,11 +114,11 @@ test('only our own pages may post, and the answer names that origin and no other
   const env = { ...baseEnv(), LEADS: kv() };
   expect((await worker.fetch(post(demo, { origin: 'https://evil.test' }), env)).status).toBe(403);
   expect((await worker.fetch(post(demo, { origin: '' }), env)).status).toBe(403);
-  const preview = await worker.fetch(post(demo, { origin: 'https://facelift-preview.atlas-site.pages.dev' }), env);
+  const preview = await worker.fetch(post(demo, { origin: 'https://facelift-preview.metrale-ai.pages.dev' }), env);
   expect(preview.status).toBe(200);
-  expect(preview.headers.get('access-control-allow-origin')).toBe('https://facelift-preview.atlas-site.pages.dev');
+  expect(preview.headers.get('access-control-allow-origin')).toBe('https://facelift-preview.metrale-ai.pages.dev');
   expect(corsFor('http://metrale.ai', env)).toBeNull(); // plain http is not us
-  expect(corsFor('https://atlas-site.pages.dev.evil.test', env)).toBeNull(); // a suffix must end the host
+  expect(corsFor('https://metrale-ai.pages.dev.evil.test', env)).toBeNull(); // a suffix must end the host
   const preflight = await worker.fetch(post(null, { method: 'OPTIONS' }), env);
   expect(preflight.status).toBe(204);
   expect(preflight.headers.get('access-control-allow-methods')).toContain('POST');
@@ -153,7 +153,7 @@ test('one address cannot post more than a few times a minute', async () => {
 
 test('the health check says it is alive and nothing else', async () => {
   const res = await worker.fetch(new Request('https://forms.example.test/'), baseEnv());
-  expect(await res.json()).toEqual({ ok: true, service: 'avarok-forms' });
+  expect(await res.json()).toEqual({ ok: true, service: 'metrale-forms' });
 });
 
 // The Worker's inboxes and the site's contact addresses are two copies of one fact.

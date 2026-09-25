@@ -1,5 +1,5 @@
 import adapter from '@sveltejs/adapter-static';
-import { avarokMarkdown } from './src/lib/md/preprocess.js';
+import { metraleMarkdown } from './src/lib/md/preprocess.js';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -12,10 +12,10 @@ const config = {
   // browser receives HTML; `e2e/check-bundle.mjs` fails the build if any of it
   // ever reaches the client bundle, which is what keeps the trade honest.
   extensions: ['.svelte', '.md'],
-  preprocess: [avarokMarkdown()],
+  preprocess: [metraleMarkdown()],
   kit: {
-    // Both web properties render the same chevron field and the same design
-    // tokens. They live in web-shared/ at the repo root — one copy, imported
+    // Both web properties render the same design tokens and lockup. They
+    // live in web-shared/ at the repo root — one copy, imported
     // by two apps, rather than a copy per app that drifts.
     alias: { '$shared': '../web-shared' },
     adapter: adapter({

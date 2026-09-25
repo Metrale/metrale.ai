@@ -101,7 +101,6 @@
     </div>
     <h1 class="post-title">{post.title}</h1>
     <p class="post-dek">{post.dek}</p>
-    {#if new Date(post.date) < new Date(blog.renamedOn)}<p class="post-former">{blog.formerName}</p>{/if}
     <div class="byline">
       <span class="avatar" aria-hidden="true">{author.initials}</span>
       <a href="/authors/{post.author}">{author.name}</a>
@@ -178,11 +177,4 @@
   .postnav-chev { width: 7px; height: auto; overflow: visible; flex: none; }
   .postnav-chev.back { transform: rotate(180deg); }
   /* One quiet line over a post from before the name changed. */
-  .post-former {
-    margin: 0.9rem 0 0;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.02em;
-    color: var(--t3);
-  }
 </style>

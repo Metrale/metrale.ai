@@ -1,17 +1,17 @@
 {
-  "generated_date": "2026-09-18",
-  "repo": "Avarok-Cybersecurity/atlas",
-  "total_contributions": 392,
+  "generated_date": "2026-09-25",
+  "repo": "Metrale/metrale-inference-alpha",
+  "total_contributions": 443,
   "contributors": [
     {
       "login": "tbraun96",
       "url": "https://github.com/tbraun96",
-      "contributions": 299
+      "contributions": 343
     },
     {
       "login": "SeedSource",
       "url": "https://github.com/SeedSource",
-      "contributions": 27
+      "contributions": 31
     },
     {
       "login": "AzeezIsh",
@@ -19,23 +19,23 @@
       "contributions": 15
     },
     {
+      "login": "TheTom",
+      "url": "https://github.com/TheTom",
+      "contributions": 13
+    },
+    {
       "login": "rsafier",
       "url": "https://github.com/rsafier",
       "contributions": 11
     },
     {
-      "login": "TheTom",
-      "url": "https://github.com/TheTom",
-      "contributions": 11
+      "login": "rrstesiak",
+      "url": "https://github.com/rrstesiak",
+      "contributions": 6
     },
     {
       "login": "DrRainbows",
       "url": "https://github.com/DrRainbows",
-      "contributions": 5
-    },
-    {
-      "login": "rrstesiak",
-      "url": "https://github.com/rrstesiak",
       "contributions": 5
     },
     {

@@ -21,7 +21,7 @@ import { makeHighlighter } from './highlight.js';
  * @param {object} [opts]
  * @param {string} [opts.staticDir] where `/images/...` resolves from
  */
-export function avarokMarkdown({ staticDir = 'static' } = {}) {
+export function metraleMarkdown({ staticDir = 'static' } = {}) {
   let highlighter = null;
 
   /**
@@ -50,7 +50,7 @@ export function avarokMarkdown({ staticDir = 'static' } = {}) {
   };
 
   return {
-    name: 'atlas-markdown',
+    name: 'metrale-markdown',
     async markup({ content, filename }) {
       if (!filename?.endsWith('.md')) return undefined; // .svelte posts untouched
       if (!highlighter) highlighter = await makeHighlighter();

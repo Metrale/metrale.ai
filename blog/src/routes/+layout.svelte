@@ -1,8 +1,7 @@
 <script>
   import '../app.css';
   import { page } from '$app/state';
-  import ChevronField from '$shared/components/ChevronField.svelte';
-  import AtlasLockup from '$shared/components/AtlasLockup.svelte';
+  import MetraleLockup from '$shared/components/MetraleLockup.svelte';
   import Header from '$lib/components/Header.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import { SITE, blog, cleanSlug } from '$lib/content.js';
@@ -25,15 +24,8 @@
   <meta property="og:url" content={canonical} />
 </svelte:head>
 
-<!-- The canvas must stay a direct child of the layout root. A `transform`,
-     `filter`, `perspective`, `will-change` or `contain: paint` on any ancestor
-     would make that ancestor the containing block for fixed-position
-     descendants, and the background would silently start scrolling with the
-     content instead of staying put. -->
-<ChevronField />
-
 <!-- The brand vector, defined once and <use>d by every lockup below. -->
-<AtlasLockup kind="defs" />
+<MetraleLockup kind="defs" />
 
 <a class="skip" href="#main">Skip to content</a>
 <div class="page">

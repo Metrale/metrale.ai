@@ -6,11 +6,11 @@
 // obvious place and silently left the page advertising the old one.
 
 import { expect, test } from 'bun:test';
-import { flagshipRecipe, runCommandRaw, runCommand, installerUrl } from './data.js';
+import { CLI, flagshipRecipe, runCommandRaw, runCommand, installerUrl } from './data.js';
 
 test('the command the page shows is built from the flagship recipe, not a copy of it', () => {
   expect(runCommandRaw).toContain(flagshipRecipe);
-  expect(runCommandRaw).toBe(`atlasctl run ${flagshipRecipe}`);
+  expect(runCommandRaw).toBe(`${CLI} run ${flagshipRecipe}`);
 });
 
 test('the same rule holds for the installer URL it already applied to', () => {

@@ -27,7 +27,7 @@ reading the code first.
 ## How the site is put together
 
 - **Words are data.** Every sentence on a marketing page lives in `src/lib/content/*.js`.
-  Components under `src/lib/components/avarok/` only draw. Change copy in content, never in markup.
+  Components under `src/lib/components/marketing/` only draw. Change copy in content, never in markup.
   The one file of another shape is `src/lib/content/positions.jsonl`, the roles on the careers
   page, one role per line; `scripts/gen-positions.mjs` turns it into `src/lib/positions.generated.json`
   on every build and stops the build on a bad line. Edit the JSONL, never the JSON.
@@ -46,7 +46,7 @@ reading the code first.
 
 ```sh
 cd site
-export AVAROK_RECIPES_ROOT=/path/to/atlas-recipes/recipes
+export METRALE_RECIPES_ROOT=/path/to/metralectl/recipes
 
 # 1. find it in SITE-GUIDE.md, edit the source it names
 # 2. prove it
@@ -86,7 +86,7 @@ browser suite, and check the port is free: on Windows the process can outlive it
 | Requests before first paint | 8 to 10 scripts on a marketing page, 11 to 14 on a developer page, and no developer page loads the marketing components | `e2e/page-weight.spec.js` |
 
 Anything that animates forever uses only `transform` and `opacity`, and stops when it is off
-screen (`src/lib/reveal.js` sets `is-live`). An element reset in `avarok.css` is written with
+screen (`src/lib/reveal.js` sets `is-live`). An element reset in `metrale.css` is written with
 `:where()` so it never outranks a class.
 
 ## Rules that are not negotiable
@@ -124,7 +124,7 @@ screen (`src/lib/reveal.js` sets `is-live`). An element reset in `avarok.css` is
 | A clip or a still | `node scripts/media/install.mjs --from <file> --as <slot>` |
 | A still made with Grok Imagine | prompt and slot in `media-brief/shots.json` (house style is there too), generate through the xAI API with the Worker's local key, look at it, then `install.mjs` |
 | A solution page | an industry in `industries` and a sector in `sectors` (`brand.js`), an entry in `solutions.js`, and a still if it gets one. The registry, the menu, the sector bar and the sitemap follow |
-| A colour | `../web-shared/avarok-tokens.css`. Both themes. The blog reads it too |
+| A colour | `../web-shared/metrale-tokens.css`. Both themes. The blog reads it too |
 | A page | add it to `routes`, to the registry in `content/index.js`, and a `+page.svelte` |
 
 Use `bun`, not `npm`: `bun install`, `bun run <script>`, `bun test`, `bun x <tool>`. The site is

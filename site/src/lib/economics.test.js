@@ -145,7 +145,7 @@ test('the graph has a point for every published rung, from measured throughput',
   const { points, measured } = efficiencyLadder(ladder.rows, { watts: 240, baselineWatts: 240 });
   expect(points.map((p) => p.c)).toEqual([...ladder.concurrencies].sort((a, b) => a - b));
   const top = ladder.rows.find((r) => r.c === points.at(-1).c);
-  expect(points.at(-1).avarok).toBeCloseTo(top.atlas / 240, 3);
+  expect(points.at(-1).engine).toBeCloseTo(top.engine / 240, 3);
   expect(points.at(-1).baseline).toBeCloseTo(top.baselines.find((b) => b.id === top.best_baseline_id).tok_s / 240, 3);
   // The ladder publishes no power today, so nothing on the graph may claim it.
   expect(measured).toBe(false);
@@ -154,12 +154,12 @@ test('the graph has a point for every published rung, from measured throughput',
 
 test('a rung that records its draw uses it, and only a fully recorded ladder is called measured', () => {
   const rows = [
-    { c: 1, atlas: 20, atlas_watts: 40, best_baseline_id: 'v', baselines: [{ id: 'v', tok_s: 10, watts: 50 }] },
-    { c: 8, atlas: 100, best_baseline_id: 'v', baselines: [{ id: 'v', tok_s: 80 }] },
+    { c: 1, engine: 20, engine_watts: 40, best_baseline_id: 'v', baselines: [{ id: 'v', tok_s: 10, watts: 50 }] },
+    { c: 8, engine: 100, best_baseline_id: 'v', baselines: [{ id: 'v', tok_s: 80 }] },
   ];
   const mixed = efficiencyLadder(rows, { watts: 200, baselineWatts: 200 });
-  expect(mixed.points[0]).toEqual({ c: 1, avarok: 0.5, baseline: 0.2, measured: true });
-  expect(mixed.points[1]).toEqual({ c: 8, avarok: 0.5, baseline: 0.4, measured: false });
+  expect(mixed.points[0]).toEqual({ c: 1, engine: 0.5, baseline: 0.2, measured: true });
+  expect(mixed.points[1]).toEqual({ c: 8, engine: 0.5, baseline: 0.4, measured: false });
   expect(mixed.measured).toBe(false);
   expect(efficiencyLadder([rows[0]]).measured).toBe(true);
   expect(efficiencyLadder([]).measured).toBe(false);
@@ -168,18 +168,18 @@ test('a rung that records its draw uses it, and only a fully recorded ladder is 
 test('the scenario starts from the top rung, against the matched baseline and never the fastest', () => {
   const start = energyInputsFrom(ladder.rows);
   const top = [...ladder.rows].sort((a, b) => a.c - b.c).at(-1);
-  expect(start.tokensPerSecond).toBe(top.atlas);
+  expect(start.tokensPerSecond).toBe(top.engine);
   expect(start.baselineTokensPerSecond).toBe(top.baselines.find((b) => b.id === top.best_baseline_id).tok_s);
   expect(start.watts).toBe(ENERGY_DEFAULTS.watts); // no recorded draw yet
   // The big number and the last point on the graph are one measurement.
   const { points } = efficiencyLadder(ladder.rows, { watts: start.watts, baselineWatts: start.baselineWatts });
-  expect(points.at(-1).avarok).toBeCloseTo(energyModel(start).tokensPerJoule, 3);
+  expect(points.at(-1).engine).toBeCloseTo(energyModel(start).tokensPerJoule, 3);
   // A recorded draw on the top rung becomes the starting draw.
   const recorded = energyInputsFrom([
     {
       c: 4,
-      atlas: 90,
-      atlas_watts: 60,
+      engine: 90,
+      engine_watts: 60,
       best_baseline_id: 'v',
       baselines: [
         { id: 'fast', tok_s: 99 },

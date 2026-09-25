@@ -40,7 +40,7 @@ export function headroom(rungs) {
     from: from.c,
     to: to.c,
     label: lower.label,
-    atlas: change(from.atlas, to.atlas),
+    engine: change(from.engine, to.engine),
     baseline: change(lower.tok_s, upper.tok_s),
     ratio: to.ratio_vs_best,
   };

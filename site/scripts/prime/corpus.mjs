@@ -15,7 +15,7 @@
 // The sources, in order:
 //   the built pages in build/ (so the base says what the site says, word for
 //   word, and follows a copy change on the next build), static/llms.txt, the
-//   engine's documents in the repository, the blog, and a snapshot of the
+//   engine's documents from its checkout, the blog, and a snapshot of the
 //   repository's history from the GitHub API (cached in scripts/.cache/).
 //   With --private <dir>, every .txt and .md file in that directory becomes the
 //   partner tier. That directory is never inside this repository.
@@ -27,6 +27,7 @@
 //   --gh refreshes the history snapshot, --no-gh skips it.
 // =============================================================================
 
+import { ENGINE_SLUG } from '../../../web-shared/sources.mjs';
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -50,7 +51,7 @@ const REPO = resolve(SITE_DIR, '..');
 const BUILD = join(SITE_DIR, 'build');
 const WORKER = join(SITE_DIR, 'deploy', 'cloudflare', 'prime-worker');
 const CACHE = join(SITE_DIR, 'scripts', '.cache');
-const REPO_SLUG = 'Avarok-Cybersecurity/atlas';
+const REPO_SLUG = ENGINE_SLUG;
 const BLOB = `https://github.com/${REPO_SLUG}/blob/main/`;
 
 const args = process.argv.slice(2);
@@ -140,7 +141,13 @@ if (existsSync(llms))
     for (const chunk of chunkText(s.text))
       add({ kind: 'page', title: 'llms.txt, the short version of the site', section: s.heading, url: `${SITE}/llms.txt`, text: chunk });
 
-// ---- 2. the repository's documents -----------------------------------------------
+// ---- 2. the engine's documents ----------------------------------------------------
+// From the checkout the site is built against (METRALE_ENGINE_ROOT, the variable
+// the generators read), because they live in the engine's repository and not in
+// this one. Their links point at the same files on GitHub. Without the checkout
+// they are left out, and the run says so.
+const ENGINE = process.env.METRALE_ENGINE_ROOT ? resolve(process.env.METRALE_ENGINE_ROOT) : null;
+if (!ENGINE) console.warn('corpus: METRALE_ENGINE_ROOT is not set, so the engine documents are left out');
 
 const REPO_DOCS = [
   ['README.md', 'Repository README', 60000],
@@ -161,8 +168,8 @@ const REPO_DOCS = [
 ];
 let docCount = 0;
 for (const [file, title, cap] of REPO_DOCS) {
-  const path = join(REPO, file);
-  if (!existsSync(path)) continue;
+  const path = ENGINE && join(ENGINE, file);
+  if (!path || !existsSync(path)) continue;
   const md = readFileSync(path, 'utf8').slice(0, cap);
   for (const s of markdownSections(md)) {
     for (const chunk of chunkText(s.text, { max: 1600 }))
@@ -369,7 +376,7 @@ const rows = [...(ladder.rows ?? [])]
   .sort((a, b) => a.c - b.c)
   .map((r) => {
     const m = r.baselines?.find((b) => b.id === r.best_baseline_id) ?? r.baselines?.[0] ?? {};
-    return { c: r.c, atlas: r.atlas, baseline: m.label ?? '', baseline_tok_s: m.tok_s ?? null, ratio: r.ratio_vs_best ?? null };
+    return { c: r.c, engine: r.engine, baseline: m.label ?? '', baseline_tok_s: m.tok_s ?? null, ratio: r.ratio_vs_best ?? null };
   });
 const data = {
   built: new Date().toISOString(),

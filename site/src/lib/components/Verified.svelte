@@ -16,7 +16,7 @@
   // sentence rather than leaving prose asserting a gap that closed.
   const top = headroom(ladder.rows);
 
-  const stamp = `atlas ${bench.generated_sha} · ${bench.generated_date}`;
+  const stamp = `engine ${bench.generated_sha} · ${bench.generated_date}`;
 
   let copyState = $state('idle'); // idle | copied | manual | blocked
   let copyTimer;
@@ -44,7 +44,7 @@
         <p>{verified.scale.lead}</p>
         <p class="scale-figure">
           From C={top.from} to C={top.to}, Metrale adds
-          <strong class="scale-up">{signed(top.atlas)}</strong> throughput while
+          <strong class="scale-up">{signed(top.engine)}</strong> throughput while
           {top.label} adds <strong class="scale-flat">{signed(top.baseline)}</strong>.
         </p>
         <p>{verified.scale.tail}</p>
@@ -69,7 +69,7 @@
         </div>
         <p class="gate-note" style="font-weight:650;color:var(--t1)">{verified.challengeLine}</p>
         <p class="gate-note" style="font-size:0.84rem">
-          Every model card comes from a recipe in <a class="link" href={recipesUrl} target="_blank" rel="noopener">atlas-recipes</a>.
+          Every model card comes from a recipe in <a class="link" href={recipesUrl} target="_blank" rel="noopener">the recipe registry</a>.
         </p>
       </div>
 

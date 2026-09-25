@@ -41,7 +41,7 @@ const FORBIDDEN = [
   ['blockTokens', 'marked internals'],
   ['inlineTokens', 'marked internals'],
   ['compileMarkdown', 'the blog’s own compiler'],
-  ['avarokMarkdown', 'the blog’s own preprocessor']
+  ['metraleMarkdown', 'the blog’s own preprocessor']
 ];
 
 /** Total client JavaScript. A leak that survives minification still shows here. */
@@ -90,7 +90,7 @@ else ok(`client JavaScript is ${kb.toFixed(1)} KB (budget ${JS_BUDGET_KB} KB)`);
 // more and are NOT checked here. The pipeline still ships and still runs for
 // any future post that uses those blocks — it is simply unguarded until a post
 // or a fixture exercises it again. Tracked, so this does not rot silently.
-const sample = join(BUILD, 'posts', 'seven-tenets-powering-atlas-inference.html');
+const sample = join(BUILD, 'posts', 'seven-tenets-powering-metrale-inference.html');
 let html = '';
 try {
   html = readFileSync(sample, 'utf8');
@@ -111,7 +111,7 @@ if (html) {
 }
 
 // ── 3. a post without maths must not pay for the stylesheet ────────────────
-const plain = join(BUILD, 'posts', 'seven-tenets-powering-atlas-inference.html');
+const plain = join(BUILD, 'posts', 'seven-tenets-powering-metrale-inference.html');
 try {
   if (readFileSync(plain, 'utf8').includes('katex.min.css')) {
     bad('a post with no maths links the KaTeX stylesheet — it should be conditional');

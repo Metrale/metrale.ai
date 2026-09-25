@@ -2,7 +2,7 @@
 // =============================================================================
 // gen-stars.mjs — generate src/lib/stars.generated.json from the GitHub API
 // -----------------------------------------------------------------------------
-// SSOT: the live GitHub star count + star history for Avarok-Cybersecurity/atlas
+// SSOT: the live GitHub star count + star history for the engine repository
 //   fetched via the `gh` CLI (uses ambient auth — GH_TOKEN in CI, the logged-in
 //   user locally). This script is BEST-EFFORT: it MUST NEVER fail the build.
 //   On any error it re-emits the existing generated file unchanged, or writes a
@@ -16,6 +16,7 @@
 // No third-party deps: Node builtins + `gh`/`git` via child_process.
 // =============================================================================
 
+import { ENGINE_REPO, ENGINE_SLUG } from '../../web-shared/sources.mjs';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -25,9 +26,9 @@ const here = dirname(fileURLToPath(import.meta.url));
 const REPO_DIR = resolve(here, '..', '..');
 const OUT = resolve(here, '..', 'src', 'lib', 'stars.generated.json');
 
-const REPO = 'Avarok-Cybersecurity/atlas';
-const URL = 'https://github.com/Avarok-Cybersecurity/atlas';
-const FALLBACK_COUNT = 546;
+const REPO = ENGINE_SLUG;
+const URL = ENGINE_REPO;
+const FALLBACK_COUNT = 0;
 
 function gh(args) {
   // stderr is piped (not discarded) so a failing leg names its HTTP error in

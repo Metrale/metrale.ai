@@ -1,4 +1,4 @@
-# avarok-forms: where the site's forms go
+# metrale-forms: where the site's forms go
 
 The marketing site is static files, so it has nowhere to send a form. Until this Worker is
 deployed and switched on, each form drafts an email in the visitor's own mail app, and a
@@ -33,15 +33,15 @@ npx wrangler@4 secret put DISCORD_WEBHOOK_URL    # a webhook of a PRIVATE channe
 npx wrangler@4 secret put SLACK_WEBHOOK_URL      # an incoming webhook
 npx wrangler@4 secret put RESEND_API_KEY         # email. See "Email" below first
 
-# 3. Ship it. It prints the address, https://avarok-forms.<account>.workers.dev
+# 3. Ship it. It prints the address, https://metrale-forms.<account>.workers.dev
 npx wrangler@4 deploy
 ```
 
 Then prove it, with the address it printed:
 
 ```sh
-curl -i https://avarok-forms.<account>.workers.dev/                       # {"ok":true,...}
-curl -i https://avarok-forms.<account>.workers.dev/lead \
+curl -i https://metrale-forms.<account>.workers.dev/                       # {"ok":true,...}
+curl -i https://metrale-forms.<account>.workers.dev/lead \
   -H 'origin: https://metrale.ai' -H 'content-type: application/json' \
   -d '{"source":"demo","name":"Test","email":"you@metrale.com","company":"Test","notes":"Wiring check."}'
 ```
@@ -53,7 +53,7 @@ A 200 with an `id` means it was kept or delivered. Look for it where you pointed
 One line. In `site/src/lib/content/brand.js`:
 
 ```js
-export const formEndpoint = 'https://avarok-forms.<account>.workers.dev/lead';
+export const formEndpoint = 'https://metrale-forms.<account>.workers.dev/lead';
 ```
 
 Then, from `site/`: `bun x --bun vite build`, `bun run guide -- --note "Forms post to the Worker"`,
@@ -92,7 +92,7 @@ people's names and addresses: keep the namespace private, and delete on request 
 ## Email
 
 Email is the one channel that needs a second account, because Workers cannot send mail by
-themselves. It uses [Resend](https://resend.com): verify `atlascybernetics.ai` there (three DNS
+themselves. It uses [Resend](https://resend.com): verify `metrale.ai` there (three DNS
 records), create an API key, and set it as `RESEND_API_KEY`. Mail goes to the inbox for that
 form (`TO_DEMO`, `TO_WAITLIST`, `TO_CAREERS` in `wrangler.toml`), from `MAIL_FROM`, with reply-to
 set to the visitor, so answering is one click. A test in the site's suite keeps those inboxes

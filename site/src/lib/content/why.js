@@ -45,7 +45,7 @@ export const pillars = [
       },
       {
         h: 'Why it is hard to build',
-        p: 'It is a decision made at the start, not a feature added later. Leaving the Python and PyTorch ecosystem meant rewriting the serving stack from scratch in Rust and running an AI first repository where every kernel change must carry a certified benchmark before it merges.',
+        p: 'It is a decision made at the start, not a feature added later. Leaving the Python and PyTorch ecosystem meant rewriting the serving stack from scratch in Rust and running a repository where every kernel change must carry a certified benchmark, and be approved by a person, before it merges.',
       },
     ],
     question: 'Ask for the throughput curve at C=128 on your workload, not a single stream number on theirs.',

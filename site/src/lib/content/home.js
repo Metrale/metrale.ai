@@ -188,9 +188,9 @@ export const value = {
 export const proof = {
   eyebrow: 'Proof, not a pitch',
   title: 'Same GB10, same checkpoint, same client. Eight rungs, eight wins.',
-  body: 'We publish the concurrency ladder against the matched vLLM configuration from C=1 to C=128, with every rung we lost on the way to it. The margin is widest at the top, which is where fleets of tool calling agents actually run.',
+  body: 'We publish the concurrency ladder against the matched vLLM configuration from C=1 to C=128, with every rung we lost on the way to it. The margin is widest at the top, which is where fleets of tool calling agents actually run. It is one NVIDIA GB10 and one checkpoint, and says nothing yet about other hardware.',
   stats: [
-    { value: '{atlasTop}', unit: 'tok/s', label: 'at C={c}, {checkpoint}' },
+    { value: '{engineTop}', unit: 'tok/s', label: 'at C={c}, {checkpoint}' },
     { value: '{won}/{rungs}', unit: '', label: 'rungs won against matched vLLM + MTP' },
     { value: '{gatePass}', unit: '', label: 'concurrency gate records passing across the repo' },
   ],
@@ -251,8 +251,8 @@ export const recognition = {
       hue: 'cyan',
       date: 'July 2026',
       title: 'Strix Halo hardware provided for the gfx1151 bring up',
-      cta: 'See the post',
-      href: links.x,
+      cta: 'See the pull request',
+      href: links.strixPr,
     },
     {
       org: 'NVIDIA Inception',
@@ -350,36 +350,4 @@ export const cta = {
   body: 'Book a working session. We run the ladder on your workload, on your hardware, and hand you the receipt.',
   primary: { text: 'Book a demo', href: routes.demoForm },
   secondary: { text: 'Run the payback model', href: `${routes.pricing}#payback` },
-};
-
-// The testimonials are real quotes from the community, already on the
-// developer page. Names are handles, sources link to the thread. They are
-// verbatim, old product name included: an attributed quote is never edited,
-// not even to follow a rebrand. The note says why the name differs.
-export const voices = {
-  eyebrow: 'From the fleet',
-  title: 'Operators running it on their own hardware.',
-  note: "Quotes are verbatim. Atlas was the engine's name until the September 2026 rebrand to Metrale.",
-  items: [
-    {
-      quote:
-        'Night and day compared to the 10 minute torch.compile cycle. Startup in about 15 seconds and it just stays coherent in an agentic loop.',
-      who: 'ronald_15496',
-      where: 'Discord, #general',
-      href: links.discord,
-    },
-    {
-      quote: 'Testing Atlas on a DGX Spark in an agentic workflow for over an hour. Super impressed. Spark is actually awesome with Atlas.',
-      who: 'PersonWhoThinks',
-      where: 'r/LocalLLaMA',
-      href: 'https://www.reddit.com/r/LocalLLaMA/comments/1rmvxo3/',
-    },
-    {
-      quote:
-        'I had grown tired of the usual stack and was hoping for something like this. Really surprised and impressed. So glad I bought a Spark.',
-      who: 'tetsuro59',
-      where: 'Discord, #general',
-      href: links.discord,
-    },
-  ],
 };

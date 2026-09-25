@@ -40,7 +40,7 @@ export const faq = [
   {
     tags: ['home', 'hardware'],
     q: 'Which models can I run?',
-    a: 'Every model on this site maps to a recipe in the atlas-recipes repository, which is the single source of truth, so the site cannot list a model without one. Qwen leads with the most recipes, alongside Gemma, Nemotron, Mistral, MiniMax and DeepSeek. Bring your own weights and we scope the bring up.',
+    a: 'Every model on this site maps to a recipe in the recipe registry, which is the single source of truth, so the site cannot list a model without one. Qwen leads with the most recipes, alongside Gemma, Nemotron, Mistral, MiniMax and DeepSeek. Bring your own weights and we scope the bring up.',
   },
   {
     tags: ['home', 'why', 'benchmarks'],

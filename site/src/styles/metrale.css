@@ -1,11 +1,11 @@
 /* =============================================================================
-   Avarok marketing design system.
+   Metrale marketing design system.
 
    Scope: every route under src/routes/(marketing). The developer routes
    (/engine, /control, /diligence) keep app.css and never load this file, so
    the two systems cannot collide on an element selector. Everything here is
    class prefixed `av-` and reads the shared tokens in
-   web-shared/avarok-tokens.css for colour, so light and dark come for free.
+   web-shared/metrale-tokens.css for colour, so light and dark come for free.
 
    Structure, top to bottom:
      1. scope and type            5. cards, tiles, chips, tables

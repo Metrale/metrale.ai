@@ -2,16 +2,16 @@
   // The root layout: what every route shares. Design tokens and the brand
   // typeface, the two lockup definition blocks, the canonical URL, and the
   // structured data. Stylesheets that belong to one route group live in that
-  // group's layout: app.css in (engine), avarok.css in (marketing), so the
+  // group's layout: app.css in (engine), metrale.css in (marketing), so the
   // developer pages and the marketing pages never load each other's rules.
-  import '../../../web-shared/avarok-tokens.css';
+  import '../../../web-shared/metrale-tokens.css';
   import '../styles/fonts.css';
-  import AtlasLockup from '$shared/components/AtlasLockup.svelte';
+  import MetraleLockup from '$shared/components/MetraleLockup.svelte';
   import { page } from '$app/state';
   import { onMount } from 'svelte';
   import { crossesGroup } from '$lib/route-groups.js';
   import { detectHost } from '$lib/install/host.svelte.js';
-  import { faq as engineFaq, githubUrl, recipesUrl, discordUrl, xUrl, hero } from '$lib/data.js';
+  import { faq as engineFaq, githubUrl, recipesUrl, discordUrl, hero } from '$lib/data.js';
   import { pages, SITE, company, links } from '$lib/content/index.js';
   import { faqFor } from '$lib/content/faq.js';
   let { children } = $props();
@@ -68,7 +68,7 @@
         url: `${SITE}/`,
         logo: `${SITE}/icon-512.png`,
         description: company.short,
-        sameAs: [githubUrl, recipesUrl, discordUrl, xUrl, links.blog],
+        sameAs: [githubUrl, recipesUrl, discordUrl, links.blog],
       },
       {
         '@type': 'WebSite',
@@ -83,7 +83,6 @@
         '@type': 'SoftwareApplication',
         '@id': `${SITE}/#app`,
         name: company.engine,
-        alternateName: 'Atlas Inference Engine',
         applicationCategory: 'DeveloperApplication',
         applicationSubCategory: 'LLM inference engine',
         operatingSystem: 'Linux',
@@ -130,6 +129,6 @@
 </svelte:head>
 
 <!-- The brand vector, defined once and <use>d by every lockup on the page. -->
-<AtlasLockup kind="defs" />
+<MetraleLockup kind="defs" />
 
 {@render children()}

@@ -3,14 +3,13 @@ import { defineConfig } from 'vite';
 import { execFileSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { glslStrip } from '../web-shared/glsl-strip.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
 // Regenerate src/lib/*.generated.json from their SSOTs on every build (and dev
-// server start). Env (AVAROK_RECIPES_ROOT / AVAROK_BASELINES_ROOT / GH_TOKEN) is
+// server start). Env (METRALE_RECIPES_ROOT / METRALE_BASELINES_ROOT / GH_TOKEN) is
 // passed through so CI and local hosts resolve their sources identically.
-function avarokGenerators() {
+function metraleGenerators() {
   const run = (script) =>
     execFileSync(process.execPath, [resolve(here, 'scripts', script)], {
       cwd: here,
@@ -18,7 +17,7 @@ function avarokGenerators() {
       env: process.env,
     });
   return {
-    name: 'avarok-generators',
+    name: 'metrale-generators',
     apply: () => true, // build + serve
     buildStart() {
       // Structural generators: a nonzero exit is a hard, loud build failure.
@@ -61,7 +60,7 @@ function avarokGenerators() {
 }
 
 export default defineConfig({
-  plugins: [glslStrip(), avarokGenerators(), sveltekit()],
+  plugins: [metraleGenerators(), sveltekit()],
   build: {
     rolldownOptions: {
       output: {
@@ -99,12 +98,12 @@ export default defineConfig({
             {
               name: 'av-chrome',
               priority: 30,
-              test: /[\\/](src[\\/]lib[\\/]components[\\/]avarok[\\/](SiteNav|SiteFooter)\.svelte|src[\\/]lib[\\/]content[\\/](brand|index|faq)\.js|src[\\/]lib[\\/]route-groups\.js|src[\\/]lib[\\/]data\.js|src[\\/]lib[\\/]install[\\/]|src[\\/]lib[\\/](stars|ladder)\.generated\.json|web-shared[\\/]components[\\/](AtlasLockup|ThemeToggle)\.svelte|web-shared[\\/]theme\.js)/,
+              test: /[\\/](src[\\/]lib[\\/]components[\\/]marketing[\\/](SiteNav|SiteFooter)\.svelte|src[\\/]lib[\\/]content[\\/](brand|index|faq)\.js|src[\\/]lib[\\/]route-groups\.js|src[\\/]lib[\\/]data\.js|src[\\/]lib[\\/]install[\\/]|src[\\/]lib[\\/](stars|ladder)\.generated\.json|web-shared[\\/]components[\\/](MetraleLockup|ThemeToggle)\.svelte|web-shared[\\/]theme\.js)/,
             },
             {
               name: 'av-ui',
               priority: 20,
-              test: /[\\/]src[\\/]lib[\\/](components[\\/]avarok[\\/]|reveal\.js)/,
+              test: /[\\/]src[\\/]lib[\\/](components[\\/]marketing[\\/]|reveal\.js)/,
             },
           ],
         },

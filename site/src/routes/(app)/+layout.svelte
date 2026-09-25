@@ -3,7 +3,7 @@
   // procedural b-roll the media pipeline records. The product mockup the
   // console clips come from is a private project and is not in this
   // repository, see media-brief/README.md.
-  import '../../styles/avarok.css';
+  import '../../styles/metrale.css';
   let { children } = $props();
 </script>
 

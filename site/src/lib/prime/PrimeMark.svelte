@@ -1,7 +1,7 @@
 <!--
   The guide's glyph is the brand mark itself: the M with the gold swash lifted
   over its right shoulder, which reads as M′. It draws from the definitions the
-  root layout renders once per document (AtlasLockup kind="defs"), so it costs
+  root layout renders once per document (MetraleLockup kind="defs"), so it costs
   no artwork of its own and follows the kit and the theme.
 -->
 <script>

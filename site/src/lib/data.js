@@ -9,7 +9,7 @@
 // evaluating an engine for a rack and a developer evaluating it for a desk are
 // reading the same page.
 //
-// SCOPE: Atlas spans a range, from edge class accelerators through workstations
+// SCOPE: the engine spans a range, from edge class accelerators through workstations
 // to multi node deployments. Copy must not narrow that to "desk machines", and
 // must not claim a tier we have not verified. Verified silicon is named. The
 // rest is stated as direction, with its status attached.
@@ -23,29 +23,28 @@
 // Public developer URL. adapter-static still writes engine.html; Cloudflare
 // Pages pretty-URLs /engine (200) and 308s /engine.html → /engine. Vite
 // preview serves /engine from that file too. Do not put .html in hrefs.
+import { CLI, ENGINE_REPO, HISTORY, REGISTRY_REPO } from '../../../web-shared/sources.mjs';
 export const ENGINE = '/engine';
 export const CONTROL = '/control';
-export const githubUrl = 'https://github.com/Avarok-Cybersecurity/atlas';
+export { CLI };
+export const githubUrl = ENGINE_REPO;
 export const discordUrl = 'https://discord.gg/RQcGakU2jW';
 export const blogUrl = 'https://blog.metrale.ai';
-export const xUrl = 'https://x.com/AtlasInferenceX';
-export const xHandle = '@AtlasInferenceX';
 export const redditUrl = 'https://www.reddit.com/r/LocalLLaMA/comments/1rmvxo3/';
 export const firstPostUrl = 'https://www.reddit.com/r/LocalLLaMA/comments/1rkefjw/solved_the_dgx_spark_102_stable_toks_qwen3535ba3b/';
-export const recipesUrl = 'https://github.com/Avarok-Cybersecurity/atlas-recipes';
-export const guideUrl = 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md';
-export const verifiedAnchor =
-  'https://github.com/Avarok-Cybersecurity/atlas/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md#8-what-verified-means-so-you-can-trust-an-image';
-export const gateSrcUrl = 'https://github.com/Avarok-Cybersecurity/atlas/blob/main/tests/gate_results.py';
-export const discussionsUrl = 'https://github.com/Avarok-Cybersecurity/atlas/discussions';
+export const recipesUrl = REGISTRY_REPO;
+export const guideUrl = `${ENGINE_REPO}/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md`;
+export const verifiedAnchor = `${ENGINE_REPO}/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md#8-what-verified-means-so-you-can-trust-an-image`;
+export const gateSrcUrl = `${ENGINE_REPO}/blob/main/tests/gate_results.py`;
+export const discussionsUrl = `${ENGINE_REPO}/discussions`;
 export const issuesUrl = `${githubUrl}/issues`;
-export const goodFirstIssuesUrl = 'https://github.com/Avarok-Cybersecurity/atlas/labels/good%20first%20issue';
+export const goodFirstIssuesUrl = `${ENGINE_REPO}/labels/good%20first%20issue`;
 // Single source of truth for contact addresses (footer + reach-out section).
 export const contactEmails = ['engineering@metrale.com']; // the role mailbox; see contacts in content/brand.js
 
 // third-party artifacts (link-or-cut, each verified live July 2026)
 export const scaleUrl = 'https://docs.scale-lang.com/stable/';
-export const strixPrUrl = 'https://github.com/Avarok-Cybersecurity/atlas/pull/187';
+export const strixPrUrl = `${HISTORY}/pull/187`;
 export const nvidiaInceptionUrl = 'https://www.nvidia.com/en-us/startups/';
 
 // --- brand -------------------------------------------------------------------
@@ -54,7 +53,7 @@ export const tagline = 'Pure Rust inference, from the device in your hand to the
 // --- commands (one flagship recipe) ------------------------------------------
 //
 // The recipe name has a SECOND home, in another repository: the installer's
-// closing hint, `scripts/install.sh` in Avarok-Cybersecurity/atlas-recipes
+// closing hint, `scripts/install.sh` in the installers' repository
 // (`info "    $BIN_NAME run <recipe>"`). A constant cannot span repos, so that
 // copy has to be changed by hand when this one changes.
 //
@@ -65,7 +64,7 @@ export const tagline = 'Pure Rust inference, from the device in your hand to the
 // `llms.txt` needs no such care: gen-llms.mjs emits `data.runCommandRaw`, so it
 // follows this constant on its own.
 export const flagshipRecipe = 'qwen3.6-35b-a3b-fp8-mtp';
-export const quickInstall = 'cargo install atlasctl';
+export const quickInstall = `cargo install ${CLI}`;
 /// Where install.sh is served from. One authority: the join one-liner in
 /// `joincommand.js` builds on this too, and a second copy is how the two drift.
 export const installerUrl = 'https://metrale.ai/install.sh';
@@ -80,14 +79,14 @@ export const runCommand = `curl -fsSL ${installerUrl} | sh`;
 /// Install the agent as a service — deliberately `install`, not `run`: a bare
 /// `run` dies with the terminal that started it, and the machine silently
 /// leaves the fleet the next time someone closes an ssh session.
-export const startAgentCommand = 'atlasctl agent install';
+export const startAgentCommand = `${CLI} agent install`;
 /// Built from `flagshipRecipe`, not repeating it. The constant existed and was
 /// referenced by nothing while its value sat hardcoded eleven lines below —
 /// so changing the flagship recipe would have updated the obvious place and
 /// left the command the site tells people to copy pointing at the old one.
 /// `installerUrl` above already states this rule: "a second copy is how the two
 /// drift".
-export const runCommandRaw = `atlasctl run ${flagshipRecipe}`;
+export const runCommandRaw = `${CLI} run ${flagshipRecipe}`;
 
 // --- hardware acknowledgment (modest banner) ---------------------------------
 // --- announcement band (the strip above the hero) ----------------------------
@@ -132,7 +131,7 @@ export const hero = {
   challenge: {
     claim: 'First token in under 90 seconds on a DGX Spark.',
     lead: 'Do not take our word for it.',
-    fine: 'Median of our GB10 runs, model cached, atlas 59616dc, Jul 2026. Same command below, run it and time it yourself.',
+    fine: 'Median of our GB10 runs, model cached, engine build 59616dc, Jul 2026. Same command below, run it and time it yourself.',
   },
   primaryCta: 'Star on GitHub',
   secondaryCta: 'Start Metrale',
@@ -159,8 +158,8 @@ export const news = {
       featured: true,
       title: 'Metrale Engine running on AMD Strix Halo',
       body: 'AMD provided a Strix Halo desktop and we brought the engine to it through SCALE, custom kernels and all. One codebase now covers both vendors with no HIP port and no second kernel tree.',
-      cta: 'See the post on X',
-      url: xUrl,
+      cta: 'See the pull request',
+      url: strixPrUrl,
     },
   ],
 };
@@ -168,36 +167,10 @@ export const news = {
 // --- star / social proof -----------------------------------------------------
 export const stars = {
   label: '// 07 · community',
-  title: 'Built in the open, starred in the open.',
-  sub: 'The engine went from one Reddit post to a community running it on their own hardware. The curve below is live, regenerated from the GitHub API on every deploy.',
+  title: 'Built in the open.',
+  sub: 'The engine went from one Reddit post to a community running it on their own hardware, and every line of it is in the repository.',
   cta: 'Star the repo',
 };
-
-// Verbatim, old product name included. An attributed quote is never edited.
-export const testimonialsNote = "Quotes are verbatim. Atlas was the engine's name until the September 2026 rebrand to Metrale.";
-
-export const testimonials = [
-  {
-    quote:
-      'Night and day compared to the 10 minute torch.compile cycle. Startup in about 15 seconds and it just stays coherent in an agentic loop.',
-    author: 'ronald_15496',
-    source: '#general',
-    sourceUrl: discordUrl,
-  },
-  {
-    quote: 'Testing Atlas on a DGX Spark in an agentic workflow for over an hour. Super impressed. Spark is actually awesome with Atlas.',
-    author: 'PersonWhoThinks',
-    source: 'r/LocalLLaMA',
-    sourceUrl: redditUrl,
-  },
-  {
-    quote:
-      'I had grown tired of the usual stack and was hoping for something like this. Really surprised and impressed. So glad I bought a Spark.',
-    author: 'tetsuro59',
-    source: '#general',
-    sourceUrl: discordUrl,
-  },
-];
 
 // --- community / discord push ------------------------------------------------
 export const community = {
@@ -257,7 +230,7 @@ export const hardware = {
 export const models = {
   label: '// 05 · models',
   title: 'Every model here has a recipe.',
-  sub: 'Pick a vendor, then a family. Every card maps to one recipe in atlas-recipes, so the site cannot list a model we do not ship. Copy the command and run it as is. Qwen3.6 leads because it is our flagship.',
+  sub: 'Pick a vendor, then a family. Every card maps to one recipe in the recipe registry, so the site cannot list a model we do not ship. Copy the command and run it as is. Qwen3.6 leads because it is our flagship.',
 };
 
 // --- get running -------------------------------------------------------------
@@ -265,10 +238,9 @@ export const getRunning = {
   label: '// 06 · start',
   title: 'Up and running in one command.',
   sub: 'This is the first 60 seconds. Everything after, per model recipes, EP=2, tuning, lives in the docs.',
-  inspectNote: 'Rather not pipe curl to a shell. Install atlasctl from crates.io, then run the flagship recipe direct.',
+  inspectNote: `Rather not pipe curl to a shell. Install ${CLI} from crates.io, then run the flagship recipe direct.`,
   docsCta: 'Read the deployment guide',
-  quickstartHint:
-    'The script downloads a prebuilt atlasctl, verifies its checksum, and installs it to ~/.local/bin. No Python, no Rust toolchain. Run it with --uninstall to reverse it.',
+  quickstartHint: `The script downloads a prebuilt ${CLI}, verifies its checksum, and installs it to ~/.local/bin. No Python, no Rust toolchain. Run it with --uninstall to reverse it.`,
 };
 
 // --- mission -----------------------------------------------------------------
@@ -296,8 +268,8 @@ export const contribute = {
     },
     {
       title: 'Add or tune a recipe',
-      body: 'Recipes are the model SSOT. Add a model, tune a quant, open a PR against atlas-recipes.',
-      cta: 'atlas-recipes',
+      body: 'Recipes are the model SSOT. Add a model, tune a quant, open a pull request against the recipe registry.',
+      cta: 'The recipe registry',
       url: recipesUrl,
     },
     {
@@ -368,7 +340,7 @@ export const faq = {
   items: [
     {
       q: 'What is Metrale Engine?',
-      a: 'An open source LLM inference engine written in pure Rust and CUDA, formerly named Atlas. It serves an OpenAI-compatible API from a single binary, with no Python and no PyTorch in the serving path. One codebase covers the range, from edge-class accelerators through workstations to expert-parallel deployments across nodes.',
+      a: 'An open source LLM inference engine written in pure Rust and CUDA. It serves an OpenAI-compatible API from a single binary, with no Python and no PyTorch in the serving path. One codebase covers the range, from edge-class accelerators through workstations to expert-parallel deployments across nodes.',
     },
     {
       q: 'What hardware does Metrale Engine run on?',
@@ -380,11 +352,11 @@ export const faq = {
     },
     {
       q: 'How do I install it?',
-      a: 'One command: curl -fsSL https://metrale.ai/install.sh | sh. It downloads a prebuilt atlasctl, verifies its checksum, and installs to ~/.local/bin. If you would rather not pipe curl to a shell, cargo install atlasctl does the same thing from source.',
+      a: `One command: curl -fsSL https://metrale.ai/install.sh | sh. It downloads a prebuilt ${CLI}, verifies its checksum, and installs to ~/.local/bin. If you would rather not pipe curl to a shell, cargo install ${CLI} does the same thing from source.`,
     },
     {
       q: 'Which models can I run?',
-      a: 'Every model on this page maps to a recipe in the atlas-recipes repository, which is the single source of truth — the site cannot list a model that has no recipe. Qwen3.6 is the flagship family, alongside Gemma, Nemotron, Mistral, MiniMax and DeepSeek.',
+      a: 'Every model on this page maps to a recipe in the recipe registry, which is the single source of truth — the site cannot list a model that has no recipe. Qwen3.6 is the flagship family, alongside Gemma, Nemotron, Mistral, MiniMax and DeepSeek.',
     },
     {
       q: 'What does “verified” mean here?',
@@ -436,13 +408,20 @@ export const reachout = {
 // repo corpus, answers come from free OpenRouter models with the visitor's own
 // key. Same voice rules as everything above.
 export const codeChat = {
+  // Off until the engine's repository publishes its own code index: its coderag
+  // workflow runs, but the index has no host until GitHub Pages is switched on
+  // there (CORPUS_GZ_URL in chat/config.js is the address it will have). What
+  // could be read today is an index of the open source code the engine builds
+  // on, which is not what `sub` promises. CHAT_ON in e2e/fixtures/chat-helpers.js follows this
+  // switch, and a unit test holds the two equal.
+  enabled: false,
   navLabel: 'Ask the codebase',
   closeLabel: 'Close ask the codebase',
   label: '// 11 \u00b7 ask the codebase',
   title: 'Ask the codebase.',
   sub: 'The whole Metrale repo is embedded into a vector lattice that runs right here in your browser. Ask a question, get an answer with file and line receipts.',
   boot: [
-    'atlas code lattice online',
+    'metrale code lattice online',
     'retrieval runs locally in wasm, only the model call leaves this page',
     'pick a question or type your own',
   ],

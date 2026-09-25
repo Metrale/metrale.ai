@@ -178,8 +178,8 @@ test.describe('navigation', () => {
     await page.getByRole('button', { name: 'Open menu' }).click();
     await expect(page.locator('#av-drawer')).toBeVisible();
     await page.locator('.av-drawer-head', { hasText: 'Solutions' }).click();
-    await page.locator('.av-drawer-items a', { hasText: 'Healthcare' }).click();
-    await expect(page).toHaveURL(/\/solutions\/healthcare/);
+    await page.locator('.av-drawer-items a', { hasText: 'SMB and edge' }).click();
+    await expect(page).toHaveURL(/\/solutions\/smb-edge/);
     await expect(page.locator('#av-drawer')).toBeHidden();
   });
 
@@ -360,7 +360,7 @@ test.describe('nothing on a marketing page costs CPU while it sits there', () =>
   // on every run: an animation that never ends may only move `transform` or
   // `opacity`, which the compositor does without the main thread. The one exception
   // is the diagram's marching dashes, which are stepped and only run on screen.
-  for (const path of ['/', '/platform', '/solutions/healthcare']) {
+  for (const path of ['/', '/platform', '/solutions/neoclouds']) {
     test(`${path}: every endless animation is compositor only`, async ({ page }) => {
       await page.goto(path);
       await page.waitForTimeout(1500);
@@ -391,7 +391,7 @@ test.describe('footer', () => {
         return (ink.top + ink.bottom) / 2 - a.getBoundingClientRect().top;
       })
     );
-    expect(centres).toHaveLength(3);
+    expect(centres).toHaveLength(2); // GitHub and Discord
     expect(Math.max(...centres) - Math.min(...centres)).toBeLessThan(1);
   });
 });
@@ -487,7 +487,7 @@ test.describe('an email button always does something', () => {
       'Email engineering -> engineering@metrale.com',
       'Partnerships -> partnerships@metrale.com',
       'Community and open source -> community@metrale.com',
-      'Report privately -> security@metrale.com',
+      'Report privately -> security@metrale.ai',
       'Email press and investors -> press@metrale.com',
     ]);
     // No founder's own address is published anywhere on the page.
@@ -636,10 +636,8 @@ test.describe('the hidden field that catches bots', () => {
 test.describe('installed art', () => {
   const samples = [
     ['/why-metrale', '/media/art/art-prisms.webp'],
-    ['/solutions/financial-services', '/media/art/art-finance.webp'],
     ['/platform/security', '/media/art/art-enclave.webp'],
     ['/pricing', '/media/art/art-desk-box.webp'],
-    ['/solutions/healthcare', '/media/art/art-health.webp'],
     ['/platform/economics', '/media/art/art-power.webp'],
     ['/labs', '/media/art/art-research.webp'],
   ];

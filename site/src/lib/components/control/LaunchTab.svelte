@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-only -->
 <script>
+  import { CLI } from '$lib/data.js';
   // Dock tab: launching one recipe on the selected node, local or forwarded.
   //
   // The ceremony is deliberate: inventory → settings → Preview → Launch.
@@ -178,7 +179,7 @@
     {:else if recipes === null}
       <p class="dt-quiet">Asking for the recipe inventory…</p>
     {:else if recipes.length === 0}
-      <p class="dt-quiet">This agent lists no recipes. Updating atlasctl adds the current set.</p>
+      <p class="dt-quiet">This agent lists no recipes. Updating {CLI} adds the current set.</p>
     {:else}
       <div class="dt-recipes" role="radiogroup" aria-label="Recipe">
         {#each recipes as r (r.id)}
@@ -245,7 +246,7 @@
               The target does not understand {unapplied.length} setting{unapplied.length === 1 ? '' : 's'} this recipe carries, so they will
               <strong>not</strong>
               be applied:
-              <code class="mono">{unapplied.join(', ')}</code>. Updating atlasctl may fix this.
+              <code class="mono">{unapplied.join(', ')}</code>. Updating {CLI} may fix this.
             </p>
           {/if}
         {/if}

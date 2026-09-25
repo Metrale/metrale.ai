@@ -46,7 +46,7 @@ export function sanitize(raw, max = NAME_MAX) {
  * it is a message this agent did not send.
  *
  * Mirrors the serde `snake_case` spelling of PairingState, Severity and
- * LinkClass in atlasctl-protocol.
+ * LinkClass in the agent's protocol crate.
  */
 /**
  * How many nodes this page will hold.

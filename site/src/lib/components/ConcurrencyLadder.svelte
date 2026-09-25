@@ -1,5 +1,5 @@
 <script>
-  // Atlas vs vLLM across the published concurrency ladder, C=1..128.
+  // Metrale Engine vs vLLM across the published concurrency ladder, C=1..128.
   //
   // Everything rendered here comes from ladder.generated.json, which
   // gen-ladder.mjs computes from the raw harness output in bench/ladder38/.
@@ -33,8 +33,8 @@
   const baselines = ladder.series.filter((s) => s.role === 'baseline');
   // `variant`: another configuration of the SUBJECT engine, drawn but never
   // scored. It is deliberately outside the win/ratio maths in gen-ladder.mjs —
-  // the published claim is Atlas against the matched vLLM baseline, and
-  // letting a second Atlas configuration into that comparison would change
+  // the published claim is the engine against the matched vLLM baseline, and
+  // letting a second engine configuration into that comparison would change
   // what the headline means rather than adding evidence for it.
   const variants = ladder.series.filter((s) => s.role === 'variant');
   const plotted = [subject, ...variants, ...baselines];
@@ -178,7 +178,7 @@
           {#each ladder.rows as row}
             <tr>
               <th scope="row" class="mono">{row.c}</th>
-              <td class="mono cl-win">{fmtV(row.atlas)}</td>
+              <td class="mono cl-win">{fmtV(row.engine)}</td>
               {#each row.baselines as b}
                 <td class="mono" class:cl-best={b.id === row.best_baseline_id}>{fmtV(b.tok_s)}</td>
               {/each}

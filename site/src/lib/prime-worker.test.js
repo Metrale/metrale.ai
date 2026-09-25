@@ -50,7 +50,7 @@ const DOCS = [
     title: 'Benchmarks · Metrale',
     section: 'The ladder',
     url: `${ORIGIN}/benchmarks`,
-    text: 'The concurrency ladder against vLLM on the GB10 box. Every rung in the campaign log. Atlas wins every rung.',
+    text: 'The concurrency ladder against vLLM on the GB10 box. Every rung in the campaign log. The engine wins every rung.',
   },
   {
     id: 'doc:3',
@@ -58,8 +58,8 @@ const DOCS = [
     kind: 'doc',
     title: 'Architecture',
     section: 'Kernels',
-    url: 'https://github.com/x/atlas/blob/main/docs/ARCHITECTURE.md#kernels',
-    text: 'NVFP4 GEMM kernels are hand tuned per hardware target. The avarok-kernels crate holds them.',
+    url: 'https://github.com/x/engine/blob/main/docs/ARCHITECTURE.md#kernels',
+    text: 'NVFP4 GEMM kernels are hand tuned per hardware target. The metrale-kernels crate holds them.',
   },
   {
     id: 'deck:4',
@@ -90,22 +90,22 @@ const DATA = {
     diligence: '/diligence',
   },
   links: {
-    contributing: 'https://github.com/x/atlas/blob/main/CONTRIBUTING.md',
-    issues: 'https://github.com/x/atlas/issues',
+    contributing: 'https://github.com/x/engine/blob/main/CONTRIBUTING.md',
+    issues: 'https://github.com/x/engine/issues',
     discord: 'https://discord.gg/x',
     blog: 'https://blog.example',
   },
   contacts: { sales: 'sales@example.test', press: 'press@example.test' },
   ladder: {
     title: 'Ladder',
-    subtitle: 'Atlas vs vLLM',
+    subtitle: 'Metrale Engine vs vLLM',
     aggregate: 'mean',
     workload: { isl_tokens: 128, osl_tokens: 1024 },
     box: { gpu: 'NVIDIA GB10, 121.7 GB' },
-    results_doc_url: 'https://github.com/x/atlas/blob/main/bench/RESULTS.md',
+    results_doc_url: 'https://github.com/x/engine/blob/main/bench/RESULTS.md',
     rows: [
-      { c: 1, atlas: 23.59, baseline: 'vLLM + MTP', baseline_tok_s: 19.72, ratio: 1.196 },
-      { c: 128, atlas: 478.11, baseline: 'vLLM + MTP', baseline_tok_s: 358.57, ratio: 1.333 },
+      { c: 1, engine: 23.59, baseline: 'vLLM + MTP', baseline_tok_s: 19.72, ratio: 1.196 },
+      { c: 128, engine: 478.11, baseline: 'vLLM + MTP', baseline_tok_s: 358.57, ratio: 1.333 },
     ],
     summary: { won: 8, rungs: 8 },
   },
@@ -129,7 +129,7 @@ const baseEnv = (over = {}) => {
   PRIME.store.set('corpus:data', JSON.stringify(DATA));
   return {
     ALLOWED_ORIGINS: `${ORIGIN},http://localhost:5173`,
-    ALLOWED_ORIGIN_SUFFIXES: '.atlas-site.pages.dev',
+    ALLOWED_ORIGIN_SUFFIXES: '.engine-site.pages.dev',
     SITE: ORIGIN,
     PRIME_MODEL: 'grok-4.7',
     PRIME_EFFORT: 'low',
@@ -232,8 +232,8 @@ beforeEach(() => {
 
 // ---- retrieval ------------------------------------------------------------------------
 
-test('the three names of the company are one word to the index, and words are stemmed', () => {
-  expect(tokenize('Atlas Avarok Metrale')).toEqual(['metrale', 'metrale', 'metrale']);
+test('words are folded to one case and stemmed', () => {
+  expect(tokenize('Metrale METRALE metrale')).toEqual(['metrale', 'metrale', 'metrale']);
   expect(tokenize('GPUs kernels benchmarks running')).toEqual(['gpu', 'kernel', 'benchmark', 'runn']);
   expect(tokenize('the of a to')).toEqual([]);
 });
@@ -499,7 +499,7 @@ test('cleanConversation keeps the newest turns and the first, and rejects what i
 test('only our own pages may call, and the health check says what it runs', async () => {
   const env = baseEnv();
   expect(corsFor('https://evil.test', env)).toBeNull();
-  expect(corsFor('https://preview.atlas-site.pages.dev', env)).not.toBeNull();
+  expect(corsFor('https://preview.engine-site.pages.dev', env)).not.toBeNull();
   expect(
     (await worker.fetch(post({ messages: [{ role: 'user', content: 'hi' }] }, { origin: 'https://evil.test' }), env, ctx())).status
   ).toBe(403);

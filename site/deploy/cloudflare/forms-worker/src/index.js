@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // =============================================================================
-// avarok-forms — where the site's forms go
+// metrale-forms — where the site's forms go
 // -----------------------------------------------------------------------------
 // The marketing site is static files. Its three forms (the demo request, the
 // Community Edition waitlist, the careers interest form) post JSON here, and this
@@ -173,7 +173,7 @@ async function tooMany(env, ip, limit = 6) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (request.method === 'GET' && url.pathname === '/') return json(200, { ok: true, service: 'avarok-forms' });
+    if (request.method === 'GET' && url.pathname === '/') return json(200, { ok: true, service: 'metrale-forms' });
     if (url.pathname !== '/lead') return json(404, { ok: false, error: 'Not found.' });
 
     const cors = corsFor(request.headers.get('origin'), env);

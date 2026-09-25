@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-only -->
 <script>
+  import { CLI } from '$lib/data.js';
   // The launch dialog, rendered once at the page root.
   //
   // It must live here rather than inside a recipe card: `.subcard` applies a
@@ -156,18 +157,15 @@
                  so the answer is the fix, not a second machine. The reported
                  case was a DGX Spark owner outside the `docker` group being
                  handed a pairing code — asked to add hardware to work around
-                 hardware that was fine. These are the same commands atlasctl
+                 hardware that was fine. These are the same commands the CLI
                  prints; nothing here runs them. -->
             {#if /docker/i.test(launch.placement.detail ?? '')}
               <p class="ld-place-lead">Fix it once on this machine:</p>
               <CommandRow command="sudo usermod -aG docker $USER" extra="ld-place-cmd" />
               <CommandRow command="newgrp docker" extra="ld-place-cmd" />
               <p class="ld-place-sub">
-                Then reopen this dialog. The agent re-checks on its own, so there is nothing to restart. Do not use <code
-                  >sudo atlasctl</code
-                >
-                — it runs the model as root and leaves root-owned files in <code>~/.avarok</code>
-                that your normal user cannot read.
+                Then reopen this dialog. The agent re-checks on its own, so there is nothing to restart. Do not use <code>sudo {CLI}</code>
+                — it runs the model as root and leaves root-owned files in your home directory that your normal user cannot read.
               </p>
             {/if}
             <p class="ld-place-sub">
@@ -236,7 +234,7 @@
           </p>
         {:else if launch.phase === 'pairing'}
           <p>The agent prints a token when it starts. Paste it once so it knows this browser is yours.</p>
-          <CommandRow command="atlasctl agent token" />
+          <CommandRow command={`${CLI} agent token`} />
           <form onsubmit={submitToken}>
             <input
               class="mono ld-token"
