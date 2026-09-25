@@ -9,10 +9,8 @@
    use for: a reading column, a chevron rail down the headings, a sticky table
    of contents, code blocks, footnotes. Those are the blog's, and they live here.
 
-   The layer below the page is the WebGL chevron field (lib/gl/), which paints
-   the ground itself. Its brightness is capped by `.contrast-check.mjs` so the
-   faintest text token still clears WCAG AA over it — see that file for the
-   working.
+   Text contrast on the dark theme's surfaces is held by `.contrast-check.mjs`
+   at the repository root, and the light theme's by the site's unit suite.
    ========================================================================== */
 @import '../../web-shared/metrale-tokens.css';
 

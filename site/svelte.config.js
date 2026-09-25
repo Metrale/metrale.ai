@@ -3,8 +3,8 @@ import adapter from '@sveltejs/adapter-static';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   kit: {
-    // Both web properties render the same chevron field and the same design
-    // tokens. They live in web-shared/ at the repo root — one copy, imported
+    // Both web properties render the same design tokens and lockup. They
+    // live in web-shared/ at the repo root — one copy, imported
     // by two apps, rather than a copy per app that drifts.
     alias: { $shared: '../web-shared' },
     adapter: adapter({

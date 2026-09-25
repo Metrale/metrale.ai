@@ -24,9 +24,8 @@
  *   heading-order    flags any jump of more than one level
  *   page-has-heading-one
  *
- * It does NOT rasterise the WebGL canvas — neither does Lighthouse. The field's
- * contribution to contrast is bounded separately and exhaustively by
- * .contrast-check.mjs at the repo root, which is the stronger statement.
+ * The tokens themselves are held to AA on every dark surface by
+ * .contrast-check.mjs at the repo root, whatever a page happens to render.
  *
  * Proved able to fail: with three defects planted in a page (body copy at
  * 1.77:1, metadata at 3.78:1, an anchor wrapping only an aria-hidden svg, and

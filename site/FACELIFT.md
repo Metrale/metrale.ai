@@ -277,7 +277,7 @@ gate green.
 | --- | --- | --- |
 | Unit | `bun test --preload ./test-runes.js src/lib` | Content integrity, the payback model, loop seams, the prompt pack, bundle budget |
 | Browser | `bun x --bun playwright test e2e/marketing.spec.js` | Menus, tabs, calculator, theme, form, every page, no third party requests |
-| Contrast | `bun .contrast-check.mjs` from the repository root | Text contrast in both themes |
+| Contrast | `bun .contrast-check.mjs` from the repository root | Text contrast on every dark surface; the light theme is a unit test |
 | Titles | In `.github/workflows/site.yml` | Each route kept its own title |
 | Cross links | `bun blog/e2e/check-crosslinks.mjs site/build blog/build` | The blog's links into this site resolve |
 | Cache rules | Part of the unit suite, `headers.test.js` | Every page has one rule in `static/_headers`, none has two, the file fits Pages' limit |

@@ -14,8 +14,8 @@ const config = {
   extensions: ['.svelte', '.md'],
   preprocess: [metraleMarkdown()],
   kit: {
-    // Both web properties render the same chevron field and the same design
-    // tokens. They live in web-shared/ at the repo root — one copy, imported
+    // Both web properties render the same design tokens and lockup. They
+    // live in web-shared/ at the repo root — one copy, imported
     // by two apps, rather than a copy per app that drifts.
     alias: { '$shared': '../web-shared' },
     adapter: adapter({

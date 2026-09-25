@@ -1,6 +1,6 @@
 <script>
   // The developer routes: /engine, /control, /diligence. The ledger design
-  // system in app.css and its companions, plus the chevron field behind them.
+  // system in app.css and its companions.
   // Load order matters. app.css is the desktop-first design system, news.css
   // adds the news band, dashboard.css then chat.css add the two modals (chat
   // reuses dashboard pieces so it loads after), ladder.css styles the
