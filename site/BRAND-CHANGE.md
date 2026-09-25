@@ -30,7 +30,7 @@ Read the report's two hand lists before building:
 
 - **history lines**: sentences that say what the brand was called before. The
   site keeps none: a visitor reads the current name only. Add the old name to
-  `RETIRED` in `web-shared/sources.mjs`, and `src/lib/content/retired.test.js`
+  `OTHER_NAMES` in `web-shared/sources.mjs`, and `src/lib/content/other-names.test.js`
   and `docs/check.mjs` keep it off the pages from then on.
 - **docs**: `README.md`, `FACELIFT.md`, `AGENTS.md`, `BRANDING.md`,
   `assets/brand/BRAND-GUIDELINES.md`, `media-brief/`. Reread each. A document

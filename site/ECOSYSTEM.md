@@ -188,9 +188,6 @@ offer `agent` and `none`.
 
 Small, and it clears the ground.
 
-- The chat's attribution and origin constants still carry earlier names
-  (`APP_TITLE`, `SITE_ORIGIN` in `chat/config.js`); align them with the brand
-  and the domain.
 - Citations that open a file should open the lines. The chunk id has them; the
   renderer should form the `#L{start}-L{end}` anchor from the id and the
   manifest's `cite` template rather than linking the path.

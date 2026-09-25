@@ -10,22 +10,21 @@ export const REGISTRY_SLUG = 'Metrale/metralectl';
 export const REGISTRY_REPO = `https://github.com/${REGISTRY_SLUG}`;
 
 /**
- * The engine's history from before it moved into the Metrale organisation: the
- * commits the published records name, the pull requests they cite, and the code
- * the codebase chat quotes. metrale.ai redirects this path to wherever that
- * history lives (site/static/_redirects), so nothing on a page names the old
- * home, and a move of the history is one line there.
+ * The history of the open source code Metrale Engine builds on: the commits the
+ * published records name and the pull requests they cite. metrale.ai redirects
+ * this path to wherever that history lives (site/static/_redirects), so no page
+ * names another project's home, and a change of address is one line there.
  */
 export const HISTORY = 'https://metrale.ai/src/history';
 export const HISTORY_SLUG = 'Avarok-Cybersecurity/atlas';
 
 /**
- * Names the company and the engine no longer use. Nothing a visitor reads may
- * carry them: site/src/lib/content/retired.test.js reads the site, the blog and
- * the shared files with this, and docs/check.mjs reads the built book. This file
- * and the history redirects are the only places they are written down.
+ * Names that belong to other projects, not to Metrale. Nothing a visitor reads
+ * may carry them: site/src/lib/content/other-names.test.js reads the site, the
+ * blog and the shared files with this, and docs/check.mjs reads the built book.
+ * This file and the history redirects are the only places they are written down.
  */
-export const RETIRED = /\b(?:atlas|avarok)\b/i;
+export const OTHER_NAMES = /\b(?:atlas|avarok)\b/i;
 
 /** The in-browser vector database the codebase chat loads, by release. */
 export const LATTICE_RELEASES = 'https://github.com/Avarok-Cybersecurity/lattice-db/releases/download';

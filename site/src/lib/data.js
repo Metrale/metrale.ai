@@ -411,8 +411,8 @@ export const codeChat = {
   // Off until the engine's repository publishes its own code index: its coderag
   // workflow runs, but the index has no host until GitHub Pages is switched on
   // there (CORPUS_GZ_URL in chat/config.js is the address it will have). What
-  // could be read today is the repository from before the move, which is not
-  // what `sub` promises. CHAT_ON in e2e/fixtures/chat-helpers.js follows this
+  // could be read today is an index of the open source code the engine builds
+  // on, which is not what `sub` promises. CHAT_ON in e2e/fixtures/chat-helpers.js follows this
   // switch, and a unit test holds the two equal.
   enabled: false,
   navLabel: 'Ask the codebase',

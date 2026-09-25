@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // docs/check.mjs — prove a built book before it ships.
 //
-// Runs over docs/build after docs/build.mjs. It fails when a reader could see a
-// name the company no longer uses, when a page still names one of the engine
+// Runs over docs/build after docs/build.mjs. It fails when a reader could see
+// another project's name, when a page still names one of the engine
 // team's hosts that docs/hosts.mjs moves, when the title or the Metrale layer is
 // missing, or when something the pages need beside them is missing. A count of
 // pages is printed so a build that silently lost chapters is noticed.
@@ -12,7 +12,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { RETIRED } from '../web-shared/sources.mjs';
+import { OTHER_NAMES } from '../web-shared/sources.mjs';
 import { unmoved } from './hosts.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -36,11 +36,11 @@ const visible = (html) =>
     .replace(/<style[\s\S]*?<\/style>/g, ' ')
     .replace(/<[^>]+>/g, ' ');
 
-const retired = new RegExp(RETIRED.source, 'gi');
+const others = new RegExp(OTHER_NAMES.source, 'gi');
 let seen = 0;
 for (const f of pages) {
   const html = readFileSync(f, 'utf8');
-  const names = visible(html).match(retired) ?? [];
+  const names = visible(html).match(others) ?? [];
   if (names.length) {
     seen += names.length;
     if (seen <= 12) bad(`${relative(OUT, f)}: says ${[...new Set(names)].join(', ')}`);
@@ -48,7 +48,7 @@ for (const f of pages) {
   const hosts = unmoved(html);
   if (hosts.length) bad(`${relative(OUT, f)} still names ${hosts.join(', ')}`);
 }
-if (seen > 12) bad(`… and ${seen - 12} more places name a retired name`);
+if (seen > 12) bad(`… and ${seen - 12} more places name another project`);
 
 const index = readFileSync(join(OUT, 'index.html'), 'utf8');
 if (!index.includes('The Metrale Engine Book')) bad("the front page does not carry the book's title");

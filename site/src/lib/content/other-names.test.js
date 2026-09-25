@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 // The company is Metrale, its brand is Metrale AI and the engine is Metrale
-// Engine. No other name for them belongs in what a visitor reads, or in the
-// source a contributor reads, so this reads the site, the blog, the shared
-// files, the docs tooling and the notes as text and fails on a retired name
-// (`RETIRED` in web-shared/sources.mjs). The only files that may carry one are
-// the ones that point at where the engine's history lives, and the installers
-// copied in at build from the registry of the command people install today.
+// Engine. Another project's name belongs neither in what a visitor reads nor in
+// the source a contributor reads, so this reads the site, the blog, the shared
+// files, the docs tooling and the notes as text and fails on one (`OTHER_NAMES`
+// in web-shared/sources.mjs). The only files that may carry one are those that
+// point at where the open source history lives, and the installers copied in at
+// build from the registry of the command people install today.
 
 import { expect, test } from 'bun:test';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { RETIRED } from '../../../../web-shared/sources.mjs';
+import { OTHER_NAMES } from '../../../../web-shared/sources.mjs';
 
 const REPO = fileURLToPath(new URL('../../../../', import.meta.url));
 const ROOTS = ['README.md', 'site', 'blog', 'web-shared', 'docs', 'assets/brand'];
@@ -30,9 +30,9 @@ const listed = () =>
     .split('\0')
     .filter(Boolean);
 
-test('no retired name in the site, the blog, the shared files, the docs tooling or the notes', () => {
+test('no name of another project in the site, the blog, the shared files, the docs tooling or the notes', () => {
   const hits = [];
-  const re = new RegExp(RETIRED.source, 'gi');
+  const re = new RegExp(OTHER_NAMES.source, 'gi');
   for (const rel of listed()) {
     if (KEEP.has(rel) || !TEXT.test(rel) || !existsSync(join(REPO, rel))) continue;
     readFileSync(join(REPO, rel), 'utf8')

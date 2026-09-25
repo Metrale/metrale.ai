@@ -244,18 +244,20 @@ and the legal entity is Metrale Corp. The kit landed on 2026-09-21. Every page,
 the blog (its posts included, in the engine team's own text), the docs, the
 diligence deck, the social cards, the film's title cards, `llms.txt`, the
 JSON-LD and the web manifest say Metrale, and nothing a visitor reads names
-anything earlier: `RETIRED` in `web-shared/sources.mjs` lists the retired names,
-and `src/lib/content/retired.test.js` and `docs/check.mjs` fail on them.
+another project: `OTHER_NAMES` in `web-shared/sources.mjs` lists those names,
+and `src/lib/content/other-names.test.js` and `docs/check.mjs` fail on them.
+Metrale is its own company and Metrale Engine its own engine; the guide says
+so when asked, without repeating another project's name.
 
-Three things still point at the engine as it was before its move into the
-Metrale organisation, by design, and none of them is words on a page. "What
+Three things still point at the open source code Metrale Engine builds on, by
+design, and none of them is words on a page. "What
 still moves", at the end, has each one and what retires it:
 
 - **The command people install.** `CLI` in `web-shared/sources.mjs`, until the
   registry's own command ships a release and the site speaks its agent
   protocol.
-- **The measured commits.** The published records name commits in the
-  engine's history, which `metrale.ai/src/history` redirects to. The deck's
+- **The measured commits.** The published records name commits in that open
+  source history, which `metrale.ai/src/history` redirects to. The deck's
   reproduction clones from that address.
 - **The installers.** `install.sh` and `install.ps1` are copied in at build
   from the recipe registry that command comes from.
@@ -547,14 +549,13 @@ commits of their own for the same reason.
 
 Recorded so the next sweep is ready before it is asked for. Nothing here is
 words a visitor reads. Each row is an address or a command that points at the
-engine as it was before its move into the Metrale organisation, and each has one
-place to change.
+open source code Metrale Engine builds on, and each has one place to change.
 
 | where | what it is | what retires it |
 | --- | --- | --- |
 | `CLI` in `web-shared/sources.mjs`, and `HELD` in `scripts/gen-models.mjs` | the command the install, run and agent instructions print, and what `install.sh` and `install.ps1` install; one recipe the command knows by another name is held off the model list | the registry's own command, `metralectl`, shipping a release, and the site's agent client speaking its protocol (4; the site speaks 2) |
 | the installer checkout in `.github/actions/engine-inputs/action.yml` | where `install.sh` and `install.ps1` are copied from at build | the same release, whose installers replace them |
-| `HISTORY` in `web-shared/sources.mjs` and `/src/history` in `static/_redirects` | the engine's history: the commits the published records name, and the AMD pull request; the deck's reproduction clones from it | nothing while the published ladder names a commit there. If the history is ever brought into the Metrale organisation, the three redirect lines change and nothing else does |
-| `HISTORY_SLUG` in `web-shared/sources.mjs` | the contributor wall counts the people who built the engine before the move, from the GitHub API at build | the same move of the history |
+| `HISTORY` in `web-shared/sources.mjs` and `/src/history` in `static/_redirects` | the open source history: the commits the published records name, and the AMD pull request; the deck's reproduction clones from it | nothing while the published ladder names a commit there. If that history is ever brought into the Metrale organisation, the three redirect lines change and nothing else does |
+| `HISTORY_SLUG` in `web-shared/sources.mjs` | the contributor wall also counts the people who wrote that open source code, from the GitHub API at build | the same change of address |
 | `LATTICE_RELEASES` in `web-shared/sources.mjs` | where the codebase chat's in-browser database is downloaded from, by pinned release and checksum | a release of it published under the Metrale organisation |
 | `codeChat.enabled` in `src/lib/data.js` | the codebase chat, off | the engine's code index being served (item 33) |

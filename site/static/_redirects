@@ -1,7 +1,7 @@
-# The engine's history before it moved into the Metrale organisation: the
-# commits the published records name and the pull requests they cite.
+# The history of the open source code Metrale Engine builds on: the commits
+# the published records name and the pull requests they cite.
 # web-shared/sources.mjs (HISTORY) builds these links; this is the one place
-# that says where the history lives.
+# that says where that history lives.
 /src/history.git/* https://github.com/Avarok-Cybersecurity/atlas.git/:splat 302
 /src/history/* https://github.com/Avarok-Cybersecurity/atlas/:splat 302
 /src/history https://github.com/Avarok-Cybersecurity/atlas 302

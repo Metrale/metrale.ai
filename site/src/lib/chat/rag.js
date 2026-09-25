@@ -15,7 +15,7 @@ function relevancePct(score) {
 }
 
 // A corpus from the Metrale organisation cites its own repository; one built
-// before the move cites the history metrale.ai keeps for it.
+// from the open source history the engine builds on cites it through metrale.ai.
 function sourceUrl(repo, commit, path, startLine, endLine) {
   const base = !repo || repo.startsWith('Metrale/') ? `https://github.com/${repo || ENGINE_SLUG}` : HISTORY;
   return `${base}/blob/${commit}/${path}#L${startLine}-L${endLine}`;
