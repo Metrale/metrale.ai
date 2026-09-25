@@ -4,7 +4,7 @@
     <script>
       (function () {
         try {
-          var t = localStorage.getItem('avarok-theme');
+          var t = localStorage.getItem('metrale-theme');
           if (t !== 'light' && t !== 'dark') {
             t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
           }
@@ -16,7 +16,7 @@
     </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Must equal --bg in web-shared/avarok-tokens.css. A meta tag cannot read a
+    <!-- Must equal --bg in web-shared/metrale-tokens.css. A meta tag cannot read a
          custom property, so this is the one unavoidable copy of the ground colour;
          theme-color.test.js fails the build if the two drift. -->
     <meta name="theme-color" content="#0E1318" />
@@ -36,7 +36,6 @@
     <meta property="og:site_name" content="Metrale" />
     <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@AtlasInferenceX" />
 
     <!-- Only the regular weight. Preloading all four would have the browser
          fetch three faces the first screen never uses, delaying the one it

@@ -1,5 +1,5 @@
 import { posts, formatDate } from '$lib/posts.js';
-import { SITE, MAIN_SITE, DOCS_SITE, blog, tags, authors, githubUrl, discordUrl, xUrl } from '$lib/content.js';
+import { SITE, MAIN_SITE, DOCS_SITE, blog, tags, authors, githubUrl, discordUrl } from '$lib/content.js';
 
 export const prerender = true;
 
@@ -52,12 +52,11 @@ ${Object.entries(authors).map(([slug, a]) => `- [${a.name}](${SITE}/authors/${sl
 
 ## Optional
 
-- [Metrale](${MAIN_SITE}): the engine this blog is about, named Atlas until September 2026 — also at ${MAIN_SITE}/llms.txt
+- [Metrale](${MAIN_SITE}): the company and the engine this blog is about — also at ${MAIN_SITE}/llms.txt
 - [Developer page](${MAIN_SITE}/engine): benchmarks, recipes, and the install command
 - [Documentation](${DOCS_SITE}): the full book — also at ${DOCS_SITE}/llms.txt
 - [Source](${githubUrl}): pure Rust and CUDA, AGPL-3.0-only
 - [Discord](${discordUrl})
-- [X](${xUrl})
 `;
 
   return new Response(body, { headers: { 'content-type': 'text/plain; charset=utf-8' } });

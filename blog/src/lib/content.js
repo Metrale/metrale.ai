@@ -5,6 +5,7 @@
  * `data.js` apart: one place to change a link or a label, and no hunting
  * through markup for the third copy of a URL.
  */
+import { ENGINE_REPO } from '../../../web-shared/sources.mjs';
 
 /**
  * adapter-static writes /posts/foo to `posts/foo.html`, and nginx serves BOTH
@@ -22,19 +23,14 @@ export const SITE = 'https://blog.metrale.ai';
 // which is every real build, they go to the live site.
 export const MAIN_SITE = (import.meta.env ?? {}).VITE_MAIN_SITE || 'https://metrale.ai';
 export const DOCS_SITE = 'https://docs.metrale.ai';
-export const githubUrl = 'https://github.com/Avarok-Cybersecurity/atlas';
+export const githubUrl = ENGINE_REPO;
 // Must match site/src/lib/data.js. An invite code is not derivable from
 // anything, so a wrong one is a dead link that looks entirely plausible.
 export const discordUrl = 'https://discord.gg/RQcGakU2jW';
-export const xUrl = 'https://x.com/AtlasInferenceX';
 
 export const blog = {
   name: 'Metrale blog',
   kicker: 'blog.metrale.ai',
-  // Shown over a post dated before the name changed. The posts are records
-  // and keep their words; this line says why they read as they do.
-  renamedOn: '2026-09-21',
-  formerName: 'Written under the engine’s former name, Atlas. The engine is Metrale Engine now; the numbers stand.',
   title: 'Notes from the inference layer',
   // The second line of the share card, static/og-image.png. Regenerate the card
   // with `node scripts/media/og.mjs --blog` from site/ after changing either.
@@ -115,8 +111,7 @@ export const footerCols = [
     heading: 'Community',
     links: [
       { text: 'GitHub', href: githubUrl },
-      { text: 'Discord', href: discordUrl },
-      { text: 'X', href: xUrl }
+      { text: 'Discord', href: discordUrl }
     ]
   }
 ];

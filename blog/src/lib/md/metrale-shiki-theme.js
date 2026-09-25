@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-// avarok-shiki-theme.js — the code-block palette, expressed as the site's own
+// metrale-shiki-theme.js — the code-block palette, expressed as the site's own
 // design tokens rather than as a second set of hex values.
 //
 // Shiki themes must name concrete colours, and it inlines them into `style`
 // attributes. Writing real hexes here would put a second copy of the palette in
-// the repo, which `web-shared/avarok-tokens.css` exists to prevent. So the theme
+// the repo, which `web-shared/metrale-tokens.css` exists to prevent. So the theme
 // names SENTINELS — colours chosen only because nothing else uses them — and
 // `colorReplacements` swaps each one for a `var()` reference as the HTML is
 // emitted. The built pages therefore READ the token file at runtime and cannot
@@ -29,8 +29,8 @@ export const COLOR_REPLACEMENTS = {
   '#000008': 'var(--accent-deep)' //   regex, escapes
 };
 
-export const avarokTheme = {
-  name: 'atlas',
+export const metraleTheme = {
+  name: 'metrale',
   type: 'dark',
   colors: { 'editor.background': '#000000', 'editor.foreground': '#000001' },
   settings: [
