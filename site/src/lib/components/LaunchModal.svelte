@@ -1,11 +1,12 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-only -->
 <script>
+  import { CLI } from '$lib/data.js';
   import { modal } from '$lib/modal.js';
   // Launch settings for one recipe.
   //
   // The modal shows the recipe's own values as a read-only base and tracks only
   // what the user changed. Start sends that sparse diff, so an untouched modal
-  // launches byte-identically to `atlasctl run <recipe>`.
+  // launches byte-identically to `<command> run <recipe>`.
   //
   // The Review tab shows the exact command, rendered by the agent's own
   // renderer — the same function the launch will use. Preview and execution
@@ -163,7 +164,7 @@
         {#if unapplied.length > 0}
           <p class="lm-warn">
             Your agent does not understand {unapplied.length} setting(s) this recipe carries, so they will <strong>not</strong> be applied:
-            <code class="mono">{unapplied.join(', ')}</code>. Updating atlasctl may fix this.
+            <code class="mono">{unapplied.join(', ')}</code>. Updating {CLI} may fix this.
           </p>
         {/if}
       {:else}

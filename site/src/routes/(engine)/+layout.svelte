@@ -17,26 +17,12 @@
   import '../../styles/overlays.css';
   import '../../styles/mobile.css';
   import '../../styles/engine-shell.css';
-  import ChevronField from '$shared/components/ChevronField.svelte';
-  import SiteNav from '$lib/components/avarok/SiteNav.svelte';
-  import SiteFooter from '$lib/components/avarok/SiteFooter.svelte';
+  import SiteNav from '$lib/components/marketing/SiteNav.svelte';
+  import SiteFooter from '$lib/components/marketing/SiteFooter.svelte';
   let { children } = $props();
 </script>
 
-<!-- The ambient chevron field: one fullscreen triangle, one fragment shader,
-     the same code blog.metrale.ai renders. It paints the page ground
-     itself, so `body`'s background sits behind it rather than beside it.
-
-     It must stay a DIRECT child of the layout root. A `transform`, `filter`,
-     `perspective`, `will-change` or `contain: paint` on any ancestor would
-     make that ancestor the containing block for fixed-position descendants,
-     and the background would start scrolling with the content. -->
-<ChevronField />
-
-<!-- Everything else goes above the canvas. Without this wrapper, only the
-     POSITIONED elements would: a fixed canvas at z-index 0 paints above the
-     block-level layer, so `footer` — which sets no position — would render
-     underneath it and vanish. -->
+<!-- The page's own layer: the nav, the route and the footer. -->
 <div class="page engine-shell">
   <SiteNav />
   {@render children()}

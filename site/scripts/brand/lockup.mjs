@@ -8,7 +8,7 @@
 // script runs that code and writes two things from it:
 //
 //   web-shared/brand-art.js          the paths and boxes the lockup component
-//                                    draws with (AtlasLockup.svelte), so the
+//                                    draws with (MetraleLockup.svelte), so the
 //                                    site never holds a redrawn copy
 //   assets/brand/svg/wordmark*.svg   the plain wordmark, on dark and on light,
 //                                    which the kit does not ship as a file
@@ -83,7 +83,7 @@ const art = {
   mark: pieces(mark.body),
   compact: pieces(compact.body),
 };
-const module_ = `// Generated ${art.generated}\n// The brand artwork as data: what AtlasLockup.svelte draws. Colours are the\n// kit's reference values; the component maps each ink to a token.\nexport const ART = ${JSON.stringify(art, null, 1)};\n`;
+const module_ = `// Generated ${art.generated}\n// The brand artwork as data: what MetraleLockup.svelte draws. Colours are the\n// kit's reference values; the component maps each ink to a token.\nexport const ART = ${JSON.stringify(art, null, 1)};\n`;
 
 const files = {
   [OUT]: module_,

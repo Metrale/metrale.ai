@@ -2,7 +2,7 @@
 //
 // The site is three documents that share a header, not one.
 //
-// The marketing pages load avarok.css. The developer pages (/engine, /control,
+// The marketing pages load metrale.css. The developer pages (/engine, /control,
 // /diligence) load app.css and its companions, a different design system whose
 // rules are written against bare elements: `nav`, `header`, `section`. Each
 // group's layout imports only its own stylesheets, and on a full page load that

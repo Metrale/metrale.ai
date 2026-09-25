@@ -1,5 +1,5 @@
 <script>
-  // Data is SSOT-derived from github.com/Avarok-Cybersecurity/atlas-recipes
+  // Data is SSOT-derived from the recipe registry (github.com/Metrale/metralectl)
   // via site/scripts/gen-models.mjs -> models.generated.json.
   // 3-level tree: vendor (brand) -> subfamily (recipe dir) -> recipes.
   import vendorsRaw from '$lib/models.generated.json';
@@ -156,8 +156,8 @@
 
     <div class="ms-foot">
       Every recipe is the single source of truth in
-      <a href={recipesUrl} class="link" target="_blank" rel="noopener">atlas-recipes</a>, so the site cannot list a model we do not ship.
-      EP=2 is Expert Parallelism across two GB10 nodes.
+      <a href={recipesUrl} class="link" target="_blank" rel="noopener">the recipe registry</a>, so the site cannot list a model we do not
+      ship. EP=2 is Expert Parallelism across two GB10 nodes.
     </div>
   </div>
 </section>

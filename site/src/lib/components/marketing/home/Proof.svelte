@@ -17,7 +17,7 @@
     PT = 16,
     PB = 30;
   const maxC = Math.max(...rows.map((r) => r.c));
-  const vMax = Math.max(...rows.map((r) => Math.max(r.atlas, best(r)))) * 1.08;
+  const vMax = Math.max(...rows.map((r) => Math.max(r.engine, best(r)))) * 1.08;
   const x = (c) => PL + (Math.log2(c) / Math.log2(maxC)) * (W - PL - PR);
   const y = (v) => PT + (1 - v / vMax) * (H - PT - PB);
   const line = (f) => rows.map((r, i) => `${i ? 'L' : 'M'}${x(r.c).toFixed(1)} ${y(f(r)).toFixed(1)}`).join(' ');
@@ -63,12 +63,12 @@
             <text x={x(r.c)} y={H - 8} text-anchor="middle" class="axis">C={r.c}</text>
           {/each}
           <path d={line(best)} class="base" />
-          <path d={line((r) => r.atlas)} class="atlas" />
+          <path d={line((r) => r.engine)} class="engine" />
           {#each rows as r}
-            <circle cx={x(r.c)} cy={y(r.atlas)} r="4" class="atlas-dot" />
+            <circle cx={x(r.c)} cy={y(r.engine)} r="4" class="engine-dot" />
           {/each}
-          <text x={W - PR} y={y(rows.at(-1).atlas) - 10} text-anchor="end" class="lab atlas-lab"
-            >Metrale {rows.at(-1).atlas.toFixed(0)} tok/s</text
+          <text x={W - PR} y={y(rows.at(-1).engine) - 10} text-anchor="end" class="lab engine-lab"
+            >Metrale {rows.at(-1).engine.toFixed(0)} tok/s</text
           >
           <text x={W - PR} y={y(best(rows.at(-1))) + 18} text-anchor="end" class="lab base-lab"
             >vLLM + MTP {best(rows.at(-1)).toFixed(0)} tok/s</text
@@ -126,12 +126,12 @@
     stroke-width: 2;
     stroke-dasharray: 5 4;
   }
-  .av-ladder .atlas {
+  .av-ladder .engine {
     fill: none;
     stroke: var(--accent);
     stroke-width: 3;
   }
-  .av-ladder .atlas-dot {
+  .av-ladder .engine-dot {
     fill: var(--accent);
   }
   .av-ladder .lab {
@@ -139,7 +139,7 @@
     font-size: 11px;
     font-weight: 700;
   }
-  .av-ladder .atlas-lab {
+  .av-ladder .engine-lab {
     fill: var(--accent);
   }
   .av-ladder .base-lab {

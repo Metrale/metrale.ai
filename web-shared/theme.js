@@ -4,7 +4,7 @@
 // The blocking boot script in each app.html must stay in lockstep with KEY
 // and the two ground colours here — theme-color.test.js pins the colours.
 
-export const THEME_KEY = 'avarok-theme';
+export const THEME_KEY = 'metrale-theme';
 export const THEME_DARK_BG = '#0E1318';
 export const THEME_LIGHT_BG = '#FFFFFF';
 

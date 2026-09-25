@@ -7,10 +7,10 @@
   form component, and its role list is the same file.
 -->
 <script>
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import PageHero from '$lib/components/avarok/PageHero.svelte';
-  import CtaBand from '$lib/components/avarok/CtaBand.svelte';
-  import DemoForm from '$lib/components/avarok/DemoForm.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import PageHero from '$lib/components/marketing/PageHero.svelte';
+  import CtaBand from '$lib/components/marketing/CtaBand.svelte';
+  import DemoForm from '$lib/components/marketing/DemoForm.svelte';
   import { careers as c } from '$lib/content/company.js';
   import { routes, links, contacts } from '$lib/content/brand.js';
   import { filterPositions, statusLabel, teamsOf } from '$lib/content/positions.js';

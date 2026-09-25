@@ -12,6 +12,11 @@ import { fileURLToPath } from 'node:url';
 import { CORPUS_GZ_URL, CORPUS_META_URL, LS_OPENROUTER_KEY } from '../../src/lib/chat/config.js';
 import { CORS_HEADERS } from './openrouter.js';
 
+// The chat is off on the site until the engine publishes its own code index
+// (`codeChat.enabled` in src/lib/data.js; a unit test holds the two equal).
+// Every chat suite skips while it is off, and chat-off.spec.js runs instead.
+export const CHAT_ON = false;
+
 const FIX = dirname(fileURLToPath(import.meta.url));
 export const META = JSON.parse(readFileSync(join(FIX, 'corpus-small.meta.json'), 'utf8'));
 export const GZ = readFileSync(join(FIX, 'corpus-small.jsonl.gz'));

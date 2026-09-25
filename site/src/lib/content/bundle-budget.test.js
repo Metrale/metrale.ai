@@ -21,7 +21,7 @@ const walk = (dir) =>
 
 const MARKETING = [
   join(SRC, 'lib', 'content'),
-  join(SRC, 'lib', 'components', 'avarok'),
+  join(SRC, 'lib', 'components', 'marketing'),
   join(SRC, 'routes', '(marketing)'),
   join(SRC, 'lib', 'broll'),
 ];

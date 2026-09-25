@@ -16,9 +16,6 @@
 // `search()` is the only contract the rest of the Worker relies on.
 // =============================================================================
 
-// The company has had three names. A question in any of them should find a
-// document that uses another, so all three become one token.
-const BRAND = /^(atlas|avarok|metrale)$/;
 const SYNONYMS = new Map([
   ['gpus', 'gpu'],
   ['tokens', 'token'],
@@ -132,10 +129,6 @@ export function tokenize(text) {
     .split(/[^a-z0-9+.]+/)) {
     const w = raw.replace(/^[.+]+|[.+]+$/g, '');
     if (w.length < 2 || STOP.has(w)) continue;
-    if (BRAND.test(w)) {
-      out.push('metrale');
-      continue;
-    }
     out.push(SYNONYMS.get(w) ?? stem(w));
   }
   return out;

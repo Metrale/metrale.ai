@@ -1,10 +1,10 @@
 <script>
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import PageHero from '$lib/components/avarok/PageHero.svelte';
-  import ValueBand from '$lib/components/avarok/home/ValueBand.svelte';
-  import Chain from '$lib/components/avarok/home/Chain.svelte';
-  import Deliveries from '$lib/components/avarok/home/Deliveries.svelte';
-  import FaqList from '$lib/components/avarok/FaqList.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import PageHero from '$lib/components/marketing/PageHero.svelte';
+  import ValueBand from '$lib/components/marketing/home/ValueBand.svelte';
+  import Chain from '$lib/components/marketing/home/Chain.svelte';
+  import Deliveries from '$lib/components/marketing/home/Deliveries.svelte';
+  import FaqList from '$lib/components/marketing/FaqList.svelte';
   import { whyHero, pillars, pov } from '$lib/content/why.js';
   import { faqFor } from '$lib/content/faq.js';
   import { routes } from '$lib/content/brand.js';

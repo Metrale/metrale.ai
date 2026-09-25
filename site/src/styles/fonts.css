@@ -24,7 +24,7 @@
    If none is installed the family is skipped and the system stack in the
    tokens takes over.
 
-   The token file names the families (web-shared/avarok-tokens.css). The blog
+   The token file names the families (web-shared/metrale-tokens.css). The blog
    ships neither this file nor the fonts and keeps working on its system stack.
    ========================================================================== */
 @font-face {

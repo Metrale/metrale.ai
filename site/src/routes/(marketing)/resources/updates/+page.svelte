@@ -1,7 +1,7 @@
 <script>
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import PageHero from '$lib/components/avarok/PageHero.svelte';
-  import CtaBand from '$lib/components/avarok/CtaBand.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import PageHero from '$lib/components/marketing/PageHero.svelte';
+  import CtaBand from '$lib/components/marketing/CtaBand.svelte';
   import { updates as u } from '$lib/content/resources.js';
   import { routes, links } from '$lib/content/brand.js';
   import changelog from '$lib/changelog.generated.json';

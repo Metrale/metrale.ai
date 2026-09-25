@@ -10,7 +10,7 @@
 // happened to keep. That rule had no test, and it is one line to lose.
 
 /** Paths that must never be served or stored by the worker. */
-export const NEVER_CACHED = ['/install.sh', '/install.ps1', '/quickstart.sh'];
+export const NEVER_CACHED = ['/install.sh', '/install.ps1'];
 
 /**
  * Files the host reads as configuration and never serves back.

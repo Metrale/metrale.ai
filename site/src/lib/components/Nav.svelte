@@ -1,11 +1,10 @@
 <script>
   import { modal } from '$lib/modal.js';
-  import AtlasLockup from '$shared/components/AtlasLockup.svelte';
+  import MetraleLockup from '$shared/components/MetraleLockup.svelte';
   // Desktop bar + mobile drawer render from the SAME `nav.links` in data.js.
   // Below the drawer breakpoint (styles/mobile.css) the bar hides and the
   // toggle appears, so phones keep every link the desktop has.
   import { nav, githubUrl, codeChat } from '$lib/data.js';
-  import stars from '$lib/stars.generated.json';
   import GithubIcon from './GithubIcon.svelte';
   import ChatLatticeIcon from './ChatLatticeIcon.svelte';
   import FleetPill from './FleetPill.svelte';
@@ -65,28 +64,30 @@
 <nav>
   <div class="nav-inner">
     <a class="nav-logo" href="/" aria-label="Metrale home" data-sveltekit-reload>
-      <AtlasLockup kind="wordmark" width={122} />
+      <MetraleLockup kind="wordmark" width={122} />
     </a>
     <div class="nav-links">
       {#each nav.links as l}
         <a href={l.href}>{l.text}</a>
       {/each}
       <a class="nav-star-btn" href={githubUrl} target="_blank" rel="noopener">
-        <GithubIcon size={15} /> Star <span class="nav-star-count">{stars.count}</span>
+        <GithubIcon size={15} /> Star
       </a>
       <ThemeToggle />
-      <button
-        type="button"
-        class="nav-chat-btn"
-        aria-label={codeChat.navLabel}
-        aria-haspopup="dialog"
-        onpointerenter={warmChat}
-        onfocus={warmChat}
-        onclick={openChat}
-      >
-        <ChatLatticeIcon size={18} />
-        {#if chatReady}<span class="nav-chat-dot" aria-hidden="true"></span>{/if}
-      </button>
+      {#if codeChat.enabled}
+        <button
+          type="button"
+          class="nav-chat-btn"
+          aria-label={codeChat.navLabel}
+          aria-haspopup="dialog"
+          onpointerenter={warmChat}
+          onfocus={warmChat}
+          onclick={openChat}
+        >
+          <ChatLatticeIcon size={18} />
+          {#if chatReady}<span class="nav-chat-dot" aria-hidden="true"></span>{/if}
+        </button>
+      {/if}
       <!-- Fleet status chip. Last on purpose: status reads as chrome, not as a
            destination, so it anchors the far right of the bar instead of
            sitting between the links and the icons. Renders nothing for
@@ -113,20 +114,22 @@
     <div class="nav-drawer-foot">
       <ThemeToggle />
       <a class="nav-star-btn" href={githubUrl} target="_blank" rel="noopener" tabindex={open ? 0 : -1}>
-        <GithubIcon size={15} /> Star <span class="nav-star-count">{stars.count}</span>
+        <GithubIcon size={15} /> Star
       </a>
-      <button
-        type="button"
-        class="nav-chat-btn"
-        aria-label={codeChat.navLabel}
-        aria-haspopup="dialog"
-        tabindex={open ? 0 : -1}
-        onfocus={warmChat}
-        onclick={openChat}
-      >
-        <ChatLatticeIcon size={20} />
-        {#if chatReady}<span class="nav-chat-dot" aria-hidden="true"></span>{/if}
-      </button>
+      {#if codeChat.enabled}
+        <button
+          type="button"
+          class="nav-chat-btn"
+          aria-label={codeChat.navLabel}
+          aria-haspopup="dialog"
+          tabindex={open ? 0 : -1}
+          onfocus={warmChat}
+          onclick={openChat}
+        >
+          <ChatLatticeIcon size={20} />
+          {#if chatReady}<span class="nav-chat-dot" aria-hidden="true"></span>{/if}
+        </button>
+      {/if}
     </div>
   </div>
 </nav>

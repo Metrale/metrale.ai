@@ -6,7 +6,7 @@
   no endpoint (brand.js `primeEndpoint`, or VITE_PRIME_ENDPOINT) renders
   nothing at all.
 
-  It lives in components/avarok/ so the build folds it into the av-ui chunk;
+  It lives in components/marketing/ so the build folds it into the av-ui chunk;
   the page-weight budget in e2e/page-weight.spec.js allows no extra request.
   Anything on the page can open it with a question by dispatching
   `new CustomEvent('prime:ask', { detail: { question } })` on window.

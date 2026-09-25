@@ -17,7 +17,10 @@ import {
   sseMidStreamErrorHandler,
   installPacedChat,
 } from './fixtures/openrouter.js';
-import { META, routeCorpus, openChat, statusText, waitReady, withKey, askQuestion } from './fixtures/chat-helpers.js';
+import { CHAT_ON, META, routeCorpus, openChat, statusText, waitReady, withKey, askQuestion } from './fixtures/chat-helpers.js';
+
+// Off with the chat itself; see CHAT_ON in fixtures/chat-helpers.js.
+test.skip(!CHAT_ON, 'The codebase chat is off until the engine publishes its code index.');
 
 // Reasoning deltas: even indices stream as `delta.reasoning`, odd indices as
 // `delta.reasoning_details` (see sseChatFrames) — both shapes must land in
@@ -156,7 +159,7 @@ test('a mid-stream error surfaces the rate card without any retry', async ({ pag
   await waitReady(page);
   // Backoff shrunk to ~0: if the engine wrongly retried after first byte, all
   // three attempts would land before the card shows and the count would say so.
-  await page.evaluate(() => window.__avarokChatSetRetryBaseMs(1));
+  await page.evaluate(() => window.__metraleChatSetRetryBaseMs(1));
 
   await askQuestion(page, 'how do NVFP4 kernels dispatch?');
   const card = page.locator('.cc-error[role="alert"]');

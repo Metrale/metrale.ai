@@ -18,10 +18,7 @@
   />
 </svelte:head>
 
-<!-- The slides quote the published campaign records, which carry the engine's
-     former name. The records are evidence and are not relabelled; the stamp in
-     the deck chrome says so on every slide. -->
-<Deck title="Verification steps" stamp={`${stamp} · records published as Atlas, now Metrale`}>
+<Deck title="Verification steps" {stamp}>
   <Frame />
   <Reproduce />
   <Ladder />

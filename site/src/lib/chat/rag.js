@@ -4,6 +4,7 @@
 // network) and lattice.js (all wasm); no DOM, no state mutation.
 // =============================================================================
 
+import { ENGINE_SLUG, HISTORY } from '../../../../web-shared/sources.mjs';
 import { getEmbedding, rerank, chat } from './openrouter.js';
 import { searchVectors } from './lattice.js';
 import { TOP_K, RERANK_MULTIPLIER } from './config.js';
@@ -13,8 +14,11 @@ function relevancePct(score) {
   return Math.max(0, Math.min(100, (1 - score) * 100));
 }
 
+// A corpus from the Metrale organisation cites its own repository; one built
+// before the move cites the history metrale.ai keeps for it.
 function sourceUrl(repo, commit, path, startLine, endLine) {
-  return `https://github.com/${repo}/blob/${commit}/${path}#L${startLine}-L${endLine}`;
+  const base = !repo || repo.startsWith('Metrale/') ? `https://github.com/${repo || ENGINE_SLUG}` : HISTORY;
+  return `${base}/blob/${commit}/${path}#L${startLine}-L${endLine}`;
 }
 
 function contextBlock(n, { path, startLine, endLine, language, text }) {
@@ -24,7 +28,7 @@ function contextBlock(n, { path, startLine, endLine, language, text }) {
 
 function systemPrompt(repo, commit, context) {
   return (
-    `You are the code assistant for the Avarok inference engine codebase (formerly named Atlas) ` +
+    `You are the code assistant for the Metrale Engine codebase ` +
     `(GitHub repository ${repo}, commit ${commit}). Answer questions about this ` +
     `codebase using ONLY the numbered code context below.\n\n` +
     `Rules:\n` +

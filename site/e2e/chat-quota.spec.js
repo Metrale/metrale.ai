@@ -15,7 +15,10 @@ import {
   freeQuotaPaidOkHandler,
   QUOTA_RESET_AT,
 } from './fixtures/openrouter.js';
-import { META, routeCorpus, openChat, waitReady, withKey, askQuestion } from './fixtures/chat-helpers.js';
+import { CHAT_ON, META, routeCorpus, openChat, waitReady, withKey, askQuestion } from './fixtures/chat-helpers.js';
+
+// Off with the chat itself; see CHAT_ON in fixtures/chat-helpers.js.
+test.skip(!CHAT_ON, 'The codebase chat is off until the engine publishes its code index.');
 
 const FREE_MODEL = 'nvidia/nemotron-3-ultra-550b-a55b:free';
 const PAID_MODEL = 'nvidia/nemotron-3-ultra-550b-a55b';
@@ -38,7 +41,7 @@ test.describe('@quota daily allowance', () => {
     await waitReady(page);
     // Shrink the backoff: if the engine wrongly retried, this test would still
     // finish fast and the attempt count below would catch the mistake.
-    await page.evaluate(() => window.__avarokChatSetRetryBaseMs(1));
+    await page.evaluate(() => window.__metraleChatSetRetryBaseMs(1));
 
     await askQuestion(page, 'how does the scheduler batch decode?');
 
@@ -67,7 +70,7 @@ test.describe('@quota daily allowance', () => {
     await page.goto('/engine');
     await openChat(page);
     await waitReady(page);
-    await page.evaluate(() => window.__avarokChatSetRetryBaseMs(1));
+    await page.evaluate(() => window.__metraleChatSetRetryBaseMs(1));
 
     await askQuestion(page, 'how does the scheduler batch decode?');
     const card = page.locator('.cc-error[role="alert"]');

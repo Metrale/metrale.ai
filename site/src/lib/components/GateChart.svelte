@@ -2,7 +2,7 @@
   // One metric panel of the benchmark dashboard: a time-scaled line per
   // (metric, variant, MODEL), reference lines for budgets/floors read from the
   // records, and a click on any point raising the underlying record(s) for the
-  // metadata card. Same hand-rolled SVG dialect as StarChart.svelte — no chart
+  // metadata card. Same hand-rolled SVG dialect as the site's other charts — no chart
   // library.
   //
   // Everything decidable lives in pure modules so it can be tested directly:

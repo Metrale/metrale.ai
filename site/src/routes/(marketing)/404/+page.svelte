@@ -5,7 +5,7 @@
   every unmatched path with index.html and a 200.
 -->
 <script>
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
   import { routes, links } from '$lib/content/brand.js';
 </script>
 

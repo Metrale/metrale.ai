@@ -1,4 +1,5 @@
 <script>
+  import { HISTORY } from '$shared/sources.mjs';
   // Act II, first half — the reference frame and the setup: fingerprint,
   // parity, and the four steps that get an outsider to two serving engines.
   // Measuring them is Ladder.svelte, which follows this act in the route.
@@ -110,10 +111,10 @@
       <Cmd
         label="clone, image, binary"
         lines={[
-          `git clone https://github.com/Avarok-Cybersecurity/atlas.git`,
-          `cd atlas && git checkout ${claim.buildPublic}`,
+          `git clone ${HISTORY}.git metrale-engine`,
+          `cd metrale-engine && git checkout ${claim.buildPublic}`,
           ``,
-          `docker build -f docker/gb10/Dockerfile -t atlas-gb10 .`,
+          `docker build -f docker/gb10/Dockerfile -t metrale-gb10 .`,
           ``,
           `sudo apt-get install -y build-essential pkg-config \\`,
           `  cmake clang libclang-dev`,
@@ -133,9 +134,8 @@
         note="The last line prints every parameter of the sweep with its default — the schema the next steps override. If it prints, the toolchain is sound and the rest of this deck will run."
       />
       <p class="after">
-        The gate's self-start also reads a cached recipe index at
-        <code class="mono">~/.avarok/atlas-recipes/index.json</code>. Open the TUI library once to populate it, or Step 6 stops with exactly
-        that message.
+        The gate's self-start also reads a cached recipe index from the engine's folder in your home directory. Open the TUI library once to
+        populate it, or Step 6 stops with a message naming the file.
       </p>
     </div>
   </div>
@@ -153,7 +153,7 @@
       `  --kv-cache-dtype fp8 --enable-prefix-caching \\`,
       `  --speculative-config '{"method":"mtp","num_speculative_tokens":3}'`,
     ]}
-    note="num_speculative_tokens 3 is K=4 — the same draft width Atlas runs. Context 2048 and batch cap 128 are the pinned pair; changing either invalidates the comparison in both directions."
+    note="num_speculative_tokens 3 is K=4 — the same draft width Metrale Engine runs. Context 2048 and batch cap 128 are the pinned pair; changing either invalidates the comparison in both directions."
   />
 </Slide>
 
@@ -165,7 +165,7 @@
         whole certified configuration, rendered from the record the harness wrote."
 >
   <Cmd
-    label="Atlas — round-11 flags, complete"
+    label="Metrale Engine — round-11 flags, complete"
     lines={[...serve.env.map((l) => `${l} \\`), ...serve.cli.map((l, i, a) => (i < a.length - 1 ? `${l} \\` : l))]}
     note="Do not trim this. Six of these are kernel and scheduling knobs whose defaults are the OPPOSITE of the certified values — ssm-h-dtype, gdn-fused-norm, ssm-batched-recurrent, ssm-tail-midchunk, mtp-gate and prefill-varlen-batch — and serving without them measures a different engine. An abridged version of this command, run on 2026-08-26, landed 4.7% under the published ladder at C=1 and 14% under at C=4, the gap widening with concurrency exactly as those knobs predict. With the full command the same box reproduced every rung to within 2.2%."
   />

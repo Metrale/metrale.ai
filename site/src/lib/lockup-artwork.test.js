@@ -14,8 +14,8 @@ import { createRequire } from 'node:module';
 const read = (p) => readFileSync(new URL(p, import.meta.url), 'utf8');
 const require = createRequire(import.meta.url);
 const { ART } = await import('../../../web-shared/brand-art.js');
-const lockup = read('../../../web-shared/components/AtlasLockup.svelte');
-const tokens = read('../../../web-shared/avarok-tokens.css');
+const lockup = read('../../../web-shared/components/MetraleLockup.svelte');
+const tokens = read('../../../web-shared/metrale-tokens.css');
 
 test("brand-art.js is what the kit's geometry draws today", () => {
   const G = require('../../../assets/brand/src/geometry.js');

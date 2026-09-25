@@ -23,7 +23,7 @@ export const tiers = [
     blurb: 'The engine and every recipe, free. For developers, labs and anyone running open models on hardware they own. Not released yet.',
     includes: [
       'Metrale Engine, full source',
-      'Every model recipe in atlas-recipes',
+      'Every model recipe in the registry',
       'OpenAI, Anthropic and Responses APIs',
       'LAN fleet manager, early access',
       'Community support in Discord',

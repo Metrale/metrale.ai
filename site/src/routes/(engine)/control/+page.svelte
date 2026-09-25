@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-only -->
 <script>
+  import { CLI } from '$lib/data.js';
   // The control plane, as one surface: the bridge.
   //
   // Prerendered in its no-agent state, which is what most visitors get, what
@@ -311,7 +312,7 @@
               <p class="ld-watching">Reconnecting…</p>
               <p>
                 If it does not come back, the agent may have stopped. Check it with
-                <code class="mono">atlasctl agent status</code>, or start it again with
+                <code class="mono">{CLI} agent status</code>, or start it again with
                 <code class="mono">{startAgentCommand}</code>.
               </p>
             </div>
@@ -328,7 +329,7 @@
               {/if}
               <p>
                 An agent is running, but it has not seen this browser before. Run
-                <code class="mono">atlasctl agent token</code> and paste the value into the launch dialog on the
+                <code class="mono">{CLI} agent token</code> and paste the value into the launch dialog on the
                 <a href="/engine#models">engine page</a> — that is where the token field lives, not here. This page notices on its own once you
                 have; it keeps looking. This is separate from pairing machines to each other.
               </p>

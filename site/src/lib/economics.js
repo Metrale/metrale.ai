@@ -218,7 +218,7 @@ const matchedBaseline = (row) => row.baselines?.find((b) => b.id === row.best_ba
  * draws less when it is doing less, so a flat draw understates the low rungs.
  *
  * When the ladder records the mean draw over a rung's timed window, as
- * `atlas_watts` on the row and `watts` on a baseline, that rung uses it, and
+ * `engine_watts` on the row and `watts` on a baseline, that rung uses it, and
  * `measured` says whether every rung did. That is the only change the tab needs
  * to go from USER to MEASURED.
  */
@@ -228,10 +228,10 @@ export function efficiencyLadder(rows = [], { watts = ENERGY_DEFAULTS.watts, bas
     .sort((a, b) => a.c - b.c)
     .map((r) => {
       const base = matchedBaseline(r) ?? { tok_s: 0 };
-      const measured = r.atlas_watts > 0 && base.watts > 0;
+      const measured = r.engine_watts > 0 && base.watts > 0;
       return {
         c: r.c,
-        avarok: perJoule(r.atlas, measured ? r.atlas_watts : watts),
+        engine: perJoule(r.engine, measured ? r.engine_watts : watts),
         baseline: perJoule(base.tok_s, measured ? base.watts : baselineWatts),
         measured,
       };
@@ -248,12 +248,12 @@ export function energyInputsFrom(rows = []) {
   const top = [...rows].sort((a, b) => a.c - b.c).at(-1);
   const base = top && matchedBaseline(top);
   if (!top || !base) return { ...ENERGY_DEFAULTS };
-  const measured = top.atlas_watts > 0 && base.watts > 0;
+  const measured = top.engine_watts > 0 && base.watts > 0;
   return {
     ...ENERGY_DEFAULTS,
-    tokensPerSecond: top.atlas,
+    tokensPerSecond: top.engine,
     baselineTokensPerSecond: base.tok_s,
-    ...(measured ? { watts: top.atlas_watts, baselineWatts: base.watts } : {}),
+    ...(measured ? { watts: top.engine_watts, baselineWatts: base.watts } : {}),
   };
 }
 

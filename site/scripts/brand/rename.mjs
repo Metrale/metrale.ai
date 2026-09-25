@@ -22,8 +22,8 @@
 //                         reference is rewritten, and a redirect is added
 //   docs       listed     handoff documents, for a person to reread and edit
 //   internals  listed     identifiers and paths that are not the brand: the
-//                         `av-` class prefix, avarok-tokens.css, the theme key,
-//                         the components/avarok folder, the GitHub organisation,
+//                         `av-` class prefix, metrale-tokens.css, the theme key,
+//                         the components/marketing folder, the GitHub organisation,
 //                         crate and environment names, worker names
 //   artwork    listed     the wordmark, the masters, favicons, icons and the
 //                         social card, which need the new kit
@@ -31,14 +31,14 @@
 //
 // Words are matched with word boundaries, capitalised (Metrale) or in capitals
 // (METRALE). The lowercase word is never rewritten: in prose a brand is
-// capitalised, and in code a lowercase `avarok` is an object key or a string
-// (`{ avarok: 0.5 }`, `path('avarok')`), so it is listed for a look instead.
-// A compound (`why-avarok`, `Avarok-Cybersecurity`, `avarokctl`) is never a
+// capitalised, and in code a lowercase `metrale` is an object key or a string
+// (`{ metrale: 0.5 }`, `path('metrale')`), so it is listed for a look instead.
+// A compound (`why-metrale`, `Metrale-Labs`, `metralectl`) is never a
 // word match, which is what keeps the internals safe. The route is the one
 // compound this script rewrites, on purpose, because it is a public URL.
 //
-//   node scripts/brand/rename.mjs --from Avarok --to Metrale            (report)
-//   node scripts/brand/rename.mjs --from Avarok --to Metrale --apply    (do it)
+//   node scripts/brand/rename.mjs --from Metrale --to Newname            (report)
+//   node scripts/brand/rename.mjs --from Metrale --to Newname --apply    (do it)
 //
 // Then: `bun x --bun vite build`, `bun run guide -- --note "..."`, the unit and
 // browser suites, and BRAND-CHANGE.md for the steps this script cannot do.
@@ -63,7 +63,7 @@ const APPLY = args.includes('--apply');
 const FROM = opt('from');
 const TO = opt('to');
 if (!FROM || !TO || !/^[A-Z][a-z]+$/.test(FROM) || !/^[A-Z][a-z]+$/.test(TO)) {
-  console.error('usage: node scripts/brand/rename.mjs --from Avarok --to Metrale [--apply]  (one capitalised word each)');
+  console.error('usage: node scripts/brand/rename.mjs --from Metrale --to Newname [--apply]  (one capitalised word each)');
   process.exit(2);
 }
 
@@ -115,7 +115,7 @@ const COPY = [
   /^site\/media-brief\/(shots|reel)\.json$/,
   /^site\/scripts\/gen-[\w-]+\.mjs$/,
   /^site\/scripts\/media\/og\.mjs$/,
-  /^web-shared\/components\/AtlasLockup\.svelte$/,
+  /^web-shared\/components\/MetraleLockup\.svelte$/,
   /^blog\/src\/.+\.(svelte|js|html)$/,
   /^site\/deploy\/cloudflare\/[\w-]+\/(wrangler\.toml|src\/.+\.js)$/,
 ];
@@ -150,9 +150,9 @@ const kindOf = (r) => {
 
 // The word in its three cases, never inside a compound. `-`, `_` and a letter
 // or digit on either side make a compound, and so do a `.` or a `/` that join
-// two names (`Avarok.svelte`, `avarok.dev`, `docs/Avarok`, `Avarok/atlas`).
+// two names (`Metrale.svelte`, `metrale.dev`, `docs/Metrale`, `Metrale/engine`).
 // Anything else is a boundary: the full stop that ends a sentence ("before
-// Avarok."), the `/` that opens a regular expression literal (`/Avarok, the
+// Metrale."), the `/` that opens a regular expression literal (`/Metrale, the
 // platform/` in a browser test). The first pass treated every `.` and `/` as
 // a compound and missed both; the built pages and the browser suite caught it.
 const lower = FROM.toLowerCase();
@@ -174,8 +174,8 @@ const replaceWords = (s) => s.replace(RE_ROUTE, ROUTE_TO).replace(RE_CAP, TO).re
 const count = (s, re) => (s.match(re) ?? []).length;
 
 // Lines that state the history need a person: a rename inside them is true but
-// incomplete ("X was named Atlas until") or wrong ("the brand is X. It was Atlas").
-const HISTORY = /named Atlas|was Atlas|formerly|rebrand|until September 2026|then named/i;
+// incomplete ("X was named Y until") or wrong ("the brand is X. It was Y").
+const HISTORY = new RegExp(`named ${FROM}|was ${FROM}|formerly|rebrand|then named`, 'i');
 
 // ---- the pass --------------------------------------------------------------------
 

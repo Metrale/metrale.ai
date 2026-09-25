@@ -165,6 +165,3 @@
   Content-Type: text/x-shellscript; charset=utf-8
 /install.ps1
   Cache-Control: no-store
-/quickstart.sh
-  Cache-Control: no-store
-  Content-Type: text/x-shellscript; charset=utf-8

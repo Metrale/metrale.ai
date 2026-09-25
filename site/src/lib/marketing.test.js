@@ -10,7 +10,7 @@ const data = {
   rows: [
     {
       c: 8,
-      atlas: 60,
+      engine: 60,
       best_baseline_id: 'fast',
       baselines: [
         { id: 'slow', tok_s: 30 },
@@ -19,7 +19,7 @@ const data = {
     },
     {
       c: 1,
-      atlas: 10,
+      engine: 10,
       best_baseline_id: 'slow',
       baselines: [{ id: 'slow', tok_s: 8, label: 'Baseline slow' }],
     },
@@ -30,7 +30,7 @@ test('the highlight uses the highest measured concurrency and its fastest publis
   expect(result.concurrency).toBe(8);
   expect(result.baseline).toBe(50);
   expect(result.ratio).toBe(1.2);
-  expect(result.atlasWidth).toBe(100);
+  expect(result.engineWidth).toBe(100);
   expect(result.baselineWidth).toBeCloseTo(83.333);
   expect(result.improved).toBe(true);
 });
@@ -39,7 +39,7 @@ test('a future slower run is represented honestly and bars stay in range', () =>
     rows: [
       {
         c: 16,
-        atlas: 40,
+        engine: 40,
         best_baseline_id: 'base',
         baselines: [{ id: 'base', tok_s: 50, label: 'Baseline' }],
       },
@@ -47,15 +47,15 @@ test('a future slower run is represented honestly and bars stay in range', () =>
   });
   expect(result.improved).toBe(false);
   expect(result.ratio).toBe(0.8);
-  expect(result.atlasWidth).toBe(80);
+  expect(result.engineWidth).toBe(80);
   expect(result.baselineWidth).toBe(100);
 });
 test('missing or invalid evidence cannot turn into a marketing claim', () => {
   for (const fixture of [
     { rows: [] },
-    { rows: [{ c: 8, atlas: 10, best_baseline_id: 'missing', baselines: [] }] },
+    { rows: [{ c: 8, engine: 10, best_baseline_id: 'missing', baselines: [] }] },
     {
-      rows: [{ c: 8, atlas: 10, best_baseline_id: 'zero', baselines: [{ id: 'zero', tok_s: 0 }] }],
+      rows: [{ c: 8, engine: 10, best_baseline_id: 'zero', baselines: [{ id: 'zero', tok_s: 0 }] }],
     },
   ]) {
     expect(() => benchmarkHighlight(fixture)).toThrow();
@@ -65,7 +65,7 @@ test('legacy technical fragments keep their precise destination and query', () =
   expect(legacyEngineDestination('#faq', '?ref=docs')).toBe('/engine?ref=docs#faq');
   expect(legacyEngineDestination('#hardware', '')).toBe('/engine#hardware');
   expect(legacyEngineDestination('#%66aq', '')).toBe('/engine#faq');
-  for (const hash of ['#verified', '#models', '#run', '#why-atlas', '#not-a-section', '#%E0%A4%A']) {
+  for (const hash of ['#verified', '#models', '#run', '#why-metrale', '#not-a-section', '#%E0%A4%A']) {
     expect(legacyEngineDestination(hash, '')).toBeNull();
   }
 });

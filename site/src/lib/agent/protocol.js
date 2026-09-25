@@ -2,7 +2,7 @@
 
 // The wire contract with the local agent.
 //
-// Mirrors crates/atlasctl-protocol in atlas-recipes. Kept deliberately small:
+// Mirrors the agent's protocol crate. Kept deliberately small:
 // the whole surface a page can reach is a handful of message types, and that is
 // the point. There is no raw-command verb, no nested-message verb and no relay
 // of opaque bytes, and the enum is closed — an unknown `type` fails to
@@ -34,6 +34,7 @@
 // managed networks — so without it the page could only reach machines on one
 // broadcast domain. Additive, but the handshake is exact-match by design.
 
+import { CLI } from '../../../../web-shared/sources.mjs';
 export const PROTOCOL_VERSION = 4;
 
 // The agent binds loopback only. Connecting to anything else would defeat the
@@ -42,7 +43,7 @@ export const AGENT_PORT = 34333;
 export const AGENT_URL = `ws://127.0.0.1:${AGENT_PORT}/ws`;
 
 /** Where the pairing token is remembered between visits. */
-export const TOKEN_KEY = 'atlas.agent.token';
+export const TOKEN_KEY = 'metrale.agent.token';
 
 /** Read the stored pairing token, if the user has pasted one. */
 export function storedToken() {
@@ -122,15 +123,15 @@ export function describeError(error) {
   if (!error || typeof error !== 'object') return UNKNOWN_PROBLEM;
   switch (error.code) {
     case 'not_paired':
-      return 'The agent did not accept that pairing token. Run `atlasctl agent token` and paste the value it prints.';
+      return `The agent did not accept that pairing token. Run \`${CLI} agent token\` and paste the value it prints.`;
     case 'unsupported_protocol':
       return Number.isInteger(error.min) && Number.isInteger(error.max)
         ? `This page speaks protocol ${PROTOCOL_VERSION}; your agent speaks ${error.min}–${error.max}. Update whichever is older.`
         : `This page speaks protocol ${PROTOCOL_VERSION}, and your agent did not say which it speaks. Reinstall the agent on that machine.`;
     case 'unknown_recipe':
       return said(error.recipe)
-        ? `Your agent does not have a recipe called “${error.recipe}”. Update atlasctl to get the latest recipe set.`
-        : 'Your agent does not have that recipe. Update atlasctl to get the latest recipe set.';
+        ? `Your agent does not have a recipe called “${error.recipe}”. Update ${CLI} to get the latest recipe set.`
+        : `Your agent does not have that recipe. Update ${CLI} to get the latest recipe set.`;
     case 'not_launchable':
       return said(error.reason)
         ? `That recipe cannot run here: ${error.reason}`

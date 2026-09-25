@@ -5,7 +5,7 @@
   by site/scripts/brand/lockup.mjs from assets/brand/src/geometry.js and
   src/paths.json, and src/lib/lockup-artwork.test.js fails when it is behind.
   Nothing here is redrawn; the only substitution is that each ink reads a
-  token (--m-ink-hi and friends in ../avarok-tokens.css) instead of the kit's
+  token (--m-ink-hi and friends in ../metrale-tokens.css) instead of the kit's
   literal hex, so the light theme swaps the ink for the kit's light-ground ink
   with no second file. The gradients keep the kit's directions.
 
@@ -51,7 +51,7 @@
 {/snippet}
 
 {#if kind === 'defs'}
-  <svg class="atlas-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <svg class="metrale-defs" width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
       <linearGradient id="m-ink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--m-ink-hi)" /><stop offset="1" stop-color="var(--m-ink-lo)" /></linearGradient>
       <linearGradient id="m-violet" x1="0" y1="0" x2="0.25" y2="1"><stop offset="0" stop-color="var(--m-lavender)" /><stop offset="1" stop-color="var(--m-violet)" /></linearGradient>
@@ -70,7 +70,7 @@
 {/if}
 
 <style>
-  .atlas-defs { position: absolute; }
+  .metrale-defs { position: absolute; }
   .logo { display: block; height: auto; }
   /* Defaults for a caller that passes no width. The header passes 152 and the
      footer 244; both clear the 140 px floor for the wordmark. */

@@ -13,7 +13,7 @@
   import { setContext } from 'svelte';
   import { browser } from '$app/environment';
   import { replaceState } from '$app/navigation';
-  import AtlasLockup from '$shared/components/AtlasLockup.svelte';
+  import MetraleLockup from '$shared/components/MetraleLockup.svelte';
 
   let { title = 'Verification steps', stamp = '', children } = $props();
 
@@ -142,7 +142,7 @@
   </div>
 
   <div class="dk-chrome">
-    <a class="dk-mark" href="/" aria-label="Metrale home"><AtlasLockup kind="mark" /></a>
+    <a class="dk-mark" href="/" aria-label="Metrale home"><MetraleLockup kind="mark" /></a>
     <span class="dk-stamp mono">{stamp}</span>
     <span class="dk-count mono">{String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</span>
   </div>

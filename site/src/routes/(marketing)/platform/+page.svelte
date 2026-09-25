@@ -1,8 +1,8 @@
 <script>
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import PageHero from '$lib/components/avarok/PageHero.svelte';
-  import ArchDiagram from '$lib/components/avarok/ArchDiagram.svelte';
-  import CtaBand from '$lib/components/avarok/CtaBand.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import PageHero from '$lib/components/marketing/PageHero.svelte';
+  import ArchDiagram from '$lib/components/marketing/ArchDiagram.svelte';
+  import CtaBand from '$lib/components/marketing/CtaBand.svelte';
   import { platformOverview as p } from '$lib/content/platform.js';
   import { routes } from '$lib/content/brand.js';
 </script>

@@ -1,5 +1,5 @@
-# avarok-forms: the Worker the site's three forms post to. README.md has the setup.
-name = "avarok-forms"
+# metrale-forms: the Worker the site's three forms post to. README.md has the setup.
+name = "metrale-forms"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 workers_dev = true
@@ -7,14 +7,14 @@ workers_dev = true
 [vars]
 # Who may post. Exact origins, then host suffixes for Pages preview deployments.
 ALLOWED_ORIGINS = "https://metrale.ai,https://www.metrale.ai,https://metrale-ai.pages.dev,http://localhost:5173,http://127.0.0.1:5173"
-ALLOWED_ORIGIN_SUFFIXES = ".atlas-site.pages.dev,.avarok-site-80h.pages.dev"
+ALLOWED_ORIGIN_SUFFIXES = ".metrale-ai.pages.dev"
 # Which inbox each form belongs to. Only used by the email channel. A test keeps
 # these equal to `contacts` in site/src/lib/content/brand.js.
 TO_DEMO = "sales@metrale.com"
 TO_WAITLIST = "sales@metrale.com"
 TO_CAREERS = "careers@metrale.com"
 # The sender for the email channel. Its domain must be verified with the provider.
-MAIL_FROM = "Metrale forms <forms@atlascybernetics.ai>"
+MAIL_FROM = "Metrale forms <forms@metrale.ai>"
 # How long a stored request is kept, in days. 0 keeps it until someone deletes it.
 LEAD_TTL_DAYS = "180"
 

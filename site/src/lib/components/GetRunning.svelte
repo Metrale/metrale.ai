@@ -1,4 +1,5 @@
 <script>
+  import { CLI } from '$lib/data.js';
   import { getRunning, quickInstall, runCommandRaw, guideUrl, githubUrl } from '$lib/data.js';
   import { currentInstall } from '$lib/install/host.svelte.js';
 
@@ -45,7 +46,7 @@
             <span class="term-title">{install.shell}</span>
           </div>
           <pre class="term-body"><span class="p">{install.prompt}</span> <span class="c" bind:this={termEl}>{install.command}</span>
-<span class="d"># downloads atlasctl, verifies its checksum, installs to {install.installDir}</span></pre>
+<span class="d"># downloads {CLI}, verifies its checksum, installs to {install.installDir}</span></pre>
         </div>
         <div class="run-copy">
           <button type="button" class="btn btn-secondary" onclick={() => copy(install.command, termEl)}>

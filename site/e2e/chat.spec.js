@@ -19,6 +19,7 @@ import {
   ok200ErrorBodyHandler,
 } from './fixtures/openrouter.js';
 import {
+  CHAT_ON,
   META,
   GZ,
   COMMIT,
@@ -35,6 +36,9 @@ import {
   askQuestion,
 } from './fixtures/chat-helpers.js';
 import { startSlowServer } from './fixtures/slow-server.mjs';
+
+// Off with the chat itself; see CHAT_ON in fixtures/chat-helpers.js.
+test.skip(!CHAT_ON, 'The codebase chat is off until the engine publishes its code index.');
 
 // --- route helpers -----------------------------------------------------------
 
@@ -387,7 +391,7 @@ test('mocked round-trip prints prompt, receipt, markdown, and real source links'
   // Source receipts: path, line range, and a blob link pinned to the corpus commit.
   const sources = card.locator('.cm-src');
   await expect(sources).toHaveCount(3);
-  const hrefPattern = new RegExp(`^https://github\\.com/Avarok-Cybersecurity/atlas/blob/${COMMIT}/.+#L\\d+-L\\d+$`);
+  const hrefPattern = new RegExp(`^https://github\\.com/Metrale/metrale-inference-alpha/blob/${COMMIT}/.+#L\\d+-L\\d+$`);
   for (const src of await sources.all()) {
     expect(await src.getAttribute('href')).toMatch(hrefPattern);
     await expect(src.locator('.cm-src-path')).not.toBeEmpty();
@@ -438,7 +442,7 @@ test.describe('error states', () => {
     await page.goto('/engine');
     await openChat(page);
     await waitReady(page);
-    await page.evaluate(() => window.__avarokChatSetRetryBaseMs(1));
+    await page.evaluate(() => window.__metraleChatSetRetryBaseMs(1));
 
     await askQuestion(page, 'what schedules decode batches?');
     const card = page.locator('.cc-error[role="alert"]');
@@ -457,7 +461,7 @@ test.describe('error states', () => {
     await page.goto('/engine');
     await openChat(page);
     await waitReady(page);
-    await page.evaluate(() => window.__avarokChatSetRetryBaseMs(1));
+    await page.evaluate(() => window.__metraleChatSetRetryBaseMs(1));
 
     await askQuestion(page, 'how do NVFP4 kernels dispatch?');
     const card = page.locator('.cc-error[role="alert"]');

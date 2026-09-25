@@ -25,8 +25,8 @@ test('citations become marked superscripts and never eat a link', () => {
 });
 
 test('inline: code, bold, italic', () => {
-  expect(renderMarkdown('Run `avarokctl up` with **care** and *speed*, _quietly_.')).toBe(
-    '<p>Run <code>avarokctl up</code> with <strong>care</strong> and <em>speed</em>, <em>quietly</em>.</p>'
+  expect(renderMarkdown('Run `make up` with **care** and *speed*, _quietly_.')).toBe(
+    '<p>Run <code>make up</code> with <strong>care</strong> and <em>speed</em>, <em>quietly</em>.</p>'
   );
   expect(renderMarkdown('snake_case_name stays')).toBe('<p>snake_case_name stays</p>');
   expect(renderMarkdown('`**not bold**`')).toBe('<p><code>**not bold**</code></p>');

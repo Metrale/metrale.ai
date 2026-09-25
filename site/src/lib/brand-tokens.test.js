@@ -2,7 +2,7 @@
 //
 // The palette is stated twice on purpose: once as data for the kit
 // (assets/brand/tokens/brand.json, what the kit's generator writes and a
-// designer reads) and once as CSS custom properties (web-shared/avarok-tokens.css,
+// designer reads) and once as CSS custom properties (web-shared/metrale-tokens.css,
 // what the two sites read). This test keeps them equal, so a swatch change is
 // one edit to brand.json and this test then names every token that has to
 // follow. It is the swatch half of the brand change runbook (site/BRAND-CHANGE.md).
@@ -11,7 +11,7 @@ import { readFileSync } from 'node:fs';
 
 const read = (p) => readFileSync(new URL(p, import.meta.url), 'utf8');
 const brand = JSON.parse(read('../../../assets/brand/tokens/brand.json'));
-const css = read('../../../web-shared/avarok-tokens.css');
+const css = read('../../../web-shared/metrale-tokens.css');
 
 // The value of a custom property inside one block of the stylesheet: the dark
 // theme is `:root {...}`, the light theme is `[data-theme="light"] {...}`.

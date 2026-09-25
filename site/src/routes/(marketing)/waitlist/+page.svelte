@@ -5,10 +5,10 @@
   to the demo. Copy is `waitlistPage` in src/lib/content/company.js.
 -->
 <script>
-  import PageShell from '$lib/components/avarok/PageShell.svelte';
-  import PageHero from '$lib/components/avarok/PageHero.svelte';
-  import DemoForm from '$lib/components/avarok/DemoForm.svelte';
-  import CtaBand from '$lib/components/avarok/CtaBand.svelte';
+  import PageShell from '$lib/components/marketing/PageShell.svelte';
+  import PageHero from '$lib/components/marketing/PageHero.svelte';
+  import DemoForm from '$lib/components/marketing/DemoForm.svelte';
+  import CtaBand from '$lib/components/marketing/CtaBand.svelte';
   import { waitlistPage as w } from '$lib/content/company.js';
   import { routes, links, contacts } from '$lib/content/brand.js';
 </script>
