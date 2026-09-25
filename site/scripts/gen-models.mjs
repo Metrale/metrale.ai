@@ -225,7 +225,8 @@ const HELD = new Set(['qwen3.5-0.8b-bf16-metrale']);
 const stemOf = (file) => basename(file).replace(/\.(ya?ml)$/, '');
 const found = walkYaml(RECIPES_ROOT).sort();
 const files = found.filter((f) => !HELD.has(stemOf(f)));
-if (found.length !== files.length) console.log(`gen-models: ${found.length - files.length} recipe(s) held back until the registry's own command ships`);
+if (found.length !== files.length)
+  console.log(`gen-models: ${found.length - files.length} recipe(s) held back until the registry's own command ships`);
 if (files.length === 0) {
   console.error(`No recipe YAML files found under ${RECIPES_ROOT}`);
   process.exit(1);

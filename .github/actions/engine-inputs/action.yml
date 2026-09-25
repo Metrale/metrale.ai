@@ -45,6 +45,16 @@ runs:
         sparse-checkout-cone-mode: false
         sparse-checkout: |
           /CHANGELOG.md
+          /README.md
+          /QUICKSTART.md
+          /CONTRIBUTING.md
+          /SECURITY.md
+          /CITATIONS.md
+          /docs/ARCHITECTURE.md
+          /docs/HARDWARE.md
+          /docs/DEPLOYMENT.md
+          /docs/GB10_DEPLOYMENT_GUIDE.md
+          /docs/ROBUSTNESS.md
           /bench/ladder38/
           /.benchmarks/
           /crates/metrale-plugin/src/benchmarks/
