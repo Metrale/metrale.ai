@@ -9,6 +9,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # The engine repository's main advances (a merge, or banked benchmark records):
+  # rebuild so the dashboard and the book read the new data without a manual push.
+  repository_dispatch:
+    types: [engine-main-updated]
 
 concurrency:
   group: pages-deploy
