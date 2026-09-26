@@ -308,7 +308,8 @@ export function samplingConcern(samples, periodMs, windowS) {
   const covered = (samples * periodMs) / 1000 / windowS;
   if (covered < MIN_SAMPLE_COVERAGE)
     return (
-      `the sampler covered ${(covered * 100).toFixed(0)}% of the ${windowS.toFixed(1)} s window ` + `(${samples} readings at ${periodMs} ms)`
+      `the sampler covered ${(covered * 100).toFixed(0)}% of the ${windowS.toFixed(1)} s window ` +
+      `(${samples} readings at ${periodMs} ms)`
     );
   return null;
 }

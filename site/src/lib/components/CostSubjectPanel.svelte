@@ -332,8 +332,8 @@
         {n.label} is comparable but carries no joules, so it has no cost curve.
       {/each}
       {#if cost.baselineGap.rungs.length > 0}
-        vLLM energy is not measured at C={cost.baselineGap.rungs.join(', ')}{cost.baselineGap.reason ? `: ${cost.baselineGap.reason}` : ''}, so
-        those rungs carry a Metrale Engine point and no verdict.
+        vLLM energy is not measured at C={cost.baselineGap.rungs.join(', ')}{cost.baselineGap.reason ? `: ${cost.baselineGap.reason}` : ''},
+        so those rungs carry a Metrale Engine point and no verdict.
       {/if}
     </p>
 

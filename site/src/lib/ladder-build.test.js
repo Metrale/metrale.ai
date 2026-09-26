@@ -217,7 +217,9 @@ describe('the energy of a rung sums its reps and keeps the worst one', () => {
       const reps = repsAt(DENSE.raws, rung.c);
       expect(rung.gpu_rail_power_samples).toBe(reps.reduce((a, r) => a + r.gpu_rail_power_samples, 0));
       expect(rung.gpu_rail_energy_window_s).toBe(r2(reps.reduce((a, r) => a + r.gpu_rail_window_s, 0)));
-      const worst = reps.reduce((a, r) => (r.gpu_rail_power_samples / r.gpu_rail_window_s < a.gpu_rail_power_samples / a.gpu_rail_window_s ? r : a));
+      const worst = reps.reduce((a, r) =>
+        r.gpu_rail_power_samples / r.gpu_rail_window_s < a.gpu_rail_power_samples / a.gpu_rail_window_s ? r : a
+      );
       expect(rung.gpu_rail_worst_rep_power_samples).toBe(worst.gpu_rail_power_samples);
       const e = energyOfRung(s.label, rung);
       expect(e.concerns).toEqual([]);
