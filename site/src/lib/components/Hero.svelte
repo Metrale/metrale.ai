@@ -71,7 +71,7 @@
   }}
 />
 
-<section class="av av-hero av-sx-violet eg-hero">
+<section id="top" class="av av-hero av-sx-violet eg-hero">
   <div class="av-glow av-glow-a" aria-hidden="true"></div>
   <div class="av-glow av-glow-b" aria-hidden="true"></div>
   <div class="av-container">
