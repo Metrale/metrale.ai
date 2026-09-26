@@ -39,6 +39,9 @@
   });
 
   const url = $derived(post.canonical ?? `${SITE}/posts/${post.slug}`);
+  /* The dek is set for a reader, under the title; a post may give search,
+     share cards and feeds a plainer summary of its own in `description`. */
+  const description = $derived(post.description || post.dek);
   /* A post may ship its own social card; an empty `og-image` means "use the
      site's". Resolved here rather than in each meta tag so the two cannot
      disagree about which image this page advertises. */
@@ -48,7 +51,7 @@
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
       headline: post.title,
-      description: post.dek,
+      description,
       datePublished: post.date,
       author: { '@type': 'Person', name: author.name },
       publisher: { '@type': 'Organization', name: 'Metrale', url: `${MAIN_SITE}/` },
@@ -68,10 +71,10 @@
 
 <svelte:head>
   <title>{post.title} — {blog.name}</title>
-  <meta name="description" content={post.dek} />
+  <meta name="description" content={description} />
   <meta property="og:type" content="article" />
   <meta property="og:title" content={post.title} />
-  <meta property="og:description" content={post.dek} />
+  <meta property="og:description" content={description} />
   <meta property="og:image" content={cardUrl} />
   <meta property="og:image:alt" content={post.title} />
   <meta property="article:published_time" content={post.date} />
@@ -81,7 +84,7 @@
   {#each post.categories as c}<meta property="article:tag" content={tags[c].name} />{/each}
   {#if post.keywords.length}<meta name="keywords" content={post.keywords.join(', ')} />{/if}
   <meta name="twitter:title" content={post.title} />
-  <meta name="twitter:description" content={post.dek} />
+  <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={cardUrl} />
   <!-- KaTeX's stylesheet is ~23 KB and render-blocking. Loading it globally
        would charge every post — including every Svelte post, which has no

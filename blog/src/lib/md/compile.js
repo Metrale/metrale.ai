@@ -177,6 +177,7 @@ export function compileMarkdown(src, { filename, tags, authors, highlight, measu
     format: 'md',
     title: front.title,
     dek: front.dek,
+    description: front.description ?? null,
     date: front.date,
     tag: front.categories[0],
     categories: front.categories,
