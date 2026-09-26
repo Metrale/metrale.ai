@@ -28,6 +28,10 @@ on:
       - 'site/engine.ref'
       - '.github/workflows/docs.yml'
   workflow_dispatch:
+  # The engine repository's main advances (a merge, or banked benchmark records):
+  # rebuild so the dashboard and the book read the new data without a manual push.
+  repository_dispatch:
+    types: [engine-main-updated]
 
 concurrency:
   group: docs-${{ github.ref }}
@@ -86,7 +90,7 @@ jobs:
   deploy:
     name: Deploy to Cloudflare Pages
     needs: build
-    if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && vars.DOCS_PAGES_PROJECT != '' }}
+    if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch') && vars.DOCS_PAGES_PROJECT != '' }}
     runs-on: ubuntu-latest
     concurrency:
       group: docs-deploy
