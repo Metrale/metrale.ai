@@ -37,6 +37,7 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { assignTrendPredecessors } from '../src/lib/gate-lineage.js';
 import { declaredLimitsOf, mergeDeclaredLimits, parseToml } from './lib/bench-toml.mjs';
+import { foldLedger } from './lib/limit-ledger.mjs';
 import { engineRoot } from './lib/engine-root.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -211,47 +212,18 @@ function fileVersions(rel) {
   return out.reverse();
 }
 
-/** Copy of the previous ledger, keeping only well-formed dated series. */
+/** The ledger the previous build wrote, or none. */
 function priorLedger() {
   if (!existsSync(OUT)) return {};
-  let prev;
   try {
-    prev = JSON.parse(readFileSync(OUT, 'utf8')).gate_limits ?? {};
+    return JSON.parse(readFileSync(OUT, 'utf8')).gate_limits ?? {};
   } catch {
     return {};
   }
-  const out = {};
-  for (const [gate, byCk] of Object.entries(prev)) {
-    for (const [ck, metrics] of Object.entries(byCk ?? {})) {
-      for (const [metric, row] of Object.entries(metrics ?? {})) {
-        for (const bound of ['min', 'max']) {
-          const series = row?.[bound];
-          if (!Array.isArray(series)) continue;
-          const clean = series.filter((e) => Number.isFinite(e?.since) && (e.value === null || Number.isFinite(e.value)));
-          if (clean.length) (((out[gate] ??= {})[ck] ??= {})[metric] ??= {})[bound] = clean.map((e) => ({ ...e }));
-        }
-      }
-    }
-  }
-  return out;
 }
 
 function gateLimits() {
-  const ledger = priorLedger();
-  const observe = (gate, ck, metric, bound, since, value) => {
-    const series = ((((ledger[gate] ??= {})[ck] ??= {})[metric] ??= {})[bound] ??= []);
-    series.push({ since, value });
-  };
-  const observeTable = (table, since) => {
-    for (const [gate, byCk] of Object.entries(table)) {
-      for (const [ck, metrics] of Object.entries(byCk)) {
-        for (const [metric, lim] of Object.entries(metrics)) {
-          for (const bound of ['min', 'max']) if (lim[bound] !== undefined) observe(gate, ck, metric, bound, since, lim[bound]);
-        }
-      }
-    }
-  };
-
+  const observations = [];
   const current = [];
   let currentSince = 0;
   for (const { abs, rel } of benchTomlPaths()) {
@@ -260,7 +232,7 @@ function gateLimits() {
       const text = gitSoft(['show', `${v.sha}:${v.path}`]);
       if (!text) continue;
       try {
-        observeTable(declaredLimitsOf(parseToml(text), `${rel}@${v.sha.slice(0, 10)}`), v.ct);
+        observations.push({ table: declaredLimitsOf(parseToml(text), `${rel}@${v.sha.slice(0, 10)}`), since: v.ct });
       } catch (err) {
         console.error(`gen-gates: ${rel}@${v.sha.slice(0, 10)} skipped (${String(err.message).split('\n')[0]})`);
       }
@@ -269,48 +241,12 @@ function gateLimits() {
     const table = declaredLimitsOf(parseToml(text), rel);
     const head = versions[versions.length - 1];
     const since = head && gitSoft(['show', `HEAD:${rel}`]) === text ? head.ct : nowTs();
-    observeTable(table, since);
+    observations.push({ table, since });
     current.push([rel, table]);
     currentSince = Math.max(currentSince, since);
   }
   // Two files declaring one (gate, checkpoint) is refused as before.
-  const now = mergeDeclaredLimits(current);
-
-  // A bound the ledger still carries but no file declares any more is
-  // withdrawn from the newest observation on: its last entry becomes null.
-  for (const [gate, byCk] of Object.entries(ledger)) {
-    for (const [ck, metrics] of Object.entries(byCk)) {
-      for (const [metric, row] of Object.entries(metrics)) {
-        for (const bound of ['min', 'max']) {
-          const series = row[bound];
-          if (!series) continue;
-          const declared = now[gate]?.[ck]?.[metric]?.[bound];
-          const last = [...series].sort((a, b) => a.since - b.since).at(-1);
-          if (declared === undefined && last.value !== null) series.push({ since: currentSince, value: null });
-        }
-      }
-    }
-  }
-
-  // Sort, then collapse each run of one value to the earliest date it was seen.
-  for (const byCk of Object.values(ledger)) {
-    for (const metrics of Object.values(byCk)) {
-      for (const row of Object.values(metrics)) {
-        for (const bound of ['min', 'max']) {
-          if (!row[bound]) continue;
-          const sorted = row[bound].sort((a, b) => a.since - b.since || String(a.value).localeCompare(String(b.value)));
-          const collapsed = [];
-          for (const e of sorted) {
-            const prev = collapsed[collapsed.length - 1];
-            if (prev && prev.value === e.value) continue;
-            collapsed.push({ since: e.since, value: e.value });
-          }
-          row[bound] = collapsed;
-        }
-      }
-    }
-  }
-  return ledger;
+  return foldLedger(priorLedger(), observations, mergeDeclaredLimits(current), currentSince);
 }
 // Walked before leg 2's shallow fetch, which would truncate every history.
 const GATE_LIMITS = gateLimits();

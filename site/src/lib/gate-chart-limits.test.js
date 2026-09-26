@@ -242,22 +242,61 @@ describe('GateChart: a declared ceiling applies only from the date it took effec
   });
 });
 
+/**
+ * Render with one dated series of the ledger replaced by `series`, and put
+ * back before returning. The render is synchronous and reads the ledger while
+ * it runs, so nothing outside `fn` ever sees the fixture.
+ */
+const withLimitSeries = ([gate, ck, metric, bound], series, fn) => {
+  const created = [];
+  let node = gateLimits;
+  for (const key of [gate, ck, metric]) {
+    if (!Object.hasOwn(node, key)) {
+      node[key] = {};
+      created.push([node, key]);
+    }
+    node = node[key];
+  }
+  const had = Object.hasOwn(node, bound);
+  const kept = node[bound];
+  node[bound] = series;
+  try {
+    return fn();
+  } finally {
+    if (had) node[bound] = kept;
+    else delete node[bound];
+    for (const [parent, key] of created.reverse()) if (Object.keys(parent[key]).length === 0) delete parent[key];
+  }
+};
+
 describe('GateChart: a re-cut newer than every record is still drawn, on its own day', () => {
-  // The real FP8 warm-TTFT ceiling has at least two entries; take the last
-  // two and date every record between them, so the newest re-cut post-dates
-  // the newest record — the state a chart is in right after a ratchet lands
-  // and before the next gate run.
+  // A two-entry dated ceiling built here rather than read from the ledger: the
+  // published ledger may hold a single entry per bound. Every record is dated
+  // between the two, so the newest re-cut post-dates the newest record — the
+  // state a chart is in right after a ratchet lands and before the next run.
   const CK = 'Qwen/Qwen3.6-35B-A3B-FP8';
-  const series = gateLimits['ttft-warm-gate'][CK].median_ms.max;
-  const [old, recut] = series.slice(-2);
+  const PATH = ['ttft-warm-gate', CK, 'median_ms', 'max'];
+  const T = 1_790_000_000;
+  const series = [
+    { since: T, value: 400 },
+    { since: T + 30 * DAY, value: 250 },
+  ];
+  const [old, recut] = series;
   const panel = { title: 'warm TTFT', unit: 'ms', metrics: [{ key: 'median_ms', label: 'median' }] };
   const ttft = (when, v) => rec({ benchmark_id: 'ttft-warm-gate', target_model: CK, recorded_at: when, metrics: { median_ms: v } });
   // Both values sit between the two ceilings: over the new one, under the old.
   const v = (old.value + recut.value) / 2;
-  const page = html(GateChart, { panel, records: [ttft(old.since + DAY, v), ttft(old.since + 5 * DAY, v)], onselect: () => {} });
+  const before = JSON.stringify(gateLimits);
+  const page = withLimitSeries(PATH, series, () =>
+    html(GateChart, { panel, records: [ttft(old.since + DAY, v), ttft(old.since + 5 * DAY, v)], onselect: () => {} })
+  );
+
+  test('the fixture is what was drawn, and the published ledger is left exactly as it was', () => {
+    expect(limitLabels(page)).toContain(`ceiling ${fmtMs(recut.value)} ms`);
+    expect(JSON.stringify(gateLimits)).toBe(before);
+  });
 
   test('the axis reaches the re-cut, the rule steps down there, and both bounds are named', () => {
-    expect(series.length).toBeGreaterThanOrEqual(2);
     expect(recut.since).toBeGreaterThan(old.since + 5 * DAY);
     const paths = limitPaths(page);
     expect(paths).toHaveLength(1);
