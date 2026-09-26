@@ -15,8 +15,8 @@
 //   3. Everything is length-capped here, not by CSS. An unbounded string is a
 //      denial of service against the layout.
 //   4. Hostnames are display-only. Every keyed operation — the node map,
-//      selection, pairing, launching — uses the fingerprint, because Sparks
-//      ship with colliding names like spark-256a.
+//      selection, pairing, launching — uses the fingerprint, because DGX Spark
+//      units ship with colliding names like spark-256a.
 //
 // PRIVACY. Fleet data lives in memory for the life of the tab, and the
 // prerendered page contains no fleet data at all.
@@ -148,7 +148,7 @@ export class FleetSession {
    *
    * Null until the agent has said, which is not the same as false: a page that
    * assumed false while connecting would flash a control-only banner at every
-   * operator on a Spark. Callers must treat null as "not yet known".
+   * operator on a DGX Spark. Callers must treat null as "not yet known".
    */
   get localCanLaunch() {
     return this.local ? this.local.canLaunch : null;

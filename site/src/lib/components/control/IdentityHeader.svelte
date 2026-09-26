@@ -2,7 +2,7 @@
 <script>
   // Region C1: who the stage is about, in one 48px line.
   //
-  // The hostname is the least trustworthy thing on it — Sparks ship with
+  // The hostname is the least trustworthy thing on it — DGX Spark units ship with
   // colliding names — so the fingerprint sits beside it, copyable in full,
   // and every action keys on the fingerprint. Provenance renders as two
   // separate facts ("identity vouched by dgx1 · control routed via dgx1")

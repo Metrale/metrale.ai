@@ -4,10 +4,10 @@
   import CtaBand from '$lib/components/marketing/CtaBand.svelte';
   import { contributors as c } from '$lib/content/resources.js';
   import { routes, links } from '$lib/content/brand.js';
-  import data from '$lib/contributors.generated.json';
 
-  const core = data.contributors.filter((x) => c.core[x.login]);
-  const rest = data.contributors.filter((x) => !c.core[x.login]);
+  const person = (login) => ({ login, url: `https://github.com/${login}` });
+  const core = c.people.filter((login) => c.core[login]).map(person);
+  const rest = c.people.filter((login) => !c.core[login]).map(person);
   const initials = (login) =>
     login
       .replace(/[^a-z0-9]/gi, '')
@@ -23,12 +23,7 @@
     primary={c.cta}
     secondary={{ text: c.cta2.text, href: c.cta2.href, external: true }}
     color="gold"
-  >
-    <p class="av-kicker" style="margin-top:1.4rem">
-      <span class="av-dot"></span>
-      {data.contributors.length} contributors · {data.total_contributions.toLocaleString('en-US')} commits · generated {data.generated_date}
-    </p>
-  </PageHero>
+  />
   <section class="av-section av-section-alt">
     <div class="av-container">
       <h2 class="av-sr">Core team and contributors</h2>
@@ -39,7 +34,6 @@
             <div class="av-avatar" aria-hidden="true">{initials(p.login)}</div>
             <h3 class="av-h4">{p.login}</h3>
             <p class="av-role">{c.core[p.login]}</p>
-            <p class="av-small">{p.contributions.toLocaleString('en-US')} commits</p>
           </a>
         {/each}
       </div>
@@ -51,9 +45,7 @@
       <ul class="av-contrib-grid av-reveal">
         {#each rest as p}
           <li>
-            <a href={p.url} target="_blank" rel="noopener"
-              ><span class="av-mono">{p.login}</span><span class="av-small">{p.contributions}</span></a
-            >
+            <a href={p.url} target="_blank" rel="noopener"><span class="av-mono">{p.login}</span></a>
           </li>
         {/each}
       </ul>

@@ -109,7 +109,7 @@ export const enginePage = {
     href: links.discord,
   },
   faqTag: 'hardware',
-  cta: { text: 'Join the Community Edition waitlist', href: routes.waitlist },
+  cta: { text: 'Install the engine', href: routes.openSource },
   cta2: { text: 'Read the ladder', href: routes.benchmarks },
 };
 
@@ -357,7 +357,7 @@ export const securityPage = {
     { value: '0', label: 'Python or PyTorch in the request path' },
     { value: '~75 MB', label: 'the whole signed binary' },
     { value: '48 h', label: 'acknowledgement window for a reported vulnerability' },
-    { value: 'AGPL + commercial', label: 'dual licensed, so legal knows exactly what it signed' },
+    { value: 'MIT OR Apache-2.0', label: 'the engine’s license, so legal knows exactly what it signed' },
   ],
   disclosure: { text: 'Read the security policy and disclosure process', href: links.securityPolicyDoc },
   faqTag: 'security',
@@ -455,7 +455,7 @@ export const hardwarePage = {
       name: 'NVIDIA DGX Spark',
       chip: 'GB10 · Blackwell SM121',
       status: 'Verified',
-      body: 'One multi model binary serves a full matrix of hand tuned targets on a single GB10. NVFP4 and FP8, MTP speculative decoding, EP=2 across two Sparks. Every target passes the serve matrix before an image is cut.',
+      body: 'One multi model binary serves a full matrix of hand tuned targets on a single GB10. NVFP4 and FP8, MTP speculative decoding, EP=2 across two DGX Spark units. Every target passes the serve matrix before an image is cut.',
       href: links.guide,
       cta: 'Deployment guide',
     },

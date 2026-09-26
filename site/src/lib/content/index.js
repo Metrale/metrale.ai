@@ -125,9 +125,9 @@ export const pages = [
   },
   {
     path: routes.waitlist,
-    title: T('Community Edition waitlist'),
+    title: T('Release notes'),
     description:
-      'The Community Edition of Metrale is not released yet. Leave an address and the hardware you run, and hear first when it is. The open source engine runs today.',
+      'Metrale Engine is open source and runs today. Leave an address and the hardware you run, and hear when the next release ships.',
     priority: 0.6,
   },
   {

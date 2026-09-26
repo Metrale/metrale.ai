@@ -116,7 +116,7 @@
       </span>
     </p>
 
-    <svg class="cost-savings-spark" viewBox="0 0 {W} {H}" role="img" aria-label="cumulative savings, {days} days">
+    <svg class="cost-savings-sparkline" viewBox="0 0 {W} {H}" role="img" aria-label="cumulative savings, {days} days">
       <path d={path} fill="none" stroke="currentColor" stroke-width="2" />
     </svg>
   {/if}

@@ -16,11 +16,11 @@ export const pricingHero = {
 export const tiers = [
   {
     key: 'community',
-    name: 'Community Edition',
+    name: 'Open source engine',
     price: '$0',
-    per: 'AGPL-3.0, forever',
-    badge: 'Waitlist open',
-    blurb: 'The engine and every recipe, free. For developers, labs and anyone running open models on hardware they own. Not released yet.',
+    per: 'MIT OR Apache-2.0',
+    badge: 'Available now',
+    blurb: 'The engine and every recipe, free. For developers, labs and anyone running open models on hardware they own.',
     includes: [
       'Metrale Engine, full source',
       'Every model recipe in the registry',
@@ -28,7 +28,7 @@ export const tiers = [
       'LAN fleet manager, early access',
       'Community support in Discord',
     ],
-    cta: { text: 'Join the waitlist', href: routes.waitlist },
+    cta: { text: 'Install the engine', href: routes.openSource },
     tone: 'plain',
   },
   {
@@ -37,9 +37,8 @@ export const tiers = [
     price: '$50',
     per: 'per box per month, billed annually',
     blurb:
-      'A DGX Spark or Strix Halo class box serving an office, a branch or a field team. Commercial license, signed update channel, managed from the console.',
+      'A DGX Spark or Strix Halo class box serving an office, a branch or a field team. Signed update channel, managed from the console.',
     includes: [
-      'Commercial license per box',
       'Signed stable and LTS channels',
       'Console access for every licensed box',
       'Email support, next business day',
@@ -57,7 +56,7 @@ export const tiers = [
     blurb:
       'The full platform for GPU fleets. Realized pricing at fleet scale runs $1,800 to $2,400 per GPU per year. Support and forward deployed engineering priced separately.',
     includes: [
-      'Metrale Engine, commercial license',
+      'Metrale Engine, signed stable and LTS channels',
       'Metrale Control, rollouts, routing, policy, repair',
       'Metrale Economics, chargeback and payback',
       'Named engineer and response SLA',
@@ -149,7 +148,7 @@ export const paybackCopy = {
   fleet: {
     title: 'Get more out of the fleet you own',
     body: 'The uplift frees GPUs. Freed GPUs are deferred purchases or rentals plus the power they burned. The license is what the uplift costs.',
-    note: 'Uplift defaults to 1.20x, below the measured ratio on the GB10 ladder at C=128, because a datacenter part is not a Spark until we publish the receipt.',
+    note: 'Uplift defaults to 1.20x, below the measured ratio on the GB10 ladder at C=128, because a datacenter part is not a DGX Spark until we publish the receipt.',
   },
   api: {
     title: 'Stop renting tokens',

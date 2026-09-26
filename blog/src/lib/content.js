@@ -71,7 +71,7 @@ export const authors = {
     name: 'Ronald R. Stesiak',
     initials: 'RS',
     role: 'Founding Engineer, Metrale',
-    bio: 'Tunes Metrale for speed on real hardware, from CUDA kernels to the speculative-decode layer. Holds the single-Spark records this blog reports.'
+    bio: 'Tunes Metrale for speed on real hardware, from CUDA kernels to the speculative-decode layer. Holds the single DGX Spark records this blog reports.'
   },
   'alexi-derkatsch': {
     name: 'Alexi Derkatsch',

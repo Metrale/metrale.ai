@@ -11,7 +11,7 @@ inputs:
     description: The commit written to build/version.txt
     required: true
   github-token:
-    description: Token for the star and contributor generators (public data only)
+    description: Token for the star generator (public data only)
     required: true
 
 runs:

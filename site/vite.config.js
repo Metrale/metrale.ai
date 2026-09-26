@@ -48,13 +48,6 @@ function metraleGenerators() {
       } catch (err) {
         this.warn(`gen-stars failed (non-fatal): ${err && err.message ? err.message : err}`);
       }
-      // The contributors page renders the GitHub contributor list. Best-effort,
-      // like gen-stars: the committed file stands in when the API is unreachable.
-      try {
-        run('gen-contributors.mjs');
-      } catch (err) {
-        this.warn(`gen-contributors failed (non-fatal): ${err && err.message ? err.message : err}`);
-      }
     },
   };
 }

@@ -8,7 +8,7 @@ The legal entity is Metrale Corp.
 
 ## The platform
 
-- Metrale Engine: the open source inference engine, pure Rust and CUDA, AGPL-3.0-only.
+- Metrale Engine: the open source inference engine, pure Rust and CUDA, MIT OR Apache-2.0.
 - Metrale Control: the governance and control plane. Signed recipes, canary rollouts, routing, fleet policy.
 - Metrale Economics: cost per workload, chargeback, stranded capacity and payback, from runtime telemetry.
 
@@ -29,7 +29,7 @@ The legal entity is Metrale Corp.
 - [SMB and edge · Metrale](https://metrale.ai/solutions/smb-edge): Metrale for SMB and edge. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
 - [Pricing · Metrale](https://metrale.ai/pricing): Priced against productive GPU capacity, not seats. Community, workstation, enterprise and proof of value, with a payback model you can edit.
 - [Book a demo · Metrale](https://metrale.ai/demo): A working session on your workload. The console on demo data, the published ladder, the payback model with your inputs, and a scoped proof of value.
-- [Community Edition waitlist · Metrale](https://metrale.ai/waitlist): The Community Edition of Metrale is not released yet. Leave an address and the hardware you run, and hear first when it is. The open source engine runs today.
+- [Release notes · Metrale](https://metrale.ai/waitlist): Metrale Engine is open source and runs today. Leave an address and the hardware you run, and hear when the next release ships.
 - [Resources · Metrale](https://metrale.ai/resources): Blog, documentation, product updates, benchmarks, open source, contributors, events and Metrale Labs.
 - [Product updates · Metrale](https://metrale.ai/resources/updates): What shipped, rendered from the repository changelog on every build.
 - [Events · Metrale](https://metrale.ai/resources/events): Where to meet the Metrale team, in person and online.
@@ -44,7 +44,7 @@ The legal entity is Metrale Corp.
 
 Proposed list prices, subject to contract. The pricing page carries the payback model.
 
-- Community Edition: $0 AGPL-3.0, forever
+- Open source engine: $0 MIT OR Apache-2.0
 - Workstation and edge: $50 per box per month, billed annually
 - Enterprise: $3,000 per GPU per year, list
 - Proof of value: Fixed fee four weeks, credited on conversion
@@ -53,13 +53,13 @@ Proposed list prices, subject to contract. The pricing page carries the payback 
 
 Metrale Engine is an open source LLM engine written in Rust and CUDA. One ~75 MB binary, no Python, no PyTorch. It runs on edge class accelerators today, scales across nodes with expert parallelism, and holds throughput at the concurrency a datacenter serves. What ships is what we verify, and we bench every release.
 
-Written in pure Rust and CUDA and licensed AGPL-3.0-only. One codebase covers
+Written in pure Rust and CUDA and licensed MIT OR Apache-2.0. One codebase covers
 the range, from edge-class accelerators through workstations to expert-parallel
 deployments across nodes.
 
 ### What it runs on
 
-- NVIDIA DGX Spark (GB10 · SM121) — Verified today. One multi model binary serves a full matrix of hand tuned targets on a single GB10. NVFP4 and FP8, MTP speculative decoding, EP=2 across two Sparks. Every target passes the serve matrix before we cut an image.
+- NVIDIA DGX Spark (GB10 · SM121) — Verified today. One multi model binary serves a full matrix of hand tuned targets on a single GB10. NVFP4 and FP8, MTP speculative decoding, EP=2 across two DGX Spark units. Every target passes the serve matrix before we cut an image.
 - AMD Strix Halo (gfx1151 · RDNA 3.5) — Runs through SCALE. One codebase, both vendors. Our CUDA kernels compile straight for AMD gfx1151 with SCALE by Spectral Compute. No HIP port, no second kernel tree. AMD provided the Strix Halo desktop it runs on.
 
 ### Measured performance
@@ -170,5 +170,5 @@ model that has no recipe. Run any of them with `metralectl run <id>`.
 
 ## License
 
-AGPL-3.0-only for the Community Edition. Contributions are covered by a CLA
-that permits Enterprise re-licensing.
+Metrale Engine is dual licensed under MIT OR Apache-2.0, at your option:
+https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT and https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-APACHE.

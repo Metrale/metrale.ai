@@ -436,26 +436,30 @@ test.describe('calls to action land on the form', () => {
     await expect(page.locator('#book input').first()).toBeFocused();
   });
 
-  test('the Community Edition is a waitlist, not an install button', async ({ page }) => {
+  test('the open source tier installs the engine, which is released', async ({ page }) => {
     await page.goto('/pricing');
-    const tier = page.locator('.av-tier', { hasText: 'Community Edition' });
-    await expect(tier).toContainText('Waitlist open');
-    await tier.getByRole('link', { name: 'Join the waitlist' }).click();
-    await expect(page).toHaveURL(/\/waitlist$/);
-    await expect(page.locator('h1')).toContainText('not out yet');
+    const tier = page.locator('.av-tier', { hasText: 'Open source engine' });
+    await expect(tier).toContainText('MIT OR Apache-2.0');
+    await tier.getByRole('link', { name: 'Install the engine' }).click();
+    await expect(page).toHaveURL(new RegExp(`${routes.openSource}$`));
+  });
+
+  test('the release notes form says what it signs up for', async ({ page }) => {
+    await page.goto('/waitlist');
+    await expect(page.locator('h1')).toContainText('runs today');
     await page.locator('#waitlist-email').fill('dev@example.com');
     const [request] = await Promise.all([
       page.waitForEvent('request', { predicate: (r) => r.url().startsWith('mailto:'), timeout: 5000 }).catch(() => null),
       page.locator('form.av-form button[type="submit"]').click(),
     ]);
     await expect(page.locator('form.av-form [role="status"]')).toContainText('on the list');
-    if (request) expect(decodeURIComponent(request.url())).toContain('Community Edition waitlist');
+    if (request) expect(decodeURIComponent(request.url())).toContain('Release notes');
   });
 
-  test('no page still offers to install an edition that is not released', async ({ page }) => {
-    for (const path of ['/', '/platform/engine', '/pricing', '/resources']) {
+  test('no page names an edition', async ({ page }) => {
+    for (const path of ['/', '/platform/engine', '/pricing', '/resources', '/waitlist', '/company', '/trust']) {
       await page.goto(path);
-      await expect(page.locator('main')).not.toContainText(/install the community edition/i);
+      await expect(page.locator('body')).not.toContainText(/community edition|enterprise edition/i);
     }
   });
 });

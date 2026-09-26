@@ -23,7 +23,7 @@
 // Public developer URL. adapter-static still writes engine.html; Cloudflare
 // Pages pretty-URLs /engine (200) and 308s /engine.html → /engine. Vite
 // preview serves /engine from that file too. Do not put .html in hrefs.
-import { CLI, ENGINE_REPO, HISTORY, REGISTRY_REPO } from '../../../web-shared/sources.mjs';
+import { CLI, ENGINE_REPO, REGISTRY_REPO } from '../../../web-shared/sources.mjs';
 export const ENGINE = '/engine';
 export const CONTROL = '/control';
 export { CLI };
@@ -44,7 +44,7 @@ export const contactEmails = ['engineering@metrale.com']; // the role mailbox; s
 
 // third-party artifacts (link-or-cut, each verified live July 2026)
 export const scaleUrl = 'https://docs.scale-lang.com/stable/';
-export const strixPrUrl = `${HISTORY}/pull/187`;
+export const strixKernelsUrl = `${ENGINE_REPO}/tree/main/kernels/strix`;
 export const nvidiaInceptionUrl = 'https://www.nvidia.com/en-us/startups/';
 
 // --- brand -------------------------------------------------------------------
@@ -131,7 +131,7 @@ export const hero = {
   challenge: {
     claim: 'First token in under 90 seconds on a DGX Spark.',
     lead: 'Do not take our word for it.',
-    fine: 'Median of our GB10 runs, model cached, engine build 59616dc, Jul 2026. Same command below, run it and time it yourself.',
+    fine: 'Median of our GB10 runs, model cached, July 2026. Same command below, run it and time it yourself.',
   },
   primaryCta: 'Star on GitHub',
   secondaryCta: 'Start Metrale',
@@ -158,8 +158,8 @@ export const news = {
       featured: true,
       title: 'Metrale Engine running on AMD Strix Halo',
       body: 'AMD provided a Strix Halo desktop and we brought the engine to it through SCALE, custom kernels and all. One codebase now covers both vendors with no HIP port and no second kernel tree.',
-      cta: 'See the pull request',
-      url: strixPrUrl,
+      cta: 'See the gfx1151 kernels',
+      url: strixKernelsUrl,
     },
   ],
 };
@@ -186,8 +186,6 @@ export const verified = {
   label: '// 02 · verified',
   title: 'Every number is a receipt.',
   sub: 'The website is a build artifact of the repo. Models come from recipes, performance comes from committed gate enforced baselines, stamped with commit and date. If a number is not in the repo, it is not on this page.',
-  pendingHeadline: 'Throughput baselines pending',
-  pendingBody: 'The release gate holds every image to liveness and coherence, and you can reproduce any run yourself.',
   mechanism: 'A release that ships slower than the committed baseline fails our gate. That one sentence is the whole positioning.',
   reproLead: 'Reproduce the matrix',
   challengeLine: 'Beat these numbers or catch a regression, open an issue and we will feature it.',
@@ -211,7 +209,7 @@ export const hardware = {
       chip: 'GB10 · SM121',
       status: 'verified',
       statusText: 'Verified today',
-      body: 'One multi model binary serves a full matrix of hand tuned targets on a single GB10. NVFP4 and FP8, MTP speculative decoding, EP=2 across two Sparks. Every target passes the serve matrix before we cut an image.',
+      body: 'One multi model binary serves a full matrix of hand tuned targets on a single GB10. NVFP4 and FP8, MTP speculative decoding, EP=2 across two DGX Spark units. Every target passes the serve matrix before we cut an image.',
       cta: { text: 'Read the deployment guide', url: guideUrl },
     },
     {
@@ -220,7 +218,7 @@ export const hardware = {
       status: 'bringup',
       statusText: 'Runs through SCALE',
       body: 'One codebase, both vendors. Our CUDA kernels compile straight for AMD gfx1151 with SCALE by Spectral Compute. No HIP port, no second kernel tree. AMD provided the Strix Halo desktop it runs on.',
-      cta: { text: 'Join the bring up, PR #187', url: strixPrUrl },
+      cta: { text: 'See the gfx1151 kernels', url: strixKernelsUrl },
       scale: { text: 'Built with SCALE by Spectral Compute', url: scaleUrl },
     },
   ],
@@ -230,7 +228,7 @@ export const hardware = {
 export const models = {
   label: '// 05 · models',
   title: 'Every model here has a recipe.',
-  sub: 'Pick a vendor, then a family. Every card maps to one recipe in the recipe registry, so the site cannot list a model we do not ship. Copy the command and run it as is. Qwen3.6 leads because it is our flagship.',
+  sub: 'Pick a vendor, then a family. Every card maps to one recipe in the recipe registry, so the site cannot list a model we do not ship. Copy the command and run it as is. Qwen leads because it has the most recipes.',
 };
 
 // --- get running -------------------------------------------------------------
@@ -258,7 +256,7 @@ export const mission = {
 export const contribute = {
   label: '// 08 · build with us',
   title: 'Your machine is the test fleet.',
-  sub: 'Metrale Engine grows from the machines it runs on. Every path below is real and linked. Contributions ship in the Community Edition under AGPLv3, and the CLA lets us re license for the Enterprise Edition.',
+  sub: 'Metrale Engine grows from the machines it runs on. Every path below is real and linked. The engine is open source under MIT OR Apache-2.0.',
   paths: [
     {
       title: 'Run the serve matrix',
@@ -285,7 +283,7 @@ export const contribute = {
       url: discussionsUrl,
     },
   ],
-  cla: 'Contributions are AGPLv3 and the CLA permits Enterprise re licensing. See CONTRIBUTING.md.',
+  cla: 'The engine is licensed MIT OR Apache-2.0. See CONTRIBUTING.md for how a change lands.',
 };
 
 // --- roadmap (next up + artifact-linked) -------------------------------------
@@ -312,8 +310,8 @@ export const roadmap = {
       title: 'AMD Strix Halo',
       status: 'Runs through SCALE',
       body: 'Native gfx1151 through SCALE. AMD provided a Strix Halo desktop and we brought the engine to it, custom kernels and all.',
-      cta: 'PR #187',
-      url: strixPrUrl,
+      cta: 'The gfx1151 kernels',
+      url: strixKernelsUrl,
     },
     {
       title: 'Bigger model support',
@@ -356,7 +354,7 @@ export const faq = {
     },
     {
       q: 'Which models can I run?',
-      a: 'Every model on this page maps to a recipe in the recipe registry, which is the single source of truth — the site cannot list a model that has no recipe. Qwen3.6 is the flagship family, alongside Gemma, Nemotron, Mistral, MiniMax and DeepSeek.',
+      a: 'Every model on this page maps to a recipe in the recipe registry, which is the single source of truth — the site cannot list a model that has no recipe. Qwen has the most recipes, and the published concurrency ladder is measured on Qwen3.8-27B. Gemma, Nemotron, Mistral, MiniMax and DeepSeek have recipes too.',
     },
     {
       q: 'What does “verified” mean here?',
@@ -368,7 +366,7 @@ export const faq = {
     },
     {
       q: 'What license is Metrale Engine under, and can I use it commercially?',
-      a: 'The Community Edition is AGPL-3.0-only. Contributions are covered by a CLA that permits re-licensing for the Enterprise Edition. If you are running Metrale Engine in production or need different terms, email us.',
+      a: 'Metrale Engine is dual licensed under MIT OR Apache-2.0, at your option, so yes, commercial use is allowed under either license. If you are running it in production and want support, email us.',
     },
     {
       q: 'Does Metrale Engine run multi-node?',
@@ -381,12 +379,12 @@ export const faq = {
 export const reachout = {
   label: '// 10 · reach out',
   title: 'Come work with us.',
-  sub: 'Building on Spark or Strix, deploying at rack scale, bringing hardware to the table, or wanting to partner. We want to hear from you.',
+  sub: 'Building on DGX Spark or Strix Halo, deploying at rack scale, bringing hardware to the table, or wanting to partner. We want to hear from you.',
   cards: [
     {
       emoji: '💼',
       title: 'Business',
-      body: 'Running Metrale in production or evaluating the Enterprise Edition. Tell us what you need and we will scope it with you.',
+      body: 'Running Metrale in production or evaluating the platform. Tell us what you need and we will scope it with you.',
     },
     {
       emoji: '🤝',
@@ -547,7 +545,7 @@ export const codeChat = {
 // --- footer ------------------------------------------------------------------
 export const footer = {
   tagline: 'Pure Rust and CUDA inference, from the device in your hand to the datacenter rack.',
-  license: 'Dual licensed. Community Edition under AGPLv3, Enterprise Edition commercial.',
+  license: 'Dual licensed under MIT OR Apache-2.0, at your option.',
   cols: [
     {
       heading: 'Project',
@@ -556,7 +554,8 @@ export const footer = {
         { text: 'Blog', url: blogUrl },
         { text: 'Deployment guide', url: guideUrl },
         { text: 'Recipes (SSOT)', url: recipesUrl },
-        { text: 'License AGPLv3', url: githubUrl + '/blob/main/LICENSE' },
+        { text: 'License MIT', url: githubUrl + '/blob/main/LICENSE-MIT' },
+        { text: 'License Apache-2.0', url: githubUrl + '/blob/main/LICENSE-APACHE' },
       ],
     },
     {

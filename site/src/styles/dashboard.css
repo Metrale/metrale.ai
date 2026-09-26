@@ -263,8 +263,10 @@
   font-size: 0.7rem;
   color: var(--t3);
 }
-.bd-unpublished {
-  color: var(--amber);
+.bd-foot a {
+  color: var(--t2);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* ---- per-benchmark section ------------------------------------------------ */
@@ -1397,7 +1399,7 @@
   font-size: 0.72rem;
   color: var(--t3);
 }
-.cost-savings-spark {
+.cost-savings-sparkline {
   display: block;
   width: 100%;
   max-width: 320px;
@@ -1454,4 +1456,18 @@
 }
 .cost-trend-h .lazy-icon {
   color: var(--accent);
+}
+
+/* The latest point's receipt, under each chart. Wraps on a phone. */
+.gate-panel-receipt {
+  margin: 0.45rem 0 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--t3);
+  overflow-wrap: anywhere;
+}
+.gate-panel-receipt a {
+  color: var(--t2);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }

@@ -23,7 +23,7 @@ const instrumentKey = (record) =>
       hardware: {
         gpu: record.hardware?.gpu ?? '',
         driver: record.hardware?.driver ?? '',
-        // The Spark hostname suffix changes across boots while machine_id is
+        // The DGX Spark hostname suffix changes across boots while machine_id is
         // stable. Prefer the recorded machine identity; use perf_class only
         // for older records that cannot prove it.
         machine: record.machine_id

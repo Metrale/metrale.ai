@@ -265,7 +265,7 @@
   min-width: 0;
   flex: 1;
 }
-.io-spark {
+.io-sparkline {
   flex: 1;
   min-width: 0;
   height: 30px;
@@ -691,7 +691,7 @@
 }
 
 /* ---- B1: aggregate sparkline ------------------------------------------------ */
-.fa-spark {
+.fa-sparkline {
   flex: 1;
   min-width: 0;
   height: 22px;

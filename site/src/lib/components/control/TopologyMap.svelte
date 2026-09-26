@@ -117,7 +117,7 @@
             stroke-width={selected.has(p.node.id) ? 2.5 : 1.5}
           />
           <!-- The fingerprint, not the hostname: this file's own header warns
-             that Sparks ship with colliding names, and the last four characters
+             that DGX Spark units ship with colliding names, and the last four characters
              of a hostname collide for exactly the machines an operator most
              needs to tell apart. -->
           <text class="topo-node-name" x={p.x} y={p.y + 4} text-anchor="middle">

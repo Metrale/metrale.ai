@@ -31,7 +31,7 @@
   <div class="grid2">
     <Kv
       rows={[
-        ['code', `${claim.engine} ${claim.build}`, 'plus the certified SHA and the merge commit, all three named'],
+        ['code', claim.engine, 'every gate record names the commit it measured, and its .sig binds the two'],
         ['baseline', 'container digest', 'sha256, not a tag — the same digest across every leg'],
         ['harness', 'sha256 in every output', 'the script hashes its own source into the JSON it writes'],
         ['weights', claim.checkpoint, 'HF repo, pinned revision'],
@@ -149,7 +149,7 @@
 <Slide
   act="gold"
   eyebrow="IP and licensing"
-  title="AGPL-3.0-only, enforced rather than declared"
+  title="MIT OR Apache-2.0, enforced rather than declared"
   lede="The first question an investor's counsel asks about a serving engine is the licence, so
         here it is with the machinery that keeps it honest."
   steps={2}
@@ -157,18 +157,18 @@
   <div class="grid2">
     <Kv
       rows={[
-        ['licence', 'AGPL-3.0-only', 'network copyleft, chosen deliberately — an open-core position, not an accident'],
+        ['licence', 'MIT OR Apache-2.0', 'permissive, at the user’s option, the same pair most of the Rust ecosystem ships under'],
         ['headers', 'SPDX line 1, every source file', 'CI-enforced via skywalking-eyes against .licenserc.yaml'],
         ['dependencies', 'deny.toml allowlist', 'licence policy is a lockfile, not a policy document'],
-        ['contributors', 'CLA workflow', 'cla.yml gates every pull request'],
+        ['third party', 'THIRD_PARTY_NOTICES.md', 'vendored code keeps its own licence and is never restamped'],
         ['provenance', 'signed commits, merge ancestry check', 'merge-ancestry.yml rejects unrecorded history'],
       ]}
     />
     <aside class="ask at" style="--n: 2">
       <p class="ask-h mono">The question behind the question</p>
       <p>
-        AGPL is a red flag when it is <em>found</em> in a proprietary serving path during diligence. It is a position when it is the licence of
-        the whole work, with a CLA that keeps relicensing possible. We are the second case, and the CLA is why.
+        A permissive licence means the engine can sit inside a proprietary serving path with no copyleft obligation, under either licence.
+        The third party code it vendors keeps its own terms, and the notices file lists each one.
       </p>
     </aside>
   </div>
@@ -220,19 +220,17 @@
     <Cmd
       label="start here"
       lines={[
-        `spark benchmark list concurrency-sweep`,
-        `spark benchmark run concurrency-sweep --url YOUR_VLLM_URL --model CHECKPOINT \\`,
+        `met benchmark list concurrency-sweep`,
+        `met benchmark run concurrency-sweep --url YOUR_VLLM_URL --model CHECKPOINT \\`,
         `    --param concurrencies=1,4,8,16 --param isls=512 --param osl=320`,
-        `spark benchmark run concurrency-sweep --pull-request-gate --yes`,
+        `met benchmark run concurrency-sweep --pull-request-gate --yes`,
       ]}
       note="The first line prints every parameter and its default. The second measures whatever you already have serving. The third is the one CI runs. Expect ~2 hours on a single GB10 including the model download."
     />
     <ul class="links">
       <li><span class="mono">results</span><a class="link" href={links.results} target="_blank" rel="noopener">{claim.resultsDoc}</a></li>
       <li>
-        <span class="mono">source</span><a class="link" href={links.repo} target="_blank" rel="noopener"
-          >github.com/Metrale/metrale-inference-alpha</a
-        >
+        <span class="mono">source</span><a class="link" href={links.repo} target="_blank" rel="noopener">{links.repoLabel}</a>
       </li>
       <li><span class="mono">gates</span><a class="link" href={links.gateDoc} target="_blank" rel="noopener">what “verified” means</a></li>
     </ul>

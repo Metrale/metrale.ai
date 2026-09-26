@@ -15,7 +15,7 @@
 
 // The domain is unchanged by the rebrand (see PR #1101). When DNS moves, this
 // is the one constant to change. Everything absolute is built from it.
-import { ENGINE_REPO, HISTORY, REGISTRY_REPO } from '../../../../web-shared/sources.mjs';
+import { ENGINE_REPO, REGISTRY_REPO } from '../../../../web-shared/sources.mjs';
 export const SITE = 'https://metrale.ai';
 
 export const company = {
@@ -51,13 +51,14 @@ export const links = {
   docs: 'https://docs.metrale.ai',
   guide: `${ENGINE_REPO}/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md`,
   ladderLog: `${ENGINE_REPO}/blob/main/bench/ladder38/RESULTS.md`,
-  strixPr: `${HISTORY}/pull/187`,
+  strixKernels: `${ENGINE_REPO}/tree/main/kernels/strix`,
   inception: 'https://www.nvidia.com/en-us/startups/',
   scale: 'https://docs.scale-lang.com/stable/',
   llamaCppPr: 'https://github.com/ggml-org/llama.cpp/pull/18680',
   securityPolicy: '/trust#disclosure',
   securityPolicyDoc: `${ENGINE_REPO}/blob/main/SECURITY.md`,
-  license: `${ENGINE_REPO}/blob/main/LICENSE`,
+  license: `${ENGINE_REPO}/blob/main/LICENSE-MIT`,
+  licenseApache: `${ENGINE_REPO}/blob/main/LICENSE-APACHE`,
   contributing: `${ENGINE_REPO}/blob/main/CONTRIBUTING.md`,
   changelog: `${ENGINE_REPO}/blob/main/CHANGELOG.md`,
   issues: `${ENGINE_REPO}/issues`,
@@ -230,8 +231,8 @@ export const nav = {
         {
           heading: 'Build',
           items: [
-            { text: 'Open source', blurb: 'The engine, AGPL-3.0, running today', href: routes.openSource },
-            { text: 'Community Edition', blurb: 'Not released yet. Join the waitlist', href: routes.waitlist },
+            { text: 'Open source', blurb: 'The engine, MIT OR Apache-2.0, running today', href: routes.openSource },
+            { text: 'Release notes', blurb: 'Hear when the next release ships', href: routes.waitlist },
             { text: 'Contributors', blurb: 'Everyone who has landed code, called out by name', href: routes.contributors },
             { text: 'Metrale Labs', blurb: 'The research arm and what it is working on', href: routes.labs },
             { text: 'Verification walkthrough', blurb: 'Reproduce the ladder yourself, step by step', href: routes.diligence },
@@ -281,7 +282,7 @@ export const footer = {
         { text: 'Blog', href: links.blog, external: true },
         { text: 'Documentation', href: links.docs, external: true },
         { text: 'Open source', href: routes.openSource },
-        { text: 'Community Edition waitlist', href: routes.waitlist },
+        { text: 'Release notes', href: routes.waitlist },
         { text: 'Contributors', href: routes.contributors },
         { text: 'Product updates', href: routes.updates },
         { text: 'Metrale Labs', href: routes.labs },
@@ -301,5 +302,5 @@ export const footer = {
     },
   ],
   legal: `© 2026 ${company.legal} Metrale, Metrale AI, and ${company.engine} are products of ${company.legal}`,
-  license: 'Community Edition under AGPL-3.0. Enterprise Edition under a commercial license.',
+  license: 'Metrale Engine is open source under the MIT or Apache 2.0 license, at your option.',
 };

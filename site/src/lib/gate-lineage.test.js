@@ -64,7 +64,7 @@ test('does not connect ancestor commits measured with different instruments', ()
   expect(trendEdges([a, b, c])).toEqual([]);
 });
 
-test('uses stable machine identity across changing Spark hostnames', () => {
+test('uses stable machine identity across changing DGX Spark hostnames', () => {
   const a = {
     ...rec('a', 1),
     hardware: { gpu: 'GB10', driver: '580' },

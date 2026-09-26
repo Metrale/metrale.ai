@@ -49,9 +49,9 @@ suite('whether to ask at all', () => {
   });
 
   test('two candidates is a real question', () => {
-    const d = P.decide([node('me', { isLocal: true }), node('spark')], { nodes: 1 });
+    const d = P.decide([node('me', { isLocal: true }), node('peer')], { nodes: 1 });
     expect(d.kind).toBe('ask');
-    expect(d.options.map((n) => n.id)).toEqual(['me', 'spark']);
+    expect(d.options.map((n) => n.id)).toEqual(['me', 'peer']);
   });
 
   test('nothing to run on says so, and offers to onboard', () => {
@@ -98,7 +98,7 @@ suite('multi-node recipes are a cluster plan, not a placement question', () => {
 
 suite('how a machine is described', () => {
   test('what distinguishes it, in the order an operator scans', () => {
-    const d = P.describe(node('spark', { os: 'Linux', accelerator: 'GB10', addresses: [{ addr: '10.10.10.2', class: 'roce' }] }));
+    const d = P.describe(node('peer', { os: 'Linux', accelerator: 'GB10', addresses: [{ addr: '10.10.10.2', class: 'roce' }] }));
     expect(d).toBe('Linux · GB10 · 10.10.10.2');
   });
 
@@ -119,7 +119,7 @@ suite('how a machine is described', () => {
 });
 
 test('a launchable machine with an unreported fleet runs here, it does not despair', () => {
-  // First launch on a brand-new Spark: the fleet session has not started, so
+  // First launch on a brand-new DGX Spark: the fleet session has not started, so
   // `nodes` is empty. The agent this dialog is connected to has already said it
   // can launch. Telling the operator "No machine here can run this yet" sent
   // them off to onboard a second machine to fix a machine that was fine.

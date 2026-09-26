@@ -1,5 +1,5 @@
 <script>
-  import { HISTORY } from '$shared/sources.mjs';
+  import { ENGINE_REPO } from '$shared/sources.mjs';
   // Act II, first half — the reference frame and the setup: fingerprint,
   // parity, and the four steps that get an outsider to two serving engines.
   // Measuring them is Ladder.svelte, which follows this act in the route.
@@ -111,31 +111,31 @@
       <Cmd
         label="clone, image, binary"
         lines={[
-          `git clone ${HISTORY}.git metrale-engine`,
-          `cd metrale-engine && git checkout ${claim.buildPublic}`,
+          `git clone ${ENGINE_REPO}.git metrale-engine`,
+          `cd metrale-engine`,
           ``,
           `docker build -f docker/gb10/Dockerfile -t metrale-gb10 .`,
           ``,
           `sudo apt-get install -y build-essential pkg-config \\`,
           `  cmake clang libclang-dev`,
-          `cargo build --release -p spark-server --bin spark`,
+          `cargo build --release -p metrale-server --bin met`,
         ]}
-        note={`Both builds run from the repository root, with CUDA still on PATH from Step 1. The multi-target image compiles PTX for every supported model; the first cargo build takes 15–30 minutes for the same reason and leaves 3–5 GB under target/. ${claim.buildPublic} is the certified sha rather than ${claim.build}, the tree the numbers were measured on: that one was a local merge and was never pushed, so it does not exist in your clone. The two differ only in doc comments and gate machinery — no executable change.`}
+        note="Both builds run from the repository root, with CUDA still on PATH from Step 1. The multi-target image compiles PTX for every supported model; the first cargo build takes 15–30 minutes for the same reason and leaves 3–5 GB under target/. To rebuild the exact tree a record measured, check out the commit it names: every record under .benchmarks/ carries it as git_sha, and the .sig beside it binds the record to that commit."
       />
     </div>
     <div class="at" style="--n: 2">
       <Cmd
         label="verify before going further"
         lines={[
-          `./target/release/spark --version`,
-          `./target/release/spark benchmark list`,
-          `./target/release/spark benchmark list concurrency-sweep`,
+          `./target/release/met --version`,
+          `./target/release/met benchmark list`,
+          `./target/release/met benchmark list concurrency-sweep`,
         ]}
         note="The last line prints every parameter of the sweep with its default — the schema the next steps override. If it prints, the toolchain is sound and the rest of this deck will run."
       />
       <p class="after">
-        The gate's self-start also reads a cached recipe index from the engine's folder in your home directory. Open the TUI library once to
-        populate it, or Step 6 stops with a message naming the file.
+        The gate's self-start also reads a cached recipe index from the engine's folder in your home directory. Run
+        <code class="mono">./target/release/met sync-recipes</code> once to populate it, or Step 6 stops with a message naming the file.
       </p>
     </div>
   </div>

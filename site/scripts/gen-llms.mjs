@@ -71,7 +71,7 @@ push(
   '',
   '## The platform',
   '',
-  `- ${company.engine}: the open source inference engine, pure Rust and CUDA, AGPL-3.0-only.`,
+  `- ${company.engine}: the open source inference engine, pure Rust and CUDA, MIT OR Apache-2.0.`,
   `- ${company.control}: the governance and control plane. Signed recipes, canary rollouts, routing, fleet policy.`,
   `- ${company.economics}: cost per workload, chargeback, stranded capacity and payback, from runtime telemetry.`,
   '',
@@ -91,7 +91,7 @@ push(
   '',
   `${hero.sub}`,
   '',
-  'Written in pure Rust and CUDA and licensed AGPL-3.0-only. One codebase covers',
+  'Written in pure Rust and CUDA and licensed MIT OR Apache-2.0. One codebase covers',
   'the range, from edge-class accelerators through workstations to expert-parallel',
   'deployments across nodes.',
   '',
@@ -176,8 +176,8 @@ push(
   '',
   '## License',
   '',
-  'AGPL-3.0-only for the Community Edition. Contributions are covered by a CLA',
-  'that permits Enterprise re-licensing.',
+  `${company.engine} is dual licensed under MIT OR Apache-2.0, at your option:`,
+  `${links.license} and ${links.licenseApache}.`,
   ''
 );
 

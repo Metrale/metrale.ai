@@ -92,7 +92,7 @@
         downloadUrl: githubUrl,
         softwareHelp: links.docs,
         programmingLanguage: ['Rust', 'CUDA'],
-        license: 'https://spdx.org/licenses/AGPL-3.0-only.html',
+        license: ['https://spdx.org/licenses/MIT.html', 'https://spdx.org/licenses/Apache-2.0.html'],
         isAccessibleForFree: true,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         publisher: { '@id': `${SITE}/#org` },

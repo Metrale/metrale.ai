@@ -161,7 +161,7 @@ test('a name from the wire is sanitized before it is rendered', () => {
     node: 'e'.repeat(64),
     exchanged: true,
     verification: 'w',
-    name: 'spark\u202e-evil',
+    name: 'node\u202e-evil',
   });
-  expect(r.name).toBe('spark-evil');
+  expect(r.name).toBe('node-evil');
 });
