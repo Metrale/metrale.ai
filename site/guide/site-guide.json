@@ -1,5 +1,5 @@
 {
- "revision": 6,
+ "revision": 7,
  "date": "2026-09-26",
  "changes": [
   {
@@ -101,6 +101,25 @@
     "console-fleet.webp",
     "reel.mp4",
     "reel.webm"
+   ]
+  },
+  {
+   "rev": 7,
+   "date": "2026-09-26",
+   "pr": 32,
+   "base": "3cefc5487",
+   "note": "Engine links use Metrale/metrale-inference.",
+   "touched": [
+    "links.github",
+    "links.guide",
+    "links.ladderLog",
+    "links.strixKernels",
+    "links.securityPolicyDoc",
+    "links.license",
+    "links.licenseApache",
+    "links.contributing",
+    "links.changelog",
+    "links.issues"
    ]
   }
  ],
@@ -613,18 +632,30 @@
   },
   {
    "key": "links.changelog",
-   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CHANGELOG.md",
-   "rev": 1,
-   "date": "2026-09-24",
+   "value": "https://github.com/Metrale/metrale-inference/blob/main/CHANGELOG.md",
+   "rev": 2,
+   "date": "2026-09-26",
+   "was": [
+    {
+     "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CHANGELOG.md",
+     "until": "2026-09-26"
+    }
+   ],
    "used": [
     "/resources/updates"
    ]
   },
   {
    "key": "links.contributing",
-   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CONTRIBUTING.md",
-   "rev": 1,
-   "date": "2026-09-24",
+   "value": "https://github.com/Metrale/metrale-inference/blob/main/CONTRIBUTING.md",
+   "rev": 2,
+   "date": "2026-09-26",
+   "was": [
+    {
+     "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CONTRIBUTING.md",
+     "until": "2026-09-26"
+    }
+   ],
    "used": [
     "/company/careers",
     "/resources/contributors"
@@ -704,9 +735,15 @@
   },
   {
    "key": "links.github",
-   "value": "https://github.com/Metrale/metrale-inference-alpha",
-   "rev": 1,
-   "date": "2026-09-24",
+   "value": "https://github.com/Metrale/metrale-inference",
+   "rev": 2,
+   "date": "2026-09-26",
+   "was": [
+    {
+     "value": "https://github.com/Metrale/metrale-inference-alpha",
+     "until": "2026-09-26"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -740,9 +777,15 @@
   },
   {
    "key": "links.guide",
-   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
-   "rev": 1,
-   "date": "2026-09-24",
+   "value": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+   "rev": 2,
+   "date": "2026-09-26",
+   "was": [
+    {
+     "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "until": "2026-09-26"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/diligence",
@@ -797,18 +840,30 @@
   },
   {
    "key": "links.issues",
-   "value": "https://github.com/Metrale/metrale-inference-alpha/issues",
-   "rev": 1,
-   "date": "2026-09-24",
+   "value": "https://github.com/Metrale/metrale-inference/issues",
+   "rev": 2,
+   "date": "2026-09-26",
+   "was": [
+    {
+     "value": "https://github.com/Metrale/metrale-inference-alpha/issues",
+     "until": "2026-09-26"
+    }
+   ],
    "used": [
     "/engine"
    ]
   },
   {
    "key": "links.ladderLog",
-   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md",
-   "rev": 1,
-   "date": "2026-09-24",
+   "value": "https://github.com/Metrale/metrale-inference/blob/main/bench/ladder38/RESULTS.md",
+   "rev": 2,
+   "date": "2026-09-26",
+   "was": [
+    {
+     "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md",
+     "until": "2026-09-26"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/diligence",
@@ -818,12 +873,16 @@
   },
   {
    "key": "links.license",
-   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT",
-   "rev": 2,
+   "value": "https://github.com/Metrale/metrale-inference/blob/main/LICENSE-MIT",
+   "rev": 3,
    "date": "2026-09-26",
    "was": [
     {
      "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE",
+     "until": "2026-09-26"
+    },
+    {
+     "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT",
      "until": "2026-09-26"
     }
    ],
@@ -860,9 +919,15 @@
   },
   {
    "key": "links.licenseApache",
-   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-APACHE",
-   "rev": 1,
+   "value": "https://github.com/Metrale/metrale-inference/blob/main/LICENSE-APACHE",
+   "rev": 2,
    "date": "2026-09-26",
+   "was": [
+    {
+     "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-APACHE",
+     "until": "2026-09-26"
+    }
+   ],
    "used": [
     "/engine"
    ]
@@ -962,9 +1027,15 @@
   },
   {
    "key": "links.securityPolicyDoc",
-   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md",
-   "rev": 1,
-   "date": "2026-09-24",
+   "value": "https://github.com/Metrale/metrale-inference/blob/main/SECURITY.md",
+   "rev": 2,
+   "date": "2026-09-26",
+   "was": [
+    {
+     "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md",
+     "until": "2026-09-26"
+    }
+   ],
    "used": [
     "/platform/security",
     "/trust"
@@ -979,9 +1050,15 @@
   },
   {
    "key": "links.strixKernels",
-   "value": "https://github.com/Metrale/metrale-inference-alpha/tree/main/kernels/strix",
-   "rev": 1,
+   "value": "https://github.com/Metrale/metrale-inference/tree/main/kernels/strix",
+   "rev": 2,
    "date": "2026-09-26",
+   "was": [
+    {
+     "value": "https://github.com/Metrale/metrale-inference-alpha/tree/main/kernels/strix",
+     "until": "2026-09-26"
+    }
+   ],
    "used": [
     "/engine",
     "/"
@@ -3031,14 +3108,14 @@
      "button": false
     },
     {
-     "text": "github.com/Metrale/metrale-inference-alpha",
-     "href": "https://github.com/Metrale/metrale-inference-alpha",
+     "text": "github.com/Metrale/metrale-inference",
+     "href": "https://github.com/Metrale/metrale-inference",
      "kind": "out",
      "button": false
     },
     {
      "text": "Metrale Engine, MIT OR Apache-2.0",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/LICENSE-MIT",
      "kind": "out",
      "button": false
     },
@@ -3145,19 +3222,19 @@
     },
     {
      "text": "The repository",
-     "href": "https://github.com/Metrale/metrale-inference-alpha",
+     "href": "https://github.com/Metrale/metrale-inference",
      "kind": "out",
      "button": true
     },
     {
      "text": "Good first issues",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/labels/good%20first%20issue",
+     "href": "https://github.com/Metrale/metrale-inference/labels/good%20first%20issue",
      "kind": "out",
      "button": true
     },
     {
      "text": "How to contribute",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CONTRIBUTING.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/CONTRIBUTING.md",
      "kind": "out",
      "button": true
     },
@@ -3594,7 +3671,7 @@
     },
     {
      "text": "Read the full campaign log",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/bench/ladder38/RESULTS.md",
      "kind": "out",
      "button": true
     },
@@ -3618,7 +3695,7 @@
     },
     {
      "text": "July 2026 Strix Halo hardware provided for the gfx1151 bring up See the gfx1151 kernels gi",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/tree/main/kernels/strix",
+     "href": "https://github.com/Metrale/metrale-inference/tree/main/kernels/strix",
      "kind": "out",
      "button": false
     },
@@ -3654,7 +3731,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -3720,7 +3797,7 @@
     },
     {
      "text": "Open pull requests",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/pulls",
+     "href": "https://github.com/Metrale/metrale-inference/pulls",
      "kind": "out",
      "button": true
     },
@@ -3897,7 +3974,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -3977,7 +4054,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -3989,7 +4066,7 @@
     },
     {
      "text": "Read the deployment guide",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": true
     }
@@ -4057,7 +4134,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -4143,7 +4220,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -4272,7 +4349,7 @@
    "links": [
     {
      "text": "Read the security policy and disclosure process",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/SECURITY.md",
      "kind": "out",
      "button": false
     },
@@ -4284,7 +4361,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -4394,7 +4471,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -4513,7 +4590,7 @@
     },
     {
      "text": "Star on GitHub",
-     "href": "https://github.com/Metrale/metrale-inference-alpha",
+     "href": "https://github.com/Metrale/metrale-inference",
      "kind": "out",
      "button": true
     }
@@ -4905,7 +4982,7 @@
    "links": [
     {
      "text": "Read the policy",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/SECURITY.md",
      "kind": "out",
      "button": true
     },
@@ -4923,7 +5000,7 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
@@ -5133,13 +5210,13 @@
     },
     {
      "text": "deployment guide",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": false
     },
     {
      "text": "Read the deployment guide",
-     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+     "href": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
      "kind": "out",
      "button": true
     }
@@ -5168,25 +5245,25 @@
    "/company",
    "/"
   ],
-  "https://github.com/Metrale/metrale-inference-alpha": [
+  "https://github.com/Metrale/metrale-inference": [
    "/company",
    "/company/careers",
    "/resources"
   ],
-  "https://github.com/Metrale/metrale-inference-alpha/blob/main/CONTRIBUTING.md": [
+  "https://github.com/Metrale/metrale-inference/blob/main/CONTRIBUTING.md": [
    "/company/careers"
   ],
-  "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT": [
+  "https://github.com/Metrale/metrale-inference/blob/main/LICENSE-MIT": [
    "/company"
   ],
-  "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md": [
+  "https://github.com/Metrale/metrale-inference/blob/main/SECURITY.md": [
    "/platform/security",
    "/trust"
   ],
-  "https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md": [
+  "https://github.com/Metrale/metrale-inference/blob/main/bench/ladder38/RESULTS.md": [
    "/"
   ],
-  "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md": [
+  "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md": [
    "/",
    "/platform/control",
    "/platform/deployment",
@@ -5197,13 +5274,13 @@
    "/trust",
    "/why-metrale"
   ],
-  "https://github.com/Metrale/metrale-inference-alpha/labels/good%20first%20issue": [
+  "https://github.com/Metrale/metrale-inference/labels/good%20first%20issue": [
    "/company/careers"
   ],
-  "https://github.com/Metrale/metrale-inference-alpha/pulls": [
+  "https://github.com/Metrale/metrale-inference/pulls": [
    "/labs"
   ],
-  "https://github.com/Metrale/metrale-inference-alpha/tree/main/kernels/strix": [
+  "https://github.com/Metrale/metrale-inference/tree/main/kernels/strix": [
    "/"
   ],
   "https://github.com/Metrale/metralectl": [

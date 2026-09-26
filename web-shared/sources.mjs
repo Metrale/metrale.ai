@@ -4,7 +4,7 @@
 // line to change when the engine repository's name changes.
 
 /** The engine: code, benchmark records, the ladder, the book and the changelog. */
-export const ENGINE_SLUG = 'Metrale/metrale-inference-alpha';
+export const ENGINE_SLUG = 'Metrale/metrale-inference';
 export const ENGINE_REPO = `https://github.com/${ENGINE_SLUG}`;
 
 /** The recipe registry: every model the site lists has a recipe here. */

@@ -98,7 +98,7 @@ Extends the manifest `coderag.yml` already writes.
   "format": "lattice-jsonl",
   "version": 2,
   "tier": "code",
-  "source": { "repo": "Metrale/metrale-inference-alpha", "commit": "2988586", "ref": "main" },
+  "source": { "repo": "Metrale/metrale-inference", "commit": "2988586", "ref": "main" },
   "model": "nvidia/llama-nemotron-embed-vl-1b-v2:free",
   "dim": 2048,
   "points": 5831,
@@ -106,7 +106,7 @@ Extends the manifest `coderag.yml` already writes.
   "cadence_s": 300,
   "full": { "url": ".../metrale-coderag.jsonl.gz", "sha256": "…", "gz_bytes": 98625375 },
   "delta": { "since": "5f1c2e9", "url": ".../metrale-coderag.delta.jsonl.gz", "removed": ["…"] },
-  "cite": "https://github.com/Metrale/metrale-inference-alpha/blob/{commit}/{path}#L{start}-L{end}",
+  "cite": "https://github.com/Metrale/metrale-inference/blob/{commit}/{path}#L{start}-L{end}",
   "license": "AGPL-3.0-only"
 }
 ```

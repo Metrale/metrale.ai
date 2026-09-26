@@ -83,7 +83,7 @@ against the matched vLLM + MTP configuration at each concurrency.
 | 64 | 386.63 | 361.39 (vLLM + MTP) | 1.070x |
 | 128 | 478.11 | 358.57 (vLLM + MTP) | 1.333x |
 
-Full campaign log including every rung lost on the way: https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md
+Full campaign log including every rung lost on the way: https://github.com/Metrale/metrale-inference/blob/main/bench/ladder38/RESULTS.md
 Release gate: A Metrale Engine image ships only after the serve matrix passes: every model boots, stays coherent (greedy determinism, no token leakage, tool reliability), and holds throughput within 10% of its committed baseline.
 Reproduce: python3 tests/run_all_models.py && python3 tests/gate_results.py --update-baselines
 
@@ -157,10 +157,10 @@ model that has no recipe. Run any of them with `metralectl run <id>`.
 
 ## Links
 
-- Engine repo: https://github.com/Metrale/metrale-inference-alpha
+- Engine repo: https://github.com/Metrale/metrale-inference
 - Recipes (model SSOT): https://github.com/Metrale/metralectl
-- Deployment guide: https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md
-- Benchmark results: https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md
+- Deployment guide: https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md
+- Benchmark results: https://github.com/Metrale/metrale-inference/blob/main/bench/ladder38/RESULTS.md
 - Discord: https://discord.gg/RQcGakU2jW
 - X: undefined
 - Site: https://metrale.ai
@@ -171,4 +171,4 @@ model that has no recipe. Run any of them with `metralectl run <id>`.
 ## License
 
 Metrale Engine is dual licensed under MIT OR Apache-2.0, at your option:
-https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT and https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-APACHE.
+https://github.com/Metrale/metrale-inference/blob/main/LICENSE-MIT and https://github.com/Metrale/metrale-inference/blob/main/LICENSE-APACHE.
