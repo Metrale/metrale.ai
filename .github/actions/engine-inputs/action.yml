@@ -1,7 +1,8 @@
 # What a build reads from outside this repository, all public:
 #   Metrale/metrale-inference-alpha, at site/engine.ref
-#                            benchmark records, gate descriptors, the ladder, the
-#                            changelog and the baselines (METRALE_ENGINE_ROOT)
+#                            benchmark records, gate descriptors and limits, the
+#                            ladders, the changelog and the baselines
+#                            (METRALE_ENGINE_ROOT)
 #   Metrale/metralectl       the recipe registry, the model list (METRALE_RECIPES_ROOT),
 #                            and the installers install.sh and install.ps1
 # The variables are exported for the rest of the job, so `vite build` and the
@@ -55,8 +56,14 @@ runs:
           /docs/GB10_DEPLOYMENT_GUIDE.md
           /docs/ROBUSTNESS.md
           /bench/ladder38/
+          /bench/baselines/
           /.benchmarks/
           /crates/metrale-plugin/src/benchmarks/
+          /crates/metrale-plugin/src/hardware/energy.rs
+          /crates/metrale-plugin/src/hardware/energy_sampler.rs
+          /kernels/gb10/HARDWARE.toml
+          /kernels/gb10/*/BENCH.toml
+          /test_data/gate-records/
           /tests/baselines/
 
     # The install command the site prints is served from these two files, so both

@@ -8,11 +8,33 @@
   // of them. Clicking such a point must still reach EVERY run inside it, so
   // this card takes an array and gives a group one tab per commit. The plotted
   // run is not privileged over the others — they are all real receipts.
+  import { tick } from 'svelte';
   import { shortModel, fmtDate } from '$lib/gates.js';
   import { moveTab } from '$lib/tablist.js';
   import GateRecordBody from './GateRecordBody.svelte';
+  import GateReproSteps from './GateReproSteps.svelte';
 
   let { records, onclose } = $props();
+
+  // "Reproduction steps" sits at the TOP of the panel (owner decision,
+  // 2026-09-21): it is the first thing a reader wants from a receipt, so it
+  // should not be reachable only after scrolling the record body. It reveals
+  // in place directly beneath its own button -- above the receipt, per tab for
+  // a grouped point -- and widens the card; focus moves to the panel heading
+  // so a keyboard reader lands on what just appeared.
+  //
+  // Ordering note: the button lives INSIDE #gpc-panel rather than above the
+  // tablist, because the steps it reveals are per-record (`record={r}`).
+  // Hoisting it above the tabs would put a control for one run outside the
+  // element that selects which run is showing.
+  let repro = $state(false);
+  let reproEl = $state(null);
+  async function toggleRepro() {
+    repro = !repro;
+    if (!repro) return;
+    await tick();
+    reproEl?.querySelector('h3')?.focus();
+  }
 
   // Newest first inside a group: the chart emphasises the latest value, so the
   // tab that opens should be the one a reader is most likely to be after.
@@ -49,6 +71,7 @@
        is Escape, handled on the window. -->
   <div
     class="gpc receipt"
+    class:is-wide={repro}
     role="dialog"
     aria-modal="true"
     tabindex="-1"
@@ -85,6 +108,14 @@
       {/if}
 
       <div id="gpc-panel" role={many ? 'tabpanel' : undefined} aria-labelledby={many ? `gpc-tab-${active}` : undefined}>
+        <button type="button" class="gpc-repro-toggle" aria-expanded={repro} aria-controls="gpc-repro" onclick={toggleRepro}>
+          {repro ? 'hide reproduction steps' : 'reproduction steps'}
+        </button>
+        {#if repro}
+          <div bind:this={reproEl}>
+            <GateReproSteps record={r} />
+          </div>
+        {/if}
         <GateRecordBody record={r} />
       </div>
 
