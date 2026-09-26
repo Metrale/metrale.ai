@@ -27,7 +27,22 @@
         </a>
       </div>
       <a class="av-footer-badge" href={links.inception} target="_blank" rel="noopener noreferrer">
-        <img src="/nvidia-inception.webp" alt="NVIDIA Inception Program member" width="280" height="102" loading="lazy" />
+        <img
+          class="badge-light"
+          src="/nvidia-inception.webp"
+          alt="NVIDIA Inception Program member"
+          width="280"
+          height="102"
+          loading="lazy"
+        />
+        <img
+          class="badge-dark"
+          src="/nvidia-inception-dark.webp"
+          alt="NVIDIA Inception Program member"
+          width="280"
+          height="102"
+          loading="lazy"
+        />
       </a>
     </div>
     {#each footer.cols as col}
@@ -118,18 +133,22 @@
     display: inline-block;
     margin-top: 1.2rem;
     line-height: 0;
-    opacity: 0.75;
-    transition: opacity 0.15s;
-  }
-  .av-footer-badge:hover {
-    opacity: 1;
   }
   .av-footer-badge img {
     width: 132px;
     height: auto;
   }
-  :global(html:not([data-theme='light'])) .av-footer-badge img {
-    filter: grayscale(1) invert(1) brightness(1.15);
+  /* The badge in its own colours on either theme: the program's file on light,
+     the same badge with white lettering on dark. The hidden one is display:none
+     and lazy, so only the one in use is fetched. */
+  .av-footer-badge .badge-dark {
+    display: none;
+  }
+  :global(html:not([data-theme='light'])) .av-footer-badge .badge-dark {
+    display: block;
+  }
+  :global(html:not([data-theme='light'])) .av-footer-badge .badge-light {
+    display: none;
   }
   /* h2, not h4. The footer follows a page whose last heading is an h2, and a
      jump to h4 is an invalid heading order. The size is set here, not by level. */

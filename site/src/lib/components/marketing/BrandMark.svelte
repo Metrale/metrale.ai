@@ -1,8 +1,9 @@
 <!--
   Somebody else's logo, shown in its own colours on either theme.
 
-    src       a finished raster badge (the NVIDIA Inception badge). Greyed and
-              inverted on the dark theme, because it only comes in dark ink.
+    src       a finished raster badge (the NVIDIA Inception badge).
+    srcDark   the same badge for the dark theme, with light lettering. Without
+              it a badge drawn in dark ink is greyed and inverted there.
     file      an SVG under static/logos, for the light theme.
     fileDark  the same logo for the dark theme, when `file` is drawn in dark
               ink. Without it `file` serves both themes.
@@ -20,7 +21,8 @@
 
 <span class="av-mark" style:--h={`${height}px`}>
   {#if mark.src}
-    <img src={mark.src} {alt} {height} width="120" loading="lazy" class="is-dark-invert" />
+    <img src={mark.src} {alt} {height} width="120" loading="lazy" class:only-light={mark.srcDark} class:is-dark-invert={!mark.srcDark} />
+    {#if mark.srcDark}<img src={mark.srcDark} {alt} {height} width="120" loading="lazy" class="only-dark" />{/if}
   {:else if mark.file}
     <img src={`/logos/${mark.file}.svg`} {alt} {height} width="120" loading="lazy" class:only-light={mark.fileDark} />
     {#if mark.fileDark}<img src={`/logos/${mark.fileDark}.svg`} {alt} {height} width="120" loading="lazy" class="only-dark" />{/if}

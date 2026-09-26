@@ -50,7 +50,7 @@ Shown in their own colours. A logo drawn in dark ink has a second file for the d
 | `amd.svg`, `amd-dark.svg` | Commons, File:AMD Logo.svg | Public domain (not copyrightable), trademarked. The dark file is the same path filled white |
 | `scale.svg`, `scale-dark.svg` | docs.scale-lang.com, `logo_white.svg` | Spectral Compute's mark for SCALE. The dark file is the original. The light file is the same path filled `#14171c`. The mark has no wordmark, so the name is set beside it |
 
-The NVIDIA Inception badge is `static/nvidia-inception.webp`, the badge the program gives its members.
+The NVIDIA Inception badge is `static/nvidia-inception.webp`, the badge the program gives its members. `static/nvidia-inception-dark.webp` is the same badge for the dark theme: the green mark untouched and the lettering white at the same coverage, the way NVIDIA sets its logo on a dark ground.
 
 ## Adding a mark
 
