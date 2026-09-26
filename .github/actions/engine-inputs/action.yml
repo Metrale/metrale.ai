@@ -62,9 +62,9 @@ runs:
           /bench/ladder38/
           /bench/baselines/
           /.benchmarks/
-          /crates/metrale-plugin/src/benchmarks/
-          /crates/metrale-plugin/src/hardware/energy.rs
-          /crates/metrale-plugin/src/hardware/energy_sampler.rs
+          /crates/bench/src/benchmarks/
+          /crates/bench/src/hardware/energy.rs
+          /crates/bench/src/hardware/energy_sampler.rs
           /kernels/gb10/HARDWARE.toml
           /kernels/gb10/*/BENCH.toml
           /test_data/gate-records/

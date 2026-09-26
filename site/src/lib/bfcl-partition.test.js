@@ -24,7 +24,7 @@ const BENCHES = ['bfcl-subset', 'bfcl-subset-echolp'];
 
 // -- the conformance test --------------------------------------------------
 // This is the one that matters. `aggregate()` is a hand port of
-// `crates/metrale-plugin/src/benchmarks/bfcl/aggregate.rs`, which is itself a
+// `crates/bench/src/benchmarks/bfcl/aggregate.rs`, which is itself a
 // hand port of BFCL's `score.py`. A port can be self-consistently wrong, so it
 // is never tested against numbers this file chose: it is fed each committed
 // record's OWN per-subset tallies and must reproduce the `overall_accuracy`

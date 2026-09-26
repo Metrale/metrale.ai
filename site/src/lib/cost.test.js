@@ -277,7 +277,7 @@ describe('under-sampled windows are marked, never averaged in', () => {
     expect(t.excluded[0].reason).toContain('under-sampled');
   });
 
-  test('the SW power cap is reported but never disqualifying — it is this box normal state', () => {
+  test('the SW power cap is reported but never disqualifying', () => {
     const e = energyOf(rec({ metrics: cell(8, { swCapFrac: 1 }) }), 8);
     expect(e.trusted).toBe(true);
     expect(e.throttled).toBe(false);

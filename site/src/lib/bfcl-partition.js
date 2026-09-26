@@ -84,7 +84,7 @@ export function unionTallies(parts) {
 /**
  * Aggregate per-subset tallies exactly as `score.py` would over the same rows.
  *
- * Mirrors `crates/metrale-plugin/src/benchmarks/bfcl/aggregate.rs::aggregate`.
+ * Mirrors `crates/bench/src/benchmarks/bfcl/aggregate.rs::aggregate`.
  * Given ONE shard's tallies it returns that shard's own score, which is what
  * makes the conformance test against the committed shard records possible.
  *

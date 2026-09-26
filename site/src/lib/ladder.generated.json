@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-09-26T16:05:28Z",
+  "generated_utc": "2026-09-26T22:01:39Z",
   "manifest": "bench/ladder38/published.json",
   "title": "Qwen3.8-27B NVFP4 concurrency ladder",
   "subtitle": "Metrale Engine vs vLLM 0.27.1, C=1..128, every workload axis matched",
@@ -32,7 +32,7 @@
     "664302439b": "The ENERGY leg (vllm-mtp-energy), 2026-09-21. harness_w56_conc_ladder.py -- the w55 harness plus power_window.py, which is the half that records gpu_rail_energy_j; w55 has no power sampling at all, which is why the throughput-only legs above carry no joules. This is the sha256 of the copy committed at bench/ladder38/harness_w56_conc_ladder.py and asserted equal to the raw file's driver_sha256 at the time it was added, so the two are checkable against each other -- and gen-ladder.mjs re-hashes that file at every build as harness_repo_sha256.",
     "equivalence": "The only difference is those two keys. vLLM already defaults both to 0.0, so its sampling is byte-identical either way; the keys exist to stop Metrale Engine's non_thinking preset injecting presence_penalty=1.5. Both engines therefore ran identical sampling."
   },
-  "harness_repo_sha256": "68bc27b4ebdab730a7c2000fe31767be0dbbaeca2b0ecab032fd805a0c54445d",
+  "harness_repo_sha256": "4649c9b001d1c984bdbaae9b9a97631b526a6725f4fe963a23a5c378f6d5cb3c",
   "concurrencies": [
     1,
     2,

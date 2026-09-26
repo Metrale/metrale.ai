@@ -6,7 +6,7 @@
 // Two rules govern everything here, and the tests hold both:
 //
 //   1. Every command shown is READ from the record. The run command is
-//      `record.command`, written by `crates/metrale-plugin/src/gate/record.rs`
+//      `record.command`, written by `crates/bench/src/gate/record.rs`
 //      from the recorded inputs; a shard partition's commands are its MEMBER
 //      records' own `command` fields. Nothing is reconstructed from `params`.
 //      The two flags the record does not carry (`--checkpoint`, `--hardware`,
