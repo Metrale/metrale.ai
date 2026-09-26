@@ -14,12 +14,15 @@ import { test, expect } from '@playwright/test';
 import { pages, routes } from '../src/lib/content/index.js';
 import { industries } from '../src/lib/content/brand.js';
 
+// The registry already lists the solution pages; a Set keeps each path once.
 const PATHS = [
-  ...pages.map((p) => p.path).filter((p) => p !== '/404'),
-  ...industries.map((i) => `${routes.solutions}/${i.slug}`),
-  routes.openSource,
-  routes.controlPlane,
-  routes.diligence,
+  ...new Set([
+    ...pages.map((p) => p.path).filter((p) => p !== '/404'),
+    ...industries.map((i) => `${routes.solutions}/${i.slug}`),
+    routes.openSource,
+    routes.controlPlane,
+    routes.diligence,
+  ]),
 ];
 
 /** The document's overflow, and the text past the right edge that causes it. */
