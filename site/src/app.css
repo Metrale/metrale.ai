@@ -499,27 +499,6 @@ nav:not(.av-nav) {
 .receipt-row .val {
   color: var(--t2);
 }
-.receipt-pending {
-  border: 1.5px dashed var(--border-strong);
-  border-radius: 4px;
-  padding: 0.9rem 1rem;
-  margin: 0.4rem 0 0.2rem;
-  background: color-mix(in srgb, var(--amber) 6%, transparent);
-}
-.receipt-pending .tag {
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--amber);
-}
-.receipt-pending p {
-  font-size: 0.8rem;
-  color: var(--t2);
-  line-height: 1.55;
-  margin-top: 0.4rem;
-  font-family: var(--font-sans);
-}
 .receipt-foot {
   margin-top: 1rem;
   padding-top: 0.7rem;
@@ -561,9 +540,6 @@ nav:not(.av-nav) {
 }
 .receipt-total .val {
   color: var(--green);
-}
-.receipt-row .ok.pending {
-  color: var(--amber);
 }
 .receipt-print {
   animation: printin 0.6s ease-out both;
@@ -1299,6 +1275,13 @@ nav:not(.av-nav) {
   display: flex;
   gap: 0.7rem;
   align-items: flex-start;
+}
+/* A flex item is as wide as its content unless told otherwise, and the command
+   is one nowrap line: without this the step pushed /control 88px past a phone.
+   The command scrolls inside its own box instead. */
+.ld-steps li > div {
+  flex: 1;
+  min-width: 0;
 }
 .ld-step-n {
   flex-shrink: 0;

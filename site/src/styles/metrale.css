@@ -1591,6 +1591,9 @@ html:not([data-theme='light']) .av img.is-dark-invert {
   font-size: 0.93rem;
   line-height: 1.6;
   margin-bottom: 0.5rem;
+  /* Changelog lines carry paths like kernels/<hw>/HARDWARE.toml, one
+     unbreakable word wider than a phone. */
+  overflow-wrap: anywhere;
 }
 .av-update li::before {
   content: '';

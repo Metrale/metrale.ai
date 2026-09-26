@@ -440,7 +440,6 @@ video {
   .receipt-hw,
   .road-status,
   .ms-count,
-  .receipt-pending .tag,
   .cmd-copy,
   .email-btn-copy {
     font-size: 0.74rem;
@@ -487,6 +486,17 @@ video {
 @media (max-width: 480px) {
   section {
     padding: 3rem 1rem;
+  }
+  /* A long provenance stamp ("every card links its primary source") does not
+     fit beside the section name on a phone: it drops to its own line and
+     wraps there rather than pushing the page sideways. */
+  .ledger-rail {
+    flex-wrap: wrap;
+  }
+  .prov {
+    white-space: normal;
+    flex-shrink: 1;
+    min-width: 0;
   }
   .hero {
     padding: 2.25rem 1rem 2.5rem;
