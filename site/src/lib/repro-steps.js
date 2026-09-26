@@ -241,14 +241,14 @@ export function reproSteps(record, ctx) {
   const build = {
     id: 'build',
     title: 'Build',
-    summary: `cargo build --release -p spark-server --bin met · engine ${rec.engine_version || 'version not recorded'}`,
+    summary: `cargo build --release -p metrale-server --bin met · engine ${rec.engine_version || 'version not recorded'}`,
     facts: [['engine version', rec.engine_version || 'not recorded']],
     commands: [
       {
         label: 'binary',
         lines: [
           'export PATH=/usr/local/cuda/bin:$PATH',
-          'cargo build --release -p spark-server --bin met',
+          'cargo build --release -p metrale-server --bin met',
           `./target/release/met benchmark list ${shellQuote(rec.benchmark_id)}`,
         ],
         derivedLines: [],
@@ -429,7 +429,7 @@ export function reproSteps(record, ctx) {
   }
   recordStep.commands.push({
     label: 'what CI runs to verify every committed record',
-    lines: ['cargo run --locked -p spark-server --bin met -- benchmark --pull-request-gate-check'],
+    lines: ['cargo run --locked -p metrale-server --bin met -- benchmark --pull-request-gate-check'],
     derivedLines: [],
   });
   if (rec.box_state) {
