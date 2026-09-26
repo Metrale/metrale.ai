@@ -84,6 +84,23 @@
       "base": "bcab6542c",
       "note": "the engine page in the front page's design; News and Hardware removed",
       "touched": []
+    },
+    {
+      "rev": 6,
+      "date": "2026-09-26",
+      "pr": 28,
+      "base": "17084b34c",
+      "note": "The film and the deploy and fleet clips are re-recorded with metrale.ai on screen, and the NVIDIA Inception badge has its own file for the dark theme.",
+      "touched": [
+        "console-deploy.mp4",
+        "console-deploy.webm",
+        "console-deploy.webp",
+        "console-fleet.mp4",
+        "console-fleet.webm",
+        "console-fleet.webp",
+        "reel.mp4",
+        "reel.webm"
+      ]
     }
   ],
   "facts": {
@@ -1147,22 +1164,40 @@
       "date": "2026-09-24"
     },
     "site/static/media/console-deploy.mp4": {
-      "sha": "6776369eb4ee",
-      "bytes": 371494,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "3c9c4acf94fd",
+      "bytes": 411039,
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "sha": "6776369eb4ee",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "site/static/media/console-deploy.webm": {
-      "sha": "9ed1877f8788",
-      "bytes": 620691,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "4a3cb4756af4",
+      "bytes": 615446,
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "sha": "9ed1877f8788",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "site/static/media/console-deploy.webp": {
-      "sha": "213927adc44e",
-      "bytes": 67302,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "f9671bc83b17",
+      "bytes": 66874,
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "sha": "213927adc44e",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "site/static/media/console-economics.mp4": {
       "sha": "77bf6cc36d22",
@@ -1183,22 +1218,40 @@
       "date": "2026-09-24"
     },
     "site/static/media/console-fleet.mp4": {
-      "sha": "48cde3f22dc4",
-      "bytes": 396258,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "1fc4d96dec5c",
+      "bytes": 407566,
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "sha": "48cde3f22dc4",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "site/static/media/console-fleet.webm": {
-      "sha": "bc6a1c357433",
-      "bytes": 606882,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "3f212245beb9",
+      "bytes": 609707,
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "sha": "bc6a1c357433",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "site/static/media/console-fleet.webp": {
-      "sha": "e4147afa9f74",
-      "bytes": 72564,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "312235f4b2ba",
+      "bytes": 72008,
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "sha": "e4147afa9f74",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "site/static/media/console-governance.mp4": {
       "sha": "9cfa6b8f3ce3",
@@ -1237,16 +1290,28 @@
       "date": "2026-09-24"
     },
     "site/static/media/reel.mp4": {
-      "sha": "ff65b5762d65",
-      "bytes": 4879732,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "8a75a99b0cfd",
+      "bytes": 4850666,
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "sha": "ff65b5762d65",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "site/static/media/reel.webm": {
-      "sha": "0f8e891738af",
-      "bytes": 4715812,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "1026e3bf92c3",
+      "bytes": 4705970,
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "sha": "0f8e891738af",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "site/static/media/reel.webp": {
       "sha": "7211222cd189",
