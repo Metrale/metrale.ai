@@ -4,8 +4,9 @@
   // 3-level tree: vendor (brand) -> subfamily (recipe dir) -> recipes.
   import vendorsRaw from '$lib/models.generated.json';
   import { copyLabel, copyOrSelect } from '$lib/clipboard.js';
-  import { models as mcopy, recipesUrl } from '$lib/data.js';
+  import { models as copy, recipesUrl } from '$lib/data.js';
   import RunButton from './RunButton.svelte';
+  import Head from './engine/lower/Head.svelte';
 
   // Flagship first: Qwen3.6 leads its vendor, then Qwen3.5, then the rest as-is.
   const rankSub = (n) => (n === 'Qwen3.6' ? 0 : n === 'Qwen3.5' ? 1 : 2);
@@ -13,6 +14,15 @@
     ...v,
     subfamilies: [...v.subfamilies].sort((a, b) => rankSub(a.name) - rankSub(b.name)),
   }));
+
+  // The counts the head prints. Read off the registry tree, never typed.
+  const recipeCount = vendors.reduce((n, v) => n + v.subfamilies.reduce((m, f) => m + f.recipes.length, 0), 0);
+  const familyCount = vendors.reduce((n, v) => n + v.subfamilies.length, 0);
+  const stats = [
+    [recipeCount, copy.stats.recipes],
+    [vendors.length, copy.stats.vendors],
+    [familyCount, copy.stats.families],
+  ];
 
   // --- inline brand/model marks (no external URL/CDN — static site) ---------
   // Monochrome, viewBox 0 0 24 24, fill=currentColor -> inherits the dark
@@ -36,7 +46,8 @@
   let copied = $state('');
 
   const vendor = $derived(vendors[selectedVendor]);
-  const sub = $derived(vendor.subfamilies[selectedSub[selectedVendor]] ?? vendor.subfamilies[0]);
+  const subIndex = $derived(selectedSub[selectedVendor] ?? 0);
+  const sub = $derived(vendor.subfamilies[subIndex] ?? vendor.subfamilies[0]);
 
   function pickVendor(i) {
     selectedVendor = i;
@@ -51,14 +62,14 @@
   let copyState = $state('idle');
   let copyTimer;
 
-  // The slider unmounts on navigation while a flash is pending.
+  // The section unmounts on navigation while a flash is pending.
   $effect(() => () => clearTimeout(copyTimer));
 
   async function copyCmd(cmd, el) {
     clearTimeout(copyTimer);
     copied = cmd;
-    // Was `if (… !== 'copied') return;`, which left the button unchanged on a
-    // refusal — indistinguishable from success to the person clicking it.
+    // A refusal is reported, not swallowed: an unchanged button reads as
+    // success to the person who clicked it.
     copyState = await copyOrSelect(cmd, el);
     copyTimer = setTimeout(() => {
       if (copied === cmd) {
@@ -68,34 +79,51 @@
     }, 2400);
   }
 
-  const quantClass = (q) => {
+  // The hue grammar from the tokens file: violet is the engine, cyan is
+  // silicon, green is a verified multi-node result, gold is a caution.
+  const quantChip = (q) => {
     const k = (q || '').toLowerCase();
-    if (k === 'nvfp4') return 'chip chip-nvfp4';
-    if (k === 'fp8') return 'chip chip-fp8';
-    if (k === 'bf16') return 'chip chip-bf16';
-    return 'chip';
+    if (k === 'nvfp4') return 'av-chip av-chip-violet';
+    if (k === 'fp8') return 'av-chip av-chip-cyan';
+    return 'av-chip';
   };
   const quantLabel = (q) => (q && q !== 'none' ? q.toUpperCase() : 'BF16');
-  const topoClass = (t) => (t === 'EP=2' ? 'chip chip-ep2' : t === 'TP=2' ? 'chip chip-tp2' : 'chip chip-single');
-  import SectionHead from './SectionHead.svelte';
+  const topoChip = (t) => (t === 'EP=2' ? 'av-chip av-chip-green' : t === 'TP=2' ? 'av-chip av-chip-gold' : 'av-chip');
+
+  // A registry field is sometimes a phrase ("nvfp4 (mixed precision above
+  // layer 55)", "27B dense hybrid (48 GDN linear-attn + 16 softmax-attn
+  // layers)"). The chip carries the leading token and the rest is printed as
+  // a quiet detail line under it, so nothing the registry says is dropped.
+  const head = (v) => (v || '').split(/\s+/)[0];
+  const detail = (v) => (v || '').slice(head(v).length).trim();
+  const details = (r) => [detail(r.quant), detail(r.params)].filter(Boolean).join(', ');
 </script>
 
-<section id="models" class="sx-violet">
-  <div class="container">
-    <SectionHead label={mcopy.label} title={mcopy.title} sub={mcopy.sub} />
+<section id="models" class="av av-section av-sx-violet">
+  <div class="av-container">
+    <Head eyebrow={copy.label} title={copy.title} lede={copy.sub} maxCh={22}>
+      {#snippet aside()}
+        <ul class="eg-stats" aria-label="The recipe registry in numbers">
+          {#each stats as [n, label]}
+            <li><strong>{n}</strong><span>{label}</span></li>
+          {/each}
+        </ul>
+      {/snippet}
+    </Head>
 
-    <div class="mnav">
+    <div class="eg-nav">
       <!-- Level 1: vendor brand tabs -->
-      <div class="mnav-vendors" role="tablist" aria-label="Model vendors">
+      <div class="eg-vendors" role="tablist" aria-label={copy.vendorsLabel}>
         {#each vendors as v, i}
           <button
             type="button"
-            class="mnav-vendor {i === selectedVendor ? 'is-active' : ''}"
+            class="eg-vendor"
+            class:is-active={i === selectedVendor}
             role="tab"
             aria-selected={i === selectedVendor}
             onclick={() => pickVendor(i)}
           >
-            <svg class="mnav-ico" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <svg class="eg-ico" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
               <path d={ICONS[v.icon]} />
             </svg>
             <span>{v.vendor}</span>
@@ -104,60 +132,395 @@
       </div>
 
       <!-- Level 2: subfamily sub-tabs (within the selected vendor) -->
-      <div class="mnav-subs" role="tablist" aria-label={`${vendor.vendor} model families`}>
+      <div class="eg-families" role="tablist" aria-label={`${vendor.vendor} ${copy.familiesLabel}`}>
         {#each vendor.subfamilies as sf, i}
           <button
             type="button"
-            class="mnav-sub {i === (selectedSub[selectedVendor] ?? 0) ? 'is-active' : ''}"
+            class="eg-family"
+            class:is-active={i === subIndex}
             role="tab"
-            aria-selected={i === (selectedSub[selectedVendor] ?? 0)}
+            aria-selected={i === subIndex}
             onclick={() => pickSub(i)}
           >
             {sf.name}
-            <span class="mnav-sub-count">{sf.recipes.length}</span>
+            <span class="eg-family-n">{sf.recipes.length}</span>
           </button>
         {/each}
       </div>
-
-      <!-- Level 3: recipe sub-cards (within the selected subfamily) -->
-      <div class="card ms-famcard">
-        <div class="ms-accent" aria-hidden="true"></div>
-        <div class="ms-famhead">
-          <h3>{vendor.vendor} · {sub.name}</h3>
-          <span class="ms-count">{sub.recipes.length} recipe{sub.recipes.length === 1 ? '' : 's'}</span>
-        </div>
-        <div class="ms-grid">
-          {#each sub.recipes as r (r.recipeStem)}
-            <div class="subcard">
-              <div class="subcard-label">{r.displayName}</div>
-              <div class="subcard-meta">
-                <span class={quantClass(r.quant)}>{quantLabel(r.quant)}</span>
-                <span class={topoClass(r.topology)}>{r.topology}</span>
-                {#if r.params}<span class="chip chip-params">{r.params}</span>{/if}
-              </div>
-              <div class="subcard-hf mono" title={r.hfId}>{r.hfId}</div>
-              <div class="cmd-pill">
-                <code class="cmd-text mono">{r.command}</code>
-                <button
-                  type="button"
-                  class="cmd-copy"
-                  onclick={(e) => copyCmd(r.command, e.currentTarget.closest('.cmd-pill')?.querySelector('code'))}
-                  aria-label={`Copy ${r.command}`}
-                >
-                  {copied === r.command ? copyLabel(copyState) : 'Copy'}
-                </button>
-                <RunButton recipeId={r.recipeId ?? r.recipeStem} runnable={r.runnable ?? true} />
-              </div>
-            </div>
-          {/each}
-        </div>
-      </div>
     </div>
 
-    <div class="ms-foot">
-      Every recipe is the single source of truth in
-      <a href={recipesUrl} class="link" target="_blank" rel="noopener">the recipe registry</a>, so the site cannot list a model we do not
-      ship. EP=2 is Expert Parallelism across two GB10 nodes.
+    <!-- Level 3: the recipes of the selected subfamily, one row each -->
+    <div class="av-card av-card-accent eg-panel">
+      <div class="eg-panel-head">
+        <h3>{vendor.vendor} {sub.name}</h3>
+        <span class="av-kicker">{sub.recipes.length} {sub.recipes.length === 1 ? copy.countOne : copy.countMany}</span>
+      </div>
+      <div class="eg-cols" aria-hidden="true">
+        <span>{copy.columns.model}</span><span>{copy.columns.build}</span><span>{copy.columns.command}</span>
+      </div>
+      <ul class="eg-rows">
+        {#each sub.recipes as r (r.recipeStem)}
+          <li class="eg-row">
+            <div class="eg-row-model">
+              <span class="eg-row-name">{r.displayName}</span>
+              <span class="eg-row-hf av-mono" title={r.hfId}>{r.hfId}</span>
+            </div>
+            <div class="eg-row-build">
+              <span class="eg-row-chips">
+                <span class={quantChip(head(r.quant))}>{quantLabel(head(r.quant))}</span>
+                <span class={topoChip(r.topology)}>{r.topology}</span>
+                {#if r.params}<span class="av-chip">{head(r.params)}</span>{/if}
+              </span>
+              {#if details(r)}<span class="eg-row-detail">{details(r)}</span>{/if}
+            </div>
+            <div class="eg-cmd">
+              <code class="av-mono">{r.command}</code>
+              <button
+                type="button"
+                class="eg-copy"
+                onclick={(e) => copyCmd(r.command, e.currentTarget.parentElement?.querySelector('code'))}
+                aria-label={`Copy ${r.command}`}
+              >
+                {copied === r.command ? copyLabel(copyState) : 'Copy'}
+              </button>
+              <RunButton recipeId={r.recipeId ?? r.recipeStem} runnable={r.runnable ?? true} />
+            </div>
+          </li>
+        {/each}
+      </ul>
+    </div>
+
+    <div class="eg-foot">
+      <div>
+        <p class="av-card-tag">{copy.pins.title}</p>
+        <dl class="eg-pins">
+          {#each copy.pins.items as p}
+            <div>
+              <dt>{p.term}</dt>
+              <dd>{p.body}</dd>
+            </div>
+          {/each}
+        </dl>
+      </div>
+      <div class="eg-note">
+        <p class="av-small">{copy.legend}</p>
+        <a class="av-link" href={recipesUrl} target="_blank" rel="noopener">{copy.registryCta} ↗</a>
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+  .eg-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+  .eg-stats li {
+    display: grid;
+    gap: 0.25rem;
+    padding-left: 0.9rem;
+    border-left: 2px solid var(--sx);
+  }
+  .eg-stats strong {
+    font-family: var(--font-mono);
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--t1);
+  }
+  .eg-stats span {
+    font-size: 0.8rem;
+    color: var(--t3);
+  }
+  .eg-nav {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .eg-vendors,
+  .eg-families {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .eg-vendor {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    background: var(--card);
+    color: var(--t2);
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      border-color 0.18s,
+      color 0.18s,
+      background 0.18s,
+      transform 0.18s var(--av-ease);
+  }
+  .eg-vendor:hover {
+    border-color: var(--accent);
+    color: var(--t1);
+    transform: translateY(-1px);
+  }
+  .eg-vendor.is-active {
+    background: var(--accent-fill);
+    border-color: var(--accent-fill);
+    color: var(--on-accent);
+  }
+  .eg-ico {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+  .eg-family {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.38rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--t2);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      border-color 0.18s,
+      color 0.18s,
+      background 0.18s;
+  }
+  .eg-family:hover {
+    border-color: var(--accent);
+    color: var(--t1);
+  }
+  .eg-family.is-active {
+    color: var(--sx-text);
+    border-color: color-mix(in srgb, var(--sx) 45%, transparent);
+    background: color-mix(in srgb, var(--sx) 12%, transparent);
+  }
+  .eg-family-n {
+    font-size: 0.66rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--t3) 18%, transparent);
+    color: var(--t2);
+  }
+  .eg-family.is-active .eg-family-n {
+    background: color-mix(in srgb, var(--sx) 18%, transparent);
+    color: var(--sx-text);
+  }
+  .eg-panel {
+    padding: 0;
+  }
+  .eg-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1.4rem 1.6rem 0.9rem;
+  }
+  .eg-panel-head h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+  .eg-cols,
+  .eg-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr) minmax(0, 1.4fr);
+    gap: 1.25rem;
+    align-items: center;
+    padding: 0.9rem 1.6rem;
+  }
+  .eg-cols {
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--t3);
+    font-weight: 600;
+  }
+  .eg-rows {
+    display: grid;
+  }
+  .eg-row {
+    border-bottom: 1px solid var(--border);
+  }
+  .eg-row:last-child {
+    border-bottom: 0;
+  }
+  .eg-row-model {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+  .eg-row-name {
+    font-weight: 600;
+    color: var(--t1);
+  }
+  .eg-row-hf {
+    font-size: 0.74rem;
+    color: var(--t3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .eg-row-build {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+  .eg-row-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .eg-row-detail {
+    font-size: 0.78rem;
+    color: var(--t3);
+    line-height: 1.45;
+  }
+  .eg-cmd {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    background: var(--sunk);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 0.4rem 0.4rem 0.4rem 0.75rem;
+  }
+  .eg-cmd code {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.76rem;
+    color: var(--t1);
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: thin;
+  }
+  .eg-copy,
+  .eg-cmd :global(.cmd-run) {
+    flex-shrink: 0;
+    border-radius: 999px;
+    padding: 0.38rem 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+  .eg-copy {
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  .eg-copy:hover {
+    background: var(--accent-fill);
+    color: var(--on-accent);
+  }
+  .eg-foot {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .eg-pins {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin: 0;
+  }
+  .eg-pins div {
+    display: grid;
+    gap: 0.3rem;
+    align-content: start;
+  }
+  .eg-pins dt {
+    font-weight: 600;
+    color: var(--t1);
+    font-size: 0.95rem;
+  }
+  .eg-pins dd {
+    margin: 0;
+    color: var(--t2);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+  .eg-note {
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+    justify-items: start;
+  }
+  @media (max-width: 900px) {
+    .eg-cols {
+      display: none;
+    }
+    .eg-row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.75rem;
+      padding: 1rem 1.15rem;
+    }
+    .eg-panel-head {
+      padding: 1.15rem 1.15rem 0.6rem;
+    }
+    .eg-row-hf {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .eg-foot {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+    .eg-pins {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 720px) {
+    .eg-vendors,
+    .eg-families {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      padding-bottom: 0.3rem;
+    }
+    .eg-vendor,
+    .eg-family {
+      flex-shrink: 0;
+    }
+    .eg-cmd {
+      flex-wrap: wrap;
+    }
+    .eg-cmd code {
+      flex-basis: 100%;
+    }
+    .eg-stats {
+      gap: 1.25rem;
+    }
+  }
+</style>
