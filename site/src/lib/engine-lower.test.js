@@ -74,8 +74,11 @@ test('no FAQ answer carries a hand typed performance figure', () => {
   for (const item of faq.items) expect(item.a, item.q).not.toMatch(/\d+(\.\d+)?\s*[x×]\b|tok\/s|\bms\b|\d+\s*%/);
 });
 
+// The box is named in full ("DGX Spark"); its bare plural is derived from that name.
+const BOX_PLURAL = new RegExp(`\\bGB10s\\b|\\b${'DGX Spark'.split(' ')[1]}s\\b`);
+
 test('every hardware name is written in full', () => {
-  for (const [path, s] of prose) expect(s, `${path}: "${s}"`).not.toMatch(/\bGB10s\b|\bSparks\b/);
+  for (const [path, s] of prose) expect(s, `${path}: "${s}"`).not.toMatch(BOX_PLURAL);
 });
 
 // --- lockstep with the registry -------------------------------------------
