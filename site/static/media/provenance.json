@@ -42,7 +42,7 @@
   "console-deploy": {
     "kind": "recorded",
     "from": "/console?scene=deploy",
-    "at": "2026-09-22"
+    "at": "2026-09-26"
   },
   "console-economics": {
     "kind": "recorded",
@@ -52,7 +52,7 @@
   "console-fleet": {
     "kind": "recorded",
     "from": "/console?scene=fleet",
-    "at": "2026-09-22"
+    "at": "2026-09-26"
   },
   "console-governance": {
     "kind": "recorded",
@@ -67,6 +67,6 @@
   "reel": {
     "kind": "assembled",
     "from": "media-brief/reel.json",
-    "at": "2026-09-22"
+    "at": "2026-09-26"
   }
 }

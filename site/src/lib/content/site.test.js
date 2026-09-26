@@ -216,7 +216,7 @@ test('the logo wall only shows files that ship', () => {
   }
   for (const p of home.logoWall.programs) {
     for (const f of [p.file, p.fileDark]) if (f && !logo(f, 'svg')) missing.push(`${p.name}: ${f}.svg`);
-    if (p.src && !existsSync(join(STATIC_DIR, p.src))) missing.push(`${p.name}: ${p.src}`);
+    for (const f of [p.src, p.srcDark]) if (f && !existsSync(join(STATIC_DIR, f))) missing.push(`${p.name}: ${f}`);
   }
   expect(missing).toEqual([]);
 });

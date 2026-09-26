@@ -68,13 +68,15 @@ export const logoWall = {
   note: 'Prior roles of the founding team and core contributors. Listed for background, not as customers or endorsements. The appearance of U.S. Department of Defense visual information does not imply or constitute DoD endorsement.',
   programsLabel: 'Programs and partners',
   // `file` is the logo on the light theme and `fileDark` the one for the dark
-  // theme, when the logo is drawn in dark ink. `label` sets a name beside a mark
+  // theme, when the logo is drawn in dark ink; `src` and `srcDark` are the same
+  // for a raster badge. `label` sets a name beside a mark
   // that has no wordmark of its own. `height` in pixels, for a logo whose
   // lettering is small inside its own box. The default is 26.
   programs: [
     {
       name: 'NVIDIA Inception',
       src: '/nvidia-inception.webp',
+      srcDark: '/nvidia-inception-dark.webp',
       href: links.inception,
       blurb: 'Program member. DGX Spark hardware provided.',
     },
@@ -256,7 +258,7 @@ export const recognition = {
     },
     {
       org: 'NVIDIA Inception',
-      mark: { name: 'NVIDIA Inception', src: '/nvidia-inception.webp', height: 34 },
+      mark: { name: 'NVIDIA Inception', src: '/nvidia-inception.webp', srcDark: '/nvidia-inception-dark.webp', height: 34 },
       hue: 'violet',
       date: 'Member',
       title: 'Program member. DGX Spark hardware provided for the GB10 bring up',
