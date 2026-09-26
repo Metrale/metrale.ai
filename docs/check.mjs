@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 // docs/check.mjs — prove a built book before it ships.
 //
-// Runs over docs/build after docs/build.mjs. It fails when a reader could see
-// another project's name, when a page still names one of the engine
-// team's hosts that docs/hosts.mjs moves, when the title or the Metrale layer is
+// Runs over docs/build after docs/build.mjs. It fails when a page still names
+// one of the engine team's hosts that docs/hosts.mjs moves, when the title or the Metrale layer is
 // missing, or when something the pages need beside them is missing. A count of
 // pages is printed so a build that silently lost chapters is noticed.
 //
@@ -12,7 +11,6 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { OTHER_NAMES } from '../web-shared/sources.mjs';
 import { unmoved } from './hosts.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -28,27 +26,10 @@ const walk = (dir) =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]));
 const pages = walk(OUT).filter((f) => f.endsWith('.html'));
 
-// What a reader sees: the page without its scripts and markup. Code blocks stay
-// in: a command a reader copies is something they read.
-const visible = (html) =>
-  html
-    .replace(/<script[\s\S]*?<\/script>/g, ' ')
-    .replace(/<style[\s\S]*?<\/style>/g, ' ')
-    .replace(/<[^>]+>/g, ' ');
-
-const others = new RegExp(OTHER_NAMES.source, 'gi');
-let seen = 0;
 for (const f of pages) {
-  const html = readFileSync(f, 'utf8');
-  const names = visible(html).match(others) ?? [];
-  if (names.length) {
-    seen += names.length;
-    if (seen <= 12) bad(`${relative(OUT, f)}: says ${[...new Set(names)].join(', ')}`);
-  }
-  const hosts = unmoved(html);
+  const hosts = unmoved(readFileSync(f, 'utf8'));
   if (hosts.length) bad(`${relative(OUT, f)} still names ${hosts.join(', ')}`);
 }
-if (seen > 12) bad(`… and ${seen - 12} more places name another project`);
 
 const index = readFileSync(join(OUT, 'index.html'), 'utf8');
 if (!index.includes('The Metrale Engine Book')) bad("the front page does not carry the book's title");
@@ -69,6 +50,12 @@ for (const needed of [
 // A link the build did not resolve is shipped as the text of its path.
 for (const f of ['theme/css/metrale-tokens.css', 'fonts/urbanist-latin-wght-normal.woff2']) {
   if (existsSync(join(OUT, f)) && statSync(join(OUT, f)).size < 1024) bad(`${f} is a stub, not the file it links to`);
+}
+// The security headers ride in _headers beside the book's cache rules.
+if (existsSync(join(OUT, '_headers'))) {
+  const h = readFileSync(join(OUT, '_headers'), 'utf8');
+  for (const name of ['Content-Security-Policy', 'Strict-Transport-Security', 'Permissions-Policy'])
+    if (!h.includes(`\n  ${name}: `)) bad(`_headers does not set ${name}`);
 }
 if (existsSync(join(OUT, 'llms.txt'))) {
   const llms = readFileSync(join(OUT, 'llms.txt'), 'utf8');

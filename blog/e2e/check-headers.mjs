@@ -4,7 +4,7 @@
  *
  *   bun blog/e2e/check-headers.mjs [base-url]
  *
- * Asserts the four response headers the vhost promises, on all three response
+ * Asserts the security headers the host promises, on all three response
  * classes that nginx routes differently: a document, a content-hashed asset,
  * and a 404. It exists because the defect it guards against is invisible from
  * inside the config file — `add_header` does not accumulate across contexts, so
@@ -23,7 +23,8 @@ const base = (process.argv[2] ?? 'https://blog.metrale.ai').replace(/\/$/, '');
 const SECURITY = {
   'x-content-type-options': 'nosniff',
   'x-frame-options': 'SAMEORIGIN',
-  'referrer-policy': 'strict-origin-when-cross-origin'
+  'referrer-policy': 'strict-origin-when-cross-origin',
+  'strict-transport-security': 'max-age=31536000; includeSubDomains'
 };
 
 let failures = 0;
@@ -57,6 +58,10 @@ function expectSecurityHeaders(label, h) {
   for (const [name, value] of Object.entries(SECURITY)) {
     check(`${label}: ${name}`, h(name).toLowerCase() === value.toLowerCase(), h(name) || 'absent');
   }
+  // The policies are long; what matters is that each is there, once, and
+  // starts where static/_headers says it does.
+  check(`${label}: content-security-policy`, h('content-security-policy').startsWith("default-src 'self';"), h('content-security-policy') || 'absent');
+  check(`${label}: permissions-policy`, h('permissions-policy').includes('camera=()'), h('permissions-policy') || 'absent');
 }
 
 console.log(`checking ${base}`);

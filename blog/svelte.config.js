@@ -1,5 +1,10 @@
 import adapter from '@sveltejs/adapter-static';
+import { readFileSync } from 'node:fs';
 import { metraleMarkdown } from './src/lib/md/preprocess.js';
+import { inlineScriptHashes } from '../web-shared/csp.mjs';
+
+// The one inline script in app.html, the theme boot.
+const appHtmlHashes = inlineScriptHashes(readFileSync(new URL('./src/app.html', import.meta.url), 'utf8'), 1);
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -18,6 +23,13 @@ const config = {
     // live in web-shared/ at the repo root — one copy, imported
     // by two apps, rather than a copy per app that drifts.
     alias: { '$shared': '../web-shared' },
+    // Every prerendered page carries a <meta> script policy naming the hash of
+    // each inline script, so no other inline script runs. The rest of the
+    // policy is the header in static/_headers.
+    csp: {
+      mode: 'hash',
+      directives: { 'script-src': ['self', ...appHtmlHashes] }
+    },
     adapter: adapter({
       pages: 'build',
       assets: 'build',
