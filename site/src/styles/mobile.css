@@ -611,8 +611,17 @@ video {
     scrollbar-width: none;
     max-width: 100%;
   }
+  /* Underlined tabs never wrap inside the scrolling strip. */
+  .bd-tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
   .bd-controls {
     row-gap: 0.6rem;
+  }
+  /* The model switcher drops under the strip and keeps the strip's inset. */
+  .bd-model {
+    padding-bottom: 0.75rem;
   }
   .gbs-tile {
     min-width: 6.2rem;

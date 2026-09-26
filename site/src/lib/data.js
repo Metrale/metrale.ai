@@ -150,8 +150,17 @@ export const hero = {
 
 // --- proof strip (prominent, right under the hero) ---------------------------
 export const proof = {
-  label: '// receipts, not adjectives',
-  items: [{ text: 'Built with SCALE by Spectral Compute', url: scaleUrl }],
+  label: 'Proof',
+  // The trust strip under the hero. Four facts, each linked to its source.
+  // The signed-record count is read from live.generated.json by the
+  // component; only the words around it live here, so the number is never
+  // typed. `kind` picks the glyph (components/engine/bench/ProofIcon.svelte).
+  items: [
+    { kind: 'partner', tag: 'Partner', text: 'Built with SCALE by Spectral Compute', url: scaleUrl },
+    { kind: 'program', tag: 'Program', text: 'NVIDIA Inception member', url: nvidiaInceptionUrl },
+    { kind: 'licence', tag: 'Licence', text: 'MIT OR Apache-2.0, at your option', url: `${githubUrl}/blob/main/LICENSE-MIT` },
+  ],
+  signed: { kind: 'records', tag: 'Records', text: '{signed} of {records} gate records signed', href: `#verified` },
 };
 
 // --- star / social proof -----------------------------------------------------
@@ -173,18 +182,94 @@ export const community = {
 
 // --- verified performance (the gate receipt) ---------------------------------
 export const verified = {
-  label: '// 02 · verified',
+  label: 'Verified',
   title: 'Every number is a receipt.',
-  sub: 'The website is a build artifact of the repo. Models come from recipes, performance comes from committed gate enforced baselines, stamped with commit and date. If a number is not in the repo, it is not on this page.',
-  mechanism: 'A release that ships slower than the committed baseline fails our gate. That one sentence is the whole positioning.',
-  reproLead: 'Reproduce the matrix',
+  sub: 'Metrale Engine is benchmarked on every release against a committed baseline, and every record is signed. The performance on this page comes from those records, stamped with the engine commit and the date. If a number is not in the repository, it is not on this page.',
+  mechanism: 'A release that ships slower than the committed baseline fails our gate.',
   challengeLine: 'Beat these numbers or catch a regression, open an issue and we will feature it.',
-  // Rendered directly under the ladder chart. The numbers in this block are
-  // derived from ladder.generated.json by lib/ladder.js, never typed here.
+  challengeCta: 'Open an issue',
+  // The headline comparison, three tiles over the ladder chart. Every {value}
+  // is read from ladder.generated.json by components/engine/bench/ladder-facts.js.
+  headline: {
+    ratio: {
+      label: 'Against matched vLLM at C={c}',
+      body: '{baselineLabel} runs vLLM with its own speculative decoding at the same K as the engine, on the same box, checkpoint, client and prompts.',
+    },
+    throughput: {
+      label: 'Aggregate throughput at C={c}',
+      unit: 'tok/s',
+      body: '{checkpoint} on one DGX Spark. {aggregate}.',
+    },
+    rungs: {
+      label: 'Rungs won, C={from} to C={c}',
+      body: 'Margin {min}× to {max}× against the matched configuration at every rung, with the rungs we lost on the way in the campaign log.',
+    },
+  },
+  stamp: 'engine {sha} · {date}',
+  // Rendered under the ladder chart. The figures in it are derived from
+  // ladder.generated.json by lib/ladder.js, never typed here.
   scale: {
     title: 'The top of the ladder is the part that matters.',
-    lead: 'Agentic work does not arrive as one conversation at a time. It arrives as fleets of tool calling agents sharing a context bus, fanning out and rejoining, and the engine underneath them is judged where the requests pile up rather than at a single stream.',
-    tail: 'That gap is the whole thesis. An engine that flattens under load caps how many agents you can actually run, on any hardware you put it on. Holding the curve is what turns one accelerator into a swarm, and it is why the same engine is worth running on a rack.',
+    lead: 'Agentic work arrives as fleets of tool calling agents sharing a context bus, and the engine underneath them is judged where the requests pile up, not at a single stream.',
+    tail: 'An engine that flattens under load caps how many agents you can run on the hardware you have. Holding the curve is what turns one accelerator into a fleet.',
+  },
+  // What the comparison does and does not say. Each {value} is read from the
+  // ladder manifest by caveatsOf in ladder-facts.js, so a re-measured
+  // baseline rewrites its date here on the next build.
+  caveats: {
+    kicker: 'What this does and does not say',
+    box: { label: 'One accelerator', text: '{gpu}. {boxNote}.' },
+    checkpoint: {
+      label: 'One checkpoint',
+      text: '{checkpoint}, a {checkpointNote}. Other models are measured in the dashboard and claimed nowhere else.',
+    },
+    baseline: {
+      label: 'A matched baseline',
+      text: '{baselineLabel} is {baselineEngine} with {baselineSpeculation}, measured {baselineFrom} to {baselineTo}. It is a dated snapshot, not a live series.',
+    },
+    workload: {
+      label: 'One workload',
+      text: 'ISL {isl} and OSL {osl}, {reps} timed reps after {warmup} warmup, temperature {temperature}, seed {seed}. Your prompts will differ.',
+    },
+    unmatched: {
+      label: 'Drawn, not scored',
+      text: '{unmatchedLabels} differs on {unmatchedDeltas}. It is on the chart for completeness and is not the denominator of any ratio here.',
+    },
+    scope: {
+      label: 'Nothing beyond that',
+      text: 'One box, one checkpoint, one workload. This says nothing about other hardware until we have run it there.',
+    },
+  },
+  // The entry point to the benchmark dashboard, one control per family.
+  dashboard: {
+    kicker: 'Benchmark dashboard',
+    title: 'Every benchmark family, every signed run.',
+    body: 'Agentic, BFCL, TTFT, decode, concurrency and cost, one tab each. Every chart point opens its record, its signature and the steps to reproduce it.',
+    groupLabel: 'Open the dashboard on a benchmark family',
+    cta: 'Open the dashboard',
+  },
+  // The trust signals beside the release-gate receipt.
+  trust: {
+    signed: {
+      title: 'Signed records',
+      body: '{signed} of {records} gate records carry a detached signature and the public key that made it, committed beside the record. The newest is from {newest}.',
+      cta: 'How to verify a record',
+      // The certification chapter of the engine's book. Held equal to
+      // RECORD_SIGNING_DOC in lib/receipt.js by ladder-facts.test.js: the page
+      // cannot import receipt.js, which is shared with the lazily loaded
+      // dashboard and would split into one more preload (page-weight.spec.js).
+      url: 'https://docs.metrale.ai/project/landing.html',
+    },
+    gate: {
+      title: 'The release gate',
+      cta: 'What verified means',
+      ctaSource: 'gate_results.py',
+    },
+    reproduce: {
+      title: 'Reproduce it',
+      body: 'The campaign log holds every rung, every raw file and the harness sha, including the rungs we lost on the way and the claims we retracted.',
+      cta: 'Read the campaign log',
+    },
   },
 };
 
