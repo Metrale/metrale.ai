@@ -611,6 +611,14 @@
   overflow-y: auto;
   width: min(430px, 100%);
 }
+/* The card is also a .receipt, and app.css gives .receipt overflow: hidden at the same
+   specificity; on routes where app.css loads later that clip won and the expanded
+   reproduction steps could not be scrolled into view. Clip sideways, scroll down. */
+.gpc.receipt {
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 .gpc-verdict {
   font-size: 0.78rem;
   font-weight: 800;
