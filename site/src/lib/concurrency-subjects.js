@@ -10,7 +10,7 @@
 // Two subjects
 // share a checkpoint (dense and DFlash both serve the 27B), and every gate id
 // has exactly one declared subject (`record_is_required_subject` in
-// crates/metrale-plugin/src/gate/check.rs — which is why the MoE ladder is
+// crates/bench/src/gate/check.rs — which is why the MoE ladder is
 // `concurrency-sweep-moe`, not a second checkpoint of `concurrency-sweep`), so
 // a record is assigned on BOTH fields: the checkpoint alone would file a
 // DFlash run under the dense tab, and the gate alone would let a stray record

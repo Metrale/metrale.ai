@@ -14,7 +14,7 @@
 //   (see gen-stars.mjs for the bug that rule comes from).
 //
 // The registered benchmark list is derived from the descriptor SSOT
-// (crates/metrale-plugin/src/benchmarks/**: `id: "<bench-id>"`), so the UI can
+// (crates/bench/src/benchmarks/**: `id: "<bench-id>"`), so the UI can
 // name gated-but-not-yet-published benchmarks without hardcoding them.
 //
 // Records are slimmed for the page: `closure` (per-kernel hashes, ~10x the
@@ -43,7 +43,7 @@ import { engineRoot } from './lib/engine-root.mjs';
 const here = dirname(fileURLToPath(import.meta.url));
 const REPO = engineRoot();
 const RECORDS_ROOT = resolve(REPO, '.benchmarks');
-const DESCRIPTOR_ROOT = resolve(REPO, 'crates', 'metrale-plugin', 'src', 'benchmarks');
+const DESCRIPTOR_ROOT = resolve(REPO, 'crates', 'bench', 'src', 'benchmarks');
 const KERNELS_ROOT = resolve(REPO, 'kernels', 'gb10');
 const OUT = resolve(here, '..', 'src', 'lib', 'gates.generated.json');
 

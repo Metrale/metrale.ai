@@ -44,7 +44,7 @@ describe('the subject list', () => {
 
   test('the MoE has its own gate id; dense and DFlash share a checkpoint', () => {
     // A required gate has ONE declared subject per box class (`record_is_required_subject`
-    // in crates/metrale-plugin/src/gate/check.rs), so the MoE ladder cannot be a second
+    // in crates/bench/src/gate/check.rs), so the MoE ladder cannot be a second
     // subject of `concurrency-sweep`: it is `concurrency-sweep-moe`, the mechanism the
     // DFlash2 ladder already uses, and its records land in their own directory.
     expect(byId('qwen38-27b').gate).toBe('concurrency-sweep');

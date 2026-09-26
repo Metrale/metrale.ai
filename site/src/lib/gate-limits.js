@@ -41,7 +41,7 @@ export const RUNG_METRIC = /^c(\d+)_aggregate_tok_s$/;
 
 /**
  * Metric → the param the harness records its threshold under, and which bound
- * that threshold is. The names are the gate descriptors' (crates/metrale-plugin
+ * that threshold is. The names are the gate descriptors' (crates/bench
  * /src/benchmarks); they are spelled once, here.
  */
 const GOVERNING_PARAM = Object.freeze({

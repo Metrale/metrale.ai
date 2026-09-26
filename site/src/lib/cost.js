@@ -6,7 +6,7 @@
 //
 // # Store joules and tokens, derive every ratio
 //
-// The producer (crates/metrale-plugin/src/hardware/energy.rs) stores JOULES and
+// The producer (crates/bench/src/hardware/energy.rs) stores JOULES and
 // the TOKEN COUNT of the window they span, and nothing else: joules and tokens
 // are additive and survive re-aggregation, a ratio does not. So J/token,
 // tokens/Wh and dollars are computed HERE, from that pair, and none of them is
@@ -383,8 +383,8 @@ export function readEnergy(m, prefix, run, id, expectTokS) {
     const thin = w === null || w <= 0 ? 'no window recorded for it' : samplingConcern(num(worstSamples), periodMs, w);
     if (thin) concerns.push(`worst rep: ${thin}`);
   }
-  // SW Power Cap is this box's NORMAL steady state under load (energy.rs), so
-  // it is reported and never disqualifying. The HW power brake is not normal.
+  // The SW power cap is the driver's own power management, not a throttle, so it
+  // is reported and never disqualifying. The HW power brake is a hardware throttle.
   const hwBrakeFrac = num(at(KEY.hwBrakeFrac));
   const throttled = hwBrakeFrac !== null && hwBrakeFrac > 0;
   if (throttled) concerns.push(`HW power brake asserted on ${(hwBrakeFrac * 100).toFixed(0)}% of readings`);

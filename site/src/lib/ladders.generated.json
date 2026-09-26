@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-09-26T16:05:28Z",
+  "generated_utc": "2026-09-26T22:01:39Z",
   "subjects": {
     "qwen38-27b": {
       "manifest": "bench/ladder38/published.json",
@@ -34,7 +34,7 @@
         "664302439b": "The ENERGY leg (vllm-mtp-energy), 2026-09-21. harness_w56_conc_ladder.py -- the w55 harness plus power_window.py, which is the half that records gpu_rail_energy_j; w55 has no power sampling at all, which is why the throughput-only legs above carry no joules. This is the sha256 of the copy committed at bench/ladder38/harness_w56_conc_ladder.py and asserted equal to the raw file's driver_sha256 at the time it was added, so the two are checkable against each other -- and gen-ladder.mjs re-hashes that file at every build as harness_repo_sha256.",
         "equivalence": "The only difference is those two keys. vLLM already defaults both to 0.0, so its sampling is byte-identical either way; the keys exist to stop Metrale Engine's non_thinking preset injecting presence_penalty=1.5. Both engines therefore ran identical sampling."
       },
-      "harness_repo_sha256": "68bc27b4ebdab730a7c2000fe31767be0dbbaeca2b0ecab032fd805a0c54445d",
+      "harness_repo_sha256": "4649c9b001d1c984bdbaae9b9a97631b526a6725f4fe963a23a5c378f6d5cb3c",
       "concurrencies": [
         1,
         2,
@@ -763,7 +763,7 @@
         "41e242c072": "vLLM MoE leg, the only leg in this manifest. This was the sha256 of the copy committed at bench/ladder38/harness_w55_conc_ladder.py (md5 4aa694d8aabe404edc8f1e3eb2acbf31) when it ran; that file's comments have been edited since, so gen-ladder.mjs's harness_repo_sha256 (the tree copy) no longer equals it. The dense ladder's raw files carry earlier revisions of this same file (6412b12d4d, 1c77e1d8e9, 1f10d4887b); the deck prints the recorded and the repo hash side by side.",
         "equivalence": "One revision, one leg. The copy on dgx2 (/home/claude/ladder38-pinned/) was a DIFFERENT, older revision and was replaced with the repo copy before measuring; the driver_sha256 in the raw file is the proof of which copy ran, and the generator refuses any raw file whose driver sha is not listed here."
       },
-      "harness_repo_sha256": "68bc27b4ebdab730a7c2000fe31767be0dbbaeca2b0ecab032fd805a0c54445d",
+      "harness_repo_sha256": "4649c9b001d1c984bdbaae9b9a97631b526a6725f4fe963a23a5c378f6d5cb3c",
       "concurrencies": [
         1,
         2,

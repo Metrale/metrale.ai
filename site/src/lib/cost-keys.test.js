@@ -20,8 +20,8 @@ import { engineRoot } from '../../scripts/lib/engine-root.mjs';
 
 // The engine checkout the build reads (site/engine.ref pins its commit).
 const path = (rel) => join(engineRoot(), rel);
-const ENERGY = path('crates/metrale-plugin/src/hardware/energy.rs');
-const SAMPLER = path('crates/metrale-plugin/src/hardware/energy_sampler.rs');
+const ENERGY = path('crates/bench/src/hardware/energy.rs');
+const SAMPLER = path('crates/bench/src/hardware/energy_sampler.rs');
 
 // The site is built from a checkout of the whole repo; if that ever stops
 // being true this must fail loudly rather than skip and report green.
@@ -49,8 +49,8 @@ describe('every key cost.js reads is one the producer writes', () => {
   });
 
   test('the prefix the sweep applies is the c{C}_ the page builds', () => {
-    // concurrency.rs: r.instrument_metrics(&format!("c{c}_"), …)
-    const conc = readFileSync(path('crates/metrale-plugin/src/benchmarks/concurrency.rs'), 'utf8');
+    // concurrency_report.rs: r.instrument_metrics(&format!("c{c}_"), …)
+    const conc = readFileSync(path('crates/bench/src/benchmarks/concurrency_report.rs'), 'utf8');
     expect(conc).toContain('instrument_metrics(&format!("c{c}_")');
     expect(conc).toContain('c{c}_aggregate_tok_s');
   });
@@ -72,8 +72,8 @@ describe('the trust rule is calibrated against the producer cadence, not guessed
     expect(energySrc).toMatch(/pub fn integrate\(/);
   });
 
-  test('SW power cap is documented as this box NORMAL state — which is why it does not disqualify', () => {
-    expect(energySrc).toContain('SW Power Cap is the NORMAL state');
+  test('the producer computes the SW power cap fraction the page reports (cost.test.js pins that it never disqualifies)', () => {
+    expect(energySrc).toMatch(/pub sw_power_cap_frac: Option<f64>/);
   });
 });
 
