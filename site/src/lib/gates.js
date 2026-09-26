@@ -7,11 +7,28 @@
 import { ENGINE_REPO } from '../../../web-shared/sources.mjs';
 import gates from '$lib/gates.generated.json';
 import { splitByVariant } from './gate-variants.js';
+import { foldPartitions } from './bfcl-partition.js';
+import { latestDeclaredSince, limitFor as limitForRecord, rungFloors as rungFloorsOf } from './gate-limits.js';
 
 export const gateData = gates;
 // A record links to its own file in the engine repository, on the branch it was
 // found on: the record is the evidence, and it outlives the commit it names.
 export const recordUrl = (r) => (r?.path ? `${ENGINE_REPO}/blob/${r.branch || 'main'}/${r.path}` : ENGINE_REPO);
+
+// The floors and ceilings BENCH.toml declares, per gate and checkpoint —
+// carried by gen-gates.mjs. Its absence means the generated file predates the
+// generator that writes it; that is a stale build to fix, not a "no limits"
+// state to draw.
+if (!gates.gate_limits) throw new Error('gates.generated.json has no gate_limits — run node site/scripts/gen-gates.mjs');
+export const gateLimits = gates.gate_limits;
+/** The floor/ceiling governing one record's metric — see gate-limits.js. */
+export const limitFor = (record, metricKey) => limitForRecord(record, metricKey, gateLimits);
+/** The same record's limit with the declaration read as of another time. */
+export const limitAsOf = (record, metricKey, at) => limitForRecord(record, metricKey, gateLimits, at);
+/** When the declaration governing this record's metric last changed. */
+export const latestLimitChange = (record, metricKey) =>
+  latestDeclaredSince(gateLimits, record?.benchmark_id, record?.target_model, metricKey);
+export const rungFloors = (record) => rungFloorsOf(record, gateLimits);
 
 export { MODEL_COLORS, UNKNOWN_MODEL_COLOR, colorFor } from './series-colors.js';
 export { dashFor, groupFor, groupRecords, groupedBenches, isLatestOfVariant, splitByVariant, variantLabel } from './gate-variants.js';
@@ -33,16 +50,39 @@ const TAB_DEFS = [
   // records-filter below keeps the tabs hidden and the ids show in the
   // footer's "gated, not yet published" line — nothing renders empty.
   { id: 'decode', label: 'Decode', benches: ['decode-floor'] },
-  // Both concurrency gates share this tab AND one set of charts — see
-  // gate-variants.js. They run the same fixture at the same rungs on the
+  // The two dense concurrency gates share this tab AND one set of charts —
+  // see gate-variants.js. They run the same fixture at the same rungs on the
   // same checkpoint and differ only in whether the engine speculates, so
-  // two lines on one axis is the comparison; two panels is not.
+  // two lines on one axis is the comparison; two panels is not. The MoE
+  // ladder (`concurrency-sweep-moe`) is a third bench on this tab but NOT a
+  // member of that group: a different checkpoint on a different instrument
+  // (the published ISL 128 / OSL 1024 essay request), owned by its own
+  // subject in concurrency-subjects.json.
   {
     id: 'concurrency',
     label: 'Concurrency',
-    benches: ['concurrency-sweep', 'concurrency-sweep-dflash2'],
+    benches: ['concurrency-sweep', 'concurrency-sweep-dflash2', 'concurrency-sweep-moe'],
+  },
+  // Cost reads the SAME records as Concurrency — the GPU-rail joules and the
+  // token count of the window they span ride in each sweep record's metrics
+  // map — so it earns a tab on the same evidence. It renders an explicit
+  // "not yet measured" state per subject until an energy-instrumented run
+  // lands, which is the state it ships in: a cost tab that appeared only once
+  // a number existed would hide the fact that nothing has been measured.
+  {
+    id: 'cost',
+    label: 'Cost',
+    // The MoE rides BOTH tabs. Its records carry the same ladder shape and the
+    // same GPU-rail joules as the dense ones, so a gate id listed on
+    // Concurrency but not on Cost would render a throughput curve for a subject
+    // whose energy is sitting unread in the very same record.
+    benches: ['concurrency-sweep', 'concurrency-sweep-dflash2', 'concurrency-sweep-moe'],
   },
 ];
+// Every bench whose metrics map is a concurrency ladder (c{C}_aggregate_tok_s
+// + peak_aggregate_tok_s), read from the tab definition so a bench added there
+// gets the ladder panels without a second edit.
+const CONCURRENCY_BENCHES = new Set(TAB_DEFS.find((t) => t.id === 'concurrency').benches);
 export const tabs = TAB_DEFS.filter((t) => t.benches.some((b) => (gates.benchmarks[b]?.records ?? []).length > 0));
 
 // Registered in the suite (descriptor SSOT) but with zero published records —
@@ -53,12 +93,9 @@ export const unpublished = (gates.registered ?? []).filter((id) => !withRecords.
 export const models = [...new Set(Object.values(gates.benchmarks).flatMap((b) => b.records.map((r) => r.target_model)))].sort();
 
 // ---- panel specs ------------------------------------------------------------
-// floor/cap lines are read from the records themselves (params or the
-// verdict_reason's "(floor N)" text) — never invented here.
-const floorFromReason = (r) => {
-  const m = /floor ([0-9.]+)/.exec(r.verdict_reason ?? '');
-  return m ? +m[1] : null;
-};
+// Floor/ceiling lines are NOT part of a panel spec: GateChart reads them per
+// record through `limitFor` (gate-limits.js), so a ratcheted floor steps
+// where it was ratcheted and nothing is invented here.
 
 export function panelsFor(benchId, records) {
   if (records.length === 0) return [];
@@ -69,10 +106,6 @@ export function panelsFor(benchId, records) {
         title: 'Σ wall time',
         unit: 's',
         metrics: [{ key: 'sum_wall_s', label: 'Σ wall (s)' }],
-        caps: [...new Set(records.map((r) => +r.params?.wall_budget_s || 0).filter(Boolean))].map((v) => ({
-          value: v,
-          label: `budget ${v}s`,
-        })),
       },
       {
         title: 'webserver_ok per run',
@@ -88,11 +121,6 @@ export function panelsFor(benchId, records) {
         title: 'overall accuracy',
         unit: 'score',
         metrics: [{ key: 'overall_accuracy', label: 'overall' }],
-        caps: [],
-        floors: [...new Set(records.map(floorFromReason).filter(Boolean))].map((v) => ({
-          value: v,
-          label: `floor ${v}`,
-        })),
       },
     ];
   }
@@ -115,9 +143,27 @@ export function panelsFor(benchId, records) {
     // chart forever. Prefer a tok/s-shaped key, else the first numeric one.
     const keys = Object.keys(latest.metrics ?? {});
     const key = keys.find((k) => /tok_s/.test(k)) ?? keys.find((k) => k !== 'samples');
-    return key ? [{ title: 'decode floor', unit: 'tok/s', metrics: [{ key, label: key }] }] : [];
+    const panels = key ? [{ title: 'decode floor', unit: 'tok/s', metrics: [{ key, label: key }] }] : [];
+    // STABILITY, on its own axis. It is the tail spread of the inter-arrival
+    // gap (lower = smoother), so it shares no unit with tok/s and must not
+    // share a panel: a 0.04 line drawn against a 26 tok/s axis is a flat line
+    // at the bottom of the chart, which reads as "nothing happening" rather
+    // than as a different quantity.
+    //
+    // Emitted only when the records carry it — `absent is not zero`, and the
+    // key landed with the campaign-3 metrics work, so every record older than
+    // that has none. Nothing is interpolated across the gap; the chart simply
+    // starts where the measurement does.
+    if (keys.includes('stability')) {
+      panels.push({
+        title: 'stability · arrival-gap tail spread',
+        unit: 'lower = smoother',
+        metrics: [{ key: 'stability', label: 'stability' }],
+      });
+    }
+    return panels;
   }
-  if (benchId === 'concurrency-sweep' || benchId === 'concurrency-sweep-dflash2') {
+  if (CONCURRENCY_BENCHES.has(benchId)) {
     // Two panels: the ladder curve (throughput vs C, latest runs overlaid —
     // rendered by GateLadderChart via kind: 'ladder') and the peak's trend
     // over time. Keys come from the sweep's metrics map
@@ -165,7 +211,37 @@ export const ladderPoints = (record) =>
     .filter(Boolean)
     .sort((a, b) => a.c - b.c);
 
-export const recordsFor = (benchId) => gates.benchmarks[benchId]?.records ?? [];
+/**
+ * The records for a benchmark, with every COMPLETE shard partition folded into
+ * the single aggregate the gate judged.
+ *
+ * The fold lives here, at the one place records enter the page, rather than in
+ * each chart: the record count printed beside a panel, the "latest" record in
+ * its header, the modal and the charts must all be talking about the same
+ * measurements. A chart-local fold would have left the header saying "124
+ * records" over a chart drawing 84 points.
+ *
+ * Memoised because it is called once per render per benchmark and the input is
+ * a frozen import.
+ */
+const foldCache = new Map();
+const folded = (benchId) => {
+  let f = foldCache.get(benchId);
+  if (!f) {
+    f = foldPartitions(gates.benchmarks[benchId]?.records ?? []);
+    foldCache.set(benchId, f);
+  }
+  return f;
+};
+
+export const recordsFor = (benchId) => folded(benchId).records;
+
+/**
+ * Shard records that do NOT complete a partition, grouped by the partition
+ * they belong to. Never plotted — half a strided draw is not a measurement —
+ * and never silently dropped either: the page says how many are withheld.
+ */
+export const withheldFor = (benchId) => folded(benchId).partial;
 export const benchName = (benchId) => gates.benchmarks[benchId]?.name ?? benchId;
 export const fmtDate = (unix) => new Date(unix * 1000).toISOString().slice(0, 10);
 export const fmtDateTime = (unix) => new Date(unix * 1000).toISOString().slice(0, 16).replace('T', ' ') + ' UTC';

@@ -40,6 +40,10 @@ On Windows use Git Bash, and give the variable a forward slash path
 
 ## Test it
 
+The unit suite reads the engine checkout as the build does: the benchmark
+dashboard's tests check the published manifests, the gate limits and the energy
+producer at `METRALE_ENGINE_ROOT`.
+
 ```sh
 bun test --preload ./test-runes.js src/lib          # unit, about a second
 bun x --bun playwright test e2e/marketing.spec.js   # browser, builds first

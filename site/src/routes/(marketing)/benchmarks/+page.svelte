@@ -20,9 +20,12 @@
   import bench from '$lib/benchmarks.generated.json';
   import { hardwarePage } from '$lib/content/platform.js';
 
-  let activeTab = $state(tabs[0]?.id);
+  // Cost is the dashboard's per-subject view of the concurrency records; it has
+  // no gate sections of its own, so this page keeps to the gate families.
+  const families = tabs.filter((t) => t.id !== 'cost');
+  let activeTab = $state(families[0]?.id);
   let selected = $state(null);
-  const tab = $derived(tabs.find((t) => t.id === activeTab) ?? tabs[0]);
+  const tab = $derived(families.find((t) => t.id === activeTab) ?? families[0]);
   const sections = $derived.by(() => {
     const out = [];
     const done = new Set();
@@ -99,7 +102,7 @@
         </p>
       </div>
       <div class="av-tabs av-reveal" role="tablist" aria-label="Benchmark families">
-        {#each tabs as t}
+        {#each families as t}
           <button type="button" role="tab" class="av-tab" aria-selected={activeTab === t.id} onclick={() => (activeTab = t.id)}
             >{t.label}</button
           >

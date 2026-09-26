@@ -102,6 +102,11 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/setup-site
+      # The dashboard's tests read the engine's manifests, gate limits and
+      # energy producer at the pinned commit, the same inputs the build reads.
+      - uses: ./.github/actions/engine-inputs
+        with:
+          github-token: ${{ github.token }}
       - name: Unit tests
         working-directory: site
         run: bun run test:unit
