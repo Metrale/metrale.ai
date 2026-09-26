@@ -8,6 +8,7 @@
 
 import { test, expect } from '@playwright/test';
 import { CHAT_ON } from './fixtures/chat-helpers.js';
+import { ENGINE_REPO } from '../../web-shared/sources.mjs';
 
 // Off with the chat itself; see CHAT_ON in fixtures/chat-helpers.js.
 test.skip(!CHAT_ON, 'The codebase chat is off until the engine publishes its code index.');
@@ -47,7 +48,7 @@ test.describe('@live real corpus', () => {
     // Free-tier models can rate-limit; sources are the part the site controls.
     await expect(card.locator('.cm-src').first()).toBeVisible({ timeout: 120_000 });
     expect(await card.locator('.cm-src').first().getAttribute('href')).toMatch(
-      /^https:\/\/github\.com\/Metrale\/metrale-inference-alpha\/blob\/[0-9a-f]{40}\/.+#L\d+-L\d+$/
+      new RegExp(`^${ENGINE_REPO.replace(/[.]/g, '\\.')}/blob/[0-9a-f]{40}/.+#L\\d+-L\\d+$`)
     );
   });
 });

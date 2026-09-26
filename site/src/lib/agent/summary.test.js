@@ -156,7 +156,7 @@ describe('a control-only machine says what it is', () => {
 
   test('a machine whose agent has not answered yet is idle, not control only', () => {
     // canLaunch absent means "not yet known"; assuming false would flash the
-    // wrong word at every operator on a Spark while the agent connects.
+    // wrong word at every operator on a DGX Spark while the agent connects.
     const s = U.summarize({ mode: 'live', nodes: [node('a', { isLocal: true })] });
     expect(s.detail).toBe('idle');
   });

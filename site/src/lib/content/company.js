@@ -25,7 +25,7 @@ export const story = {
     {
       when: 'Winter 2026',
       title: 'From scratch, in Rust',
-      body: 'Months of trying to improve vLLM on the Spark had shown that the feedback loop from a kernel change to a number was too slow to learn from. The serving stack was rewritten in Rust with hand tuned CUDA, no Python, and a build that takes a minute instead of forty.',
+      body: 'Months of trying to improve vLLM on the DGX Spark had shown that the feedback loop from a kernel change to a number was too slow to learn from. The serving stack was rewritten in Rust with hand tuned CUDA, no Python, and a build that takes a minute instead of forty.',
     },
     {
       when: 'May 2026',
@@ -35,7 +35,7 @@ export const story = {
     {
       when: 'July 2026',
       title: 'Two vendors',
-      body: 'AMD provided a Strix Halo desktop, and the engine ran on it from the same CUDA source as on the Spark, compiled through SCALE.',
+      body: 'AMD provided a Strix Halo desktop, and the engine ran on it from the same CUDA source as on the DGX Spark, compiled through SCALE.',
     },
     {
       when: 'August 2026',
@@ -85,7 +85,7 @@ export const mission = {
     },
     {
       title: 'Open at the core',
-      body: 'The Community Edition is AGPL-3.0 and always will be. The enterprise platform pays for the people who keep it that way.',
+      body: 'The engine is open source under MIT OR Apache-2.0. The platform pays for the people who keep it that way.',
     },
   ],
 };
@@ -386,28 +386,27 @@ export const demoPage = {
   },
 };
 
-// /waitlist. The Community Edition is announced, not released, so every button
-// that used to say "install" comes here. The engine underneath it IS released
-// and open source, and the page says so, because a developer who wants it today
-// should not be told to wait. When the edition ships: point `routes.waitlist`
-// users back at the install page and delete this block and its route.
+// /waitlist, the release notes sign up. The engine is released and open source,
+// so this page never asks anyone to wait for it: the install command is one
+// click away, and the form only asks who wants to hear when the next release
+// ships.
 export const waitlistPage = {
-  eyebrow: 'Community Edition',
-  title: 'The Community Edition is not out yet. Be first when it is.',
-  lede: 'The Community Edition is the free edition of Metrale, under AGPL-3.0. Leave an address and the hardware you run, and we will write to you when it is released.',
+  eyebrow: 'Release notes',
+  title: 'The engine runs today. Hear when the next release ships.',
+  lede: 'Metrale Engine is open source under MIT OR Apache-2.0, and the developer page has the install command. Leave an address and the hardware you run, and we will write when a release ships.',
   bullets: [
-    'One note when the Community Edition is released',
-    'Tell us the hardware you run, so we know what people are waiting on',
+    'One note when a release ships',
+    'Tell us the hardware you run, so we know what to test next',
     'Need it for a business today? A working session is the faster road',
   ],
   today: {
     title: 'Want to run something today',
-    body: 'The engine underneath is open source and running now. The developer page has the install command, the recipes and the numbers.',
+    body: 'The engine is open source and running now. The developer page has the install command, the recipes and the numbers.',
     cta: { text: 'Go to the developer page', href: routes.openSource },
     discord: 'The people building it are in Discord every day.',
   },
   form: {
-    title: 'Join the waitlist',
+    title: 'Get the release notes',
     fields: [
       { name: 'email', label: 'Email', type: 'email', required: true, autocomplete: 'email' },
       { name: 'name', label: 'Your name', type: 'text', autocomplete: 'name' },
@@ -425,14 +424,14 @@ export const waitlistPage = {
       },
       { name: 'notes', label: 'What you would run', type: 'textarea', placeholder: 'The models, the workload, anything we should know' },
     ],
-    submit: 'Join the waitlist',
+    submit: 'Sign me up',
     fallbackNote: 'Submitting opens a prefilled email to the team. Nothing is stored on this site.',
-    thanks: 'You are on the list. We will write when the Community Edition is released.',
+    thanks: 'You are on the list. We will write when a release ships.',
     composed: 'Your note is drafted in your mail app. Press send and you are on the list.',
   },
   cta: {
     title: 'Running inference for a business?',
-    body: 'The Enterprise Edition is available now, with the control plane, the economics layer and a named engineer.',
+    body: 'The platform adds the control plane, the economics layer and a named engineer.',
     primary: { text: 'Book a demo', href: routes.demoForm },
     secondary: { text: 'See pricing', href: routes.pricing },
   },
@@ -481,8 +480,7 @@ export const trust = {
     {
       title: 'Licensing',
       items: [
-        'Community Edition under AGPL-3.0-only. Contributions are covered by a CLA that permits Enterprise relicensing.',
-        'Enterprise Edition under a commercial license, per GPU per year, with terms your legal team can read in one sitting.',
+        'Metrale Engine is open source under MIT OR Apache-2.0, at your option.',
         'Third party names on this site belong to their owners and appear for background or as primary sources, never as endorsements.',
       ],
     },
@@ -492,7 +490,6 @@ export const trust = {
         'No security certification is held yet. SOC 2 readiness documentation comes with the first SLA engagements.',
         'No customer is named on this site.',
         'No ratio is claimed beyond the hardware it was measured on. The published ladder was measured on NVIDIA GB10. The engine also runs on AMD Strix Halo through SCALE, and Hopper and Blackwell are the next campaigns.',
-        'The Community Edition is not released yet. The open source engine runs today.',
       ],
     },
   ],
@@ -514,7 +511,7 @@ export const facts = {
     ['Products', `Metrale, Metrale AI and ${company.engine}`],
     ['Started', 'January 2026'],
     ['Engine source', links.github.replace('https://', ''), links.github],
-    ['License', 'AGPL-3.0-only for the Community Edition, commercial for the Enterprise Edition'],
+    ['License', 'Metrale Engine, MIT OR Apache-2.0', links.license],
     ['Recipe registry', links.recipes.replace('https://', ''), links.recipes],
     ['Security', contacts.security, `mailto:${contacts.security}`],
     ['Verification', 'Reproduce the published ladder, step by step', routes.diligence],

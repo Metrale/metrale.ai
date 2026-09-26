@@ -239,7 +239,7 @@ for (const file of files) {
   // invocation per node, so the card shows the head's; the docs carry the rest.
   // The command refuses to launch a multi-node recipe on one node rather than
   // quietly serving something smaller than the recipe describes.
-  const command = topology === 'single' ? `${CLI} run ${stem}` : `${CLI} run ${stem} --rank 0 --world-size 2 --master-addr <spark-1>`;
+  const command = topology === 'single' ? `${CLI} run ${stem}` : `${CLI} run ${stem} --rank 0 --world-size 2 --master-addr <head-node>`;
   const recipe = {
     displayName: recipeDisplay(stem),
     hfId: top.model || '',

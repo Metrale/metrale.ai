@@ -120,7 +120,7 @@ export const solutions = {
     ],
     workloads: [
       'Analyst assistants over classified corpora',
-      'Agentic tooling at the tactical edge on Spark class hardware',
+      'Agentic tooling at the tactical edge on DGX Spark class hardware',
       'Translation, triage and summarization at scale',
     ],
     deployment:

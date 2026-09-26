@@ -16,6 +16,7 @@
   import { fmtLimit, limitLabel, stepPath, timeSpans, violationOf } from '$lib/gate-limits.js';
   import { clampValue, dodgeLabels, robustDomain, tickLabel } from '$lib/gate-domain.js';
   import { clipCaret, loneTriangle } from '$lib/chart-marks.js';
+  import RecordReceipt from './RecordReceipt.svelte';
 
   let { records, panel, onselect } = $props();
 
@@ -411,4 +412,5 @@
       <text class="gc-val" x={l.x} y={l.y + 3} text-anchor="end" fill={l.color}>{l.text}</text>
     {/each}
   </svg>
+  <RecordReceipt records={series.flatMap((s) => s.nodes.map((n) => n.rec))} />
 </figure>

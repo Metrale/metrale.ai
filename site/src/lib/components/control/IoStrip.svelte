@@ -92,7 +92,7 @@
       {/if}
       {#if path}
         <!-- Decorative: every number it encodes is printed beside it. -->
-        <svg class="io-spark" viewBox="0 0 220 30" preserveAspectRatio="none" aria-hidden="true">
+        <svg class="io-sparkline" viewBox="0 0 220 30" preserveAspectRatio="none" aria-hidden="true">
           <path d={path} fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
         </svg>
       {/if}

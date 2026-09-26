@@ -10,7 +10,7 @@ export const faq = [
   {
     tags: ['home', 'why'],
     q: 'What is Metrale?',
-    a: 'Metrale is an inference economics platform for GPUs you own or rent by the hour. Metrale Engine runs open models faster on the same silicon, Metrale Control deploys and governs the fleet, and Metrale Economics turns the telemetry into cost per workload, chargeback and payback. The engine is open source under AGPL-3.0. The platform is licensed per GPU.',
+    a: 'Metrale is an inference economics platform for GPUs you own or rent by the hour. Metrale Engine runs open models faster on the same silicon, Metrale Control deploys and governs the fleet, and Metrale Economics turns the telemetry into cost per workload, chargeback and payback. The engine is open source under MIT OR Apache-2.0. The platform is licensed per GPU.',
   },
   {
     tags: ['home', 'why', 'deploy'],
@@ -50,7 +50,7 @@ export const faq = [
   {
     tags: ['home', 'pricing'],
     q: 'How is it priced?',
-    a: 'Per GPU per year for the Enterprise Edition, with volume tiers as the fleet grows, and a per box license for workstation and edge deployments. Support and forward deployed engineering are priced separately. The Community Edition is free under AGPL-3.0. The pricing page lists the proposed sheet and a payback model with editable inputs.',
+    a: 'Per GPU per year for the Enterprise tier, with volume tiers as the fleet grows, and a per box price for workstation and edge deployments. Support and forward deployed engineering are priced separately. The engine itself is free and open source under MIT OR Apache-2.0. The pricing page lists the proposed sheet and a payback model with editable inputs.',
   },
   {
     tags: ['pricing', 'why'],

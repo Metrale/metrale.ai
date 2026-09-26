@@ -55,7 +55,7 @@ ${Object.entries(authors).map(([slug, a]) => `- [${a.name}](${SITE}/authors/${sl
 - [Metrale](${MAIN_SITE}): the company and the engine this blog is about — also at ${MAIN_SITE}/llms.txt
 - [Developer page](${MAIN_SITE}/engine): benchmarks, recipes, and the install command
 - [Documentation](${DOCS_SITE}): the full book — also at ${DOCS_SITE}/llms.txt
-- [Source](${githubUrl}): pure Rust and CUDA, AGPL-3.0-only
+- [Source](${githubUrl}): pure Rust and CUDA, MIT OR Apache-2.0
 - [Discord](${discordUrl})
 `;
 

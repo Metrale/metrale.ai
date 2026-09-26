@@ -79,7 +79,7 @@
       {#if path}
         <!-- Decorative: every number it encodes is printed beside it, so a
              screen reader loses nothing by skipping the drawing. -->
-        <svg class="ls-spark" viewBox="0 0 220 34" preserveAspectRatio="none" aria-hidden="true">
+        <svg class="ls-sparkline" viewBox="0 0 220 34" preserveAspectRatio="none" aria-hidden="true">
           <path d={path} fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
         </svg>
       {/if}

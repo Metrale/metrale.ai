@@ -1,6 +1,6 @@
 {
- "revision": 2,
- "date": "2026-09-24",
+ "revision": 5,
+ "date": "2026-09-26",
  "changes": [
   {
    "rev": 1,
@@ -57,6 +57,33 @@
    "pr": 21,
    "base": "f9d6f597a",
    "note": "The security contact is published at /.well-known/security.txt, and the Solutions page describes the two kinds of buyer.",
+   "touched": []
+  },
+  {
+   "rev": 3,
+   "date": "2026-09-26",
+   "base": "c5fb689df",
+   "note": "licence MIT OR Apache-2.0, release notes sign-up, static contributors, receipts, DGX Spark wording",
+   "touched": [
+    "links.strixKernels",
+    "links.license",
+    "links.licenseApache",
+    "footer.license",
+    "links.strixPr"
+   ]
+  },
+  {
+   "rev": 4,
+   "date": "2026-09-26",
+   "base": "fe145c78e",
+   "note": "engine: enterprise composition, News and Hardware removed",
+   "touched": []
+  },
+  {
+   "rev": 5,
+   "date": "2026-09-26",
+   "base": "bcab6542c",
+   "note": "the engine page in the front page's design; News and Hardware removed",
    "touched": []
   }
  ],
@@ -448,9 +475,15 @@
   },
   {
    "key": "footer.license",
-   "value": "Community Edition under AGPL-3.0. Enterprise Edition under a commercial license.",
-   "rev": 1,
-   "date": "2026-09-24",
+   "value": "Metrale Engine is open source under the MIT or Apache 2.0 license, at your option.",
+   "rev": 2,
+   "date": "2026-09-26",
+   "was": [
+    {
+     "value": "Community Edition under AGPL-3.0. Enterprise Edition under a commercial license.",
+     "until": "2026-09-26"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -768,9 +801,15 @@
   },
   {
    "key": "links.license",
-   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE",
-   "rev": 1,
-   "date": "2026-09-24",
+   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT",
+   "rev": 2,
+   "date": "2026-09-26",
+   "was": [
+    {
+     "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE",
+     "until": "2026-09-26"
+    }
+   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -800,6 +839,15 @@
     "/trust",
     "/waitlist",
     "/why-metrale"
+   ]
+  },
+  {
+   "key": "links.licenseApache",
+   "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-APACHE",
+   "rev": 1,
+   "date": "2026-09-26",
+   "used": [
+    "/engine"
    ]
   },
   {
@@ -913,10 +961,10 @@
    "used": []
   },
   {
-   "key": "links.strixPr",
-   "value": "https://metrale.ai/src/history/pull/187",
+   "key": "links.strixKernels",
+   "value": "https://github.com/Metrale/metrale-inference-alpha/tree/main/kernels/strix",
    "rev": 1,
-   "date": "2026-09-24",
+   "date": "2026-09-26",
    "used": [
     "/engine",
     "/"
@@ -2630,7 +2678,7 @@
   },
   {
    "menu": "Resources",
-   "text": "Community Edition",
+   "text": "Release notes",
    "href": "/waitlist"
   },
   {
@@ -2732,7 +2780,7 @@
   },
   {
    "column": "Resources",
-   "text": "Community Edition waitlist",
+   "text": "Release notes",
    "href": "/waitlist"
   },
   {
@@ -2920,6 +2968,12 @@
     {
      "text": "github.com/Metrale/metrale-inference-alpha",
      "href": "https://github.com/Metrale/metrale-inference-alpha",
+     "kind": "out",
+     "button": false
+    },
+    {
+     "text": "Metrale Engine, MIT OR Apache-2.0",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT",
      "kind": "out",
      "button": false
     },
@@ -3285,36 +3339,40 @@
   {
    "path": "/engine",
    "title": "Metrale Engine, pure Rust inference for DGX Spark",
-   "h1": "One inference engine, from the device in your hand to the datacenter rack.",
+   "h1": "More inference from the silicon you already own. One signed binary, verified on every release.",
    "route": "src/routes/(engine)/engine/+page.svelte",
    "copy": [
+    {
+     "file": "src/lib/content/brand.js",
+     "exports": [
+      "links",
+      "routes"
+     ]
+    },
     {
      "file": "src/lib/data.js",
      "exports": [
       "CLI",
       "CONTROL",
       "announcement",
-      "codeChat",
       "community",
       "contribute",
       "discordUrl",
       "faq",
+      "flagshipRecipe",
       "gateSrcUrl",
       "getRunning",
       "githubUrl",
       "guideUrl",
-      "hardware",
       "hero",
+      "issuesUrl",
       "mission",
       "models",
       "nav",
-      "news",
       "proof",
-      "quickInstall",
       "reachout",
       "recipesUrl",
       "roadmap",
-      "runCommandRaw",
       "stars",
       "startAgentCommand",
       "verified",
@@ -3494,8 +3552,8 @@
      "button": false
     },
     {
-     "text": "July 2026 Strix Halo hardware provided for the gfx1151 bring up See the pull request metra",
-     "href": "https://metrale.ai/src/history/pull/187",
+     "text": "July 2026 Strix Halo hardware provided for the gfx1151 bring up See the gfx1151 kernels gi",
+     "href": "https://github.com/Metrale/metrale-inference-alpha/tree/main/kernels/strix",
      "kind": "out",
      "button": false
     },
@@ -4025,8 +4083,8 @@
      "button": false
     },
     {
-     "text": "Join the Community Edition waitlist",
-     "href": "/waitlist",
+     "text": "Install the engine",
+     "href": "/engine",
      "kind": "page",
      "button": true
     },
@@ -4240,8 +4298,8 @@
    "generated": false,
    "links": [
     {
-     "text": "Join the waitlist",
-     "href": "/waitlist",
+     "text": "Install the engine",
+     "href": "/engine",
      "kind": "page",
      "button": true
     },
@@ -4353,7 +4411,7 @@
      "button": false
     },
     {
-     "text": "Open source The engine, under AGPL-3.0. One install command, every recipe, the deployment ",
+     "text": "Open source The engine, under MIT OR Apache-2.0. One install command, every recipe, the de",
      "href": "/engine",
      "kind": "page",
      "button": false
@@ -4822,8 +4880,8 @@
   },
   {
    "path": "/waitlist",
-   "title": "Community Edition waitlist · Metrale",
-   "h1": "The Community Edition is not out yet. Be first when it is.",
+   "title": "Release notes · Metrale",
+   "h1": "The engine runs today. Hear when the next release ships.",
    "route": "src/routes/(marketing)/waitlist/+page.svelte",
    "copy": [
     {
@@ -4887,7 +4945,7 @@
     }
    ],
    "controls": [
-    "Join the waitlist"
+    "Sign me up"
    ],
    "forms": [
     "waitlist"
@@ -5053,6 +5111,9 @@
   "https://github.com/Metrale/metrale-inference-alpha/blob/main/CONTRIBUTING.md": [
    "/company/careers"
   ],
+  "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT": [
+   "/company"
+  ],
   "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md": [
    "/platform/security",
    "/trust"
@@ -5077,14 +5138,14 @@
   "https://github.com/Metrale/metrale-inference-alpha/pulls": [
    "/labs"
   ],
+  "https://github.com/Metrale/metrale-inference-alpha/tree/main/kernels/strix": [
+   "/"
+  ],
   "https://github.com/Metrale/metralectl": [
    "/company"
   ],
   "https://github.com/ggml-org/llama.cpp/pull/18680": [
    "/company"
-  ],
-  "https://metrale.ai/src/history/pull/187": [
-   "/"
   ],
   "https://www.nvidia.com/en-us/startups/": [
    "/company",

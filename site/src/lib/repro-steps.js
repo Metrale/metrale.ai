@@ -22,6 +22,7 @@
 
 import { ENGINE_REPO, REGISTRY_REPO } from '../../../web-shared/sources.mjs';
 import { shardOf } from './bfcl-partition.js';
+import { recordFileUrl, signerKeyUrl } from './receipt.js';
 
 /** Tokens a POSIX shell reads back unchanged without quoting. */
 const SAFE_TOKEN = /^[A-Za-z0-9_@%+=:,./-]+$/;
@@ -424,8 +425,8 @@ export function reproSteps(record, ctx) {
   };
   const files = partition ? partition.members : [rec];
   for (const f of files) {
-    if (f.path) recordStep.facts.push(['record', `${ENGINE_REPO}/blob/main/${f.path}`]);
-    if (f.signer) recordStep.facts.push(['signer', `${ENGINE_REPO}/blob/main/.github/record-signers/${f.signer}.pub`]);
+    if (f.path) recordStep.facts.push(['record', recordFileUrl(f)]);
+    if (f.signer) recordStep.facts.push(['signer', signerKeyUrl(f)]);
   }
   recordStep.commands.push({
     label: 'what CI runs to verify every committed record',

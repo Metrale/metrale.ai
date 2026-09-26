@@ -49,7 +49,10 @@
          that one against a handful of fake globals. -->
     <script>
       (function () {
-        var href = '%sveltekit.assets%/fonts/type.css';
+        // Absolute, not the assets placeholder: that renders as a path relative
+        // to each page, which would give this script different bytes at every
+        // depth and so a different hash in the page's CSP (svelte.config.js).
+        var href = '/fonts/type.css';
         var done = false;
         function attach() {
           if (done) return;

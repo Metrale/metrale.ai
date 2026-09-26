@@ -20,7 +20,7 @@
 // social metadata, and the icons, the card, the Pages headers and a version
 // stamp are copied in. docs/check.mjs proves the result before it ships.
 //
-//   METRALE_ENGINE_ROOT=../metrale-inference-alpha node docs/build.mjs   # needs mdbook on PATH
+//   METRALE_ENGINE_ROOT=../<engine checkout> node docs/build.mjs   # needs mdbook on PATH
 //   MDBOOK=/path/to/mdbook node docs/build.mjs                           # or name the binary
 // =============================================================================
 
@@ -41,10 +41,11 @@ import {
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rehost } from './hosts.mjs';
+import { ENGINE_SLUG } from '../web-shared/sources.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, '..');
-const ENGINE = resolve(process.env.METRALE_ENGINE_ROOT || join(repo, '..', 'metrale-inference-alpha'));
+const ENGINE = resolve(process.env.METRALE_ENGINE_ROOT || join(repo, '..', ENGINE_SLUG.split('/')[1]));
 const BOOK = join(ENGINE, 'book');
 const WORK = join(here, '.book');
 const OUT = join(here, 'build');
@@ -121,8 +122,11 @@ const STATIC = join(repo, 'site', 'static');
 for (const icon of ['favicon.svg', 'favicon.ico', 'favicon-32.png', 'favicon-16.png', 'apple-touch-icon.png', 'og-image.png']) {
   if (existsSync(join(STATIC, icon))) copyFileSync(join(STATIC, icon), join(OUT, icon));
 }
+// The book's own cache rules, then this repository's security headers after
+// them (docs/_headers): the policy is the host's to set, whatever the book says.
 const headers = join(BOOK, 'deploy', 'cloudflare', '_headers');
-if (existsSync(headers)) copyFileSync(headers, join(OUT, '_headers'));
+const bookHeaders = existsSync(headers) ? readFileSync(headers, 'utf8').replace(/\n*$/, '\n\n') : '';
+writeFileSync(join(OUT, '_headers'), bookHeaders + readFileSync(join(here, '_headers'), 'utf8'));
 const sha = (dir) => {
   try {
     return execFileSync('git', ['-C', dir, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();

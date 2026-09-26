@@ -103,9 +103,10 @@ function checkHeader(doc, file, workload) {
 /**
  * The GPU-rail energy of one rung, when the harness recorded it.
  *
- * Joules and tokens ADD across reps (that is why the producer stores them and
- * not a ratio); the sample count takes the WORST rep, because the trust rule
- * the page applies must not be flattered by a well-sampled sibling. The key
+ * Joules, tokens, the window and the sample count ADD across reps (that is why
+ * the producer stores them and not a ratio). The worst-covered rep is carried
+ * beside the sums, as its own count and window, because the trust rule the
+ * page applies must not be flattered by a well-sampled sibling. The key
  * names are the producer's own (`EnergyWindow::metrics`), carried unchanged so
  * a vLLM rung and a Metrale Engine gate cell are read by one function on the page.
  *
@@ -159,11 +160,29 @@ function rungEnergy(seriesId, c, file, reps) {
   };
   const winKey = pick(['gpu_rail_energy_window_s', 'gpu_rail_window_s']);
   const tokKey = pick(['gpu_rail_energy_window_tokens', 'completion_tokens']);
+  // ★ THE SAMPLE COUNT IS A SUM, BECAUSE THE WINDOW IT IS JUDGED AGAINST IS ONE.
+  // The page's coverage rule is `samples x period / window`. Until 2026-09-26
+  // this carried the WORST rep's count against the SUMMED window, so a rung
+  // whose three reps were each 99% covered read as 33% covered (212 readings
+  // x 250 ms over 161.8 s) and every vLLM energy rung was left out of the Cost
+  // tab's verdict as under-sampled. The count now adds like the window does,
+  // and the worst-covered rep rides beside it with its own window, so the page
+  // still judges the thinnest rep on its own terms.
+  const counted = samples.length === reps.length;
+  const worst = counted
+    ? reps.reduce((a, r) => (r.gpu_rail_power_samples / positive(r, winKey) < a.gpu_rail_power_samples / positive(a, winKey) ? r : a))
+    : null;
   return {
     gpu_rail_energy_j: r2(sum('gpu_rail_energy_j')),
     gpu_rail_energy_window_tokens: sum(tokKey),
     gpu_rail_energy_window_s: r2(sum(winKey)),
-    ...(samples.length === reps.length ? { gpu_rail_power_samples: Math.min(...samples) } : {}),
+    ...(counted
+      ? {
+          gpu_rail_power_samples: samples.reduce((a, b) => a + b, 0),
+          gpu_rail_worst_rep_power_samples: worst.gpu_rail_power_samples,
+          gpu_rail_worst_rep_window_s: r2(worst[winKey]),
+        }
+      : {}),
     ...(periods.length === 1 ? { gpu_rail_sample_period_ms: periods[0] } : {}),
   };
 }

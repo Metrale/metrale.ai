@@ -57,6 +57,33 @@
       "base": "f9d6f597a",
       "note": "The security contact is published at /.well-known/security.txt, and the Solutions page describes the two kinds of buyer.",
       "touched": []
+    },
+    {
+      "rev": 3,
+      "date": "2026-09-26",
+      "base": "c5fb689df",
+      "note": "licence MIT OR Apache-2.0, release notes sign-up, static contributors, receipts, DGX Spark wording",
+      "touched": [
+        "links.strixKernels",
+        "links.license",
+        "links.licenseApache",
+        "footer.license",
+        "links.strixPr"
+      ]
+    },
+    {
+      "rev": 4,
+      "date": "2026-09-26",
+      "base": "fe145c78e",
+      "note": "engine: enterprise composition, News and Hardware removed",
+      "touched": []
+    },
+    {
+      "rev": 5,
+      "date": "2026-09-26",
+      "base": "bcab6542c",
+      "note": "the engine page in the front page's design; News and Hardware removed",
+      "touched": []
     }
   ],
   "facts": {
@@ -151,9 +178,15 @@
       "date": "2026-09-24"
     },
     "footer.license": {
-      "value": "Community Edition under AGPL-3.0. Enterprise Edition under a commercial license.",
-      "rev": 1,
-      "date": "2026-09-24"
+      "value": "Metrale Engine is open source under the MIT or Apache 2.0 license, at your option.",
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "value": "Community Edition under AGPL-3.0. Enterprise Edition under a commercial license.",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "footer.slogan": {
       "value": "Same silicon. Smarter inference. Stronger scalability.",
@@ -216,9 +249,20 @@
       "date": "2026-09-24"
     },
     "links.license": {
-      "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE",
+      "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT",
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE",
+          "until": "2026-09-26"
+        }
+      ]
+    },
+    "links.licenseApache": {
+      "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-APACHE",
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-26"
     },
     "links.llamaCppPr": {
       "value": "https://github.com/ggml-org/llama.cpp/pull/18680",
@@ -250,10 +294,16 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "links.strixKernels": {
+      "value": "https://github.com/Metrale/metrale-inference-alpha/tree/main/kernels/strix",
+      "rev": 1,
+      "date": "2026-09-26"
+    },
     "links.strixPr": {
       "value": "https://metrale.ai/src/history/pull/187",
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-09-26"
     },
     "site.origin": {
       "value": "https://metrale.ai",

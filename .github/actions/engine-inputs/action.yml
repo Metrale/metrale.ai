@@ -1,5 +1,5 @@
 # What a build reads from outside this repository, all public:
-#   Metrale/metrale-inference-alpha, at site/engine.ref
+#   the engine (ENGINE_SLUG in web-shared/sources.mjs), at site/engine.ref
 #                            benchmark records, gate descriptors and limits, the
 #                            ladders, the changelog and the baselines
 #                            (METRALE_ENGINE_ROOT)
@@ -13,7 +13,7 @@ description: Check out the engine at its pin and the recipe registry, and export
 
 inputs:
   github-token:
-    description: Token for the star and contributor generators (public data only)
+    description: Token for the star generator (public data only)
     required: true
 
 runs:
@@ -22,7 +22,11 @@ runs:
     - name: Read the engine pin
       id: engine
       shell: bash
-      run: echo "ref=$(tr -d '[:space:]' < site/engine.ref)" >> "$GITHUB_OUTPUT"
+      run: |
+        slug=$(node --input-type=module -e "const m = await import('./web-shared/sources.mjs'); console.log(m.ENGINE_SLUG)")
+        [ -n "$slug" ] || { echo "::error::web-shared/sources.mjs names no ENGINE_SLUG"; exit 1; }
+        echo "slug=$slug" >> "$GITHUB_OUTPUT"
+        echo "ref=$(tr -d '[:space:]' < site/engine.ref)" >> "$GITHUB_OUTPUT"
 
     - name: Checkout the recipe registry
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -36,7 +40,7 @@ runs:
     - name: Checkout the engine at the pinned commit
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       with:
-        repository: Metrale/metrale-inference-alpha
+        repository: ${{ steps.engine.outputs.slug }}
         ref: ${{ steps.engine.outputs.ref }}
         path: .inputs/engine
         fetch-depth: 0

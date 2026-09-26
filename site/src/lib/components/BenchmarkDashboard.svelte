@@ -12,7 +12,8 @@
   import TabStrip from './TabStrip.svelte';
   import { browser } from '$app/environment';
   import { replaceState } from '$app/navigation';
-  import { gateData, tabs, unpublished, models, recordsFor, benchName, shortModel, colorFor } from '$lib/gates.js';
+  import { gateData, tabs, models, recordsFor, benchName, shortModel, colorFor } from '$lib/gates.js';
+  import { RECORD_SIGNING_DOC } from '$lib/receipt.js';
   import { SUBJECTS, rungsDeclared } from '$lib/concurrency-subjects.js';
   import { formatDashboardHash, isDeepLink, parseDashboardHash } from '$lib/dashboard-link.js';
 
@@ -183,13 +184,12 @@
 
     <footer class="bd-foot">
       <span>
-        {src.committed + src.from_branches} records · {src.branches_scanned} branches scanned
-        {#if src.from_branches > 0}· {src.from_branches} from remote branch heads{/if}
-        · as of {gateData.generated_date} ({gateData.generated_sha})
+        {src.committed + src.from_branches} records · {Object.keys(gateData.benchmarks).length} of {gateData.registered.length} registered benchmarks
+        have one
+        {#if src.from_branches > 0}· {src.from_branches} from {src.branches_scanned} remote branch heads{/if}
+        · as of {gateData.generated_date}
       </span>
-      {#if unpublished.length > 0}
-        <span class="bd-unpublished">gated, not yet published: {unpublished.join(', ')}</span>
-      {/if}
+      <a href={RECORD_SIGNING_DOC} target="_blank" rel="noopener">how to verify a record</a>
     </footer>
   </div>
 </div>

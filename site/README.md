@@ -32,8 +32,8 @@ bun x --bun vite preview             # serves build/ on http://localhost:4173
 ```
 
 A GitHub login is optional. With `GH_TOKEN=$(gh auth token)` the build refreshes
-the star history and the contributor list. Without it those two fall back to
-the committed files and the build says so without failing.
+the star history. Without it the history falls back to the committed file and
+the build says so without failing.
 
 On Windows use Git Bash, and give the variable a forward slash path
 (`/c/Users/you/metralectl/recipes`).

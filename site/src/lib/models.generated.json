@@ -74,7 +74,7 @@
             "recipeStem": "qwen3.5-122b-a10b-nvfp4-ep2",
             "recipeId": "qwen3.5-122b-a10b-nvfp4-ep2",
             "runnable": false,
-            "command": "metralectl run qwen3.5-122b-a10b-nvfp4-ep2 --rank 0 --world-size 2 --master-addr <spark-1>"
+            "command": "metralectl run qwen3.5-122b-a10b-nvfp4-ep2 --rank 0 --world-size 2 --master-addr <head-node>"
           },
           {
             "displayName": "Qwen3.5 122B A10B NVFP4 Single",
@@ -424,7 +424,7 @@
             "recipeStem": "minimax-m2.7-nvfp4-ep2",
             "recipeId": "minimax-m2.7-nvfp4-ep2",
             "runnable": false,
-            "command": "metralectl run minimax-m2.7-nvfp4-ep2 --rank 0 --world-size 2 --master-addr <spark-1>"
+            "command": "metralectl run minimax-m2.7-nvfp4-ep2 --rank 0 --world-size 2 --master-addr <head-node>"
           }
         ]
       }
@@ -446,7 +446,7 @@
             "recipeStem": "deepseek-v4-flash-nvfp4-ep2",
             "recipeId": "deepseek-v4-flash-nvfp4-ep2",
             "runnable": false,
-            "command": "metralectl run deepseek-v4-flash-nvfp4-ep2 --rank 0 --world-size 2 --master-addr <spark-1>"
+            "command": "metralectl run deepseek-v4-flash-nvfp4-ep2 --rank 0 --world-size 2 --master-addr <head-node>"
           }
         ]
       }

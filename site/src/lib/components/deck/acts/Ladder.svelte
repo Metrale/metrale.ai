@@ -2,7 +2,7 @@
   // Act II, second half — measurement. Two instruments appear here and the
   // distinction between them is the point of the act:
   //
-  //   * `spark benchmark run concurrency-sweep` is what CI runs. It is the only
+  //   * `met benchmark run concurrency-sweep` is what CI runs. It is the only
   //     one that can mint a gate record, and it measures the GATE's workload.
   //   * `bench/ladder38/harness_w55_conc_ladder.py` is what produced the chart
   //     on this page. Nothing else reproduces the published ladder, so the deck
@@ -30,11 +30,11 @@
       <Cmd
         label="the baseline leg, then the subject leg"
         lines={[
-          `spark benchmark run concurrency-sweep \\`,
+          `met benchmark run concurrency-sweep \\`,
           `  --url http://127.0.0.1:8000 --model ${claim.checkpoint} \\`,
           `  --param concurrencies=1,4,8,16 --param isls=512 --param osl=320 \\`,
           `  --skip-coherence-probe --format json > vllm.json`,
-          `spark benchmark run concurrency-sweep \\`,
+          `met benchmark run concurrency-sweep \\`,
           `  --url http://127.0.0.1:8888 --model ${claim.checkpoint} \\`,
           `  --param concurrencies=1,4,8,16 --param isls=512 --param osl=320 \\`,
           `  --format json > metrale.json`,
@@ -109,19 +109,17 @@
 >
   <div class="at" style="--n: 1">
     <Cmd
-      label="scripts/queue-perf-pr.sh — the campaign it prints"
+      label="one gate, then every gate the commit still owes"
       lines={[
-        `for g in ttft-cold-gate ttft-warm-gate vision-fidelity \\`,
-        `         ssm-state-poisoning-gate decode-floor concurrency-sweep \\`,
-        `         video-fidelity bfcl-subset bfcl-subset-echolp \\`,
-        `         kat-equality-gate agentic-webserver; do`,
-        `  timeout 21600 ./target/release/spark benchmark run "$g" \\`,
-        `      --pull-request-gate --yes`,
-        `done`,
+        `./target/release/met benchmark run concurrency-sweep \\`,
+        `    --pull-request-gate --yes`,
         ``,
-        `spark benchmark --pull-request-gate-check    # what CI then runs`,
+        `./target/release/met benchmark certify --dry-run    # the plan`,
+        `./target/release/met benchmark certify --yes`,
+        ``,
+        `met benchmark --pull-request-gate-check    # what CI then runs`,
       ]}
-      note="One gate per process, which is why it is a loop. Each run writes .benchmarks/&lt;id&gt;/&lt;date&gt;-&lt;sha&gt;.json carrying the metrics, the verdict, the hardware fingerprint, the exact command and the commit sha."
+      note="certify runs every gate the commit still owes and says whether the tree is certified when they are done. It stops on a failed verdict unless given --keep-going. Each run writes .benchmarks/&lt;id&gt;/&lt;date&gt;-&lt;sha&gt;.json carrying the metrics, the verdict, the hardware fingerprint, the exact command and the commit sha, with a .sig beside it."
     />
   </div>
   <p class="after at" style="--n: 2">

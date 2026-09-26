@@ -1,4 +1,0 @@
-# A post's previous address. Pages keeps answering a deleted page's address from
-# an old copy, so the old address redirects to the post.
-/posts/seven-tenets-powering-atlas-inference /posts/seven-tenets-powering-metrale-inference 301
-/posts/seven-tenets-powering-atlas-inference.html /posts/seven-tenets-powering-metrale-inference 301

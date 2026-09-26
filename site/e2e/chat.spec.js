@@ -7,6 +7,7 @@
 
 import { test, expect } from '@playwright/test';
 import { CORPUS_GZ_URL, CORPUS_META_URL, LS_OPENROUTER_KEY } from '../src/lib/chat/config.js';
+import { ENGINE_REPO } from '../../web-shared/sources.mjs';
 import {
   OR_EMBEDDINGS,
   OR_RERANK,
@@ -391,7 +392,7 @@ test('mocked round-trip prints prompt, receipt, markdown, and real source links'
   // Source receipts: path, line range, and a blob link pinned to the corpus commit.
   const sources = card.locator('.cm-src');
   await expect(sources).toHaveCount(3);
-  const hrefPattern = new RegExp(`^https://github\\.com/Metrale/metrale-inference-alpha/blob/${COMMIT}/.+#L\\d+-L\\d+$`);
+  const hrefPattern = new RegExp(`^${ENGINE_REPO.replace(/[.]/g, '\\.')}/blob/${COMMIT}/.+#L\\d+-L\\d+$`);
   for (const src of await sources.all()) {
     expect(await src.getAttribute('href')).toMatch(hrefPattern);
     await expect(src.locator('.cm-src-path')).not.toBeEmpty();

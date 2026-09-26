@@ -118,7 +118,7 @@ suite('a line never claims a better link than it has', () => {
 });
 
 suite('labels identify the machine, not its hostname', () => {
-  test('the fingerprint is used, because Sparks ship with colliding names', () => {
+  test('the fingerprint is used, because DGX Spark units ship with colliding names', () => {
     expect(T.label(node('a1b2c3d4', { name: 'spark-256a' }))).toBe('a1b2');
   });
 

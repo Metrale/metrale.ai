@@ -13,7 +13,7 @@
 // Three suppression rules, each a bug when violated:
 //
 // **Typing wins.** A key pressed inside an input, textarea, select or
-// editable region is text, not a command — an operator typing "spark-1" into
+// editable region is text, not a command — an operator typing "node-1" into
 // the add-by-address field must not have the page teleport its selection.
 //
 // **Overlays own their keys.** While any overlay or dialog is open, the page

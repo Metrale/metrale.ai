@@ -27,6 +27,7 @@ import {
   API_DEFAULTS,
   ENERGY_DEFAULTS,
 } from '../../../../src/lib/economics.js';
+import { ENGINE_REPO } from '../../../../../web-shared/sources.mjs';
 
 const MAX_RESULT_CHARS = 7000;
 
@@ -95,7 +96,7 @@ export const TOOLS = [
     function: {
       name: 'next_steps',
       description:
-        'What a visitor can do next, with links: a working session on their workload, a scoped pilot, the Community Edition waitlist, the deck on request, the open source engine, the contributing guide, the contact paths. Pick by who is asking.',
+        'What a visitor can do next, with links: a working session on their workload, a scoped pilot, the release notes, the deck on request, the open source engine, the contributing guide, the contact paths. Pick by who is asking.',
       parameters: {
         type: 'object',
         properties: { audience: { type: 'string', enum: ['infra', 'investor', 'contributor', 'curious'] } },
@@ -198,10 +199,10 @@ function stepsFor(audience, data, site) {
     ],
     contributor: [
       { step: 'Install the open source engine and run a recipe', url: p(routes.openSource ?? '/engine') },
-      { step: 'Read the contributing guide and the CLA', url: links.contributing ?? '' },
+      { step: 'Read the contributing guide', url: links.contributing ?? '' },
       { step: 'Pick a good first issue', url: links.issues ? `${links.issues}?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22` : '' },
       { step: 'Join the Discord, which is also the test fleet', url: links.discord ?? '' },
-      { step: 'Join the Community Edition waitlist', url: p(routes.waitlist ?? '/waitlist') },
+      { step: 'Get the release notes', url: p(routes.waitlist ?? '/waitlist') },
     ],
     curious: [
       { step: 'Start with the platform overview', url: p(routes.platform ?? '/platform') },
@@ -389,7 +390,7 @@ export async function runTool(name, rawArgs, ctx) {
       const h = data.history;
       if (!h) return { error: 'The repository history is not in the knowledge base.' };
       const limit = Math.max(1, Math.min(40, num(args.limit, 12)));
-      const repo = data.links?.github ?? 'https://github.com/Metrale/metrale-inference-alpha';
+      const repo = data.links?.github ?? ENGINE_REPO;
       const kind = ['releases', 'commits', 'pulls', 'contributors'].includes(args.kind) ? args.kind : 'summary';
       const n = cite(ctx, {
         id: `tool:repo:${kind}`,

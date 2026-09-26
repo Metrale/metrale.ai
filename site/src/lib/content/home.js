@@ -251,8 +251,8 @@ export const recognition = {
       hue: 'cyan',
       date: 'July 2026',
       title: 'Strix Halo hardware provided for the gfx1151 bring up',
-      cta: 'See the pull request',
-      href: links.strixPr,
+      cta: 'See the gfx1151 kernels',
+      href: links.strixKernels,
     },
     {
       org: 'NVIDIA Inception',

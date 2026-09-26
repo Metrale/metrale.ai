@@ -138,7 +138,7 @@ export function edges(pts) {
 /**
  * A short, stable label for a machine.
  *
- * The fingerprint, not the hostname. Sparks ship with colliding names, and the
+ * The fingerprint, not the hostname. DGX Spark units ship with colliding names, and the
  * previous label — the last four characters of the hostname — collided for
  * exactly the machines an operator most needs to tell apart.
  *

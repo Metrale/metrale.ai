@@ -39,7 +39,7 @@ export const prime = {
       label: 'I want to contribute',
       starters: [
         'How do I install the engine and run a recipe?',
-        'Where should a first contribution go, and what does the CLA say?',
+        'Where should a first contribution go, and how does a change land?',
         'What gates does a kernel change have to pass before it merges?',
       ],
     },

@@ -48,7 +48,7 @@
   </section>
   <CtaBand
     title="Want the next one on your fleet?"
-    body="Every release passes the serve matrix before it ships. Enterprise customers pin a channel and get the receipt with the upgrade."
+    body="Every release passes the serve matrix before it ships. Customers pin a channel and get the receipt with the upgrade."
     primary={{ text: 'Book a demo', href: routes.demoForm }}
     secondary={{ text: 'Subscribe on GitHub', href: `${links.github}/releases`, external: true }}
   />

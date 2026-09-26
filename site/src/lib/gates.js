@@ -6,6 +6,7 @@
 // =============================================================================
 import { ENGINE_REPO } from '../../../web-shared/sources.mjs';
 import gates from '$lib/gates.generated.json';
+import { recordFileUrl } from './receipt.js';
 import { splitByVariant } from './gate-variants.js';
 import { foldPartitions } from './bfcl-partition.js';
 import { latestDeclaredSince, limitFor as limitForRecord, rungFloors as rungFloorsOf } from './gate-limits.js';
@@ -13,7 +14,7 @@ import { latestDeclaredSince, limitFor as limitForRecord, rungFloors as rungFloo
 export const gateData = gates;
 // A record links to its own file in the engine repository, on the branch it was
 // found on: the record is the evidence, and it outlives the commit it names.
-export const recordUrl = (r) => (r?.path ? `${ENGINE_REPO}/blob/${r.branch || 'main'}/${r.path}` : ENGINE_REPO);
+export const recordUrl = (r) => recordFileUrl(r) ?? ENGINE_REPO;
 
 // The floors and ceilings BENCH.toml declares, per gate and checkpoint —
 // carried by gen-gates.mjs. Its absence means the generated file predates the
@@ -47,8 +48,8 @@ const TAB_DEFS = [
   { id: 'ttft', label: 'TTFT', benches: ['ttft-warm-gate', 'ttft-cold-gate'] },
   // Wired ahead of data: records for these land only after calibration on
   // the fixed instrument (2026-08-15 concurrency re-scope). Until then the
-  // records-filter below keeps the tabs hidden and the ids show in the
-  // footer's "gated, not yet published" line — nothing renders empty.
+  // records-filter below keeps the tabs hidden, and the footer counts how
+  // many registered benchmarks have a record — nothing renders empty.
   { id: 'decode', label: 'Decode', benches: ['decode-floor'] },
   // The two dense concurrency gates share this tab AND one set of charts —
   // see gate-variants.js. They run the same fixture at the same rungs on the
@@ -84,11 +85,6 @@ const TAB_DEFS = [
 // gets the ladder panels without a second edit.
 const CONCURRENCY_BENCHES = new Set(TAB_DEFS.find((t) => t.id === 'concurrency').benches);
 export const tabs = TAB_DEFS.filter((t) => t.benches.some((b) => (gates.benchmarks[b]?.records ?? []).length > 0));
-
-// Registered in the suite (descriptor SSOT) but with zero published records —
-// named honestly in the footer instead of rendering empty tabs.
-const withRecords = new Set(Object.keys(gates.benchmarks));
-export const unpublished = (gates.registered ?? []).filter((id) => !withRecords.has(id));
 
 export const models = [...new Set(Object.values(gates.benchmarks).flatMap((b) => b.records.map((r) => r.target_model)))].sort();
 

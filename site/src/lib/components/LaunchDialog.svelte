@@ -124,6 +124,7 @@
   {:else}
     <div class="ld" role="dialog" aria-modal="true" aria-labelledby="ld-title" tabindex="-1" bind:this={dialogEl} use:modal>
       <header class="ld-head">
+        <p class="ld-kicker">Run on your machine</p>
         <h3 class="ld-title" id="ld-title">
           {#if launch.phase === 'connecting' && showProbe}Looking for your agent
           {:else if launch.phase === 'connecting'}Run this on your own machine
@@ -132,7 +133,7 @@
           {:else if launch.phase === 'placement'}Where should this run?
           {:else if launch.phase === 'pairing'}Pair this browser
           {:else if launch.phase === 'running'}Running
-          {:else}That didn’t work{/if}
+          {:else}That did not start{/if}
         </h3>
         <p class="ld-sub mono">{launch.openRecipe}</p>
         <button type="button" class="ld-close" onclick={() => launch.close()} aria-label="Close">×</button>
@@ -160,12 +161,12 @@
                  hardware that was fine. These are the same commands the CLI
                  prints; nothing here runs them. -->
             {#if /docker/i.test(launch.placement.detail ?? '')}
-              <p class="ld-place-lead">Fix it once on this machine:</p>
+              <p class="ld-place-lead">Fix it once on this machine.</p>
               <CommandRow command="sudo usermod -aG docker $USER" extra="ld-place-cmd" />
               <CommandRow command="newgrp docker" extra="ld-place-cmd" />
               <p class="ld-place-sub">
-                Then reopen this dialog. The agent re-checks on its own, so there is nothing to restart. Do not use <code>sudo {CLI}</code>
-                — it runs the model as root and leaves root-owned files in your home directory that your normal user cannot read.
+                Then reopen this dialog. The agent re-checks on its own, so there is nothing to restart. Do not use <code>sudo {CLI}</code>.
+                It runs the model as root and leaves root-owned files in your home directory that your normal user cannot read.
               </p>
             {/if}
             <p class="ld-place-sub">
@@ -175,7 +176,7 @@
             </p>
           {:else}
             <p class="ld-place-lead">
-              Add a machine that can. Run this on it — the code is good for one machine, once, for {Math.round(
+              Add a machine that can. Run this on it. The code is good for one machine, once, for {Math.round(
                 (launch.join?.expiresInS ?? 600) / 60
               )} minutes.
             </p>
@@ -187,7 +188,7 @@
               {/if}
               <p class="ld-watching">
                 <span class="ld-pulse" aria-hidden="true"></span>
-                Watching for it — this dialog will continue on its own.
+                Watching for it. This dialog continues on its own.
               </p>
             {:else if launch.join}
               <!-- A window opened, but this machine offered no address another
@@ -195,8 +196,8 @@
                  with a Copy button next to it, which is how an operator found
                  this: there was nothing to copy and nothing saying why. -->
               <p class="ld-place-sub">
-                This machine has no network address another machine could dial — only loopback or virtual interfaces are up. Connect it to
-                the network you want the fleet on, then reopen this dialog. The code itself is fine; there is nowhere to point it.
+                This machine has no network address another machine could dial. Only loopback or virtual interfaces are up. Connect it to
+                the network you want the fleet on, then reopen this dialog. The code itself is fine, there is nowhere to point it.
               </p>
             {:else}
               <p class="ld-place-sub">
@@ -227,7 +228,7 @@
           <InstallSteps />
           <p class="ld-watching" aria-live="polite">
             <span class="ld-pulse" aria-hidden="true"></span>
-            Watching for it — this will continue on its own.
+            Watching for it. This dialog continues on its own.
           </p>
           <p class="ld-caution">
             Any web page can show you an install command. Check the address bar says <strong>metrale.ai</strong> before running one.
@@ -265,3 +266,58 @@
     </div>
   {/if}
 {/if}
+
+<style>
+  /* The dialog sits outside the `.av` scope on purpose (DESIGN.md) and keeps
+     app.css's `.ld*` rules for its logic-bearing states. It takes the
+     homepage's radius, weight and chip grammar from the tokens here. Class
+     hooks only, nothing behavioural. */
+  .ld {
+    width: min(560px, calc(100vw - 2rem));
+    border-radius: 18px;
+    box-shadow: var(--shadow-lg);
+  }
+  .ld-head {
+    padding: 1.25rem 1.5rem 1rem;
+  }
+  .ld-kicker {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ch-violet-text);
+  }
+  .ld-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .ld-sub {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: var(--bg2);
+    color: var(--t2);
+    font-size: 0.7rem;
+  }
+  .ld-close {
+    top: 1rem;
+    right: 1.1rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 1.25rem;
+  }
+  .ld-close:hover {
+    background: var(--bg2);
+  }
+  .ld-body {
+    padding: 1.1rem 1.5rem 1.4rem;
+  }
+</style>

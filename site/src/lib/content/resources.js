@@ -38,7 +38,7 @@ export const resourcesHub = {
     },
     {
       title: 'Open source',
-      body: 'The engine, under AGPL-3.0. One install command, every recipe, the deployment guide and the Discord where the work happens.',
+      body: 'The engine, under MIT OR Apache-2.0. One install command, every recipe, the deployment guide and the Discord where the work happens.',
       href: routes.openSource,
       cta: 'Install the engine',
     },
@@ -101,20 +101,49 @@ export const events = {
 export const contributors = {
   eyebrow: 'Contributors',
   title: 'Everyone who has landed code, called out by name.',
-  lede: 'Generated from the GitHub contributors API on every build. The core team is annotated with their role. Everyone else is the reason the test fleet keeps growing.',
+  lede: 'The core team is annotated with their role. Everyone else is the reason the test fleet keeps growing.',
   // GitHub logins with a role. Anyone not listed here renders as a contributor.
   core: {
     // Roles as the people state them publicly on the blog (blog/src/lib/content.js).
     // Anyone without a public bio is a core contributor and nothing more: a role
     // nobody published is not this page's to assign.
     tbraun96: 'Founder',
-    rrstesiak: 'Founding engineer, speculative decoding and the single Spark records',
+    rrstesiak: 'Founding engineer, speculative decoding and the single DGX Spark records',
     DrRainbows: 'Systems engineer',
     TheTom: 'Core contributor',
     rsafier: 'Core contributor',
     SeedSource: 'Core contributor',
   },
-  cla: 'Contributions ship in the Community Edition under AGPL-3.0. The CLA permits Enterprise relicensing.',
+  // Everyone credited, as GitHub logins, in the order the list was frozen on
+  // 2026-09-26. A static list on purpose: a person joins it by a pull request
+  // here, not by a count read from an API at build time. Each name links to its
+  // GitHub profile.
+  // cspell:disable
+  people: [
+    'tbraun96',
+    'SeedSource',
+    'AzeezIsh',
+    'TheTom',
+    'rsafier',
+    'rrstesiak',
+    'DrRainbows',
+    'lesserevil',
+    'arclabch',
+    'pragmaxim',
+    '0137',
+    'aceangel3k',
+    'camerono',
+    'Sujimoshi',
+    'marksunner',
+    'Marker689',
+    'ngerakines',
+    'sercand',
+    'Weschera',
+    'Jayuda',
+    'gbanyan',
+  ],
+  // cspell:enable
+  cla: 'The engine is licensed MIT OR Apache-2.0. CONTRIBUTING.md in the repository says how a change lands.',
   cta: { text: 'Good first issues', href: `${links.github}/labels/good%20first%20issue` },
   cta2: { text: 'How to contribute', href: links.contributing },
 };
@@ -177,7 +206,7 @@ export const labs = {
 export const openSourceCallout = {
   eyebrow: 'Open source',
   title: 'The engine is free. The platform pays for the people who keep it that way.',
-  body: 'Install the engine in one command, run any recipe, and bring your machine to the test fleet. The Enterprise Edition adds the control plane, the economics layer and a named engineer.',
+  body: 'Install the engine in one command, run any recipe, and bring your machine to the test fleet. The platform adds the control plane, the economics layer and a named engineer.',
   primary: { text: 'Install the engine', href: routes.openSource },
   secondary: { text: 'Star on GitHub', href: links.github, external: true },
 };

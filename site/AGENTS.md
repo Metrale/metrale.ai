@@ -97,7 +97,7 @@ screen (`src/lib/reveal.js` sets `is-live`). An element reset in `metrale.css` i
 - **If the site says it about the company, a source says it.** Where the company is based,
   what it pays, how fast it delivers: not ours to guess. `FACELIFT.md` has the list of claims
   a first draft invented and a later audit removed.
-- **Nothing is offered that is not released.** The Community Edition is a waitlist.
+- **Nothing is offered that is not released.** The engine is open source and released, so buttons install it. There is no edition split.
 - **Attributed quotes are verbatim**, and a real person's entry changes only on their word.
 - **The product mockup is a private project.** Only its recordings are here.
 - **The voice:** plain, short sentences. No em dashes, semicolons or exclamation marks. A test

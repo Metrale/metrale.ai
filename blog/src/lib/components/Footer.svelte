@@ -29,7 +29,7 @@
     {/each}
   </div>
   <div class="ftr-legal">
-    <div>© {year} Metrale · Community Edition AGPLv3</div>
+    <div>© {year} Metrale · Metrale Engine is MIT OR Apache-2.0</div>
     <div>{blog.kicker}</div>
   </div>
 </footer>

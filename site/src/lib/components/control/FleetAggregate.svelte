@@ -54,7 +54,7 @@
     </span>
     {#if path}
       <!-- Decorative: the Σ it encodes is printed beside it. -->
-      <svg class="fa-spark" viewBox="0 0 220 22" preserveAspectRatio="none" aria-hidden="true">
+      <svg class="fa-sparkline" viewBox="0 0 220 22" preserveAspectRatio="none" aria-hidden="true">
         <path d={path} fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" />
       </svg>
     {/if}

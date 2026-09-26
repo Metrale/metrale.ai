@@ -244,7 +244,7 @@ export const WITHDRAWN = [
   /\bMLCommons\b/i,
   /\bDev\s+Ambassadors?\b|\bQwen\b[^.\n]*\bambassadors?\b/i,
   /Hugging\s*Face\s+Transformers|\b(merged?|landed|ships?)\b[^.\n]{0,40}\b(into|in)\s+(Hugging\s*Face|Transformers)\b|upstream\s+merge|transformers(\/pull\/|\s*#)46423/i,
-  /\bSparkrun\b[^.\n]*\bretired\b/i,
+  /(?<!\w)sparkrun\b[^.\n]*\bretired\b/i,
 ];
 
 /** True when the text makes a withdrawn claim. */

@@ -44,14 +44,20 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
+      # The repository is ENGINE_SLUG in web-shared/sources.mjs, the one place
+      # it is spelled; the commit is the pin.
       - name: Read the engine pin
         id: engine
-        run: echo "ref=$(tr -d '[:space:]' < site/engine.ref)" >> "$GITHUB_OUTPUT"
+        run: |
+          slug=$(node --input-type=module -e "const m = await import('./web-shared/sources.mjs'); console.log(m.ENGINE_SLUG)")
+          [ -n "$slug" ] || { echo "::error::web-shared/sources.mjs names no ENGINE_SLUG"; exit 1; }
+          echo "slug=$slug" >> "$GITHUB_OUTPUT"
+          echo "ref=$(tr -d '[:space:]' < site/engine.ref)" >> "$GITHUB_OUTPUT"
       # Only the book, at the commit the site is built against.
       - name: Checkout the engine's book
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          repository: Metrale/metrale-inference-alpha
+          repository: ${{ steps.engine.outputs.slug }}
           ref: ${{ steps.engine.outputs.ref }}
           path: .inputs/engine
           persist-credentials: false

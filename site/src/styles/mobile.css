@@ -24,8 +24,6 @@ video {
 .verified-grid > *,
 .star-wrap > *,
 .run-grid > *,
-.hw-grid > *,
-.news-grid > *,
 .road-grid > *,
 .contrib-grid > *,
 .reach-grid > *,
@@ -215,7 +213,6 @@ video {
   .hero-inner,
   .star-wrap,
   .verified-grid,
-  .hw-grid,
   .run-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -354,10 +351,6 @@ video {
   .hero-receipt .receipt-hit {
     max-width: none;
   }
-  .hw-card {
-    padding: 1.5rem 1.35rem;
-  }
-  .news-card,
   .reach-card,
   .road-card,
   .contrib-card {
@@ -435,12 +428,10 @@ video {
   .mnav-sub-count {
     font-size: 0.68rem;
   }
-  .news-tag,
   .receipt-title,
   .receipt-hw,
   .road-status,
   .ms-count,
-  .receipt-pending .tag,
   .cmd-copy,
   .email-btn-copy {
     font-size: 0.74rem;
@@ -448,9 +439,6 @@ video {
   .slabel {
     font-size: 0.75rem;
   }
-  .hw-chip,
-  .hw-status,
-  .news-date,
   .term-title,
   .hero-challenge .fine {
     font-size: 0.78rem;
@@ -466,8 +454,6 @@ video {
   .cla-line {
     font-size: 0.74rem;
   }
-  .hw-card p,
-  .news-card p,
   .road-card p,
   .contrib-card p,
   .reach-card p,
@@ -487,6 +473,17 @@ video {
 @media (max-width: 480px) {
   section {
     padding: 3rem 1rem;
+  }
+  /* A long provenance stamp ("every card links its primary source") does not
+     fit beside the section name on a phone: it drops to its own line and
+     wraps there rather than pushing the page sideways. */
+  .ledger-rail {
+    flex-wrap: wrap;
+  }
+  .prov {
+    white-space: normal;
+    flex-shrink: 1;
+    min-width: 0;
   }
   .hero {
     padding: 2.25rem 1rem 2.5rem;
@@ -524,17 +521,9 @@ video {
     padding: 0 0.7rem;
   }
   .reach-card,
-  .news-card,
   .road-card,
   .contrib-card {
     padding: 1.2rem 1.15rem;
-  }
-  .news-top {
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-  .news-card h3 {
-    font-size: 1rem;
   }
   .tcard {
     padding: 1.1rem 1.15rem;
@@ -586,14 +575,11 @@ video {
   .fcol a {
     padding-block: 0.3rem;
   }
-  .news-link,
-  .hw-links a,
   .road-card a,
   .contrib-card a {
     padding-block: 0.35rem;
   }
   .subcard:hover,
-  .news-card:hover,
   .reach-card:hover,
   .contrib-card:hover {
     transform: none;
@@ -625,8 +611,17 @@ video {
     scrollbar-width: none;
     max-width: 100%;
   }
+  /* Underlined tabs never wrap inside the scrolling strip. */
+  .bd-tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
   .bd-controls {
     row-gap: 0.6rem;
+  }
+  /* The model switcher drops under the strip and keeps the strip's inset. */
+  .bd-model {
+    padding-bottom: 0.75rem;
   }
   .gbs-tile {
     min-width: 6.2rem;

@@ -119,7 +119,6 @@ a group's CSS to that group's pages.
 | The team's prior employers | `logoWall` in `src/lib/content/home.js`, files in `static/logos/` |
 | Emblems or plain type for the two commands | `logoWall.emblems` in `src/lib/content/home.js`. One boolean |
 | A partner's logo | `logoWall.programs` and `recognition.cards` in `home.js`. `static/logos/README.md` says how to add a file |
-| Releasing the Community Edition | Point the buttons that use `routes.waitlist` back at the install page, then delete `waitlistPage` and `src/routes/(marketing)/waitlist/` |
 | A product name | `company` in `src/lib/content/brand.js`. Copy uses `{engine}` and friends |
 | An industry | `industries` in `brand.js`, and its entry in `solutions.js` |
 | A video | `node scripts/media/install.mjs --from <file> --as <slot>` |
@@ -169,11 +168,13 @@ header button and the footer link open the top of that page. A route may
 carry an anchor, and `site.test.js` checks the id exists, because a link to a
 missing anchor does not fail, it lands at the top and reads as a dead button.
 
-**Nothing is offered that is not released.** The Community Edition is not out,
-so its buttons say waitlist and go to `/waitlist`. The engine under it is
-released and open source, and the waitlist page says so and points at the
-developer page, because a developer who wants it today should not be told to
-wait. A browser test fails if any page offers to install the edition.
+**Nothing is offered that is not released.** The engine is released and open
+source under MIT OR Apache-2.0, so its buttons install it. `/waitlist` is the
+release notes sign up, and it points at the developer page, because a developer
+who wants the engine today should not be told to wait. There is no edition
+split: a browser test fails if a page names one, and
+`src/lib/content/licence.test.js` fails on any sentence of the old licence
+story.
 
 **If the site says it about the company, a source says it.** Where the
 company is based, how it works, what it pays, when something happens, how fast
@@ -243,21 +244,11 @@ The company is Metrale, its brand is Metrale AI, the engine is Metrale Engine,
 and the legal entity is Metrale Corp. The kit landed on 2026-09-21. Every page,
 the blog (its posts included, in the engine team's own text), the docs, the
 diligence deck, the social cards, the film's title cards, `llms.txt`, the
-JSON-LD and the web manifest say Metrale, and nothing a visitor reads names
-another project: `OTHER_NAMES` in `web-shared/sources.mjs` lists those names,
-and `src/lib/content/other-names.test.js` and `docs/check.mjs` fail on them.
-The blog's `static/_redirects` holds one post's previous address, so old links
-land on the post.
-Metrale is its own company and Metrale Engine its own engine; the guide says
-so when asked, without repeating another project's name.
+JSON-LD and the web manifest say Metrale.
 
-One thing still points at the open source code Metrale Engine builds on, by
-design, and it is not words on a page. "What still moves", at the end, has it
-and what retires it:
-
-- **The measured commits.** The published records name commits in that open
-  source history, which `metrale.ai/src/history` redirects to. The deck's
-  reproduction clones from that address.
+The engine's address is `ENGINE_SLUG` in `web-shared/sources.mjs`, and nothing
+else spells it: the reproduction steps, the record links and the contributor
+list all read it from there.
 
 The command people install is `metralectl` (`CLI` in `web-shared/sources.mjs`),
 and `install.sh` and `install.ps1` are copied in at build from its registry,
@@ -429,9 +420,8 @@ gate green.
 15. **Where waitlist entries go.** They go to the sales address, like demo
     requests. It is the `to` prop on the form in
     `src/routes/(marketing)/waitlist/+page.svelte`.
-16. **What the Community Edition will contain.** The waitlist page says only
-    that it is the free edition under AGPL-3.0 and is not released. The pricing
-    tier still lists what is in it. The team should confirm that list.
+16. **What the open source tier lists.** The pricing tier lists what comes with
+    the free engine. The team should confirm that list.
 17. **The deck.** Asked for as a download beside the team. It is not in the repository,
     because this repository is public and a file pushed here is published at that moment,
     before anyone reviews it. The deck was written for private meetings, so it needs a read
@@ -536,8 +526,7 @@ gate green.
     domain on the Pages project. `deploy/cloudflare/README.md` has why.
 36. **What the trust page does not claim.** "What we do not claim" says no security
     certification is held yet, names no customer, limits the ladder to the hardware it was
-    measured on and says the Community Edition is not released. Each line changes when the
-    fact does.
+    measured on. Each line changes when the fact does.
 
 ## How to throw it away
 
@@ -552,12 +541,9 @@ commits of their own for the same reason.
 ## What still moves
 
 Recorded so the next sweep is ready before it is asked for. Nothing here is
-words a visitor reads. Each row is an address or a command that points at the
-open source code Metrale Engine builds on, and each has one place to change.
+words a visitor reads, and each has one place to change.
 
 | where | what it is | what retires it |
 | --- | --- | --- |
-| `HISTORY` in `web-shared/sources.mjs` and `/src/history` in `static/_redirects` | the open source history: the commits the published records name, and the AMD pull request; the deck's reproduction clones from it | nothing while the published ladder names a commit there. If that history is ever brought into the Metrale organisation, the three redirect lines change and nothing else does |
-| `HISTORY_SLUG` in `web-shared/sources.mjs` | the contributor wall also counts the people who wrote that open source code, from the GitHub API at build | the same change of address |
 | `LATTICE_RELEASES` in `web-shared/sources.mjs` | where the codebase chat's in-browser database is downloaded from, by pinned release and checksum | a release of it published under the Metrale organisation |
 | `codeChat.enabled` in `src/lib/data.js` | the codebase chat, off | the engine's code index being served (item 33) |

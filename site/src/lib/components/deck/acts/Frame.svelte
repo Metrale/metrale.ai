@@ -66,7 +66,7 @@
 >
   <blockquote class="claim">
     <p>
-      <strong>{claim.engine}</strong> (build <code class="mono">{claim.build}</code>) sustains higher mean decode throughput than
+      <strong>{claim.engine}</strong> sustains higher mean decode throughput than
       <strong>{claim.baseline}</strong>
       on
       <code class="mono">{claim.checkpoint}</code>, served on one {claim.box}, at
@@ -108,7 +108,7 @@
 <Slide
   act="violet"
   eyebrow="Why the desktop is the right instrument"
-  title="The Spark is the on-ramp, not the destination"
+  title="The DGX Spark is the on-ramp, not the destination"
   lede="Measuring on a DGX Spark is not a smaller claim than measuring in a datacenter. It is the
         rung NVIDIA built for exactly this, and the path off it is theirs, not our extrapolation."
   steps={2}

@@ -55,4 +55,7 @@ test('live.generated.json carries the counts live.js prints', () => {
   expect(counts.recipes).toBeGreaterThan(0);
   expect(counts.gates.concurrencyRecords).toBeGreaterThan(0);
   expect(counts.gates.concurrencyPass).toBeLessThanOrEqual(counts.gates.concurrencyRecords);
+  expect(counts.gates.signed).toBeLessThanOrEqual(counts.gates.records);
+  expect(counts.gates.withRecords).toBeLessThanOrEqual(counts.gates.registered);
+  expect(counts.gates.newest).toMatch(/^\d{4}-\d{2}-\d{2}$/);
 });

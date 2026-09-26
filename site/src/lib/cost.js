@@ -61,6 +61,17 @@ export const KEY = Object.freeze({
   hwBrakeFrac: 'gpu_rail_hw_power_brake_frac',
 });
 
+/**
+ * The worst-covered rep of a one-shot rung, written by
+ * `scripts/lib/ladder-build.mjs#rungEnergy` beside the rung's summed window.
+ * Not producer keys: a gate record's cell is ONE window, so it has no reps to
+ * be worst among and never carries these.
+ */
+export const WORST_REP_KEY = Object.freeze({
+  samples: 'gpu_rail_worst_rep_power_samples',
+  windowS: 'gpu_rail_worst_rep_window_s',
+});
+
 /** The run-level keys, from `EnergySampler::metrics` / `SamplerCost::metrics`. */
 export const RUN_KEY = Object.freeze({
   idleW: 'gpu_rail_idle_power_w',
@@ -276,6 +287,34 @@ export const fmtUsd = (v) => (v >= 1 ? v.toFixed(2) : Number(v.toPrecision(2)).t
 const num = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : null);
 
 /**
+ * Why a window's joule count cannot be trusted, or null when it can: too few
+ * readings, a sampler that watched too little of the window, or a count or a
+ * cadence nobody recorded.
+ *
+ * ★ ABSENT IS NOT ZERO, APPLIED TO THE GUARD ITSELF. Coverage is
+ * `samples x period / window`, so with no recorded cadence it cannot be
+ * computed, and a window with ample samples and no period is NOT trusted: the
+ * sampler could have left most of it unobserved. Only 2 of the 72 committed
+ * concurrency-sweep records carried the key when this was found.
+ *
+ * @param {number|null} samples @param {number|null} periodMs @param {number} windowS
+ * @returns {string|null}
+ */
+export function samplingConcern(samples, periodMs, windowS) {
+  if (samples === null) return 'no sample count recorded — the joule count is unauditable';
+  if (samples < MIN_POWER_SAMPLES) return `under-sampled: ${samples} readings over ${windowS.toFixed(1)} s`;
+  if (periodMs === null || periodMs <= 0)
+    return `sampler cadence not recorded (${RUN_KEY.periodMs}) — coverage of the ${windowS.toFixed(1)} s window cannot be verified`;
+  const covered = (samples * periodMs) / 1000 / windowS;
+  if (covered < MIN_SAMPLE_COVERAGE)
+    return (
+      `the sampler covered ${(covered * 100).toFixed(0)}% of the ${windowS.toFixed(1)} s window ` +
+      `(${samples} readings at ${periodMs} ms)`
+    );
+  return null;
+}
+
+/**
  * @typedef {object} EnergyCell
  * @property {'absent'|'refused'|'measured'} state
  * @property {string} reason        why it is absent or refused; `''` when measured
@@ -333,29 +372,17 @@ export function readEnergy(m, prefix, run, id, expectTokS) {
   const samples = num(at(KEY.samples));
   const periodMs = num(run?.[RUN_KEY.periodMs]);
   const concerns = [];
-  if (samples === null) concerns.push('no sample count recorded — the joule count is unauditable');
-  else if (samples < MIN_POWER_SAMPLES) concerns.push(`under-sampled: ${samples} readings over ${windowS.toFixed(1)} s`);
-  else if (periodMs !== null && periodMs > 0) {
-    const covered = (samples * periodMs) / 1000 / windowS;
-    if (covered < MIN_SAMPLE_COVERAGE)
-      concerns.push(
-        `the sampler covered ${(covered * 100).toFixed(0)}% of the ${windowS.toFixed(1)} s window ` +
-          `(${samples} readings at ${periodMs} ms)`
-      );
+  const whole = samplingConcern(samples, periodMs, windowS);
+  if (whole) concerns.push(whole);
+  // A one-shot rung sums its reps, so the whole window can be well covered
+  // while one rep was not. That rep is judged on its own window too.
+  const worstSamples = at(WORST_REP_KEY.samples);
+  const worstWindowS = at(WORST_REP_KEY.windowS);
+  if (!whole && (worstSamples !== undefined || worstWindowS !== undefined)) {
+    const w = num(worstWindowS);
+    const thin = w === null || w <= 0 ? 'no window recorded for it' : samplingConcern(num(worstSamples), periodMs, w);
+    if (thin) concerns.push(`worst rep: ${thin}`);
   }
-  // ★ ABSENT IS NOT ZERO, APPLIED TO THE GUARD ITSELF. Coverage is
-  // `samples x period / window`, so with no recorded cadence it cannot be
-  // computed -- and the chain above used to simply fall off its end: a record
-  // with ample samples and no period collected NO concern at all, was marked
-  // trusted, drawn solid, and counted in every tile, verdict and trend line
-  // with its coverage never checked. The window could have been sampled at a
-  // cadence leaving most of it unobserved and the page would have shown a full
-  // measurement. Only 2 of the 72 committed concurrency-sweep records carry the
-  // key, so this was inert almost everywhere it mattered.
-  else
-    concerns.push(
-      `sampler cadence not recorded (${RUN_KEY.periodMs}) — coverage of the ` + `${windowS.toFixed(1)} s window cannot be verified`
-    );
   // SW Power Cap is this box's NORMAL steady state under load (energy.rs), so
   // it is reported and never disqualifying. The HW power brake is not normal.
   const hwBrakeFrac = num(at(KEY.hwBrakeFrac));
@@ -491,11 +518,28 @@ export function costLadder(subject, records, ladders) {
     refused,
     noEnergy,
     verdicts,
+    baselineGap: baselineGapOf(metrale, baselines),
     idle: idleAvailability(metrale, baselines),
     refusals: [metrale, ...baselines]
       .filter(Boolean)
       .flatMap((s) => s.points.filter((p) => p.energy.state === 'refused').map((p) => p.energy.reason)),
   };
+}
+
+/**
+ * The rungs Metrale Engine has joules for and no drawn vLLM leg does, with the
+ * reason the vLLM manifest records for not driving them. A verdict of "k of n"
+ * counts only rungs measured on both engines, so without this line a reader
+ * could take n for the whole ladder. Empty when nothing is drawn against.
+ *
+ * @returns {{rungs: number[], reason: string|null}}
+ */
+export function baselineGapOf(metrale, baselines) {
+  if (!metrale || baselines.length === 0) return { rungs: [], reason: null };
+  const rivalled = (c) => baselines.some((b) => b.points.some((q) => q.c === c && q.energy.state === 'measured'));
+  const rungs = metrale.points.filter((p) => p.energy.state === 'measured' && !rivalled(p.c)).map((p) => p.c);
+  const listed = baselines.find((b) => b.series?.unmeasured?.rungs?.some((c) => rungs.includes(c)));
+  return { rungs, reason: listed?.series.unmeasured.reason ?? null };
 }
 
 /**

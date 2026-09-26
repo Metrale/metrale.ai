@@ -7,7 +7,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "generate": "node scripts/gen-models.mjs && node scripts/gen-benchmarks.mjs && node scripts/gen-gates.mjs && node scripts/gen-ladder.mjs && node scripts/gen-live.mjs && node scripts/gen-changelog.mjs && node scripts/gen-stars.mjs && node scripts/gen-contributors.mjs",
+    "generate": "node scripts/gen-models.mjs && node scripts/gen-benchmarks.mjs && node scripts/gen-gates.mjs && node scripts/gen-ladder.mjs && node scripts/gen-live.mjs && node scripts/gen-changelog.mjs && node scripts/gen-stars.mjs",
     "media": "node scripts/media/record.mjs && node scripts/media/encode.mjs",
     "og": "node scripts/media/og.mjs",
     "reel": "node scripts/media/reel.mjs",

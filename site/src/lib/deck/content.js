@@ -22,8 +22,6 @@ export const stamp = `engine ${bench.generated_sha} · ${ladder.generated_utc.sl
 
 export const claim = {
   engine: subject.engine,
-  build: subject.build,
-  buildPublic: subject.build_public,
   baseline: matched.engine ?? 'vLLM 0.27.1 + MTP',
   checkpoint: ladder.workload.checkpoint,
   box: ladder.box.gpu,
@@ -121,9 +119,9 @@ export const fingerprint = [
   [
     'harness',
     ladder.workload.harness,
-    `campaign driver for the published ladder, sha256 pinned per leg; the gate's own instrument is \`spark benchmark run concurrency-sweep\``,
+    `campaign driver for the published ladder, sha256 pinned per leg; the gate's own instrument is \`met benchmark run concurrency-sweep\``,
   ],
-  ['engine', `${subject.engine} @ ${subject.build}`, subject.build_note],
+  ['engine', subject.engine, 'every gate record names the commit it was measured at, in its git_sha'],
   ['baseline', matched.engine, 'container digest pinned in RESULTS.md'],
   ['aggregate', ladder.aggregate, `${ladder.workload.warmup} warmup discarded`],
 ];
@@ -215,6 +213,7 @@ export const audit = [
 export const links = {
   results: ladder.results_doc_url,
   repo: githubUrl,
+  repoLabel: githubUrl.replace('https://', ''),
   gateDoc: bench.gate_doc,
   repro: bench.repro_cmd,
 };

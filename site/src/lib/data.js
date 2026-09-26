@@ -23,7 +23,7 @@
 // Public developer URL. adapter-static still writes engine.html; Cloudflare
 // Pages pretty-URLs /engine (200) and 308s /engine.html → /engine. Vite
 // preview serves /engine from that file too. Do not put .html in hrefs.
-import { CLI, ENGINE_REPO, HISTORY, REGISTRY_REPO } from '../../../web-shared/sources.mjs';
+import { CLI, ENGINE_REPO, REGISTRY_REPO } from '../../../web-shared/sources.mjs';
 export const ENGINE = '/engine';
 export const CONTROL = '/control';
 export { CLI };
@@ -44,7 +44,7 @@ export const contactEmails = ['engineering@metrale.com']; // the role mailbox; s
 
 // third-party artifacts (link-or-cut, each verified live July 2026)
 export const scaleUrl = 'https://docs.scale-lang.com/stable/';
-export const strixPrUrl = `${HISTORY}/pull/187`;
+export const strixKernelsUrl = `${ENGINE_REPO}/tree/main/kernels/strix`;
 export const nvidiaInceptionUrl = 'https://www.nvidia.com/en-us/startups/';
 
 // --- brand -------------------------------------------------------------------
@@ -88,222 +88,358 @@ export const startAgentCommand = `${CLI} agent install`;
 /// drift".
 export const runCommandRaw = `${CLI} run ${flagshipRecipe}`;
 
-// --- hardware acknowledgment (modest banner) ---------------------------------
-// --- announcement band (the strip above the hero) ----------------------------
+// --- announcement strip (the one line above the hero) ------------------------
+// One row, the front page's pattern. Emptying `text` takes the strip off the
+// page: the component renders nothing without it.
 export const announcement = {
-  // The partnership row is HIDDEN, not deleted: `line` empty means the banner
-  // skips that row entirely. Restoring it is a one-line content change rather
-  // than rebuilding the markup, which is why the component renders the row
-  // conditionally instead of this file dropping the keys.
-  line: '',
-  sub: '',
-  ctaText: '',
-  ctaUrl: '',
-  // `note` would be a second row; there is none, and the component skips a
-  // row with no words. The browser client's row is its own piece of news. The
-  // ask for feedback is only honest if it is easy to act on, so it carries the
-  // link rather than the words "let us know".
-  pwa: 'Metrale Fleet Manager, the PWA that runs models straight from your browser, is still under development. Feedback is welcome.',
-  pwaCtaText: 'Open an issue',
-  pwaCtaUrl: issuesUrl,
+  tag: 'Preview',
+  text: 'Metrale Fleet Manager runs models from your browser on the machines you pair, and nothing leaves your network. It is in preview, and feedback is welcome.',
+  cta: 'Open the control plane',
+  href: CONTROL,
 };
 
-// --- nav (SSOT for both the desktop bar and the mobile drawer) ---------------
+// --- nav (SSOT for the /engine jump bar and the /control bar and drawer) -----
 export const nav = {
+  // `hue` is the section's colour in the jump bar, by the tokens' grammar:
+  // green for a verified result, violet for the engine, gold for the
+  // community, cyan for the control plane.
   links: [
-    { text: 'Verified', href: `${ENGINE}#verified` },
-    { text: 'News', href: `${ENGINE}#news` },
-    { text: 'Hardware', href: `${ENGINE}#hardware` },
-    { text: 'Models', href: `${ENGINE}#models` },
-    { text: 'Start Metrale', href: `${ENGINE}#run` },
-    { text: 'Control', href: CONTROL },
-    { text: 'Blog', href: blogUrl },
+    { text: 'Verified', href: `${ENGINE}#verified`, hue: 'green' },
+    { text: 'Models', href: `${ENGINE}#models`, hue: 'violet' },
+    { text: 'Get running', href: `${ENGINE}#run`, hue: 'violet' },
+    { text: 'Community', href: `${ENGINE}#community`, hue: 'gold' },
+    { text: 'Reach out', href: `${ENGINE}#reach`, hue: 'gold' },
+    { text: 'Control', href: CONTROL, hue: 'cyan' },
+    { text: 'Blog', href: blogUrl, hue: 'gold' },
   ],
   menuLabel: 'Menu',
   closeLabel: 'Close menu',
 };
 
 // --- hero --------------------------------------------------------------------
+// The figures the hero prints (rungs won, the margin, the top rung) come from
+// ladder.generated.json inside Hero.svelte. Nothing numeric about performance
+// is typed here. "75 MB" is the size of the binary, and the front page says it.
 export const hero = {
-  badge: 'Open source. Pure Rust and CUDA. Verified on GB10.',
-  headline: ['One inference engine, from the device in your hand', 'to the datacenter rack.'],
-  sub: 'Metrale Engine is an open source LLM engine written in Rust and CUDA. One ~75 MB binary, no Python, no PyTorch. It runs on edge class accelerators today, scales across nodes with expert parallelism, and holds throughput at the concurrency a datacenter serves. What ships is what we verify, and we bench every release.',
-  challenge: {
-    claim: 'First token in under 90 seconds on a DGX Spark.',
-    lead: 'Do not take our word for it.',
-    fine: 'Median of our GB10 runs, model cached, engine build 59616dc, Jul 2026. Same command below, run it and time it yourself.',
+  kicker: 'Metrale Engine, the inference layer',
+  pillars: ['Open source', 'Rust and CUDA', 'Verified on DGX Spark'],
+  headline: ['More inference from the silicon you already own.', 'One signed binary, verified on every release.'],
+  sub: 'Metrale Engine is the open source inference layer of the Metrale platform. Rust and CUDA in one 75 MB binary, with no Python or PyTorch in the request path, OpenAI and Anthropic compatible APIs, and a signed gate record behind every release. It runs on a single accelerator today and scales across nodes with expert parallelism.',
+  primaryCta: 'Get running',
+  secondaryCta: 'Talk to us',
+  githubCta: 'Star on GitHub',
+  // The line under the actions. Hero.svelte fills the figures in from the
+  // generated ladder; this is only the frame around them.
+  claim: {
+    conditions: 'Same box, same checkpoint, same client.',
+    logCta: 'Read the campaign log',
   },
-  primaryCta: 'Star on GitHub',
-  secondaryCta: 'Start Metrale',
-  discordCta: 'Join the Discord',
+  // The benchmark story beside the copy: the frame's kicker, the three stat
+  // labels, and the control that opens the dashboard.
+  art: {
+    kicker: 'Published DGX Spark ladder',
+    stats: {
+      ratio: 'the matched vLLM configuration at the top rung',
+      throughput: 'aggregate tok/s at the top rung',
+      rungs: 'rungs won',
+    },
+    records: 'signed records',
+    dashboardCta: 'View the benchmark dashboard',
+  },
 };
 
 // --- proof strip (prominent, right under the hero) ---------------------------
 export const proof = {
-  label: '// receipts, not adjectives',
-  items: [{ text: 'Built with SCALE by Spectral Compute', url: scaleUrl }],
-};
-
-// --- news band ----------------------------------------------------------------
-// Newest first. Every card points at a primary source. See CLAIM POLICY at the
-// top of this file.
-export const news = {
-  label: '// 03 · news',
-  title: 'What just happened.',
-  sub: 'Every card links straight to the primary source.',
+  label: 'Proof',
+  // The trust strip under the hero. Four facts, each linked to its source.
+  // The signed-record count is read from live.generated.json by the
+  // component; only the words around it live here, so the number is never
+  // typed. `kind` picks the glyph (components/engine/bench/ProofIcon.svelte).
   items: [
-    {
-      tag: 'AMD',
-      date: 'July 2026',
-      featured: true,
-      title: 'Metrale Engine running on AMD Strix Halo',
-      body: 'AMD provided a Strix Halo desktop and we brought the engine to it through SCALE, custom kernels and all. One codebase now covers both vendors with no HIP port and no second kernel tree.',
-      cta: 'See the pull request',
-      url: strixPrUrl,
-    },
+    { kind: 'partner', tag: 'Partner', text: 'Built with SCALE by Spectral Compute', url: scaleUrl },
+    { kind: 'program', tag: 'Program', text: 'NVIDIA Inception member', url: nvidiaInceptionUrl },
+    { kind: 'licence', tag: 'Licence', text: 'MIT OR Apache-2.0, at your option', url: `${githubUrl}/blob/main/LICENSE-MIT` },
   ],
+  signed: { kind: 'records', tag: 'Records', text: '{signed} of {records} gate records signed', href: `#verified` },
 };
 
 // --- star / social proof -----------------------------------------------------
 export const stars = {
-  label: '// 07 · community',
+  label: 'Community',
   title: 'Built in the open.',
-  sub: 'The engine went from one Reddit post to a community running it on their own hardware, and every line of it is in the repository.',
-  cta: 'Star the repo',
+  sub: 'The engine went from one public post to a community running it on their own hardware. Every line of it is in the repository, and so is every gate record behind a number on this page.',
+  cta: 'Star on GitHub',
+  starsLabel: 'stars on GitHub',
 };
 
 // --- community / discord push ------------------------------------------------
 export const community = {
-  label: '// come build with us',
-  title: 'The action is in Discord.',
-  body: 'Hundreds of builders are running Metrale Engine on their own hardware right now. We are in there every day, shipping fixes, taking model requests, and tuning kernels in the open. Your machine is the test fleet and your voice sets the roadmap.',
-  cta: 'Join the Discord',
-  sub: 'Active every day.',
+  label: 'Where the work happens',
+  cards: [
+    {
+      icon: 'github',
+      title: 'The repository',
+      body: 'Kernels, scheduler, gate records and the campaign log, in one public tree. What ships is what you can read.',
+      cta: 'Open the repository',
+      url: githubUrl,
+    },
+    {
+      icon: 'discord',
+      title: 'Discord',
+      body: 'We are in there every day, shipping fixes, taking model requests and tuning kernels in the open. Bring what you are running.',
+      cta: 'Join the Discord',
+      url: discordUrl,
+    },
+    {
+      icon: 'discussions',
+      title: 'Discussions and issues',
+      body: 'Design questions go to Discussions. Bugs and regressions go to Issues, and a reproducible report gets featured rather than buried.',
+      cta: 'Start a discussion',
+      url: discussionsUrl,
+      more: [
+        { text: 'Good first issues', url: goodFirstIssuesUrl },
+        { text: 'r/LocalLLaMA', url: redditUrl },
+      ],
+    },
+  ],
 };
 
 // --- verified performance (the gate receipt) ---------------------------------
 export const verified = {
-  label: '// 02 · verified',
+  label: 'Verified',
   title: 'Every number is a receipt.',
-  sub: 'The website is a build artifact of the repo. Models come from recipes, performance comes from committed gate enforced baselines, stamped with commit and date. If a number is not in the repo, it is not on this page.',
-  pendingHeadline: 'Throughput baselines pending',
-  pendingBody: 'The release gate holds every image to liveness and coherence, and you can reproduce any run yourself.',
-  mechanism: 'A release that ships slower than the committed baseline fails our gate. That one sentence is the whole positioning.',
-  reproLead: 'Reproduce the matrix',
+  sub: 'Metrale Engine is benchmarked on every release against a committed baseline, and every record is signed. The performance on this page comes from those records, stamped with the engine commit and the date. If a number is not in the repository, it is not on this page.',
+  mechanism: 'A release that ships slower than the committed baseline fails our gate.',
   challengeLine: 'Beat these numbers or catch a regression, open an issue and we will feature it.',
-  // Rendered directly under the ladder chart. The numbers in this block are
-  // derived from ladder.generated.json by lib/ladder.js, never typed here.
+  challengeCta: 'Open an issue',
+  // The headline comparison, three tiles over the ladder chart. Every {value}
+  // is read from ladder.generated.json by components/engine/bench/ladder-facts.js.
+  headline: {
+    ratio: {
+      label: 'Against matched vLLM at C={c}',
+      body: '{baselineLabel} runs vLLM with its own speculative decoding at the same K as the engine, on the same box, checkpoint, client and prompts.',
+    },
+    throughput: {
+      label: 'Aggregate throughput at C={c}',
+      unit: 'tok/s',
+      body: '{checkpoint} on one DGX Spark. {aggregate}.',
+    },
+    rungs: {
+      label: 'Rungs won, C={from} to C={c}',
+      body: 'Margin {min}× to {max}× against the matched configuration at every rung, with the rungs we lost on the way in the campaign log.',
+    },
+  },
+  stamp: 'engine {sha} · {date}',
+  // Rendered under the ladder chart. The figures in it are derived from
+  // ladder.generated.json by lib/ladder.js, never typed here.
   scale: {
     title: 'The top of the ladder is the part that matters.',
-    lead: 'Agentic work does not arrive as one conversation at a time. It arrives as fleets of tool calling agents sharing a context bus, fanning out and rejoining, and the engine underneath them is judged where the requests pile up rather than at a single stream.',
-    tail: 'That gap is the whole thesis. An engine that flattens under load caps how many agents you can actually run, on any hardware you put it on. Holding the curve is what turns one accelerator into a swarm, and it is why the same engine is worth running on a rack.',
+    lead: 'Agentic work arrives as fleets of tool calling agents sharing a context bus, and the engine underneath them is judged where the requests pile up, not at a single stream.',
+    tail: 'An engine that flattens under load caps how many agents you can run on the hardware you have. Holding the curve is what turns one accelerator into a fleet.',
   },
-};
-
-// --- hardware ----------------------------------------------------------------
-export const hardware = {
-  label: '// 04 · hardware',
-  title: 'One engine, every tier.',
-  sub: 'The same Rust and CUDA source runs on both platforms below, compiles for NVIDIA and AMD without a second kernel tree, and scales from a single accelerator to expert parallel across nodes. These are the parts we have verified. The range is the design, and the list grows.',
-  cards: [
-    {
-      name: 'NVIDIA DGX Spark',
-      chip: 'GB10 · SM121',
-      status: 'verified',
-      statusText: 'Verified today',
-      body: 'One multi model binary serves a full matrix of hand tuned targets on a single GB10. NVFP4 and FP8, MTP speculative decoding, EP=2 across two Sparks. Every target passes the serve matrix before we cut an image.',
-      cta: { text: 'Read the deployment guide', url: guideUrl },
+  // What the comparison does and does not say. Each {value} is read from the
+  // ladder manifest by caveatsOf in ladder-facts.js, so a re-measured
+  // baseline rewrites its date here on the next build.
+  caveats: {
+    kicker: 'What this does and does not say',
+    box: { label: 'One accelerator', text: '{gpu}. {boxNote}.' },
+    checkpoint: {
+      label: 'One checkpoint',
+      text: '{checkpoint}, a {checkpointNote}. Other models are measured in the dashboard and claimed nowhere else.',
     },
-    {
-      name: 'AMD Strix Halo',
-      chip: 'gfx1151 · RDNA 3.5',
-      status: 'bringup',
-      statusText: 'Runs through SCALE',
-      body: 'One codebase, both vendors. Our CUDA kernels compile straight for AMD gfx1151 with SCALE by Spectral Compute. No HIP port, no second kernel tree. AMD provided the Strix Halo desktop it runs on.',
-      cta: { text: 'Join the bring up, PR #187', url: strixPrUrl },
-      scale: { text: 'Built with SCALE by Spectral Compute', url: scaleUrl },
+    baseline: {
+      label: 'A matched baseline',
+      text: '{baselineLabel} is {baselineEngine} with {baselineSpeculation}, measured {baselineFrom} to {baselineTo}. It is a dated snapshot, not a live series.',
     },
-  ],
+    workload: {
+      label: 'One workload',
+      text: 'ISL {isl} and OSL {osl}, {reps} timed reps after {warmup} warmup, temperature {temperature}, seed {seed}. Your prompts will differ.',
+    },
+    unmatched: {
+      label: 'Drawn, not scored',
+      text: '{unmatchedLabels} differs on {unmatchedDeltas}. It is on the chart for completeness and is not the denominator of any ratio here.',
+    },
+    scope: {
+      label: 'Nothing beyond that',
+      text: 'One box, one checkpoint, one workload. This says nothing about other hardware until we have run it there.',
+    },
+  },
+  // The entry point to the benchmark dashboard, one control per family.
+  dashboard: {
+    kicker: 'Benchmark dashboard',
+    title: 'Every benchmark family, every signed run.',
+    body: 'Agentic, BFCL, TTFT, decode, concurrency and cost, one tab each. Every chart point opens its record, its signature and the steps to reproduce it.',
+    groupLabel: 'Open the dashboard on a benchmark family',
+    cta: 'Open the dashboard',
+  },
+  // The trust signals beside the release-gate receipt.
+  trust: {
+    signed: {
+      title: 'Signed records',
+      body: '{signed} of {records} gate records carry a detached signature and the public key that made it, committed beside the record. The newest is from {newest}.',
+      cta: 'How to verify a record',
+      // The certification chapter of the engine's book. Held equal to
+      // RECORD_SIGNING_DOC in lib/receipt.js by ladder-facts.test.js: the page
+      // cannot import receipt.js, which is shared with the lazily loaded
+      // dashboard and would split into one more preload (page-weight.spec.js).
+      url: 'https://docs.metrale.ai/project/landing.html',
+    },
+    gate: {
+      title: 'The release gate',
+      cta: 'What verified means',
+      ctaSource: 'gate_results.py',
+    },
+    reproduce: {
+      title: 'Reproduce it',
+      body: 'The campaign log holds every rung, every raw file and the harness sha, including the rungs we lost on the way and the claims we retracted.',
+      cta: 'Read the campaign log',
+    },
+  },
 };
 
 // --- models ------------------------------------------------------------------
 export const models = {
-  label: '// 05 · models',
-  title: 'Every model here has a recipe.',
-  sub: 'Pick a vendor, then a family. Every card maps to one recipe in the recipe registry, so the site cannot list a model we do not ship. Copy the command and run it as is. Qwen3.6 leads because it is our flagship.',
+  label: 'Models',
+  title: 'Every model on this page is a recipe you can run today.',
+  sub: 'Pick a vendor, then a family. Each row is one recipe in the public registry, with its checkpoint, container image and serve settings fixed, so the page cannot list a model we do not ship. Copy the command and run it as is.',
+  stats: { recipes: 'recipes', vendors: 'vendors', families: 'families' },
+  countOne: 'recipe',
+  countMany: 'recipes',
+  columns: { model: 'Model', build: 'Precision and topology', command: 'Command' },
+  vendorsLabel: 'Model vendors',
+  familiesLabel: 'model families',
+  pins: {
+    title: 'What a recipe pins',
+    items: [
+      { term: 'Checkpoint', body: 'The exact model and quantization the engine loads.' },
+      { term: 'Container image', body: 'The engine image the recipe runs, so a deployment reproduces on another box.' },
+      { term: 'Serve settings', body: 'Context length, batch size, KV precision and speculative decoding, set per model.' },
+    ],
+  },
+  legend:
+    'EP=2 is expert parallelism across two DGX Spark units. Those recipes take two machines and start from the command rather than the Run button.',
+  registryCta: 'Browse the recipe registry',
 };
 
 // --- get running -------------------------------------------------------------
 export const getRunning = {
-  label: '// 06 · start',
-  title: 'Up and running in one command.',
-  sub: 'This is the first 60 seconds. Everything after, per model recipes, EP=2, tuning, lives in the docs.',
-  inspectNote: `Rather not pipe curl to a shell. Install ${CLI} from crates.io, then run the flagship recipe direct.`,
+  label: 'Get running',
+  title: 'Install the launcher, check the machine, start the flagship recipe.',
+  sub: `Three commands on Linux, macOS or Windows. The installer verifies every download against the release checksums, and ${CLI} will print any command before it runs it.`,
+  // The install step's command and directory come from `currentInstall()`,
+  // which follows the visitor's machine. The other two are the launcher's own.
+  steps: [
+    {
+      title: 'Install the launcher',
+      note: `Downloads a prebuilt ${CLI}, checks it against the release SHA256SUMS and installs it to {installDir}. No Python, no Rust toolchain.`,
+    },
+    {
+      title: 'Check the machine',
+      command: `${CLI} doctor`,
+      note: 'Reports whether Docker, the NVIDIA container runtime and the local agent are ready, and says what to fix.',
+    },
+    {
+      title: 'Start the flagship recipe',
+      command: runCommandRaw,
+      note: 'Pulls the engine image, loads {model} and serves an OpenAI compatible API.',
+    },
+  ],
+  inspect: {
+    title: 'Prefer to inspect first',
+    body: 'Nothing here has to be taken on trust.',
+    items: [
+      { command: `${CLI} run ${flagshipRecipe} --print`, note: 'Prints the docker command the recipe implies, and runs nothing.' },
+      { command: quickInstall, note: 'Builds the launcher from source on crates.io instead of downloading a binary.' },
+      { command: `uvx ${CLI} list`, note: 'Lists the recipes with no install step at all, through uv.' },
+    ],
+  },
+  installer: {
+    title: 'What the installer does',
+    items: [
+      'Refuses any download whose checksum is not in the release SHA256SUMS.',
+      `Installs one binary to ~/.local/bin, or %LOCALAPPDATA%\\Programs\\${CLI} on Windows.`,
+      'Sets the local agent up to start at login, as your user and never as root. METRALECTL_NO_AGENT=1 skips it.',
+      'Reverses cleanly on Linux and macOS. The same one liner with --uninstall removes the binary and the agent service.',
+    ],
+  },
+  requirements: `Docker, and the NVIDIA container runtime for GPU recipes. ${CLI} list, show and run --print work without either.`,
   docsCta: 'Read the deployment guide',
-  quickstartHint: `The script downloads a prebuilt ${CLI}, verifies its checksum, and installs it to ~/.local/bin. No Python, no Rust toolchain. Run it with --uninstall to reverse it.`,
+  docsSiteCta: 'Documentation',
+  readmeCta: 'Launcher README',
 };
 
 // --- mission -----------------------------------------------------------------
 export const mission = {
-  title: 'AI worth having, on hardware you own.',
-  statement:
-    'AI worth having should run on hardware you own, whether that is an accelerator at the edge, the workstation under your desk, or a rack you operate. We build one engine for the whole range, and we verify it on the silicon we can put our hands on.',
-  // Shown small, under the statement — the reasoning behind it rather than a
-  // second full-size claim.
+  title: 'Our position',
+  statement: 'AI worth having should run on hardware you own.',
+  // Shown small, under the statement: the reasoning, not a second claim.
   footnote:
-    'Pure Rust because the whole stack should be inspectable by one person, HTTP to kernel dispatch, no interpreter in the hot path. That is also what makes one binary portable across the range, from a part measured in watts to a node measured in kilowatts. We develop on machines provided by NVIDIA and AMD, and the test fleet is the community running it. If a model matters to you, it matters to us.',
+    'An accelerator at the edge, the workstation under a desk, or a rack you operate. Metrale builds one engine for that whole range, in Rust so the entire path from HTTP to kernel dispatch can be read by one engineer, and verifies it on the silicon we can put our hands on. NVIDIA and AMD provide the machines we develop on, and the community running the engine is the test fleet.',
 };
 
 // --- contribute --------------------------------------------------------------
 export const contribute = {
-  label: '// 08 · build with us',
+  label: 'Contribute',
   title: 'Your machine is the test fleet.',
-  sub: 'Metrale Engine grows from the machines it runs on. Every path below is real and linked. Contributions ship in the Community Edition under AGPLv3, and the CLA lets us re license for the Enterprise Edition.',
+  sub: 'Metrale Engine grows from the machines it runs on. Every path below is real and linked, and a regression report is worth as much to us as a kernel.',
+  licence: 'Dual licensed under MIT OR Apache-2.0, at your option.',
+  licences: [
+    { text: 'MIT', url: `${githubUrl}/blob/main/LICENSE-MIT` },
+    { text: 'Apache-2.0', url: `${githubUrl}/blob/main/LICENSE-APACHE` },
+  ],
   paths: [
     {
+      tag: 'Verify',
       title: 'Run the serve matrix',
-      body: 'Boot the matrix on your own GB10 and report what you see. Regressions and wins both get featured.',
+      body: 'Boot the matrix on your own DGX Spark and report what you see. Regressions and wins both get featured.',
       cta: 'Deployment guide',
       url: guideUrl,
     },
     {
+      tag: 'Models',
       title: 'Add or tune a recipe',
-      body: 'Recipes are the model SSOT. Add a model, tune a quant, open a pull request against the recipe registry.',
+      body: 'Recipes are the model source of truth. Add a model, tune a quantization, open a pull request against the registry.',
       cta: 'The recipe registry',
       url: recipesUrl,
     },
     {
+      tag: 'Kernels',
       title: 'Kernels in Rust and CUDA',
-      body: 'Hand tuned attention, MoE, GDN, Mamba-2 for Blackwell. Register level work, no generic fallbacks.',
+      body: 'Hand tuned attention, MoE, GDN and Mamba-2 for Blackwell. Register level work, no generic fallbacks.',
       cta: 'Good first issues',
       url: goodFirstIssuesUrl,
     },
     {
+      tag: 'Docs',
       title: 'Docs, triage, ideas',
-      body: 'Improve the guide, triage issues, or just tell us what you are running in Discord.',
+      body: 'Improve the guide, triage issues, or tell us what you are running and where it fell short.',
       cta: 'Discussions',
       url: discussionsUrl,
     },
   ],
-  cla: 'Contributions are AGPLv3 and the CLA permits Enterprise re licensing. See CONTRIBUTING.md.',
 };
 
 // --- roadmap (next up + artifact-linked) -------------------------------------
 export const roadmap = {
+  label: 'Roadmap',
   rowTitle: 'What we are building next.',
   rowSub:
-    'Everything shipped links to an issue, a PR, or the Discord where the work happens. Anything not yet committed carries its status, and we do not round it up.',
+    'Everything shipped links to an issue, a pull request or the Discord thread where the work happens. Anything not yet committed carries its status, and we do not round it up.',
+  // `tone` picks the status chip's hue: violet is engine work, green is a
+  // result that runs today, gold is a conversation, plain is tracking.
   items: [
     {
-      title: 'Three node GB10 topology',
+      title: 'Three node DGX Spark topology',
       status: 'Next up',
-      body: 'Three GB10s in one rig for models that will not fit across two. More memory, more experts, more concurrency headroom. We are wiring up the topology now.',
+      tone: 'violet',
+      body: 'Three DGX Spark units in one rig for models that will not fit across two. More memory, more experts, more concurrency headroom. We are wiring up the topology now.',
       cta: 'Discuss the topology in Discord',
       url: discordUrl,
     },
     {
       title: 'Intel Arc Pro B70',
       status: 'In talks',
+      tone: 'gold',
       body: 'Active conversations with Intel about bringing the engine to the Arc Pro B70. Nothing is signed yet, and this card will say so until it is.',
       cta: 'Follow along in Discord',
       url: discordUrl,
@@ -311,14 +447,16 @@ export const roadmap = {
     {
       title: 'AMD Strix Halo',
       status: 'Runs through SCALE',
+      tone: 'green',
       body: 'Native gfx1151 through SCALE. AMD provided a Strix Halo desktop and we brought the engine to it, custom kernels and all.',
-      cta: 'PR #187',
-      url: strixPrUrl,
+      cta: 'The gfx1151 kernels',
+      url: strixKernelsUrl,
     },
     {
       title: 'Bigger model support',
       status: 'Tracking',
-      body: 'Large MoE NVFP4 ports across EP topologies, DeepSeek and Kimi class, tracked in the open.',
+      tone: 'plain',
+      body: 'Large MoE NVFP4 ports across expert parallel topologies, DeepSeek and Kimi class, tracked in the open.',
       cta: 'Open issues',
       url: issuesUrl,
     },
@@ -334,73 +472,88 @@ export const roadmap = {
 // CLAIM POLICY applies: every answer below restates something already shown
 // elsewhere on this page or in a linked artifact. No new numbers.
 export const faq = {
-  label: '// 09 · questions',
-  title: 'The questions we actually get asked.',
-  sub: 'Short answers, each one backed by something on this page or in the repo.',
+  label: 'Questions',
+  title: 'The questions we get asked.',
+  sub: 'Short answers, each one backed by something on this page or in the repository.',
+  more: 'Something not answered here?',
+  moreCta: 'Talk to us',
+  moreAlt: 'or find us in',
   items: [
     {
       q: 'What is Metrale Engine?',
-      a: 'An open source LLM inference engine written in pure Rust and CUDA. It serves an OpenAI-compatible API from a single binary, with no Python and no PyTorch in the serving path. One codebase covers the range, from edge-class accelerators through workstations to expert-parallel deployments across nodes.',
+      a: 'An open source LLM inference engine written in pure Rust and CUDA. It serves an OpenAI compatible API from a single binary, with no Python and no PyTorch in the serving path. One codebase covers the range, from edge class accelerators through workstations to expert parallel deployments across nodes.',
     },
     {
       q: 'What hardware does Metrale Engine run on?',
-      a: 'NVIDIA DGX Spark (GB10) is verified today, and AMD Strix Halo (gfx1151) runs the same CUDA source compiled through SCALE by Spectral Compute — one codebase, no HIP port.',
+      a: 'NVIDIA DGX Spark (GB10) is verified today. AMD Strix Halo (gfx1151) runs the same CUDA source compiled through SCALE by Spectral Compute, one codebase and no HIP port.',
     },
     {
       q: 'Is Metrale Engine faster than vLLM on a DGX Spark?',
-      a: 'On the published concurrency ladder, yes at every rung from C=1 to C=128, by 1.012x to 1.333x against the matched vLLM + MTP configuration. The margin is widest at the top, because between C=64 and C=128 Metrale Engine keeps scaling and the matched vLLM configuration flattens. Same box, same checkpoint, same client, same prompts, greedy sampling with matched penalties. The full campaign log, including the rungs we lost on the way, is in the repo.',
+      a: 'On the published concurrency ladder, yes at every rung from C=1 to C=128 against the matched vLLM and MTP configuration. The margin is widest at the top, where Metrale Engine keeps scaling from C=64 to C=128 and the matched configuration flattens. Same box, same checkpoint, same client, same prompts, greedy sampling with matched penalties. The dashboard on this page draws every rung from the signed records, and the campaign log in the repository includes the rungs we lost on the way.',
     },
     {
       q: 'How do I install it?',
-      a: `One command: curl -fsSL https://metrale.ai/install.sh | sh. It downloads a prebuilt ${CLI}, verifies its checksum, and installs to ~/.local/bin. If you would rather not pipe curl to a shell, cargo install ${CLI} does the same thing from source.`,
+      a: `One command. ${runCommand} on Linux and macOS, or irm ${powershellInstallerUrl} | iex in PowerShell on Windows. It downloads a prebuilt ${CLI}, verifies it against the release checksums and installs it under your own user. If you would rather not pipe a script into a shell, ${quickInstall} builds it from crates.io.`,
     },
     {
       q: 'Which models can I run?',
-      a: 'Every model on this page maps to a recipe in the recipe registry, which is the single source of truth — the site cannot list a model that has no recipe. Qwen3.6 is the flagship family, alongside Gemma, Nemotron, Mistral, MiniMax and DeepSeek.',
+      a: 'Every model on this page maps to a recipe in the recipe registry, which is the single source of truth, so the site cannot list a model that has no recipe. Qwen has the most recipes, and Gemma, Nemotron, Mistral, MiniMax and DeepSeek have recipes too.',
     },
     {
-      q: 'What does “verified” mean here?',
-      a: 'An image ships only after the serve matrix passes: every model boots, stays coherent under greedy determinism with no token leakage and reliable tool calls, and holds throughput within 10% of its committed baseline. A release that ships slower than its baseline fails the gate.',
+      q: 'What does verified mean here?',
+      a: 'An image ships only after the serve matrix passes. Every model boots, stays coherent under greedy determinism with no token leakage and reliable tool calls, and holds throughput within ten percent of its committed baseline. A release that ships slower than its baseline fails the gate.',
     },
     {
-      q: 'Why does concurrency matter more than single-stream speed?',
-      a: 'Because agentic systems do not send one request at a time. A fleet of tool-calling agents sharing a context bus arrives as many concurrent streams, so the engine is judged where the requests pile up. On the published ladder Metrale Engine keeps gaining throughput from C=64 to C=128 while the leading vLLM configuration does not, and an engine that flattens under load caps how many agents a given box can actually run.',
+      q: 'Why does concurrency matter more than single stream speed?',
+      a: 'Because agentic systems do not send one request at a time. A fleet of tool calling agents sharing a context bus arrives as many concurrent streams, so the engine is judged where the requests pile up. On the published ladder Metrale Engine keeps gaining throughput from C=64 to C=128 while the matched vLLM configuration does not, and an engine that flattens under load caps how many agents a given box can run.',
     },
     {
-      q: 'What license is Metrale Engine under, and can I use it commercially?',
-      a: 'The Community Edition is AGPL-3.0-only. Contributions are covered by a CLA that permits re-licensing for the Enterprise Edition. If you are running Metrale Engine in production or need different terms, email us.',
+      q: 'What licence is Metrale Engine under, and can I use it commercially?',
+      a: 'Dual licensed under MIT OR Apache-2.0, at your option. Commercial use is allowed under either licence. If you run it in production and want support or a platform licence, email us.',
     },
     {
-      q: 'Does Metrale Engine run multi-node?',
-      a: 'Yes. EP=2 expert parallelism across two DGX Sparks is supported and shipped as recipes; those cards are marked EP=2 in the model list. A three-node GB10 topology is being wired up now.',
+      q: 'Is there a paid tier of the engine?',
+      a: 'No. There is one engine and one licence, and the binary you install from this page is the binary we verify and benchmark. Metrale Control and Metrale Economics are the platform around it for fleets, and they are licensed per GPU.',
+    },
+    {
+      q: 'Does Metrale Engine run multi node?',
+      a: 'Yes. EP=2 expert parallelism across two DGX Spark units ships as recipes, marked EP=2 in the model list. A three node DGX Spark topology is being wired up now.',
+    },
+    {
+      q: 'Who do I talk to about running it in production?',
+      a: `Email ${contactEmails[0]}, or use the reach out section below. Tell us the hardware and the workload and we will scope it with you.`,
     },
   ],
 };
 
 // --- reach out ---------------------------------------------------------------
+// The closing band. The primary action books a working session on the demo
+// page; the mailbox and Discord stay beside it for the people who would rather
+// write first. `icon` names one of the inline marks ReachOut.svelte draws.
 export const reachout = {
-  label: '// 10 · reach out',
-  title: 'Come work with us.',
-  sub: 'Building on Spark or Strix, deploying at rack scale, bringing hardware to the table, or wanting to partner. We want to hear from you.',
+  label: 'Reach out',
+  title: 'Put the engine on your workload.',
+  sub: 'We run the ladder on your models, on your hardware, and hand you the record.',
   cards: [
     {
-      emoji: '💼',
-      title: 'Business',
-      body: 'Running Metrale in production or evaluating the Enterprise Edition. Tell us what you need and we will scope it with you.',
+      icon: 'briefcase',
+      title: 'Production',
+      body: 'Evaluating the engine for production or already running it. Tell us what you serve and we will scope the deployment with you.',
     },
     {
-      emoji: '🤝',
+      icon: 'handshake',
       title: 'Partnerships',
-      body: 'Frameworks, benchmarks, standards bodies. If it advances inference on hardware people own, we want the conversation.',
+      body: 'Frameworks, benchmarks and standards bodies. If it advances inference on hardware people own, we want the conversation.',
     },
     {
-      emoji: '🔧',
-      title: 'Hardware',
-      body: 'Silicon you want Metrale Engine running on. Tell us about it and we will scope a bring up.',
+      icon: 'chip',
+      title: 'Silicon',
+      body: 'Hardware you want Metrale Engine running on. Tell us about it and we will scope the bring up.',
     },
   ],
+  primaryCta: 'Book a demo',
   emails: contactEmails,
-  discordCta: 'Or find us in Discord',
+  discordCta: 'Find us in Discord',
 };
 
 // --- ask the codebase (chat modal) -------------------------------------------
@@ -547,7 +700,7 @@ export const codeChat = {
 // --- footer ------------------------------------------------------------------
 export const footer = {
   tagline: 'Pure Rust and CUDA inference, from the device in your hand to the datacenter rack.',
-  license: 'Dual licensed. Community Edition under AGPLv3, Enterprise Edition commercial.',
+  license: 'Dual licensed under MIT OR Apache-2.0, at your option.',
   cols: [
     {
       heading: 'Project',
@@ -556,7 +709,8 @@ export const footer = {
         { text: 'Blog', url: blogUrl },
         { text: 'Deployment guide', url: guideUrl },
         { text: 'Recipes (SSOT)', url: recipesUrl },
-        { text: 'License AGPLv3', url: githubUrl + '/blob/main/LICENSE' },
+        { text: 'License MIT', url: githubUrl + '/blob/main/LICENSE-MIT' },
+        { text: 'License Apache-2.0', url: githubUrl + '/blob/main/LICENSE-APACHE' },
       ],
     },
     {

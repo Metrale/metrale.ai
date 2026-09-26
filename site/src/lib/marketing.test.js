@@ -63,8 +63,15 @@ test('missing or invalid evidence cannot turn into a marketing claim', () => {
 });
 test('legacy technical fragments keep their precise destination and query', () => {
   expect(legacyEngineDestination('#faq', '?ref=docs')).toBe('/engine?ref=docs#faq');
-  expect(legacyEngineDestination('#hardware', '')).toBe('/engine#hardware');
+  expect(legacyEngineDestination('#mission', '')).toBe('/engine#mission');
   expect(legacyEngineDestination('#%66aq', '')).toBe('/engine#faq');
+});
+test('fragments for the sections that left /engine land where their readers went, query kept', () => {
+  expect(legacyEngineDestination('#news', '')).toBe('/resources/updates');
+  expect(legacyEngineDestination('#news', '?ref=docs')).toBe('/resources/updates?ref=docs');
+  expect(legacyEngineDestination('#hardware', '')).toBe('/platform/hardware');
+});
+test('a fragment with no home anywhere is left to the browser', () => {
   for (const hash of ['#verified', '#models', '#run', '#why-metrale', '#not-a-section', '#%E0%A4%A']) {
     expect(legacyEngineDestination(hash, '')).toBeNull();
   }

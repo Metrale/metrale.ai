@@ -1,0 +1,16 @@
+# Security headers for docs.metrale.ai, appended by docs/build.mjs to the
+# cache rules the book ships in its own _headers. Pages applies every rule that
+# matches a path, so this second `/*` adds these headers beside the book's
+# without re-declaring any of them (a re-declared header is concatenated).
+#
+# The Content-Security-Policy is built from what the built book loads, crawled
+# in a browser: mdBook's scripts, styles, fonts and search index, all from this
+# origin, the diagrams the book embeds from raw.githubusercontent.com, and
+# the Rust playground mdBook's runnable code blocks call (play.rust-lang.org,
+# asked which crates it has on every page with Rust code). mdBook writes its theme and sidebar setup as
+# inline scripts that differ page by page, so script-src allows inline.
+
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), hid=(), magnetometer=(), microphone=(), payment=(), serial=(), usb=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com; font-src 'self'; connect-src 'self' https://play.rust-lang.org; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'

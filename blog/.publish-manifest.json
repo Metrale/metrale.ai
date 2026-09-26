@@ -1,12 +1,12 @@
 {
   "posts": [
     {
-      "slug": "dflash2-single-spark-record",
+      "slug": "dflash2-single-dgx-spark-record",
       "title": "DFLASH-2: the fastest single-machine numbers Metrale Engine has produced",
       "published_at": "2026-09-01",
       "topics": ["engineering", "benchmarks"],
       "urls": {
-        "blog": "https://blog.metrale.ai/posts/dflash2-single-spark-record",
+        "blog": "https://blog.metrale.ai/posts/dflash2-single-dgx-spark-record",
         "devto": null,
         "medium": null,
         "x": null

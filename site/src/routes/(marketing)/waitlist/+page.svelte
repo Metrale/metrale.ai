@@ -1,6 +1,5 @@
 <!--
-  /waitlist. The Community Edition is announced, not released, so every button
-  that used to say "install" comes here. Same shape as /demo on purpose: what
+  /waitlist, the release notes sign up. Same shape as /demo on purpose: what
   you get on the left, the form on the right, and the closing band loops back
   to the demo. Copy is `waitlistPage` in src/lib/content/company.js.
 -->
@@ -35,12 +34,7 @@
           </div>
         </div>
         <div class="av-reveal" id="join" style="scroll-margin-top:96px">
-          <DemoForm
-            form={w.form}
-            source="waitlist"
-            to={contacts.sales}
-            subject={(v) => `Community Edition waitlist, ${v.name || v.email || ''}`}
-          />
+          <DemoForm form={w.form} source="waitlist" to={contacts.sales} subject={(v) => `Release notes, ${v.name || v.email || ''}`} />
         </div>
       </div>
     </div>
