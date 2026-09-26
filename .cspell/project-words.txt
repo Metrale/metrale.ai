@@ -194,6 +194,7 @@ sinces
 skywalking
 slabel
 slai
+softmax
 sparkline
 sparkrun
 ssot

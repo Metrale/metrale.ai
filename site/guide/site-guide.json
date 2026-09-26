@@ -1,5 +1,5 @@
 {
- "revision": 4,
+ "revision": 5,
  "date": "2026-09-26",
  "changes": [
   {
@@ -77,6 +77,13 @@
    "date": "2026-09-26",
    "base": "fe145c78e",
    "note": "engine: enterprise composition, News and Hardware removed",
+   "touched": []
+  },
+  {
+   "rev": 5,
+   "date": "2026-09-26",
+   "base": "bcab6542c",
+   "note": "the engine page in the front page's design; News and Hardware removed",
    "touched": []
   }
  ],
@@ -839,7 +846,9 @@
    "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-APACHE",
    "rev": 1,
    "date": "2026-09-26",
-   "used": []
+   "used": [
+    "/engine"
+   ]
   },
   {
    "key": "links.llamaCppPr",
@@ -3336,6 +3345,7 @@
     {
      "file": "src/lib/content/brand.js",
      "exports": [
+      "links",
       "routes"
      ]
     },
@@ -3349,20 +3359,20 @@
       "contribute",
       "discordUrl",
       "faq",
+      "flagshipRecipe",
       "gateSrcUrl",
       "getRunning",
       "githubUrl",
       "guideUrl",
       "hero",
+      "issuesUrl",
       "mission",
       "models",
       "nav",
       "proof",
-      "quickInstall",
       "reachout",
       "recipesUrl",
       "roadmap",
-      "runCommandRaw",
       "stars",
       "startAgentCommand",
       "verified",
