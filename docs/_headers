@@ -5,11 +5,12 @@
 #
 # The Content-Security-Policy is built from what the built book loads, crawled
 # in a browser: mdBook's scripts, styles, fonts and search index, all from this
-# origin, and one kind of outside file, the diagrams the book embeds from
-# raw.githubusercontent.com. mdBook writes its theme and sidebar setup as
+# origin, the diagrams the book embeds from raw.githubusercontent.com, and
+# the Rust playground mdBook's runnable code blocks call (play.rust-lang.org,
+# asked which crates it has on every page with Rust code). mdBook writes its theme and sidebar setup as
 # inline scripts that differ page by page, so script-src allows inline.
 
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), hid=(), magnetometer=(), microphone=(), payment=(), serial=(), usb=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com; font-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com; font-src 'self'; connect-src 'self' https://play.rust-lang.org; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
