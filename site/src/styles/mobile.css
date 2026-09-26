@@ -990,6 +990,25 @@ video {
   }
 }
 
+/* ---- dashboard panels on a phone: text wraps, only charts may scroll ------ */
+@media (max-width: 860px) {
+  /* Legend entries are one line on a desk; on a phone they wrap like prose. */
+  .gate-panel-head,
+  .gate-panel-title,
+  .gate-legend,
+  .gl-group,
+  .gate-legend-item {
+    min-width: 0;
+  }
+  .gate-legend-item {
+    white-space: normal;
+  }
+  /* Paths, shas and instrument strings in captions break where they must. */
+  .bd-body code {
+    overflow-wrap: anywhere;
+  }
+}
+
 /* ---- cost section (all viewport rules live here, beside the dashboard's) --- */
 @media (max-width: 860px) {
   .co-tabs {

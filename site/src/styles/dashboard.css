@@ -984,6 +984,14 @@
   gap: 1rem;
   outline: none;
 }
+/* A grid item's automatic minimum width is its content's, so without this a
+   subject strip or a legend line sets the width of the whole panel instead of
+   scrolling or wrapping inside it. */
+.ct,
+.csp,
+.csp > * {
+  min-width: 0;
+}
 .csp:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
