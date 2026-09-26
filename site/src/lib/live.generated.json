@@ -4,7 +4,11 @@
     "date": "2026-09-25",
     "registered": 30,
     "concurrencyRecords": 9,
-    "concurrencyPass": 9
+    "concurrencyPass": 9,
+    "records": 69,
+    "signed": 69,
+    "withRecords": 13,
+    "newest": "2026-09-24"
   },
   "recipes": 32
 }

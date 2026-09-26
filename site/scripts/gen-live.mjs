@@ -41,6 +41,10 @@ const concurrency = Object.entries(gates.benchmarks ?? {})
   .flatMap(([, b]) => b.records ?? []);
 if (concurrency.length === 0) throw new Error('gen-live: gates.generated.json holds no concurrency gate records');
 
+// The signed gate records, counted for the release-gate receipt on /engine.
+const all = Object.values(gates.benchmarks ?? {}).flatMap((b) => b.records ?? []);
+const newest = all.reduce((t, r) => Math.max(t, r.recorded_at ?? 0), 0);
+
 const recipes = models.reduce((n, v) => n + v.subfamilies.reduce((m, f) => m + f.recipes.length, 0), 0);
 if (recipes === 0) throw new Error('gen-live: models.generated.json produced no recipes');
 
@@ -51,6 +55,10 @@ const out = {
     registered: gates.registered?.length ?? 0,
     concurrencyRecords: concurrency.length,
     concurrencyPass: concurrency.filter((r) => r.verdict === 'PASS').length,
+    records: all.length,
+    signed: all.filter((r) => r.signer).length,
+    withRecords: Object.values(gates.benchmarks ?? {}).filter((b) => (b.records ?? []).length > 0).length,
+    newest: newest ? new Date(newest * 1000).toISOString().slice(0, 10) : null,
   },
   recipes,
 };

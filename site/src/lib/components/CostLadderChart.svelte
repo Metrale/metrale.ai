@@ -35,6 +35,7 @@
   import { colorFor } from '$lib/gates.js';
   import { dashFor } from '$lib/gate-variants.js';
   import { costPerMillion, fmtUsd } from '$lib/cost.js';
+  import RecordReceipt from './RecordReceipt.svelte';
 
   /**
    * @type {{
@@ -338,4 +339,5 @@
       {/each}
     {/if}
   </svg>
+  {#if cost.metrale?.record}<RecordReceipt records={[cost.metrale.record]} />{/if}
 </figure>

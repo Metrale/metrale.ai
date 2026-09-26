@@ -48,6 +48,7 @@
 <script>
   import ConcurrencyLadder from './ConcurrencyLadder.svelte';
   import ConcurrencyBaseline from './ConcurrencyBaseline.svelte';
+  import RecordReceipt from './RecordReceipt.svelte';
   import { colorFor, fmtDate, ladderPoints, rungFloors } from '$lib/gates.js';
   import { dashFor } from '$lib/gate-variants.js';
   import { fmtLimit, limitLabel, rungSpans, stepPath, violationOf } from '$lib/gate-limits.js';
@@ -329,6 +330,7 @@
           The {r.series.label} one-shot of {measuredRange(r.series.rungs)} is on another instrument and is not drawn: {r.why}.
         {/each}
       </p>
+      <RecordReceipt records={[live]} />
     {:else if state === 'live'}
       <p class="cmp-caption">
         <strong>vLLM has not been run on this instrument</strong> ({instrumentLabel(live)}).
@@ -344,6 +346,7 @@
         One run of the reference harness at these settings, filed under
         <code>{subject.baselines_dir}/</code>, fills the comparison.
       </p>
+      <RecordReceipt records={[live]} />
     {:else}
       <!-- What is missing, why, what fills it — in that order, and never a zero. -->
       <div class="cmp-empty">
