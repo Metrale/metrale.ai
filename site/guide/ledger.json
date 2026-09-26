@@ -70,6 +70,13 @@
         "footer.license",
         "links.strixPr"
       ]
+    },
+    {
+      "rev": 4,
+      "date": "2026-09-26",
+      "base": "fe145c78e",
+      "note": "engine: enterprise composition, News and Hardware removed",
+      "touched": []
     }
   ],
   "facts": {

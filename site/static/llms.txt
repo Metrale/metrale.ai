@@ -51,7 +51,7 @@ Proposed list prices, subject to contract. The pricing page carries the payback 
 
 ## Metrale Engine
 
-Metrale Engine is an open source LLM engine written in Rust and CUDA. One ~75 MB binary, no Python, no PyTorch. It runs on edge class accelerators today, scales across nodes with expert parallelism, and holds throughput at the concurrency a datacenter serves. What ships is what we verify, and we bench every release.
+Metrale Engine is the open source inference layer of the Metrale platform. Rust and CUDA in one 75 MB binary, with no Python or PyTorch in the request path, OpenAI and Anthropic compatible APIs, and a signed gate record behind every release. It runs on a single accelerator today and scales across nodes with expert parallelism.
 
 Written in pure Rust and CUDA and licensed MIT OR Apache-2.0. One codebase covers
 the range, from edge-class accelerators through workstations to expert-parallel
@@ -59,8 +59,8 @@ deployments across nodes.
 
 ### What it runs on
 
-- NVIDIA DGX Spark (GB10 · SM121) — Verified today. One multi model binary serves a full matrix of hand tuned targets on a single GB10. NVFP4 and FP8, MTP speculative decoding, EP=2 across two DGX Spark units. Every target passes the serve matrix before we cut an image.
-- AMD Strix Halo (gfx1151 · RDNA 3.5) — Runs through SCALE. One codebase, both vendors. Our CUDA kernels compile straight for AMD gfx1151 with SCALE by Spectral Compute. No HIP port, no second kernel tree. AMD provided the Strix Halo desktop it runs on.
+- NVIDIA DGX Spark (GB10 · Blackwell SM121) — Verified. One multi model binary serves a full matrix of hand tuned targets on a single GB10. NVFP4 and FP8, MTP speculative decoding, EP=2 across two DGX Spark units. Every target passes the serve matrix before an image is cut.
+- AMD Strix Halo (gfx1151 · RDNA 3.5) — Runs through SCALE. One codebase, both vendors. The CUDA kernels compile straight for gfx1151 through SCALE by Spectral Compute. AMD provided the Strix Halo desktop it runs on.
 
 ### Measured performance
 

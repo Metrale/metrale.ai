@@ -40,13 +40,14 @@ const bench = read('src/lib/benchmarks.generated.json');
 // data.js is an ES module of plain exports; importing it keeps the copy in one
 // place instead of restating it here.
 const data = await load('src/lib/data.js');
-const { hero, githubUrl, recipesUrl, discordUrl, xUrl, guideUrl, hardware } = data;
+const { hero, githubUrl, recipesUrl, discordUrl, xUrl, guideUrl } = data;
 
 // The marketing copy. These modules import nothing but each other, so they
 // load here exactly as the pages load them.
 const { pages, company, SITE, links } = await load('src/lib/content/index.js');
 const home = await load('src/lib/content/home.js');
 const pricing = await load('src/lib/content/pricing.js');
+const { hardwarePage } = await load('src/lib/content/platform.js');
 if (!pages?.length) throw new Error('gen-llms: the page registry is empty');
 
 const recipes = models.flatMap((v) => v.subfamilies.flatMap((f) => f.recipes.map((r) => ({ vendor: v.vendor, family: f.name, ...r }))));
@@ -98,8 +99,10 @@ push(
   '### What it runs on',
   ''
 );
-for (const c of hardware.cards) {
-  push(`- ${c.name} (${c.chip}) — ${c.statusText}. ${c.body}`);
+// The verified targets, from the hardware page's copy: /engine no longer
+// carries a hardware section, and one list of what is verified is enough.
+for (const c of hardwarePage.verified) {
+  push(`- ${c.name} (${c.chip}) — ${c.status}. ${c.body}`);
 }
 
 push(

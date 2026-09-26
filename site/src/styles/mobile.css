@@ -24,8 +24,6 @@ video {
 .verified-grid > *,
 .star-wrap > *,
 .run-grid > *,
-.hw-grid > *,
-.news-grid > *,
 .road-grid > *,
 .contrib-grid > *,
 .reach-grid > *,
@@ -215,7 +213,6 @@ video {
   .hero-inner,
   .star-wrap,
   .verified-grid,
-  .hw-grid,
   .run-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -354,10 +351,6 @@ video {
   .hero-receipt .receipt-hit {
     max-width: none;
   }
-  .hw-card {
-    padding: 1.5rem 1.35rem;
-  }
-  .news-card,
   .reach-card,
   .road-card,
   .contrib-card {
@@ -435,7 +428,6 @@ video {
   .mnav-sub-count {
     font-size: 0.68rem;
   }
-  .news-tag,
   .receipt-title,
   .receipt-hw,
   .road-status,
@@ -447,9 +439,6 @@ video {
   .slabel {
     font-size: 0.75rem;
   }
-  .hw-chip,
-  .hw-status,
-  .news-date,
   .term-title,
   .hero-challenge .fine {
     font-size: 0.78rem;
@@ -465,8 +454,6 @@ video {
   .cla-line {
     font-size: 0.74rem;
   }
-  .hw-card p,
-  .news-card p,
   .road-card p,
   .contrib-card p,
   .reach-card p,
@@ -534,17 +521,9 @@ video {
     padding: 0 0.7rem;
   }
   .reach-card,
-  .news-card,
   .road-card,
   .contrib-card {
     padding: 1.2rem 1.15rem;
-  }
-  .news-top {
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-  .news-card h3 {
-    font-size: 1rem;
   }
   .tcard {
     padding: 1.1rem 1.15rem;
@@ -596,14 +575,11 @@ video {
   .fcol a {
     padding-block: 0.3rem;
   }
-  .news-link,
-  .hw-links a,
   .road-card a,
   .contrib-card a {
     padding-block: 0.35rem;
   }
   .subcard:hover,
-  .news-card:hover,
   .reach-card:hover,
   .contrib-card:hover {
     transform: none;

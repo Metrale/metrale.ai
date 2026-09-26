@@ -88,80 +88,69 @@ export const startAgentCommand = `${CLI} agent install`;
 /// drift".
 export const runCommandRaw = `${CLI} run ${flagshipRecipe}`;
 
-// --- hardware acknowledgment (modest banner) ---------------------------------
-// --- announcement band (the strip above the hero) ----------------------------
+// --- announcement strip (the one line above the hero) ------------------------
+// One row, the front page's pattern. Emptying `text` takes the strip off the
+// page: the component renders nothing without it.
 export const announcement = {
-  // The partnership row is HIDDEN, not deleted: `line` empty means the banner
-  // skips that row entirely. Restoring it is a one-line content change rather
-  // than rebuilding the markup, which is why the component renders the row
-  // conditionally instead of this file dropping the keys.
-  line: '',
-  sub: '',
-  ctaText: '',
-  ctaUrl: '',
-  // `note` would be a second row; there is none, and the component skips a
-  // row with no words. The browser client's row is its own piece of news. The
-  // ask for feedback is only honest if it is easy to act on, so it carries the
-  // link rather than the words "let us know".
-  pwa: 'Metrale Fleet Manager, the PWA that runs models straight from your browser, is still under development. Feedback is welcome.',
-  pwaCtaText: 'Open an issue',
-  pwaCtaUrl: issuesUrl,
+  tag: 'Preview',
+  text: 'Metrale Fleet Manager runs models from your browser on the machines you pair, and nothing leaves your network. It is in preview, and feedback is welcome.',
+  cta: 'Open the control plane',
+  href: CONTROL,
 };
 
-// --- nav (SSOT for both the desktop bar and the mobile drawer) ---------------
+// --- nav (SSOT for the /engine jump bar and the /control bar and drawer) -----
 export const nav = {
+  // `hue` is the section's colour in the jump bar, by the tokens' grammar:
+  // green for a verified result, violet for the engine, gold for the
+  // community, cyan for the control plane.
   links: [
-    { text: 'Verified', href: `${ENGINE}#verified` },
-    { text: 'News', href: `${ENGINE}#news` },
-    { text: 'Hardware', href: `${ENGINE}#hardware` },
-    { text: 'Models', href: `${ENGINE}#models` },
-    { text: 'Start Metrale', href: `${ENGINE}#run` },
-    { text: 'Control', href: CONTROL },
-    { text: 'Blog', href: blogUrl },
+    { text: 'Verified', href: `${ENGINE}#verified`, hue: 'green' },
+    { text: 'Models', href: `${ENGINE}#models`, hue: 'violet' },
+    { text: 'Get running', href: `${ENGINE}#run`, hue: 'violet' },
+    { text: 'Community', href: `${ENGINE}#community`, hue: 'gold' },
+    { text: 'Reach out', href: `${ENGINE}#reach`, hue: 'gold' },
+    { text: 'Control', href: CONTROL, hue: 'cyan' },
+    { text: 'Blog', href: blogUrl, hue: 'gold' },
   ],
   menuLabel: 'Menu',
   closeLabel: 'Close menu',
 };
 
 // --- hero --------------------------------------------------------------------
+// The figures the hero prints (rungs won, the margin, the top rung) come from
+// ladder.generated.json inside Hero.svelte. Nothing numeric about performance
+// is typed here. "75 MB" is the size of the binary, and the front page says it.
 export const hero = {
-  badge: 'Open source. Pure Rust and CUDA. Verified on GB10.',
-  headline: ['One inference engine, from the device in your hand', 'to the datacenter rack.'],
-  sub: 'Metrale Engine is an open source LLM engine written in Rust and CUDA. One ~75 MB binary, no Python, no PyTorch. It runs on edge class accelerators today, scales across nodes with expert parallelism, and holds throughput at the concurrency a datacenter serves. What ships is what we verify, and we bench every release.',
-  challenge: {
-    claim: 'First token in under 90 seconds on a DGX Spark.',
-    lead: 'Do not take our word for it.',
-    fine: 'Median of our GB10 runs, model cached, July 2026. Same command below, run it and time it yourself.',
+  kicker: 'Metrale Engine, the inference layer',
+  pillars: ['Open source', 'Rust and CUDA', 'Verified on DGX Spark'],
+  headline: ['More inference from the silicon you already own.', 'One signed binary, verified on every release.'],
+  sub: 'Metrale Engine is the open source inference layer of the Metrale platform. Rust and CUDA in one 75 MB binary, with no Python or PyTorch in the request path, OpenAI and Anthropic compatible APIs, and a signed gate record behind every release. It runs on a single accelerator today and scales across nodes with expert parallelism.',
+  primaryCta: 'Get running',
+  secondaryCta: 'Talk to us',
+  githubCta: 'Star on GitHub',
+  // The line under the actions. Hero.svelte fills the figures in from the
+  // generated ladder; this is only the frame around them.
+  claim: {
+    conditions: 'Same box, same checkpoint, same client.',
+    logCta: 'Read the campaign log',
   },
-  primaryCta: 'Star on GitHub',
-  secondaryCta: 'Start Metrale',
-  discordCta: 'Join the Discord',
+  // The benchmark story beside the copy: the frame's kicker, the three stat
+  // labels, and the control that opens the dashboard.
+  art: {
+    kicker: 'Published DGX Spark ladder',
+    stats: {
+      ratio: 'the matched vLLM configuration at the top rung',
+      throughput: 'aggregate tok/s at the top rung',
+      rungs: 'rungs won',
+    },
+    dashboardCta: 'View the benchmark dashboard',
+  },
 };
 
 // --- proof strip (prominent, right under the hero) ---------------------------
 export const proof = {
   label: '// receipts, not adjectives',
   items: [{ text: 'Built with SCALE by Spectral Compute', url: scaleUrl }],
-};
-
-// --- news band ----------------------------------------------------------------
-// Newest first. Every card points at a primary source. See CLAIM POLICY at the
-// top of this file.
-export const news = {
-  label: '// 03 · news',
-  title: 'What just happened.',
-  sub: 'Every card links straight to the primary source.',
-  items: [
-    {
-      tag: 'AMD',
-      date: 'July 2026',
-      featured: true,
-      title: 'Metrale Engine running on AMD Strix Halo',
-      body: 'AMD provided a Strix Halo desktop and we brought the engine to it through SCALE, custom kernels and all. One codebase now covers both vendors with no HIP port and no second kernel tree.',
-      cta: 'See the gfx1151 kernels',
-      url: strixKernelsUrl,
-    },
-  ],
 };
 
 // --- star / social proof -----------------------------------------------------
@@ -198,32 +187,6 @@ export const verified = {
   },
 };
 
-// --- hardware ----------------------------------------------------------------
-export const hardware = {
-  label: '// 04 · hardware',
-  title: 'One engine, every tier.',
-  sub: 'The same Rust and CUDA source runs on both platforms below, compiles for NVIDIA and AMD without a second kernel tree, and scales from a single accelerator to expert parallel across nodes. These are the parts we have verified. The range is the design, and the list grows.',
-  cards: [
-    {
-      name: 'NVIDIA DGX Spark',
-      chip: 'GB10 · SM121',
-      status: 'verified',
-      statusText: 'Verified today',
-      body: 'One multi model binary serves a full matrix of hand tuned targets on a single GB10. NVFP4 and FP8, MTP speculative decoding, EP=2 across two DGX Spark units. Every target passes the serve matrix before we cut an image.',
-      cta: { text: 'Read the deployment guide', url: guideUrl },
-    },
-    {
-      name: 'AMD Strix Halo',
-      chip: 'gfx1151 · RDNA 3.5',
-      status: 'bringup',
-      statusText: 'Runs through SCALE',
-      body: 'One codebase, both vendors. Our CUDA kernels compile straight for AMD gfx1151 with SCALE by Spectral Compute. No HIP port, no second kernel tree. AMD provided the Strix Halo desktop it runs on.',
-      cta: { text: 'See the gfx1151 kernels', url: strixKernelsUrl },
-      scale: { text: 'Built with SCALE by Spectral Compute', url: scaleUrl },
-    },
-  ],
-};
-
 // --- models ------------------------------------------------------------------
 export const models = {
   label: '// 05 · models',
@@ -243,13 +206,11 @@ export const getRunning = {
 
 // --- mission -----------------------------------------------------------------
 export const mission = {
-  title: 'AI worth having, on hardware you own.',
-  statement:
-    'AI worth having should run on hardware you own, whether that is an accelerator at the edge, the workstation under your desk, or a rack you operate. We build one engine for the whole range, and we verify it on the silicon we can put our hands on.',
-  // Shown small, under the statement — the reasoning behind it rather than a
-  // second full-size claim.
+  title: 'Our position',
+  statement: 'AI worth having should run on hardware you own.',
+  // Shown small, under the statement: the reasoning, not a second claim.
   footnote:
-    'Pure Rust because the whole stack should be inspectable by one person, HTTP to kernel dispatch, no interpreter in the hot path. That is also what makes one binary portable across the range, from a part measured in watts to a node measured in kilowatts. We develop on machines provided by NVIDIA and AMD, and the test fleet is the community running it. If a model matters to you, it matters to us.',
+    'An accelerator at the edge, the workstation under a desk, or a rack you operate. Metrale builds one engine for that whole range, in Rust so the entire path from HTTP to kernel dispatch can be read by one engineer, and verifies it on the silicon we can put our hands on. NVIDIA and AMD provide the machines we develop on, and the community running the engine is the test fleet.',
 };
 
 // --- contribute --------------------------------------------------------------
@@ -376,29 +337,33 @@ export const faq = {
 };
 
 // --- reach out ---------------------------------------------------------------
+// The closing band. The primary action books a working session on the demo
+// page; the mailbox and Discord stay beside it for the people who would rather
+// write first. `icon` names one of the inline marks ReachOut.svelte draws.
 export const reachout = {
-  label: '// 10 · reach out',
-  title: 'Come work with us.',
-  sub: 'Building on DGX Spark or Strix Halo, deploying at rack scale, bringing hardware to the table, or wanting to partner. We want to hear from you.',
+  label: 'Reach out',
+  title: 'Put the engine on your workload.',
+  sub: 'We run the ladder on your models, on your hardware, and hand you the record.',
   cards: [
     {
-      emoji: '💼',
-      title: 'Business',
-      body: 'Running Metrale in production or evaluating the platform. Tell us what you need and we will scope it with you.',
+      icon: 'briefcase',
+      title: 'Production',
+      body: 'Evaluating the engine for production or already running it. Tell us what you serve and we will scope the deployment with you.',
     },
     {
-      emoji: '🤝',
+      icon: 'handshake',
       title: 'Partnerships',
-      body: 'Frameworks, benchmarks, standards bodies. If it advances inference on hardware people own, we want the conversation.',
+      body: 'Frameworks, benchmarks and standards bodies. If it advances inference on hardware people own, we want the conversation.',
     },
     {
-      emoji: '🔧',
-      title: 'Hardware',
-      body: 'Silicon you want Metrale Engine running on. Tell us about it and we will scope a bring up.',
+      icon: 'chip',
+      title: 'Silicon',
+      body: 'Hardware you want Metrale Engine running on. Tell us about it and we will scope the bring up.',
     },
   ],
+  primaryCta: 'Book a demo',
   emails: contactEmails,
-  discordCta: 'Or find us in Discord',
+  discordCta: 'Find us in Discord',
 };
 
 // --- ask the codebase (chat modal) -------------------------------------------

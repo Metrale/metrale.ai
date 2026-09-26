@@ -1,12 +1,17 @@
 <script>
-  // Keep the full engineering workflow and its dialogs together.
-  import Nav from '$lib/components/Nav.svelte';
+  // The engine page, in the front page's language. The marketing stylesheet is
+  // imported HERE, not in the group layout, so /control and /diligence pay
+  // nothing for it: it is scoped to `.av`, and each section of this page
+  // carries that scope on its own root. The dashboard modal, the launch dialog
+  // and the code chat stay on app.css. src/lib/route-groups.js still holds:
+  // this is a developer route and never loads the marketing components
+  // (e2e/page-weight.spec.js).
+  import '../../../styles/metrale.css';
+  import JumpBar from '$lib/components/engine/lead/JumpBar.svelte';
   import AnnouncementBanner from '$lib/components/AnnouncementBanner.svelte';
   import Hero from '$lib/components/Hero.svelte';
   import Proof from '$lib/components/Proof.svelte';
   import Verified from '$lib/components/Verified.svelte';
-  import News from '$lib/components/News.svelte';
-  import Hardware from '$lib/components/Hardware.svelte';
   import ModelSlider from '$lib/components/ModelSlider.svelte';
   import GetRunning from '$lib/components/GetRunning.svelte';
   import Community from '$lib/components/Community.svelte';
@@ -21,13 +26,11 @@
   <title>Metrale Engine, pure Rust inference for DGX Spark</title>
 </svelte:head>
 
-<Nav />
+<JumpBar />
 <AnnouncementBanner />
 <Hero />
 <Proof />
 <Verified />
-<News />
-<Hardware />
 <ModelSlider />
 <GetRunning />
 <Community />

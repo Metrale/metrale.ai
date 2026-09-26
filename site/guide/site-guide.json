@@ -1,5 +1,5 @@
 {
- "revision": 3,
+ "revision": 4,
  "date": "2026-09-26",
  "changes": [
   {
@@ -71,6 +71,13 @@
     "footer.license",
     "links.strixPr"
    ]
+  },
+  {
+   "rev": 4,
+   "date": "2026-09-26",
+   "base": "fe145c78e",
+   "note": "engine: enterprise composition, News and Hardware removed",
+   "touched": []
   }
  ],
  "facts": [
@@ -3323,16 +3330,21 @@
   {
    "path": "/engine",
    "title": "Metrale Engine, pure Rust inference for DGX Spark",
-   "h1": "One inference engine, from the device in your hand to the datacenter rack.",
+   "h1": "More inference from the silicon you already own. One signed binary, verified on every release.",
    "route": "src/routes/(engine)/engine/+page.svelte",
    "copy": [
+    {
+     "file": "src/lib/content/brand.js",
+     "exports": [
+      "routes"
+     ]
+    },
     {
      "file": "src/lib/data.js",
      "exports": [
       "CLI",
       "CONTROL",
       "announcement",
-      "codeChat",
       "community",
       "contribute",
       "discordUrl",
@@ -3341,12 +3353,10 @@
       "getRunning",
       "githubUrl",
       "guideUrl",
-      "hardware",
       "hero",
       "mission",
       "models",
       "nav",
-      "news",
       "proof",
       "quickInstall",
       "reachout",

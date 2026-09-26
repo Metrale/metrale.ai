@@ -21,10 +21,13 @@ export const brandStyle = Object.entries({
   .map(([name, value]) => `--mk-${name}:${value}`)
   .join(';');
 
+// A section that left /engine names where its readers go now: the news band
+// became the product updates page, the hardware cards the platform's hardware
+// page. The fragment is dropped there, since neither page has that anchor.
 export const legacySections = [
   { id: 'proof', label: 'Project milestones' },
-  { id: 'news', label: 'Metrale news' },
-  { id: 'hardware', label: 'Verified hardware' },
+  { id: 'news', label: 'Metrale news', to: '/resources/updates' },
+  { id: 'hardware', label: 'Verified hardware', to: '/platform/hardware' },
   { id: 'community', label: 'Community' },
   { id: 'contribute', label: 'Contribute' },
   { id: 'roadmap', label: 'Roadmap' },
@@ -40,7 +43,9 @@ export function legacyEngineDestination(hash, search) {
   } catch {
     return null;
   }
-  return legacySections.some((section) => section.id === id) ? `${ENGINE}${search}#${id}` : null;
+  const section = legacySections.find((entry) => entry.id === id);
+  if (!section) return null;
+  return section.to ? `${section.to}${search}` : `${ENGINE}${search}#${id}`;
 }
 
 // Derived from the generated ladder. A missing baseline fails the build rather
