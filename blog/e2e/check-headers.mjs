@@ -24,7 +24,7 @@ const SECURITY = {
   'x-content-type-options': 'nosniff',
   'x-frame-options': 'SAMEORIGIN',
   'referrer-policy': 'strict-origin-when-cross-origin',
-  'strict-transport-security': 'max-age=31536000; includeSubDomains'
+  'strict-transport-security': 'max-age=31536000; includeSubDomains; preload'
 };
 
 let failures = 0;

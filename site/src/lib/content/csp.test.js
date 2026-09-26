@@ -71,7 +71,7 @@ test('the policy closes what the site never uses', () => {
 });
 
 test('HSTS and a Permissions-Policy ride with it', () => {
-  expect(headers['strict-transport-security']).toMatch(/^max-age=31536000; includeSubDomains$/);
+  expect(headers['strict-transport-security']).toMatch(/^max-age=31536000; includeSubDomains; preload$/);
   expect(headers['permissions-policy']).toContain('camera=()');
   expect(headers['permissions-policy']).toContain('microphone=()');
   expect(headers['permissions-policy']).toContain('geolocation=()');
