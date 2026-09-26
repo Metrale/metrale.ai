@@ -22,19 +22,19 @@ check them out beside this one first:
 
 ```sh
 git clone https://github.com/Metrale/metralectl.git
-git clone --filter=blob:none https://github.com/Metrale/metrale-inference-alpha.git
+git clone --filter=blob:none https://github.com/Metrale/metrale-inference.git
 
 cd metrale.ai/site
 bun install
 export METRALE_RECIPES_ROOT="$(cd ../../metralectl/recipes && pwd)"
-export METRALE_ENGINE_ROOT="$(cd ../../metrale-inference-alpha && pwd)"
+export METRALE_ENGINE_ROOT="$(cd ../../metrale-inference && pwd)"
 export METRALE_BASELINES_ROOT="$METRALE_ENGINE_ROOT/tests/baselines"
 bun x --bun vite build        # writes site/build
 bun x --bun vite preview      # serves it on http://localhost:4173
 ```
 
 CI checks out the engine at the commit in [`site/engine.ref`](site/engine.ref)
-(`git -C ../../metrale-inference-alpha checkout $(cat engine.ref)`); use the same commit locally to get the
+(`git -C ../../metrale-inference checkout $(cat engine.ref)`); use the same commit locally to get the
 same numbers. Moving it is a pull request like any other.
 
 ## How it ships

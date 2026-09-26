@@ -1,7 +1,7 @@
 # The docs
 
 `docs.metrale.ai`: the engine's book. The book itself (an mdBook) is written and
-kept in the engine's repository, `Metrale/metrale-inference-alpha`, under
+kept in the engine's repository, `Metrale/metrale-inference`, under
 `book/` beside the crates, by the engine team, skin and wordmark included.
 Nothing here changes it there. This directory publishes it at the company's
 docs address, at the commit the site is built against.
@@ -34,7 +34,7 @@ text of its path.
 
 ```sh
 # from the repository root, with a checkout of the engine beside it
-METRALE_ENGINE_ROOT=../metrale-inference-alpha node docs/build.mjs   # needs mdbook 0.4.40 on PATH
+METRALE_ENGINE_ROOT=../metrale-inference node docs/build.mjs   # needs mdbook 0.4.40 on PATH
 node docs/check.mjs
 npx serve docs/build                                                 # or any static server
 ```

@@ -11,7 +11,7 @@ Read `FACELIFT.md` for what is where and why. This file is the commands.
 You need [git](https://git-scm.com), [bun](https://bun.sh), and clones of
 [metralectl](https://github.com/Metrale/metralectl), whose `recipes/` the
 build reads the model list from, and of
-[metrale-inference-alpha](https://github.com/Metrale/metrale-inference-alpha),
+[metrale-inference](https://github.com/Metrale/metrale-inference),
 the engine, whose benchmark records, ladder and changelog the pages print. The root
 [README](../README.md) has the commands; `engine.ref` names the engine commit CI
 builds against.

@@ -101,6 +101,25 @@
         "reel.mp4",
         "reel.webm"
       ]
+    },
+    {
+      "rev": 7,
+      "date": "2026-09-26",
+      "pr": 32,
+      "base": "3cefc5487",
+      "note": "Engine links use Metrale/metrale-inference.",
+      "touched": [
+        "links.github",
+        "links.guide",
+        "links.ladderLog",
+        "links.strixKernels",
+        "links.securityPolicyDoc",
+        "links.license",
+        "links.licenseApache",
+        "links.contributing",
+        "links.changelog",
+        "links.issues"
+      ]
     }
   ],
   "facts": {
@@ -221,14 +240,26 @@
       "date": "2026-09-24"
     },
     "links.changelog": {
-      "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CHANGELOG.md",
-      "rev": 1,
-      "date": "2026-09-24"
+      "value": "https://github.com/Metrale/metrale-inference/blob/main/CHANGELOG.md",
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CHANGELOG.md",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "links.contributing": {
-      "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CONTRIBUTING.md",
-      "rev": 1,
-      "date": "2026-09-24"
+      "value": "https://github.com/Metrale/metrale-inference/blob/main/CONTRIBUTING.md",
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/CONTRIBUTING.md",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "links.discord": {
       "value": "https://discord.gg/RQcGakU2jW",
@@ -241,14 +272,26 @@
       "date": "2026-09-24"
     },
     "links.github": {
-      "value": "https://github.com/Metrale/metrale-inference-alpha",
-      "rev": 1,
-      "date": "2026-09-24"
+      "value": "https://github.com/Metrale/metrale-inference",
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "value": "https://github.com/Metrale/metrale-inference-alpha",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "links.guide": {
-      "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
-      "rev": 1,
-      "date": "2026-09-24"
+      "value": "https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "links.inception": {
       "value": "https://www.nvidia.com/en-us/startups/",
@@ -256,30 +299,52 @@
       "date": "2026-09-24"
     },
     "links.issues": {
-      "value": "https://github.com/Metrale/metrale-inference-alpha/issues",
-      "rev": 1,
-      "date": "2026-09-24"
+      "value": "https://github.com/Metrale/metrale-inference/issues",
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "value": "https://github.com/Metrale/metrale-inference-alpha/issues",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "links.ladderLog": {
-      "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md",
-      "rev": 1,
-      "date": "2026-09-24"
+      "value": "https://github.com/Metrale/metrale-inference/blob/main/bench/ladder38/RESULTS.md",
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "links.license": {
-      "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT",
-      "rev": 2,
+      "value": "https://github.com/Metrale/metrale-inference/blob/main/LICENSE-MIT",
+      "rev": 3,
       "date": "2026-09-26",
       "was": [
         {
           "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE",
           "until": "2026-09-26"
+        },
+        {
+          "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-MIT",
+          "until": "2026-09-26"
         }
       ]
     },
     "links.licenseApache": {
-      "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-APACHE",
-      "rev": 1,
-      "date": "2026-09-26"
+      "value": "https://github.com/Metrale/metrale-inference/blob/main/LICENSE-APACHE",
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/LICENSE-APACHE",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "links.llamaCppPr": {
       "value": "https://github.com/ggml-org/llama.cpp/pull/18680",
@@ -302,9 +367,15 @@
       "date": "2026-09-24"
     },
     "links.securityPolicyDoc": {
-      "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md",
-      "rev": 1,
-      "date": "2026-09-24"
+      "value": "https://github.com/Metrale/metrale-inference/blob/main/SECURITY.md",
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "value": "https://github.com/Metrale/metrale-inference-alpha/blob/main/SECURITY.md",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "links.sequoiaPatel": {
       "value": "https://sequoiacap.com/podcast/dylan-patel-of-semianalysis-why-hardware-software-co-design-is-ais-real-100x",
@@ -312,9 +383,15 @@
       "date": "2026-09-24"
     },
     "links.strixKernels": {
-      "value": "https://github.com/Metrale/metrale-inference-alpha/tree/main/kernels/strix",
-      "rev": 1,
-      "date": "2026-09-26"
+      "value": "https://github.com/Metrale/metrale-inference/tree/main/kernels/strix",
+      "rev": 2,
+      "date": "2026-09-26",
+      "was": [
+        {
+          "value": "https://github.com/Metrale/metrale-inference-alpha/tree/main/kernels/strix",
+          "until": "2026-09-26"
+        }
+      ]
     },
     "links.strixPr": {
       "value": "https://metrale.ai/src/history/pull/187",

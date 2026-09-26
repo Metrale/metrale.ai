@@ -1,12 +1,12 @@
 {
-  "bytes": 15189,
+  "bytes": 15069,
   "commit_sha": "a3f9c1e7b2d84056917e2c3a4b5d6f7089abcde1",
   "dim": 8,
   "files": 15,
   "generated_at": "2026-08-16T00:00:00Z",
-  "gz_bytes": 5761,
+  "gz_bytes": 5742,
   "model": "nvidia/llama-nemotron-embed-vl-1b-v2:free",
   "points": 20,
-  "repo": "Metrale/metrale-inference-alpha",
-  "sha256": "435a5e7af83fca02f3df748a46cd0cfe262ad32339b4150f760510e32ed2f01f"
+  "repo": "Metrale/metrale-inference",
+  "sha256": "a21364b4e4ff5a539f5abc25e4f58089657d42b07aadfd8fcc863ec5353360ac"
 }

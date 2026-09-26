@@ -1,11 +1,11 @@
 {
-  "generated_utc": "2026-09-26T22:01:39Z",
+  "generated_utc": "2026-09-26T23:39:57Z",
   "manifest": "bench/ladder38/published.json",
   "title": "Qwen3.8-27B NVFP4 concurrency ladder",
   "subtitle": "Metrale Engine vs vLLM 0.27.1, C=1..128, every workload axis matched",
   "aggregate": "mean tok/s over 3 timed reps (1 warmup discarded)",
   "results_doc": "bench/ladder38/RESULTS.md",
-  "results_doc_url": "https://github.com/Metrale/metrale-inference-alpha/blob/main/bench/ladder38/RESULTS.md",
+  "results_doc_url": "https://github.com/Metrale/metrale-inference/blob/main/bench/ladder38/RESULTS.md",
   "workload": {
     "checkpoint": "unsloth/Qwen3.8-27B-NVFP4",
     "checkpoint_note": "dense 27B hybrid, 48 GDN + 16 attention layers",
