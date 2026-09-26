@@ -14,6 +14,7 @@ import { dirname, join, resolve } from 'node:path';
 import subjects from './concurrency-subjects.json';
 import { buildLadder, cliFlag, r2, r3 } from '../../scripts/lib/ladder-build.mjs';
 import { engineRoot } from '../../scripts/lib/engine-root.mjs';
+import { energyOfRung } from './cost.js';
 
 // The engine checkout the build reads (site/engine.ref pins its commit).
 const REPO = engineRoot();
@@ -197,6 +198,42 @@ describe('a pair is scored only when it is whole', () => {
     expect(() => build(MOE, (m) => (m.series = []))).toThrow(/has no series/);
     expect(() => build(MOE, (m) => (vllm(m).role = 'variant'))).toThrow(/no baseline series/);
     expect(() => build(MOE, (m) => (m.schema = 2))).toThrow(/schema 2, expected 1/);
+  });
+});
+
+// The energy a one-shot rung carries, from the committed vLLM energy leg. Its
+// reps were each ~99% covered by the sampler; the rung must say so on the page.
+describe('the energy of a rung sums its reps and keeps the worst one', () => {
+  const ENERGY = 'vllm-mtp-energy';
+  const RAW_E = 'vllm_mtp_energy_38.json';
+  const series = (l) => l.series.find((s) => s.id === ENERGY);
+  const repsAt = (raws, c) => raws[RAW_E].rungs.find((r) => r.concurrency === c).reps;
+
+  test('the count, the window and the joules are sums, and every committed rung is trusted', () => {
+    const l = build(DENSE);
+    const s = series(l);
+    expect(s.rungs.length).toBeGreaterThan(0);
+    for (const rung of s.rungs) {
+      const reps = repsAt(DENSE.raws, rung.c);
+      expect(rung.gpu_rail_power_samples).toBe(reps.reduce((a, r) => a + r.gpu_rail_power_samples, 0));
+      expect(rung.gpu_rail_energy_window_s).toBe(r2(reps.reduce((a, r) => a + r.gpu_rail_window_s, 0)));
+      const worst = reps.reduce((a, r) => (r.gpu_rail_power_samples / r.gpu_rail_window_s < a.gpu_rail_power_samples / a.gpu_rail_window_s ? r : a));
+      expect(rung.gpu_rail_worst_rep_power_samples).toBe(worst.gpu_rail_power_samples);
+      const e = energyOfRung(s.label, rung);
+      expect(e.concerns).toEqual([]);
+      expect(e.trusted).toBe(true);
+    }
+  });
+
+  // The control: starve one rep of readings and the rung it belongs to must
+  // stop being trusted, although the sum over all three still clears 90%.
+  test('one starved rep makes its rung untrusted and is named', () => {
+    const l = build(DENSE, (m, raws) => (repsAt(raws, 8)[1].gpu_rail_power_samples = 200));
+    const rung = series(l).rungs.find((r) => r.c === 8);
+    expect(rung.gpu_rail_worst_rep_power_samples).toBe(200);
+    const e = energyOfRung(ENERGY, rung);
+    expect(e.trusted).toBe(false);
+    expect(e.concerns).toEqual([expect.stringContaining('worst rep: the sampler covered 71%')]);
   });
 });
 

@@ -19,6 +19,8 @@ import {
   KEY,
   MIN_POWER_SAMPLES,
   RUN_KEY,
+  WORST_REP_KEY,
+  baselineGapOf,
   baselineSnapshots,
   cellKey,
   costInstrumentKey,
@@ -719,6 +721,86 @@ describe('readEnergy · coverage with no recorded cadence', () => {
     const e = readEnergy(window({ [KEY.samples]: undefined }), '', {}, 'r', null);
     expect(e.concerns.join(' ')).toContain('unauditable');
     expect(e.concerns.join(' ')).not.toContain('cadence not recorded');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// A one-shot rung sums its reps: the count, the window and the joules add, and
+// the worst-covered rep is judged on its own window beside them.
+//
+// Until 2026-09-26 the rung carried the worst rep's COUNT against the SUMMED
+// window, so three reps each 99% covered read as 33% and every vLLM energy
+// rung was dropped from the verdict. These pin both halves: a well-sampled
+// rung counts, and one thin rep still cannot hide behind its siblings.
+// ---------------------------------------------------------------------------
+describe('readEnergy · a summed rung and its worst rep', () => {
+  // Three 54 s reps at 250 ms, ~215 readings each: the committed vLLM C=1 shape.
+  const rung = (o = {}) => ({
+    [KEY.energyJ]: 6148.93,
+    [KEY.tokens]: 3072,
+    [KEY.windowS]: 161.81,
+    [KEY.samples]: 646,
+    [RUN_KEY.periodMs]: 250,
+    [WORST_REP_KEY.samples]: 212,
+    [WORST_REP_KEY.windowS]: 53.29,
+    ...o,
+  });
+  const read = (m) => readEnergy(m, '', m, 'series C=1', null);
+
+  test('three fully sampled reps make a trusted rung', () => {
+    const e = read(rung());
+    expect(e.concerns).toEqual([]);
+    expect(e.trusted).toBe(true);
+  });
+
+  // The negative control: the old accounting, worst count against the summed
+  // window, is exactly what made the Cost tab empty.
+  test('the worst count against the summed window reads as a third covered', () => {
+    const e = read(rung({ [KEY.samples]: 212 }));
+    expect(e.trusted).toBe(false);
+    expect(e.concerns.join(' ')).toContain('covered 33%');
+  });
+
+  test('one thin rep is named even when the sum looks covered', () => {
+    // 620 readings over 161.81 s is 96% overall, but the worst rep saw 20 of its 53 s.
+    const e = read(rung({ [KEY.samples]: 620, [WORST_REP_KEY.samples]: 80 }));
+    expect(e.trusted).toBe(false);
+    expect(e.concerns).toEqual(['worst rep: the sampler covered 38% of the 53.3 s window (80 readings at 250 ms)']);
+  });
+
+  test('a worst rep with no window is a concern, not a pass', () => {
+    const e = read(rung({ [WORST_REP_KEY.windowS]: undefined }));
+    expect(e.trusted).toBe(false);
+    expect(e.concerns.join(' ')).toContain('worst rep: no window recorded');
+  });
+
+  test('a gate cell carries no worst rep and is judged as one window', () => {
+    const m = rung();
+    delete m[WORST_REP_KEY.samples];
+    delete m[WORST_REP_KEY.windowS];
+    expect(read(m).trusted).toBe(true);
+  });
+});
+
+describe('baselineGapOf · the rungs vLLM has no joules for', () => {
+  const measured = (c) => ({ c, energy: { state: 'measured' } });
+  const absent = (c) => ({ c, energy: { state: 'absent' } });
+  const metrale = { points: [1, 16, 32, 64].map(measured) };
+
+  test('names each rung Metrale Engine measured and no drawn baseline did, with the manifest reason', () => {
+    const b = { points: [measured(1), measured(16), absent(32)], series: { unmeasured: { rungs: [32, 64, 128], reason: 'not driven' } } };
+    expect(baselineGapOf(metrale, [b])).toEqual({ rungs: [32, 64], reason: 'not driven' });
+  });
+
+  test('a rung any drawn baseline measured is not a gap', () => {
+    const a = { points: [measured(1), measured(16)], series: {} };
+    const b = { points: [measured(32), measured(64)], series: {} };
+    expect(baselineGapOf(metrale, [a, b])).toEqual({ rungs: [], reason: null });
+  });
+
+  test('with nothing drawn against, there is no gap to name', () => {
+    expect(baselineGapOf(metrale, [])).toEqual({ rungs: [], reason: null });
+    expect(baselineGapOf(null, [])).toEqual({ rungs: [], reason: null });
   });
 });
 

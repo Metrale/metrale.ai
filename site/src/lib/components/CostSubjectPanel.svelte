@@ -144,6 +144,9 @@
       ];
     }
     const out = [{ value: verdictTile(cost.verdicts), label: 'cost per 1M tokens vs vLLM' }];
+    if (cost.baselineGap.rungs.length > 0) {
+      out.push({ value: `C=${cost.baselineGap.rungs.join(', ')}`, label: 'vLLM energy not measured' });
+    }
     if (extremes.best) {
       const b = extremes.best;
       out.push({
@@ -328,6 +331,10 @@
       {#each cost.noEnergy as n}
         {n.label} is comparable but carries no joules, so it has no cost curve.
       {/each}
+      {#if cost.baselineGap.rungs.length > 0}
+        vLLM energy is not measured at C={cost.baselineGap.rungs.join(', ')}{cost.baselineGap.reason ? `: ${cost.baselineGap.reason}` : ''}, so
+        those rungs carry a Metrale Engine point and no verdict.
+      {/if}
     </p>
 
     <!-- What the per-token figure above is worth cumulatively. It follows
