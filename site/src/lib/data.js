@@ -143,6 +143,7 @@ export const hero = {
       throughput: 'aggregate tok/s at the top rung',
       rungs: 'rungs won',
     },
+    records: 'signed records',
     dashboardCta: 'View the benchmark dashboard',
   },
 };

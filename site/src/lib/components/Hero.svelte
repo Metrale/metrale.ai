@@ -10,6 +10,7 @@
   import { modal } from '$lib/modal.js';
   import { hero, githubUrl } from '$lib/data.js';
   import ladder from '$lib/ladder.generated.json';
+  import counts from '$lib/live.generated.json';
   import Receipt from './Receipt.svelte';
 
   const rows = [...ladder.rows].sort((a, b) => a.c - b.c);
@@ -19,7 +20,11 @@
   const x = (v) => v.toFixed(3);
   const won = s.won === s.rungs ? 'Every published rung won' : `${s.won} of ${s.rungs} published rungs won`;
   const claim = `${won}, C=${rows[0].c} to C=${top.c}, ${x(s.min_ratio)}× to ${x(s.max_ratio)}× against ${best.label}.`;
-  const build = ladder.series.find((series) => series.role === 'subject')?.build_public ?? '';
+  // The card's stamp is the signed gate records and the newest one's date, from
+  // the engine checkout at site/engine.ref, and it links to the campaign log on
+  // main. Not the ladder's build sha: that is the campaign's historical
+  // provenance, not a commit a reader can check out today.
+  const stamp = `${counts.gates.signed} ${hero.art.records} · ${counts.gates.newest}`;
   const hues = ['av-sx-violet', 'av-sx-cyan', 'av-sx-green'];
 
   // The frame's ring turns only while the frame is on screen, the way reveal.js
@@ -104,7 +109,7 @@
           <div class="eg-proof">
             <div class="eg-proof-head">
               <span class="av-kicker"><span class="av-dot"></span> {hero.art.kicker}</span>
-              {#if build}<span class="av-chip av-chip-green">build {build}</span>{/if}
+              <a class="av-chip av-chip-green" href={ladder.results_doc_url} target="_blank" rel="noopener">{stamp} ↗</a>
             </div>
             <dl class="eg-proof-stats">
               <div>
