@@ -5,3 +5,7 @@ scripts/.cache/
 # Playwright output
 playwright-report/
 test-results/
+# Raw media: the recordings and the generated video takes the film is built
+# from, at full quality. They stay out of git; static/media holds the encodes.
+.media-raw/
+media-brief/takes/*.mp4
