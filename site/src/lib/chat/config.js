@@ -3,11 +3,16 @@
 // No other chat module hardcodes a URL, model id, batch size, or storage key.
 // =============================================================================
 
+import { ENGINE_SLUG } from '../../../../web-shared/sources.mjs';
+
 // --- corpus (published by the engine's coderag workflow to GitHub Pages) -----
 // The addresses that workflow names. Nothing is served there until Pages is on
-// in the engine's repository, which is why `codeChat.enabled` is false.
-export const CORPUS_GZ_URL = 'https://metrale.github.io/metrale-inference-alpha/coderag/metrale-coderag.jsonl.gz';
-export const CORPUS_META_URL = 'https://metrale.github.io/metrale-inference-alpha/coderag/metrale-coderag.jsonl.meta.json';
+// in the engine's repository, which is why `codeChat.enabled` is false. The
+// Pages host is the organisation's, and the path is the repository's name.
+const [ENGINE_ORG, ENGINE_NAME] = ENGINE_SLUG.split('/');
+const CORPUS_BASE = `https://${ENGINE_ORG.toLowerCase()}.github.io/${ENGINE_NAME}/coderag`;
+export const CORPUS_GZ_URL = `${CORPUS_BASE}/metrale-coderag.jsonl.gz`;
+export const CORPUS_META_URL = `${CORPUS_BASE}/metrale-coderag.jsonl.meta.json`;
 
 // --- OpenRouter --------------------------------------------------------------
 export const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1';

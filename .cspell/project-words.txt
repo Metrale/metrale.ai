@@ -4,7 +4,6 @@ aiohttp
 alexi
 artemissecurity
 autoshop
-avarok
 baselining
 basenames
 battlemage
@@ -62,6 +61,7 @@ gridline
 halluc
 heiser
 hrefs
+HSTS
 huggingface
 hypercompiling
 hyperscale

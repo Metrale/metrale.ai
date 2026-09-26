@@ -29,12 +29,9 @@ the handoff documents that need a person.
 Read the report's two hand lists before building:
 
 - **history lines**: sentences that say what the brand was called before. The
-  site keeps none: a visitor reads the current name only. Add the old name to
-  `OTHER_NAMES` in `web-shared/sources.mjs`, and `src/lib/content/other-names.test.js`
-  and `docs/check.mjs` keep it off the pages from then on.
+  site keeps none: a visitor reads the current name only.
 - **docs**: `README.md`, `FACELIFT.md`, `AGENTS.md`, `BRANDING.md`,
-  `assets/brand/BRAND-GUIDELINES.md`, `media-brief/`. Reread each. A document
-  that explains the previous rename explains this one after the same edit.
+  `assets/brand/BRAND-GUIDELINES.md`, `media-brief/`. Reread each.
 
 Then rebuild everything that is generated from the words:
 

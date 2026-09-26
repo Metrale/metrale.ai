@@ -4,7 +4,7 @@
 // network) and lattice.js (all wasm); no DOM, no state mutation.
 // =============================================================================
 
-import { ENGINE_SLUG, HISTORY } from '../../../../web-shared/sources.mjs';
+import { ENGINE_SLUG } from '../../../../web-shared/sources.mjs';
 import { getEmbedding, rerank, chat } from './openrouter.js';
 import { searchVectors } from './lattice.js';
 import { TOP_K, RERANK_MULTIPLIER } from './config.js';
@@ -14,11 +14,10 @@ function relevancePct(score) {
   return Math.max(0, Math.min(100, (1 - score) * 100));
 }
 
-// A corpus from the Metrale organisation cites its own repository; one built
-// from the open source history the engine builds on cites it through metrale.ai.
+// A chunk cites the repository its corpus was built from, the engine's when
+// the corpus does not say.
 function sourceUrl(repo, commit, path, startLine, endLine) {
-  const base = !repo || repo.startsWith('Metrale/') ? `https://github.com/${repo || ENGINE_SLUG}` : HISTORY;
-  return `${base}/blob/${commit}/${path}#L${startLine}-L${endLine}`;
+  return `https://github.com/${repo || ENGINE_SLUG}/blob/${commit}/${path}#L${startLine}-L${endLine}`;
 }
 
 function contextBlock(n, { path, startLine, endLine, language, text }) {

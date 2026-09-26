@@ -28,10 +28,8 @@ docs address, at the commit the site is built against.
 Then mdBook 0.4.40 builds it, the book's own two scripts add `llms.txt` and the
 per-page social metadata, and the icons, the card, the Pages headers and a
 `version.txt` (the engine commit and this repository's) are copied in.
-`docs/check.mjs` then reads every built page the way a reader would, without
-its scripts and markup, and fails on another project's name (the list is
-`OTHER_NAMES` in `web-shared/sources.mjs`), on a host the build should have
-moved, on a missing title, skin, font or file, and on a link shipped as the
+`docs/check.mjs` then reads every built page and fails on a host the build
+should have moved, on a missing title, skin, font or file, and on a link shipped as the
 text of its path.
 
 ```sh

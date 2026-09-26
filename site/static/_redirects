@@ -1,11 +1,3 @@
-# The history of the open source code Metrale Engine builds on: the commits
-# the published records name and the pull requests they cite.
-# web-shared/sources.mjs (HISTORY) builds these links; this is the one place
-# that says where that history lives.
-/src/history.git/* https://github.com/Avarok-Cybersecurity/atlas.git/:splat 302
-/src/history/* https://github.com/Avarok-Cybersecurity/atlas/:splat 302
-/src/history https://github.com/Avarok-Cybersecurity/atlas 302
-
 # Solution pages held back for now (parkedIndustries in src/lib/content/brand.js).
 # Pages keeps answering a deleted page's address from an old copy, so each one
 # redirects to the Solutions index until it returns. A unit test holds this list

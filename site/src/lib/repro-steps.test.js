@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'bun:test';
+import { ENGINE_REPO } from '../../../web-shared/sources.mjs';
 import { foldPartitions } from './bfcl-partition.js';
 import { commandCoversRecord, hardwareClass, renderArgv, reproSteps, shellQuote, splitFlags } from './repro-steps.js';
 
@@ -342,7 +343,7 @@ describe('caveats', () => {
     expect(ok.caveats).toEqual([]);
     expect(ok.steps.find((s) => s.id === 'record').facts).toContainEqual([
       'signer',
-      'https://github.com/Metrale/metrale-inference-alpha/blob/main/.github/record-signers/02156264cbf75bd7.pub',
+      `${ENGINE_REPO}/blob/main/.github/record-signers/02156264cbf75bd7.pub`,
     ]);
   });
 

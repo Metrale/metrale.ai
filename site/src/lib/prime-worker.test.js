@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// brand-rename: keep. The older names below are what the tests check, not copy.
+// brand-rename: keep.
 //
 // The Worker behind Metrale Prime (deploy/cloudflare/prime-worker) is deployed
 // by hand, so it is tested here, in the suite CI runs. xAI is a fake that
@@ -111,7 +111,7 @@ const DATA = {
   },
   history: {
     as_of: '2026-09-21',
-    summary: { stars: 701, forks: 106, license: 'AGPL-3.0' },
+    summary: { stars: 701, forks: 106, license: 'MIT OR Apache-2.0' },
     releases: [{ tag: 'b463', date: '2026-09-21', name: 'b463' }],
     commits: [{ sha: 'abc', date: '2026-09-21', author: 'tbraun96', message: 'fix' }],
     pulls: [],
