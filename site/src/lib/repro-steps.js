@@ -20,7 +20,7 @@
 //
 // Pure and dependency-free of the DOM so `bun test` can measure it directly.
 
-import { ENGINE_REPO, REGISTRY_REPO } from '../../../web-shared/sources.mjs';
+import { ENGINE_REPO, RECIPES_DIR } from '../../../web-shared/sources.mjs';
 import { shardOf } from './bfcl-partition.js';
 import { recordFileUrl, signerKeyUrl } from './receipt.js';
 
@@ -271,14 +271,23 @@ export function reproSteps(record, ctx) {
     notes: [],
   };
   if (rec.served_by) {
-    const until = typeof rec.recorded_at === 'number' ? isoDate(rec.recorded_at) : '';
-    serve.facts.push(
-      ['recipe', `${REGISTRY_REPO}/blob/main/recipes/${rec.served_by}.yaml`],
-      ['recipe history before this run', `${REGISTRY_REPO}/commits/main/recipes/${rec.served_by}.yaml?until=${until}`]
-    );
-    serve.notes.push(
-      'The record names the recipe but does not pin its revision; use the newest commit of the recipe file dated before this run.'
-    );
+    // `recipe_source` is gen-gates' lookup of recipes/<served_by>.yaml in the
+    // engine history: at the record's commit, else at the generated commit.
+    const file = `${RECIPES_DIR}/${rec.served_by}.yaml`;
+    const at = rec.recipe_source === 'record' ? sha : rec.recipe_source === 'generated' ? ctx.generated.sha : null;
+    if (!at) {
+      miss(
+        'recipe file',
+        `${file} is in neither the record's commit nor ${ctx.generated.sha}; find the recipe ${rec.served_by} as it was when this ran`
+      );
+    } else {
+      serve.facts.push(['recipe', `${ENGINE_REPO}/blob/${at}/${file}`]);
+      serve.notes.push(
+        rec.recipe_source === 'record'
+          ? `The recipe as committed at ${at}. The record names the recipe but not the revision the server loaded, so compare it with the serve log if the two may differ.`
+          : `The record's commit has no ${file}, so this is the recipe at ${at}, the engine commit this dashboard was generated from. The record does not pin the revision it served.`
+      );
+    }
   } else {
     miss('served_by', 'which serve recipe started the server; an endpoint-form run (--url/--model) measures whatever was listening');
   }

@@ -46,6 +46,7 @@ const sweep = () => ({
   verdict_reason: 'every populated floor met (C64 116.2/107.6)',
   branch: '',
   generated_ancestry: 'yes',
+  recipe_source: 'generated',
   path: '.benchmarks/concurrency-sweep/2026-09-19-a87b41905f.json',
   signer: '02156264cbf75bd7',
   dirty_paths: [],
@@ -368,8 +369,40 @@ describe('the plan shape', () => {
     expect(plan.steps.find((s) => s.id === 'judge').facts).toContainEqual(['params.min_c64', '107.6']);
     expect(plan.steps.find((s) => s.id === 'publish').summary).toBe('site/scripts/gen-gates.mjs · site as of 2026-09-16 (4b18f7cec)');
     expect(plan.steps.find((s) => s.id === 'serve').facts[0][1]).toBe(
-      'https://github.com/Metrale/metralectl/blob/main/recipes/qwen3.8/qwen3.8-27b-nvfp4-unsloth.yaml'
+      `${ENGINE_REPO}/blob/4b18f7cec/recipes/qwen3.8/qwen3.8-27b-nvfp4-unsloth.yaml`
     );
+  });
+});
+
+describe('the recipe link', () => {
+  const serveOf = (rec) => reproSteps(rec, CTX).steps.find((s) => s.id === 'serve');
+
+  it("points at the record's own commit when recipes/ there has the file", () => {
+    const serve = serveOf({ ...sweep(), recipe_source: 'record' });
+    expect(serve.facts[0]).toEqual(['recipe', `${ENGINE_REPO}/blob/a87b41905f/recipes/qwen3.8/qwen3.8-27b-nvfp4-unsloth.yaml`]);
+    expect(serve.notes[0]).toContain('as committed at a87b41905f');
+  });
+
+  it('falls back to the commit the dashboard was generated from, and says so', () => {
+    const plan = reproSteps(sweep(), CTX);
+    const serve = plan.steps.find((s) => s.id === 'serve');
+    expect(serve.facts[0][1]).toContain('/blob/4b18f7cec/');
+    expect(serve.notes[0]).toContain("The record's commit has no recipes/qwen3.8/qwen3.8-27b-nvfp4-unsloth.yaml");
+    expect(plan.missing.map((m) => m.field)).not.toContain('recipe file');
+  });
+
+  it('links nothing and names the gap when neither commit has the recipe', () => {
+    for (const recipe_source of [null, undefined]) {
+      const plan = reproSteps({ ...sweep(), recipe_source }, CTX);
+      const serve = plan.steps.find((s) => s.id === 'serve');
+      expect(serve.facts.some(([k]) => k === 'recipe')).toBe(false);
+      expect(plan.missing.find((m) => m.field === 'recipe file').need).toContain('recipes/qwen3.8/qwen3.8-27b-nvfp4-unsloth.yaml');
+    }
+  });
+
+  it('never links a record commit it does not have', () => {
+    const plan = reproSteps({ ...sweep(), git_sha: '', recipe_source: 'record' }, CTX);
+    expect(plan.steps.find((s) => s.id === 'serve').facts.some(([k]) => k === 'recipe')).toBe(false);
   });
 
   it('omits the checkout command when the commit is unknown to the dashboard history', () => {

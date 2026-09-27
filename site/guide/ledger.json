@@ -128,6 +128,15 @@
       "base": "b6ceea9da",
       "note": "Pricing says contact us for now: the tiers carry no numbers, the market anchors and the contract table are gone, and the payback model's license is the visitor's own quote, so the front page and the platform page show modeled savings before the license instead of a payback period.",
       "touched": []
+    },
+    {
+      "rev": 9,
+      "date": "2026-09-27",
+      "base": "8a7bba03d",
+      "note": "Recipes link to the engine's recipes/; the launcher README link and sameAs name the launcher",
+      "touched": [
+        "links.recipes"
+      ]
     }
   ],
   "facts": {
@@ -360,9 +369,15 @@
       "date": "2026-09-24"
     },
     "links.recipes": {
-      "value": "https://github.com/Metrale/metralectl",
-      "rev": 1,
-      "date": "2026-09-24"
+      "value": "https://github.com/Metrale/metrale-inference/tree/main/recipes",
+      "rev": 2,
+      "date": "2026-09-27",
+      "was": [
+        {
+          "value": "https://github.com/Metrale/metralectl",
+          "until": "2026-09-27"
+        }
+      ]
     },
     "links.scale": {
       "value": "https://docs.scale-lang.com/stable/",

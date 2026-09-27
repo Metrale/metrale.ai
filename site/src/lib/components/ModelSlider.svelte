@@ -1,5 +1,5 @@
 <script>
-  // Data is SSOT-derived from the recipe registry (github.com/Metrale/metralectl)
+  // Data is SSOT-derived from the engine's recipes/ (RECIPES_URL in web-shared/sources.mjs)
   // via site/scripts/gen-models.mjs -> models.generated.json.
   // 3-level tree: vendor (brand) -> subfamily (recipe dir) -> recipes.
   import vendorsRaw from '$lib/models.generated.json';

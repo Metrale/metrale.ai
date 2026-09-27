@@ -2,7 +2,7 @@
 //
 // The front page prints `<command> run <flagshipRecipe>` as its headline
 // instruction. Nothing tied that name to the recipe corpus, so retiring or
-// renaming a recipe in the registry would leave the site confidently
+// renaming a recipe in the engine's recipes/ would leave the site confidently
 // advertising a command that fails on the visitor's machine — silently, and
 // only for them.
 //
@@ -11,26 +11,28 @@
 // regenerates by hand, which is precisely not the moment a recipe gets
 // retired: the guard would have missed the event it exists for.
 //
-// It reads the corpus CI actually ships against — the registry checkout the
-// build already makes — rather than whatever branch a local
-// mirror happens to be sitting on.
+// It reads the corpus CI actually ships against — recipes/ in the engine
+// checkout at site/engine.ref, which the build already makes — rather than
+// whatever branch a local mirror happens to be sitting on.
 
 import { readdirSync, statSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { CLI } from '../../web-shared/sources.mjs';
+import { recipesRoot } from './lib/engine-root.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 // Required, not defaulted. A fallback to a machine-specific path meant this
 // guard could validate against whatever branch a local mirror happened to sit
 // on — the exact failure its own header disclaims, reached by forgetting an
-// env var rather than by intent. CI sets it (site.yml); a human running this by
-// hand should have to say which corpus they mean.
-const root = process.env.METRALE_RECIPES_ROOT;
-if (!root) {
-  console.error('METRALE_RECIPES_ROOT is not set.');
-  console.error('Point it at a checkout of the recipe registry, metralectl/recipes — the corpus this');
-  console.error('site is being built against, not whichever one happens to be nearby.');
+// env var rather than by intent. CI sets METRALE_ENGINE_ROOT (engine-inputs);
+// a human running this by hand has to say which engine checkout they mean.
+let root;
+try {
+  root = recipesRoot();
+} catch (e) {
+  console.error(e.message);
+  console.error('The recipes are its recipes/ directory, the corpus this site is being built against.');
   process.exit(1);
 }
 
@@ -56,7 +58,7 @@ try {
   stems = recipeStems(root);
 } catch (e) {
   console.error(`could not read the recipe corpus at ${root}: ${e.message}`);
-  console.error('Set METRALE_RECIPES_ROOT to a checkout of metralectl/recipes.');
+  console.error('Set METRALE_ENGINE_ROOT to an engine checkout that has recipes/ (site/engine.ref).');
   process.exit(1);
 }
 

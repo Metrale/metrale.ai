@@ -46,7 +46,8 @@ reading the code first.
 
 ```sh
 cd site
-export METRALE_RECIPES_ROOT=/path/to/metralectl/recipes
+export METRALE_ENGINE_ROOT=/path/to/metrale-inference     # at the commit in engine.ref
+export METRALE_LAUNCHER_ROOT=/path/to/metralectl
 
 # 1. find it in SITE-GUIDE.md, edit the source it names
 # 2. prove it
