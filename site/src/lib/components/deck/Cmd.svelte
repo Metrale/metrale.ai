@@ -16,78 +16,107 @@
 
   async function copy() {
     clearTimeout(timer);
-    // Was `if (… !== 'copied') return;` — a refusal rendered nothing, and a
-    // command someone retypes by eye is the failure this component exists to
-    // prevent.
+    // A refusal is reported, never rendered as success (see clipboard.js).
     state = await copyOrSelect(text, preEl);
     timer = setTimeout(() => (state = 'idle'), 2400);
   }
 </script>
 
-<figure class="cmd">
+<figure class="dk-cmd">
   <figcaption>
-    {#if label}<span class="cmd-label mono">{label}</span>{/if}
-    <button type="button" class="cmd-copy mono" onclick={copy}>{copyLabel(state, 'copy').toLowerCase()}</button>
+    {#if label}<span class="dk-cmd-label mono">{label}</span>{/if}
+    <button type="button" class="dk-cmd-copy mono" onclick={copy}>{copyLabel(state, 'copy').toLowerCase()}</button>
   </figcaption>
-  <pre class="mono" bind:this={preEl}>{#each lines as line}<span class="cmd-line">{line}</span>{/each}</pre>
-  {#if note}<p class="cmd-note">{note}</p>{/if}
+  <!-- The block scrolls sideways rather than wrapping: a wrapped command is a
+       different command once pasted. A scroll region has to be reachable from
+       the keyboard, which is the one case a tabindex on a non-interactive
+       element is for. -->
+  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+  <pre class="mono" tabindex="0" bind:this={preEl}>{#each lines as line}<span class="dk-cmd-line">{line}</span>{/each}</pre>
+  {#if note}<p class="dk-cmd-note">{note}</p>{/if}
 </figure>
 
 <style>
-  .cmd {
+  .dk-cmd {
+    min-width: 0;
+    max-width: 100%;
     border: 1px solid var(--border);
-    border-left: 2px solid var(--sx);
-    border-radius: 6px;
-    background: var(--bg2);
+    border-radius: 10px;
+    background: var(--sunk);
     overflow: hidden;
   }
   figcaption {
     display: flex;
     align-items: center;
-    gap: 1em;
-    padding: 0.45em 0.8em;
+    gap: 1rem;
+    padding: 0.5rem 0.9rem;
     border-bottom: 1px solid var(--border);
-    background: rgba(0, 0, 0, 0.18);
+    background: var(--card);
   }
-  .cmd-label {
+  .dk-cmd-label {
     flex: 1;
-    font-size: 0.72em;
+    min-width: 0;
+    font-size: 0.7rem;
+    font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--t3);
+    line-height: 1.4;
+    overflow-wrap: anywhere;
   }
-  .cmd-copy {
+  .dk-cmd-label::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--sx);
+    margin-right: 0.55rem;
+    vertical-align: 0.05em;
+  }
+  .dk-cmd-copy {
+    flex-shrink: 0;
     background: none;
     border: 1px solid var(--border-strong);
     color: var(--t2);
-    border-radius: 4px;
-    font-size: 0.68em;
-    padding: 0.1em 0.5em;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.65rem;
     cursor: pointer;
   }
-  .cmd-copy:hover {
+  .dk-cmd-copy:hover {
     border-color: var(--sx);
     color: var(--sx-text);
   }
+  .dk-cmd-copy:focus-visible,
+  pre:focus-visible {
+    outline: 2px solid var(--sx);
+    outline-offset: -2px;
+  }
   pre {
-    padding: 0.75em 0.9em;
-    font-size: 0.8em;
-    line-height: 1.75;
+    margin: 0;
+    padding: 0.8rem 1rem;
+    font-size: 0.8rem;
+    line-height: 1.7;
     color: var(--t1);
     overflow-x: auto;
+    overscroll-behavior-x: contain;
     white-space: pre;
+    tab-size: 4;
   }
-  .cmd-line {
+  .dk-cmd-line {
     display: block;
   }
   /* A blank line in a command block is a paragraph break between stages, so it
      has to occupy a line rather than collapsing to nothing. */
-  .cmd-line:empty::before {
+  .dk-cmd-line:empty::before {
     content: '\00a0';
   }
-  .cmd-note {
-    padding: 0 0.9em 0.7em;
-    font-size: 0.78em;
+  .dk-cmd-note {
+    padding: 0.6rem 1rem 0.8rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    line-height: 1.55;
     color: var(--t3);
   }
 </style>

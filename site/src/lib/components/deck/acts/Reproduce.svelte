@@ -1,115 +1,63 @@
 <script>
   import { ENGINE_REPO } from '$shared/sources.mjs';
-  // Act II, first half — the reference frame and the setup: fingerprint,
-  // parity, and the four steps that get an outsider to two serving engines.
-  // Measuring them is Ladder.svelte, which follows this act in the route.
-  // The commands are the ones in bench/ladder38/RESULTS.md, not a simplified
-  // retelling: a reproduction that needs a translation step is not one.
+  // Act II — the reference frame and the walkthrough: fingerprint and parity,
+  // then the steps that get an outsider from a bare box to the published
+  // ladder. The commands are the ones in bench/ladder38/RESULTS.md, not a
+  // simplified retelling: a reproduction that needs a translation step is not
+  // one. Every value in a command that the record carries is read from it.
   import Slide from '../Slide.svelte';
   import Cmd from '../Cmd.svelte';
   import Kv from '../Kv.svelte';
-  import { claim, fingerprint, parity, serve } from '$lib/deck/content.js';
-
-  const VLLM_DIGEST = 'sha256:0a51ea5b4ae2dc5d81890e5173f54203d2a3ae0cfffe51b8fd2afd4391bfd967';
+  import { claim, fingerprint, parity, serve, serveKnobs } from '$lib/deck/content.js';
 </script>
 
 <Slide
   act="cyan"
   eyebrow="Reference"
-  title="The fingerprint"
-  lede="Six lines that decide whether anything after them is comparable. If your box differs on
-        any of them, you are measuring something else — fine, but say so."
+  title="The fingerprint, and every axis pinned on both engines"
+  lede="Six lines decide whether anything after them is comparable; ten pins are what make the comparison fair. If your box differs on any of them you are measuring something else — fine, but say so."
 >
-  <Kv rows={fingerprint} />
-</Slide>
-
-<Slide
-  act="cyan"
-  eyebrow="Reference"
-  title="Every axis pinned on both engines"
-  lede="The commonest way to manufacture a speedup is to leave one of these unmatched. Ten axes,
-        ten pins — driven by one script, not two."
->
-  <div class="parity">
-    <Kv rows={parity} mark cols={2} />
-  </div>
-</Slide>
-
-<Slide
-  act="cyan"
-  eyebrow="Reference"
-  title="We benchmark against vLLM at its best, not its defaults"
-  lede="vLLM 0.27.1 registers Qwen3_5MTP and this checkpoint ships mtp.* weights, so vLLM can
-        speculate here. Running it without would have been the easy 2×, and a fabricated one."
-  steps={2}
->
-  <div class="two">
-    <div class="at" style="--n: 1">
-      <p class="lead">
-        The earlier reference in this campaign ran speculative decoding <em>off</em>. It understated vLLM badly, so it was replaced and the
-        old column kept in view rather than deleted.
-      </p>
-      <p class="lead">
-        The published table therefore carries two baselines: the matched MTP configuration we claim against, and the unmatched
-        no-speculation leg, labelled as such. At C=128 the unmatched configuration is actually <em>faster</em> than the matched one (vLLM's speculation
-        costs it throughput at high concurrency), so it is plotted, not scored. The headline ratio stays against the matched fingerprint.
+  <div class="dk-cols dk-cols-even">
+    <div>
+      <p class="dk-card-h">Fingerprint</p>
+      <Kv rows={fingerprint} />
+    </div>
+    <div>
+      <p class="dk-card-h">Parity — driven by one script, not two</p>
+      <Kv rows={parity} mark />
+      <p class="dk-note">
+        vLLM at its best, not its defaults: {claim.baselineVersion} registers this checkpoint's MTP weights, so the baseline runs
+        {claim.baselineSpeculation}. The no-speculation leg is published beside it and is not what we claim against.
       </p>
     </div>
-    <aside class="quote at" style="--n: 2">
-      <p>“Inadequate competitor tuning is scientific misconduct.”</p>
-      <footer class="mono">Heiser, <em>Systems Benchmarking Crimes</em></footer>
-    </aside>
   </div>
 </Slide>
 
 <Slide
   act="cyan"
-  eyebrow="Step 1"
-  title="Prove the box before you trust a number"
-  lede="Five checks, in this order. Every one of them has been the reason a run was thrown away in
-        this campaign, so none of them is ceremony."
-  steps={2}
+  eyebrow="Steps 1 and 2"
+  title="Prove the box, then build both artefacts"
+  lede="Every check here has been the reason a run was thrown away in this campaign. The container serves models; the binary measures them. You need both, from the tree the record names."
 >
-  <div class="wide2">
-    <div class="at" style="--n: 1">
+  <div class="dk-cols dk-cols-even">
+    <Cmd
+      label="1 · preflight"
+      lines={[
+        `nvidia-smi                       # GB10, driver 580+`,
+        `free -g                          # ~121 GB unified, not nvidia-smi`,
+        ``,
+        `export PATH=/usr/local/cuda/bin:$PATH`,
+        `nvcc --version                   # must report CUDA 13.0`,
+        ``,
+        `docker run --rm --gpus all \\`,
+        `  nvidia/cuda:13.0.0-base-ubuntu24.04 nvidia-smi`,
+        `df -h ~/.cache/huggingface       # weights land here, tens of GB`,
+      ]}
+      note="nvidia-smi reports memory as Not Supported on GB10: the 121 GB is a unified pool, so free is the instrument. CUDA ships outside PATH; without the export the cargo build dies in a build script rather than anywhere informative. The docker line proves the NVIDIA Container Toolkit is wired up, not just installed. Measure on an idle box: the gate refuses to self-start below 85% free host memory and tolerates at most one foreign compute process."
+    />
+    <div class="stack">
       <Cmd
-        label="preflight"
-        lines={[
-          `nvidia-smi                       # GB10, driver 580+`,
-          `free -g                          # ~121 GB unified, not nvidia-smi`,
-          ``,
-          `export PATH=/usr/local/cuda/bin:$PATH`,
-          `nvcc --version                   # must report CUDA 13.0`,
-          ``,
-          `docker run --rm --gpus all \\`,
-          `  nvidia/cuda:13.0.0-base-ubuntu24.04 nvidia-smi`,
-          `df -h ~/.cache/huggingface       # weights land here, tens of GB`,
-        ]}
-        note="Two GB10 particulars, both of which have cost this campaign time. nvidia-smi reports memory as `Not Supported` — the 121 GB is a unified LPDDR5X pool, so `free` is the instrument. And CUDA ships outside PATH: without that export, `nvcc --version` says command-not-found and the cargo build in Step 2 dies in cudarc's build script rather than anywhere informative. The docker line is the one people skip: it proves the NVIDIA Container Toolkit is wired up, not just installed."
-      />
-    </div>
-    <aside class="side at" style="--n: 2">
-      <p class="side-h mono">What a shared box costs you</p>
-      <p>
-        The gate refuses to self-start below 85% free host memory, and the hardware precheck tolerates at most one foreign compute process.
-        Measure on an idle box or the run will be declined — which is the correct behaviour, and a surprise the first time.
-      </p>
-    </aside>
-  </div>
-</Slide>
-
-<Slide
-  act="cyan"
-  eyebrow="Step 2"
-  title="Build both artefacts"
-  lede="The container serves models; the binary measures them. You need both, and the binary has to
-        come from the same tree as the commit you are testing."
-  steps={2}
->
-  <div class="wide2">
-    <div class="at" style="--n: 1">
-      <Cmd
-        label="clone, image, binary"
+        label="2 · clone, image, binary"
         lines={[
           `git clone ${ENGINE_REPO}.git metrale-engine`,
           `cd metrale-engine`,
@@ -119,121 +67,86 @@
           `sudo apt-get install -y build-essential pkg-config \\`,
           `  cmake clang libclang-dev`,
           `cargo build --release -p metrale-server --bin met`,
-        ]}
-        note="Both builds run from the repository root, with CUDA still on PATH from Step 1. The multi-target image compiles PTX for every supported model; the first cargo build takes 15–30 minutes for the same reason and leaves 3–5 GB under target/. To rebuild the exact tree a record measured, check out the commit it names: every record under .benchmarks/ carries it as git_sha, and the .sig beside it binds the record to that commit."
-      />
-    </div>
-    <div class="at" style="--n: 2">
-      <Cmd
-        label="verify before going further"
-        lines={[
+          ``,
           `./target/release/met --version`,
-          `./target/release/met benchmark list`,
           `./target/release/met benchmark list concurrency-sweep`,
+          `./target/release/met sync-recipes`,
         ]}
-        note="The last line prints every parameter of the sweep with its default — the schema the next steps override. If it prints, the toolchain is sound and the rest of this deck will run."
+        note="Both builds run from the repository root with CUDA on PATH from Step 1. The first cargo build takes 15–30 minutes and leaves 3–5 GB under target/. Every record under .benchmarks/ names the commit it measured as git_sha, with a .sig beside it; check that commit out to rebuild the exact tree. The list line prints every parameter of the sweep with its default, the schema the next steps override; if it prints, the toolchain is sound. sync-recipes populates the recipe index the gate's self-start reads in Step 6."
       />
-      <p class="after">
-        The gate's self-start also reads a cached recipe index from the engine's folder in your home directory. Run
-        <code class="mono">./target/release/met sync-recipes</code> once to populate it, or Step 6 stops with a message naming the file.
-      </p>
     </div>
   </div>
 </Slide>
 
-<Slide act="cyan" eyebrow="Step 3" title="Bring up the baseline leg" lede="Pinned by digest, not by tag — “latest” is not a version.">
-  <Cmd
-    label="vLLM 0.27.1 + MTP, fp8 KV"
-    lines={[
-      `docker run --rm --gpus all --network host \\`,
-      `  vllm/vllm-openai@${VLLM_DIGEST} \\`,
-      `  --model ${claim.checkpoint} \\`,
-      `  --max-model-len 2048 --max-num-seqs 128 \\`,
-      `  --gpu-memory-utilization 0.85 \\`,
-      `  --kv-cache-dtype fp8 --enable-prefix-caching \\`,
-      `  --speculative-config '{"method":"mtp","num_speculative_tokens":3}'`,
-    ]}
-    note="num_speculative_tokens 3 is K=4 — the same draft width Metrale Engine runs. Context 2048 and batch cap 128 are the pinned pair; changing either invalidates the comparison in both directions."
-  />
+<Slide
+  act="cyan"
+  eyebrow="Steps 3 and 4"
+  title="Bring up both legs"
+  lede="Same box, same checkpoint, same client, back to back. The baseline is pinned by digest, not by tag; the subject is the whole certified configuration, rendered from the record the harness wrote."
+>
+  <div class="dk-cols dk-cols-even">
+    <Cmd
+      label="3 · baseline: {claim.baseline}, fp8 KV"
+      lines={[
+        `docker run --rm --gpus all --network host \\`,
+        `  ${claim.baselineImage.split(':')[0]}@${claim.baselineDigest} \\`,
+        `  --model ${claim.checkpoint} \\`,
+        `  --max-model-len 2048 --max-num-seqs 128 \\`,
+        `  --gpu-memory-utilization 0.85 \\`,
+        `  --kv-cache-dtype fp8 --enable-prefix-caching \\`,
+        `  --speculative-config '{"method":"mtp","num_speculative_tokens":3}'`,
+      ]}
+      note="num_speculative_tokens 3 is K=4, the same draft width the subject runs. Context 2048 and batch cap 128 are the pinned pair; changing either invalidates the comparison in both directions. The cap is load-bearing: vLLM sizes its KV blocks and scheduler budget from max_num_seqs, and a cap-32 pair inverted the ordering on the same box the same day (RESULTS.md, method note)."
+    />
+    <Cmd
+      label="4 · subject: {claim.engine}, complete"
+      lines={[...serve.env.map((l) => `${l} \\`), ...serve.cli.map((l, i, a) => (i < a.length - 1 ? `${l} \\` : l))]}
+      note={`Do not trim this. ${serveKnobs.length} of these flags (${serveKnobs.join(', ')}) are kernel and scheduling knobs whose defaults are the opposite of the certified values; serving without them measures a different engine. An abridged command run in this campaign landed under the published ladder, the gap widening with concurrency exactly as those knobs predict. With the full command the same box reproduced every rung.`}
+    />
+  </div>
 </Slide>
 
 <Slide
   act="cyan"
-  eyebrow="Step 4"
-  title="Bring up the subject leg"
-  lede="Same box, same checkpoint, same client. Every flag, not the interesting ones — this is the
-        whole certified configuration, rendered from the record the harness wrote."
+  eyebrow="Step 5"
+  title="Measure: the chart's own driver, then the gate's instrument"
+  lede="Two instruments, not interchangeable. The campaign driver produced every number on the result slide; the gate's subcommand measures the gate's workload and is the only one that can mint a record."
 >
-  <Cmd
-    label="Metrale Engine — round-11 flags, complete"
-    lines={[...serve.env.map((l) => `${l} \\`), ...serve.cli.map((l, i, a) => (i < a.length - 1 ? `${l} \\` : l))]}
-    note="Do not trim this. Six of these are kernel and scheduling knobs whose defaults are the OPPOSITE of the certified values — ssm-h-dtype, gdn-fused-norm, ssm-batched-recurrent, ssm-tail-midchunk, mtp-gate and prefill-varlen-batch — and serving without them measures a different engine. An abridged version of this command, run on 2026-08-26, landed 4.7% under the published ladder at C=1 and 14% under at C=4, the gap widening with concurrency exactly as those knobs predict. With the full command the same box reproduced every rung to within 2.2%."
-  />
+  <div class="dk-cols">
+    <Cmd
+      label="5a · the published ladder, {claim.engine} leg"
+      lines={[
+        `python3 -m venv .venv && .venv/bin/pip install aiohttp`,
+        ``,
+        `.venv/bin/python ${claim.harnessFile} \\`,
+        `  --url http://127.0.0.1:8888 --model ${claim.checkpoint} \\`,
+        `  --label metrale --out metrale_ladder.json \\`,
+        `  --concs ${claim.concsArg} \\`,
+        `  --reps ${claim.reps} --isl ${claim.isl} --osl ${claim.osl} --warmup ${claim.warmup}`,
+      ]}
+      note={`Every knob is a required argument; the driver defaults nothing silently, so the command is the methodology. Swap --url and --label for the vLLM leg and run them back to back. Budget about an hour per leg: C=${claim.last} alone streams ${claim.last * claim.osl} tokens per rep. The driver prints its sha256 on the first line and writes it as driver_sha256; the published engine legs carry ${claim.harnessShaEngine} and the copy in the repository today hashes ${claim.harnessShaRepo}. Record the hash you ran.`}
+    />
+    <Cmd
+      label="5b · the gate's instrument, both endpoints"
+      lines={[
+        `met benchmark run concurrency-sweep \\`,
+        `  --url http://127.0.0.1:8000 --model ${claim.checkpoint} \\`,
+        `  --param concurrencies=1,4,8,16 --param isls=512 --param osl=320 \\`,
+        `  --skip-coherence-probe --format json > vllm.json`,
+        `met benchmark run concurrency-sweep \\`,
+        `  --url http://127.0.0.1:8888 --model ${claim.checkpoint} \\`,
+        `  --param concurrencies=1,4,8,16 --param isls=512 --param osl=320 \\`,
+        `  --format json > metrale.json`,
+      ]}
+      note="Drives an endpoint that is already serving; it neither loads a model nor touches the GPU, so the binary that gates our pull requests is the binary that measures vLLM. stdout carries the record and stderr the progress. The prompt corpus is byte-identical to the driver's, so aggregate tok/s is comparable across the two; percentile rules are not, so never compare one instrument's TTFT against the other's."
+    />
+  </div>
 </Slide>
 
 <style>
-  .parity {
-    max-width: 92%;
-  }
-  .wide2 {
+  .stack {
     display: grid;
-    grid-template-columns: 1.55fr 1fr;
-    gap: 2em;
-    align-items: start;
-  }
-  .side {
-    border: 1px solid var(--border-strong);
-    border-top: 2px solid var(--sx);
-    background: var(--card);
-    border-radius: 6px;
-    padding: 1em 1.1em;
-  }
-  .side-h {
-    font-size: 0.74em;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--sx-text);
-    margin-bottom: 0.6em;
-  }
-  .side p {
-    color: var(--t2);
-    line-height: 1.6;
-    font-size: 0.88em;
-    margin-bottom: 0.7em;
-  }
-  .side p:last-child {
-    margin-bottom: 0;
-  }
-  .two {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 2.4em;
-    align-items: start;
-  }
-  .lead {
-    color: var(--t2);
-    line-height: 1.65;
-    margin-bottom: 0.9em;
-    max-width: 60ch;
-  }
-  .quote {
-    border-left: 3px solid var(--sx);
-    padding: 0.4em 0 0.4em 1.1em;
-  }
-  .quote p {
-    font-size: 1.15em;
-    line-height: 1.5;
-    color: var(--t1);
-  }
-  .quote footer {
-    margin-top: 0.7em;
-    font-size: 0.75em;
-    color: var(--t3);
-  }
-  .after {
-    margin-top: 1em;
-    color: var(--t3);
-    font-size: 0.85em;
-    max-width: 74ch;
+    gap: 1rem;
+    min-width: 0;
   }
 </style>

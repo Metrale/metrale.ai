@@ -3,13 +3,17 @@
   // so an act can be split across files without a slide manifest to keep in
   // sync — the composition IS the manifest.
   //
-  // No presentation library. The three things one would have bought (a scaled
-  // canvas, slide-to-slide motion, syntax highlighting) are, in 2026, a
-  // container query, a CSS transition, and a <pre>. What a library would add
-  // instead is a second design system to override and a router conflict:
-  // reveal.js writes the URL with a bare history.replaceState, which nulls the
-  // history metadata SvelteKit stores there and breaks Back. Deep-linking here
-  // goes through $app/navigation, which does not.
+  // No presentation library: a stage is a grid cell, slide-to-slide motion is
+  // a CSS transition, and a command is a <pre>. Deep-linking goes through
+  // $app/navigation rather than a bare history.replaceState, which would null
+  // the history metadata SvelteKit stores there and break Back.
+  //
+  // The stage sits UNDER the site header, not behind it. The header is sticky
+  // at z-index 100 and --nav-h tall (it declares the variable); the deck
+  // starts where the header ends, so no slide's first line can sit beneath it
+  // at any width. Inside the stage a slide that is taller than the window
+  // scrolls vertically on its own; a component wider than the slide scrolls
+  // horizontally inside itself. The document never scrolls in either axis.
   import { setContext } from 'svelte';
   import { browser } from '$app/environment';
   import { replaceState } from '$app/navigation';
@@ -18,8 +22,6 @@
   let { title = 'Verification steps', stamp = '', children } = $props();
 
   let index = $state(0);
-  let step = $state(0);
-  let stepsOnSlide = $state(0);
   let total = $state(0);
   let acts = $state([]);
 
@@ -32,58 +34,47 @@
       acts[n] = act;
       return n;
     },
-    // Read by the active slide so it can publish its fragment count upward.
     current: () => index,
-    step: () => step,
-    setSteps(n) {
-      stepsOnSlide = n;
-    },
   });
 
   const act = $derived(acts[index] ?? 'violet');
+  const pad = (n) => String(n).padStart(2, '0');
 
   // The hash, not a query param: this route is prerendered, and touching
   // url.searchParams during prerender is a build error. The hash never reaches
-  // the prerenderer at all.
-  $effect(() => {
-    if (!browser) return;
+  // the prerenderer at all. Read at mount AND on every hashchange, so a link
+  // to #7 works from inside the page as well as from outside it.
+  function readHash() {
     const n = Number(location.hash.slice(1));
     if (Number.isInteger(n) && n >= 1 && n <= total) index = n - 1;
+  }
+  $effect(() => {
+    if (!browser) return;
+    readHash();
   });
 
   function go(n) {
     const next = Math.max(0, Math.min(total - 1, n));
     if (next === index) return;
     index = next;
-    step = 0;
     replaceState(`#${next + 1}`, {});
-  }
-
-  function advance() {
-    if (step < stepsOnSlide) step += 1;
-    else go(index + 1);
-  }
-
-  function retreat() {
-    if (step > 0) step -= 1;
-    else go(index - 1);
   }
 
   function onkeydown(e) {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     const tag = document.activeElement?.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    // Up and Down are left to the slide, which may scroll; the deck moves on
+    // the horizontal keys, the page keys and the space bar.
     switch (e.key) {
       case 'ArrowRight':
-      case 'ArrowDown':
       case 'PageDown':
       case ' ':
-        advance();
+        go(index + 1);
         break;
       case 'ArrowLeft':
-      case 'ArrowUp':
       case 'PageUp':
-        retreat();
+        go(index - 1);
         break;
       case 'Home':
         go(0);
@@ -104,203 +95,159 @@
   }
 </script>
 
-<svelte:window {onkeydown} />
+<svelte:window {onkeydown} onhashchange={readHash} />
 <svelte:head><title>{title} · Metrale</title></svelte:head>
 
-<div class="dk" style="--sx: var(--ch-{act}); --sx-text: var(--ch-{act}-text)">
+<div class="dk" style="--sx: var(--ch-{act}); --sx-text: var(--ch-{act}-text)" data-slide={index + 1} data-total={total}>
   <p class="dk-live" aria-live="polite">Slide {index + 1} of {total}</p>
 
-  <div class="dk-stage" style="--step: {step}">
-    <div class="dk-track" style="--i: {index}">
-      {@render children()}
-    </div>
+  <div class="dk-stage">
+    {@render children()}
   </div>
 
-  <button type="button" class="dk-edge dk-edge-prev" onclick={retreat} disabled={index === 0 && step === 0} aria-label="Previous slide">
-    <svg viewBox="0 0 396 636" aria-hidden="true">
-      <path d="M358 38L38 318L358 598" />
-    </svg>
+  <button type="button" class="dk-edge dk-edge-prev" onclick={() => go(index - 1)} disabled={index === 0} aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg>
   </button>
-  <button
-    type="button"
-    class="dk-edge dk-edge-next"
-    onclick={advance}
-    disabled={index === total - 1 && step === stepsOnSlide}
-    aria-label="Next slide"
-  >
-    <svg viewBox="0 0 396 636" aria-hidden="true">
-      <path d="M38 38L358 318L38 598" />
-    </svg>
+  <button type="button" class="dk-edge dk-edge-next" onclick={() => go(index + 1)} disabled={index === total - 1} aria-label="Next slide">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
   </button>
 
-  <!-- One segment per slide, coloured by act: the reader can see the three
-       movements of the deck and where they are inside the current one. -->
-  <div class="dk-rail" aria-hidden="true">
-    {#each acts as a, n}
-      <i class="dk-seg" class:on={n <= index} style="--c: var(--ch-{a ?? 'violet'})"></i>
-    {/each}
-  </div>
-
-  <div class="dk-chrome">
+  <footer class="dk-chrome">
     <a class="dk-mark" href="/" aria-label="Metrale home"><MetraleLockup kind="mark" /></a>
     <span class="dk-stamp mono">{stamp}</span>
-    <span class="dk-count mono">{String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</span>
-  </div>
+    <div class="dk-nav">
+      <button type="button" class="dk-btn" onclick={() => go(index - 1)} disabled={index === 0}>Previous</button>
+      <span class="dk-count mono" aria-hidden="true">{pad(index + 1)} / {pad(total)}</span>
+      <button type="button" class="dk-btn" onclick={() => go(index + 1)} disabled={index === total - 1}>Next</button>
+    </div>
+    <!-- One segment per slide, coloured by act, so the reader can see the
+         movements of the deck and where they are inside the current one. -->
+    <div class="dk-rail" aria-hidden="true">
+      {#each acts as a, n}
+        <i class="dk-seg" class:on={n <= index} style="--c: var(--ch-{a ?? 'violet'})"></i>
+      {/each}
+    </div>
+  </footer>
 </div>
 
 <style>
-  /* The deck fills the window rather than letterboxing a fixed 16:9 canvas
-     inside it: a black margin on a projector or an ultrawide monitor reads as
-     a broken page, not as a design. The container is here, on the element
-     that IS the viewport, because container-query units on the container
-     element itself resolve against its ancestor, not itself. */
+  /* The deck fills the window below the header. --nav-h is declared by the
+     site header itself (SiteNav.svelte), so the two cannot disagree. The
+     stage is a level of its own above the rest of the document: the footer
+     comes after the deck in the page and would otherwise paint through. */
   .dk {
     position: fixed;
-    inset: 0;
-    /* A level of its own, above the rest of the document. The footer comes
-       after the deck in the page and its badge fades in through opacity,
-       which makes it a stacking context painted in document order: without
-       this the badge showed through the cover headline on a wide window.
-       The nav keeps its own, higher level. */
+    top: var(--nav-h);
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 2;
-    container-type: size;
-    container-name: stage;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
     background: var(--bg);
     color: var(--t1);
     overflow: hidden;
+    --dk-gutter: clamp(16px, 4vw, 24px);
+    --dk-max: 1180px;
+    --dk-chrome-h: 56px;
   }
 
   /* A wash of the current act's colour, low enough to read as depth rather
-     than decoration. It moves through violet, cyan, green and gold as the deck
-     changes act, which is the only ambient cue that a movement has ended. */
+     than decoration. */
   .dk::before {
     content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;
     background:
-      radial-gradient(120% 80% at 8% -10%, color-mix(in oklab, var(--sx) 13%, transparent), transparent 62%),
-      radial-gradient(90% 70% at 100% 108%, color-mix(in oklab, var(--sx) 8%, transparent), transparent 60%);
+      radial-gradient(110% 70% at 6% -10%, color-mix(in oklab, var(--sx) 12%, transparent), transparent 62%),
+      radial-gradient(80% 60% at 100% 110%, color-mix(in oklab, var(--sx) 7%, transparent), transparent 60%);
     transition: background 620ms ease;
   }
 
-  /* One scale unit for the whole deck, taken from whichever viewport dimension
-     binds. At 16:9 the two arms are equal and --u is 1% of the width; on a
-     shorter or wider window the height arm wins and everything shrinks
-     together, so a slide never grows out of the frame. Type stays real text —
-     no transform — so it selects, prints and reads by a screen reader. */
+  /* Every slide occupies the same cell; the active one is visible. */
   .dk-stage {
-    position: absolute;
-    inset: 0;
-    --u: min(1cqw, 1.778cqh);
-    font-size: calc(1.25 * var(--u));
-    overflow: hidden;
+    position: relative;
+    display: grid;
+    min-height: 0;
+  }
+  .dk-stage > :global(*) {
+    grid-area: 1 / 1;
   }
 
-  /* Slides sit side by side on one track and the track slides. A crossfade
-     reads as a dissolve between unrelated pictures; a horizontal move reads as
-     turning a page, which is what an argument in sequence actually is. */
-  .dk-track {
-    display: flex;
-    height: 100%;
-    transform: translate3d(calc(var(--i) * -100%), 0, 0);
-    transition: transform 620ms cubic-bezier(0.66, 0, 0.24, 1);
-    will-change: transform;
-  }
-
-  /* Edge navigation, a plain chevron each side. Quiet until the pointer
-     is near, because a control that shouts on every slide becomes furniture. */
+  /* Edge navigation, a chevron each side, on windows wide enough that they
+     do not sit over the content. Quiet until the pointer is near. */
   .dk-edge {
     position: absolute;
-    top: 50%;
+    top: calc(50% - var(--dk-chrome-h) / 2);
     translate: 0 -50%;
-    width: 3.2rem;
-    height: 5.5rem;
-    display: grid;
+    width: 44px;
+    height: 72px;
+    display: none;
     place-items: center;
     border: 0;
+    border-radius: 10px;
     background: none;
+    color: var(--t2);
     cursor: pointer;
-    opacity: 0.24;
-    transition:
-      opacity 200ms ease,
-      translate 200ms ease;
+    opacity: 0.35;
+    transition: opacity 200ms ease;
   }
   .dk-edge svg {
-    width: 0.85rem;
-    height: auto;
+    width: 22px;
+    height: 22px;
     fill: none;
-    stroke: var(--t1);
-    stroke-width: 76;
+    stroke: currentColor;
+    stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
   .dk-edge-prev {
-    left: 0.4rem;
+    left: 6px;
   }
   .dk-edge-next {
-    right: 0.4rem;
+    right: 6px;
   }
   .dk-edge:hover:not(:disabled) {
     opacity: 1;
-  }
-  .dk-edge-prev:hover:not(:disabled) {
-    translate: -0.25rem -50%;
-  }
-  .dk-edge-next:hover:not(:disabled) {
-    translate: 0.25rem -50%;
-  }
-  .dk-edge:hover:not(:disabled) svg {
-    stroke: var(--sx);
+    color: var(--sx-text);
   }
   .dk-edge:disabled {
-    opacity: 0.06;
+    opacity: 0.08;
     cursor: default;
   }
   .dk-edge:focus-visible {
     opacity: 1;
     outline: 2px solid var(--sx);
-    outline-offset: -6px;
-    border-radius: 8px;
+    outline-offset: -4px;
+  }
+  @media (min-width: 1400px) {
+    .dk-edge {
+      display: grid;
+    }
   }
 
-  .dk-rail {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 3px;
-    display: flex;
-    gap: 2px;
-    background: transparent;
-  }
-  .dk-seg {
-    flex: 1;
-    background: var(--border);
-    transition:
-      background 320ms ease,
-      opacity 320ms ease;
-    opacity: 0.55;
-  }
-  .dk-seg.on {
-    background: var(--c);
-    opacity: 1;
-  }
-
+  /* The bar under every slide: the mark, the build stamp, the controls, the
+     rail. It is the deck's own footer; the site footer is below the stage
+     and never seen while the deck is open. */
   .dk-chrome {
-    position: absolute;
-    left: 1.6rem;
-    right: 1.6rem;
-    bottom: 1rem;
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: 0 var(--dk-gutter);
+    height: var(--dk-chrome-h);
     display: flex;
     align-items: center;
     gap: 1rem;
-    font-size: 0.72rem;
+    border-top: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    font-size: 0.78rem;
     color: var(--t3);
   }
   .dk-mark {
     display: block;
-    width: 30px;
+    width: 26px;
+    flex-shrink: 0;
     opacity: 0.9;
   }
   .dk-mark :global(svg) {
@@ -310,11 +257,65 @@
   }
   .dk-stamp {
     flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     letter-spacing: 0.02em;
   }
+  .dk-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+  }
+  .dk-btn {
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--t1);
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition:
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+  .dk-btn:hover:not(:disabled) {
+    border-color: var(--sx);
+    color: var(--sx-text);
+  }
+  .dk-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .dk-btn:focus-visible {
+    outline: 2px solid var(--sx);
+    outline-offset: 2px;
+  }
   .dk-count {
-    letter-spacing: 0.06em;
     color: var(--t2);
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+  }
+  .dk-rail {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 2px;
+    display: flex;
+    gap: 2px;
+  }
+  .dk-seg {
+    flex: 1;
+    background: var(--border);
+    transition: background 320ms ease;
+  }
+  .dk-seg.on {
+    background: var(--c);
   }
 
   .dk-live {
@@ -326,53 +327,32 @@
     white-space: nowrap;
   }
 
+  @media (max-width: 600px) {
+    .dk-stamp {
+      display: none;
+    }
+    .dk-nav {
+      flex: 1;
+      justify-content: space-between;
+    }
+  }
+
   /* Print is the PDF export. Every slide is already in the DOM — that is the
      whole reason slides are hidden with visibility rather than {#if} — so this
      is a stylesheet, not a feature. */
   @media print {
-    @page {
-      size: 1600px 900px landscape;
-      margin: 0;
-    }
     .dk {
       position: static;
-      container-type: normal;
       display: block;
       overflow: visible;
     }
     .dk-stage {
-      position: static;
-      overflow: visible;
-      --u: 16px;
-      font-size: 21px;
-    }
-    .dk-track {
       display: block;
-      transform: none;
     }
     .dk::before,
-    .dk-rail,
     .dk-edge,
     .dk-chrome {
       display: none;
-    }
-  }
-
-  /* Slide.svelte in this same directory already honours this; the deck that
-     MOVES the slides did not. `.dk-track` carries a 620ms full-viewport
-     translation — the exact motion the preference exists for — and `.dk-edge`
-     slides its arrows in.
-
-     Only motion is dropped. The background and opacity fades stay: they cause
-     none of what the setting is about, and removing them would make the deck
-     snap rather than settle. */
-  @media (prefers-reduced-motion: reduce) {
-    .dk-track {
-      transition: none;
-    }
-    .dk-edge {
-      transition: opacity 200ms ease;
-      translate: none;
     }
   }
 </style>

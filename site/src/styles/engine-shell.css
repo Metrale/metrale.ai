@@ -9,7 +9,7 @@
    ========================================================================== */
 .engine-shell nav:not(.av-nav) {
   position: sticky;
-  top: 68px;
+  top: var(--nav-h);
   z-index: 90;
 }
 /* The old nav renders the "Ask the codebase" dialog inside itself, and a sticky
@@ -34,9 +34,4 @@
 }
 .engine-shell .hero {
   padding-top: 3.5rem;
-}
-@media (max-width: 480px) {
-  .engine-shell nav:not(.av-nav) {
-    top: 62px;
-  }
 }

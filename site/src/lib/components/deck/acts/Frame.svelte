@@ -1,105 +1,91 @@
 <script>
-  // Act I — what is being claimed, and what is not. The order is deliberate:
-  // the limits slide comes before any evidence, because a claim whose edges are
-  // stated first is read differently from one whose edges have to be dug out.
+  // Act I — what is claimed, what is not, and the result. The scope slide
+  // comes before the chart because a claim whose edges are stated first is
+  // read differently from one whose edges have to be dug out.
   import Slide from '../Slide.svelte';
-  import MetraleLockup from '$shared/components/MetraleLockup.svelte';
   import Kv from '../Kv.svelte';
-  import { claim, fragile, stamp } from '$lib/deck/content.js';
+  import ConcurrencyLadder from '../../ConcurrencyLadder.svelte';
+  import { claim, fragile, proof, stamp } from '$lib/deck/content.js';
 </script>
 
-<Slide act="violet" wide>
-  <!-- Laid out like the kit's title slide: the wordmark at the top left, the
-       title under it, the stamp as the footer line. -->
+<Slide act="violet">
   <div class="cover">
-    <div class="cover-mark"><MetraleLockup kind="wordmark" /></div>
-    <div>
+    <div class="cover-copy">
       <p class="cover-kicker mono">Verification steps</p>
       <h1 class="cover-title">Reproduce the ladder<br />before you believe it.</h1>
       <p class="cover-sub">
-        Everything the front page claims about concurrency, batch sizing and vLLM, restated as commands you can run on your own box. {claim.rungs}
-        rungs, {claim.min} to {claim.max}.
+        The concurrency claim on the front page, restated as commands you can run on your own box, with every axis it depends on named so it
+        can be falsified.
       </p>
-      <p class="cover-stamp mono">{stamp}</p>
     </div>
+    <dl class="cover-facts">
+      <div>
+        <dt>rungs won</dt>
+        <dd class="mono">{claim.won} / {claim.rungs}</dd>
+      </div>
+      <div>
+        <dt>margin</dt>
+        <dd class="mono">{claim.min} – {claim.max}</dd>
+      </div>
+      <div>
+        <dt>checkpoint</dt>
+        <dd class="mono">{claim.checkpoint}</dd>
+      </div>
+      <div>
+        <dt>hardware</dt>
+        <dd class="mono">{claim.box}</dd>
+      </div>
+      <div>
+        <dt>baseline</dt>
+        <dd class="mono">{claim.baseline}, {claim.baselineVersion}</dd>
+      </div>
+      <div>
+        <dt>build</dt>
+        <dd class="mono">{stamp}</dd>
+      </div>
+    </dl>
+    <blockquote class="claim">
+      <p>
+        <strong>{claim.engine}</strong> sustains higher mean decode throughput than <strong>{claim.baseline}</strong>
+        ({claim.baselineVersion}) on <span class="dk-code">{claim.checkpoint}</span>, served on one {claim.box}, at <strong>every</strong>
+        concurrency C = {claim.concurrencies}
+        — ISL {claim.isl}, OSL {claim.osl}, temperature {claim.temperature}, seed {claim.seed}, {claim.aggregate}. Margins run {claim.min} to
+        {claim.max}.
+      </p>
+    </blockquote>
   </div>
-</Slide>
-
-<Slide
-  act="violet"
-  eyebrow="How to read this"
-  title="Three questions, in order"
-  lede="Diligence on an inference engine is not a code review. It answers three things, and the
-        third is the one that decides the round."
-  steps={3}
->
-  <ol class="q">
-    <li class="at" style="--n: 1">
-      <span class="q-n mono">01</span>
-      <strong>Is the claim true?</strong>
-      <span
-        >Not "is the chart real" — can a stranger produce the same numbers on their own hardware, from the artifacts, without talking to us.
-        Act II is that walkthrough.</span
-      >
-    </li>
-    <li class="at" style="--n: 2">
-      <span class="q-n mono">02</span>
-      <strong>Is it durable?</strong>
-      <span
-        >A configuration gap closes in six weeks when upstream ships. A mechanism does not. Act III separates the two and shows what defends
-        the number between releases.</span
-      >
-    </li>
-    <li class="at" style="--n: 3">
-      <span class="q-n mono">03</span>
-      <strong>What does it cost to keep true?</strong>
-      <span>Gate machinery, licence posture, contributor provenance, and the bus factor on the parts that produce the win.</span>
-    </li>
-  </ol>
-</Slide>
-
-<Slide
-  act="violet"
-  eyebrow="The claim"
-  title="Stated so it can be falsified"
-  lede="A performance claim without every axis named is not yet a claim. This is the whole of ours."
->
-  <blockquote class="claim">
-    <p>
-      <strong>{claim.engine}</strong> sustains higher mean decode throughput than
-      <strong>{claim.baseline}</strong>
-      on
-      <code class="mono">{claim.checkpoint}</code>, served on one {claim.box}, at
-      <strong>every</strong> concurrency C = {claim.concurrencies} — ISL {claim.isl}, OSL
-      {claim.osl}, temperature {claim.temperature}, seed {claim.seed}, {claim.aggregate}. Margins run {claim.min} to {claim.max}.
-    </p>
-  </blockquote>
-  <p class="claim-note">
-    Every noun in that sentence is a knob someone could have turned to flatter us. The next act hands you each of them.
-  </p>
 </Slide>
 
 <Slide
   act="violet"
   eyebrow="Scope"
-  title="What we are not claiming"
-  lede="The fastest way to waste your week is to test something we never said."
-  steps={4}
+  title="What is claimed, and what is not"
+  lede="Every noun in the claim is a knob someone could have turned. The fastest way to waste a week is to test something we never said."
 >
-  <div class="cols">
+  <div class="dk-cols">
     <Kv
       rows={[
-        ['measured on', 'one GB10 box', 'DGX Spark. Every figure here was taken there, not extrapolated from it.'],
-        ['not claimed', 'other model classes', 'One dense 27B hybrid at NVFP4. MoE and long-context behave differently.'],
-        ['not claimed', 'multi-node', 'Single box. No TP/PP/EP story is being told here.'],
+        ['measured on', claim.box, `${claim.boxName}. Every figure here was taken there, not extrapolated from it.`],
+        [
+          'one checkpoint',
+          claim.checkpoint,
+          `${claim.checkpointNote}. MoE and long-context models behave differently and are not claimed.`,
+        ],
+        ['single box', 'no multi-node', 'No TP, PP or EP story is being told here.'],
+        ['best baseline', `${claim.baseline}, fp8 KV`, `${claim.unmatchedLabel} is published beside it, plotted and not scored.`],
+        [
+          'durability',
+          'gated, not asserted',
+          'Absolute per-rung floors are committed in the engine and every pull request must clear them.',
+        ],
       ]}
     />
-    <aside class="warn at" style="--n: 4">
-      <p class="warn-h mono">Fragile rungs, named</p>
+    <aside class="dk-card dk-card-warn">
+      <p class="dk-card-h">Fragile rungs, named</p>
       <p>
-        {fragile.count} rungs are won by margins inside plausible run-to-run drift — {fragile.rungs}
-        sit between {fragile.min} and {fragile.max}. We flag them rather than rounding them into the headline, and they are the rungs we
-        re-measure first when anything changes.
+        {fragile.count} of {claim.rungs} rungs are won by margins inside plausible run-to-run drift: {fragile.rungs} sit between {fragile.min}
+        and {fragile.max}. We flag them rather than rounding them into the headline, and they are the rungs we re-measure first when
+        anything changes.
       </p>
     </aside>
   </div>
@@ -107,176 +93,141 @@
 
 <Slide
   act="violet"
-  eyebrow="Why the desktop is the right instrument"
-  title="The DGX Spark is the on-ramp, not the destination"
-  lede="Measuring on a DGX Spark is not a smaller claim than measuring in a datacenter. It is the
-        rung NVIDIA built for exactly this, and the path off it is theirs, not our extrapolation."
-  steps={2}
+  eyebrow="Result"
+  title="{claim.won} of {claim.rungs} rungs, {claim.min} to {claim.max}"
+  lede="Aggregate decode tokens per second, both engines, every rung. Log2 X because the rungs double; the table carries the exact figures and the spread the chart only implies."
 >
-  <div class="cols">
-    <div class="at" style="--n: 1">
-      <blockquote class="jhq">
-        <p>
-          “AI has transformed every layer of the computing stack. It stands to reason a new class of computers would emerge — designed for
-          AI-native developers and to run AI-native applications. With these new DGX personal AI computers, AI can span from cloud services
-          to desktop and edge applications.”
-        </p>
-        <footer class="mono">Jensen Huang, NVIDIA — DGX Spark announcement, 18 March 2025</footer>
-      </blockquote>
-      <p class="jhn">
-        NVIDIA's own framing in the same release: the full-stack platform lets DGX Spark users “seamlessly move their models from their
-        desktops to DGX Cloud or any accelerated cloud or data center infrastructure — with virtually no code changes.”
-      </p>
-    </div>
-    <aside class="warn at" style="--n: 2">
-      <p class="warn-h mono">Where Metrale Engine sits on that path</p>
-      <p>
-        Same Blackwell architecture, same CUDA stack, same OpenAI-compatible surface — a workload validated on GB10 moves up the line rather
-        than starting over. Metrale Engine ships its GB10 kernel target today, and the kernel system is already three-dimensional (hardware
-        × model × quant): another hardware arm is a target to add, not an engine to rewrite.
-      </p>
-    </aside>
+  <div class="dk-stats result-stats">
+    <div><b>{proof.topRatio}</b><span>at C={proof.topC}: {proof.topEngine} vs {proof.topBaseline} tok/s</span></div>
+    <div><b>{proof.firstRatio}</b><span>at C={proof.firstC}: {proof.firstEngine} vs {proof.firstBaseline} tok/s</span></div>
+    <div><b>{claim.reps}×</b><span>timed reps per rung, {claim.warmup} warmup discarded</span></div>
+  </div>
+  <div class="chart">
+    <ConcurrencyLadder embedded compact />
   </div>
 </Slide>
 
 <style>
   .cover {
     display: grid;
-    align-content: center;
-    gap: calc(4 * var(--u));
-    height: 100%;
-    padding-bottom: calc(4 * var(--u));
-  }
-  .cover-mark {
-    width: calc(30 * var(--u));
-  }
-  .cover-mark :global(svg) {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  .cover-kicker {
-    font-size: 0.85em;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--sx-text);
-    margin-bottom: 0.9em;
-  }
-  .cover-title {
-    font-size: 3.5em;
-    font-weight: 800;
-    letter-spacing: -0.035em;
-    line-height: 1.02;
-  }
-  .cover-sub {
-    margin-top: 1em;
-    font-size: 1.08em;
-    color: var(--t2);
-    max-width: 52ch;
-    line-height: 1.6;
-  }
-  .cover-stamp {
-    margin-top: 2.2em;
-    font-size: 0.72em;
-    color: var(--t3);
-    letter-spacing: 0.04em;
-  }
-
-  .q {
-    list-style: none;
-    display: grid;
-    gap: 1.1em;
-    max-width: 74ch;
-  }
-  .q li {
-    display: grid;
-    grid-template-columns: 3.2em 1fr;
-    gap: 0 1em;
-    padding-bottom: 1em;
-    border-bottom: 1px solid var(--border);
-  }
-  .q-n {
-    grid-row: span 2;
-    font-size: 1.5em;
-    font-weight: 700;
-    color: var(--sx-text);
-    opacity: 0.75;
-  }
-  .q strong {
-    font-size: 1.15em;
-    font-weight: 700;
-  }
-  .q span:last-child {
-    color: var(--t2);
-    line-height: 1.6;
-  }
-
-  .claim {
-    border-left: 3px solid var(--sx);
-    background: var(--card);
-    padding: 1.2em 1.5em;
-    border-radius: 0 8px 8px 0;
-    max-width: 82ch;
-  }
-  .claim p {
-    font-size: 1.12em;
-    line-height: 1.65;
-  }
-  .claim code {
-    font-size: 0.9em;
-    color: var(--accent-deep);
-  }
-  .claim-note {
-    margin-top: 1.2em;
-    color: var(--t3);
-    font-size: 0.92em;
-  }
-
-  .cols {
-    display: grid;
-    grid-template-columns: 1.35fr 1fr;
-    gap: 2.4em;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem 3rem;
+    padding-top: clamp(0.5rem, 4vh, 3rem);
     align-items: start;
   }
-  .warn {
-    border: 1px solid var(--border-strong);
-    border-top: 2px solid var(--amber);
-    background: var(--card);
-    border-radius: 6px;
-    padding: 1em 1.1em;
+  @media (min-width: 1100px) {
+    .cover {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    }
+    .cover-facts {
+      grid-row: 1 / span 2;
+      grid-column: 2;
+      margin-top: 0.4rem;
+    }
   }
-  .jhq {
-    border-left: 3px solid var(--sx);
-    padding: 0.2em 0 0.2em 1.1em;
-    margin-bottom: 1em;
+  .cover-copy {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
   }
-  .jhq p {
-    font-size: 0.98em;
-    line-height: 1.55;
-    color: var(--t1);
+  .cover-facts {
+    display: grid;
+    gap: 0;
+    min-width: 0;
+    border-top: 1px solid var(--border-strong);
   }
-  .jhq footer {
-    margin-top: 0.7em;
-    font-size: 0.74em;
+  .cover-facts > div {
+    display: grid;
+    grid-template-columns: 11ch minmax(0, 1fr);
+    gap: 0.8rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: baseline;
+  }
+  .cover-facts dt {
+    overflow-wrap: anywhere;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--t3);
   }
-  .jhn {
+  .cover-facts dd {
+    font-size: 0.86rem;
+    color: var(--t1);
+    overflow-wrap: anywhere;
+  }
+  .cover-kicker {
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sx-text);
+  }
+  .cover-title {
+    font-size: clamp(2rem, 1.3rem + 3vw, 3.6rem);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+  .cover-sub {
+    font-size: clamp(1rem, 0.95rem + 0.35vw, 1.2rem);
     color: var(--t2);
-    font-size: 0.92em;
+    max-width: 58ch;
     line-height: 1.6;
-    max-width: 62ch;
+  }
+  .claim {
+    grid-column: 1;
+    border-left: 3px solid var(--sx);
+    background: var(--card);
+    padding: 1rem 1.25rem;
+    border-radius: 0 10px 10px 0;
+    max-width: 78ch;
+    min-width: 0;
+  }
+  .claim p {
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: var(--t2);
+    overflow-wrap: anywhere;
+  }
+  .claim strong {
+    color: var(--t1);
+    font-weight: 600;
+  }
+  .result-stats {
+    margin-bottom: 1.25rem;
   }
 
-  .warn-h {
-    font-size: 0.74em;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 0.6em;
+  /* The ladder component stacks chart over table, which is a page layout. On
+     a wide slide they sit side by side; the table keeps its own scroll box. */
+  .chart {
+    min-width: 0;
   }
-  .warn p {
-    color: var(--t2);
-    line-height: 1.6;
-    font-size: 0.92em;
+  .chart :global(.cl-embed-inner) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem 1.5rem;
+    align-items: start;
+    max-width: none;
+  }
+  @media (min-width: 1100px) {
+    .chart :global(.cl-embed-inner) {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    }
+  }
+  .chart :global(.cl-panel) {
+    margin: 0;
+    min-width: 0;
+  }
+  .chart :global(.cl-table),
+  .chart :global(.cl-caption) {
+    font-size: 0.78rem;
+  }
+  .chart :global(.cl-tablewrap) {
+    margin: 0;
+    min-width: 0;
   }
 </style>
