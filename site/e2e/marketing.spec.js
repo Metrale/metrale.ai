@@ -292,9 +292,20 @@ test.describe('pricing', () => {
     await expect(tabs.first()).toHaveAttribute('aria-selected', 'true');
   });
 
-  test('every proposed price is labelled as proposed', async ({ page }) => {
-    await page.goto(routes.pricing);
-    expect(await page.locator('.av-evidence.is-proposed, .av-badge-proposed, :text("PROPOSED")').count()).toBeGreaterThan(0);
+  // No price is published for now: the paid tiers say contact us, and the
+  // payback model's license starts empty, so no payback period shows until the
+  // visitor enters a quote.
+  test('the tiers name no price and the license waits for a quote', async ({ page }) => {
+    await page.goto(`${routes.pricing}#payback`);
+    const prices = page.locator('.av-tier-price');
+    await expect(prices.first()).toBeVisible();
+    for (const text of await prices.allInnerTexts()) expect(text).not.toMatch(/\$\s?\d/);
+    await expect(prices.filter({ hasText: 'Contact us' })).toHaveCount(2);
+
+    const hero = page.locator('#payback .av-calc-hero').first();
+    await expect(hero).toContainText('before the license');
+    await page.getByLabel(/^Metrale license per GPU per year/).fill('1000');
+    await expect(hero).toContainText('Payback period');
   });
 });
 

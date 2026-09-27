@@ -50,7 +50,7 @@ export const faq = [
   {
     tags: ['home', 'pricing'],
     q: 'How is it priced?',
-    a: 'Per GPU per year for the Enterprise tier, with volume tiers as the fleet grows, and a per box price for workstation and edge deployments. Support and forward deployed engineering are priced separately. The engine itself is free and open source under MIT OR Apache-2.0. The pricing page lists the proposed sheet and a payback model with editable inputs.',
+    a: 'Per GPU per year for the Enterprise tier, with volume tiers as the fleet grows, and a per box price for workstation and edge deployments. Support and forward deployed engineering are priced separately. The engine itself is free and open source under MIT OR Apache-2.0. Prices are set with each customer for now, so the pricing page says contact us, beside a payback model with editable inputs.',
   },
   {
     tags: ['pricing', 'why'],

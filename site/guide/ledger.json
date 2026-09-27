@@ -120,6 +120,14 @@
         "links.changelog",
         "links.issues"
       ]
+    },
+    {
+      "rev": 8,
+      "date": "2026-09-26",
+      "pr": 33,
+      "base": "b6ceea9da",
+      "note": "Pricing says contact us for now: the tiers carry no numbers, the market anchors and the contract table are gone, and the payback model's license is the visitor's own quote, so the front page and the platform page show modeled savings before the license instead of a payback period.",
+      "touched": []
     }
   ],
   "facts": {

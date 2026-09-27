@@ -23,6 +23,7 @@
     API_DEFAULTS,
   } from '$lib/economics.js';
   import { paybackCopy } from '$lib/content/pricing.js';
+  import { routes } from '$lib/content/brand.js';
   import { live, ladderData } from '$lib/content/live.js';
   import { moveTab } from '$lib/tablist.js';
 
@@ -116,10 +117,11 @@
           >
         </label>
         <label class="av-field"
-          ><span>License per GPU per year <span class="av-evidence is-proposed">PROPOSED</span></span><input
+          ><span>Metrale license per GPU per year, from your quote <span class="av-evidence">USER</span></span><input
             type="number"
             min="0"
             step="100"
+            placeholder="Your quote"
             bind:value={f.licensePerGpuYear}
           /></label
         >
@@ -158,9 +160,15 @@
       </div>
       <div class="av-calc-out">
         <div class="av-calc-hero">
-          <span class="av-tile-label">Payback period</span>
-          <span class="av-num">{paybackLabel(fr.paybackMonths)}</span>
-          <span class="av-small">then {usd(fr.net)} a year is upside</span>
+          {#if fr.quoted}
+            <span class="av-tile-label">Payback period</span>
+            <span class="av-num">{paybackLabel(fr.paybackMonths)}</span>
+            <span class="av-small">then {usd(fr.net)} a year is upside</span>
+          {:else}
+            <span class="av-tile-label">Savings per year before the license</span>
+            <span class="av-num">{usd(fr.grossSavings)}</span>
+            <span class="av-small">{paybackCopy.noQuote} <a class="av-link" href={routes.contact}>Contact us</a> for one.</span>
+          {/if}
         </div>
         <dl class="av-calc-rows">
           <div>
@@ -185,16 +193,18 @@
           </div>
           <div>
             <dt>Metrale license per year</dt>
-            <dd>{usd(fr.license)}</dd>
+            <dd>{fr.quoted ? usd(fr.license) : 'On quote'}</dd>
           </div>
-          <div class="is-total">
-            <dt>Net per year</dt>
-            <dd>{usd(fr.net)}</dd>
-          </div>
-          <div>
-            <dt>Three year net</dt>
-            <dd>{usd(fr.threeYearNet)}</dd>
-          </div>
+          {#if fr.quoted}
+            <div class="is-total">
+              <dt>Net per year</dt>
+              <dd>{usd(fr.net)}</dd>
+            </div>
+            <div>
+              <dt>Three year net</dt>
+              <dd>{usd(fr.threeYearNet)}</dd>
+            </div>
+          {/if}
         </dl>
       </div>
     </div>
@@ -252,10 +262,11 @@
             ></label
           >
           <label class="av-field"
-            ><span>License per box per month <span class="av-evidence is-proposed">PROPOSED</span></span><input
+            ><span>Metrale license per box per month, from your quote <span class="av-evidence">USER</span></span><input
               type="number"
               min="0"
               step="5"
+              placeholder="Your quote"
               bind:value={a.licensePerBoxMonth}
             /></label
           >
@@ -286,7 +297,7 @@
           <span class="av-num">{ar.savingsPct > 0 ? `${Math.round(100 - ar.savingsPct)}%` : 'more'}</span>
           <span class="av-small"
             >{ar.savingsPct > 0
-              ? `${Math.round(ar.savingsPct)}% lower, payback in ${paybackLabel(ar.paybackMonths)}`
+              ? `${Math.round(ar.savingsPct)}% lower${ar.quoted ? '' : ' before the license'}, payback in ${paybackLabel(ar.paybackMonths)}`
               : 'owning does not beat renting at these inputs'}</span
           >
         </div>
@@ -308,8 +319,8 @@
             <dd>{usd(ar.powerPerMonth)}</dd>
           </div>
           <div>
-            <dt>License per month</dt>
-            <dd>{usd(ar.licensePerMonth)}</dd>
+            <dt>Metrale license per month</dt>
+            <dd>{ar.quoted ? usd(ar.licensePerMonth) : 'On quote'}</dd>
           </div>
           <div class="is-total">
             <dt>New monthly cost</dt>
@@ -470,8 +481,7 @@
   {/if}
   <p class="av-small av-calc-foot">
     {paybackCopy.disclaimer} Evidence classes: <b>MEASURED</b>
-    {paybackCopy.classes.MEASURED.toLowerCase()}. <b>PROPOSED</b>
-    {paybackCopy.classes.PROPOSED.toLowerCase()}. <b>USER</b>
+    {paybackCopy.classes.MEASURED.toLowerCase()}. <b>USER</b>
     {paybackCopy.classes.USER.toLowerCase()}.
   </p>
 </div>

@@ -9,8 +9,8 @@
 // VOICE: plain, confident, buyer to buyer. Commas and periods. No em dashes,
 // no semicolons, no exclamation marks. Numbers that describe performance are
 // never typed here, they are computed from the generated JSON at build time
-// (see src/lib/content/live.js). Numbers that describe a model or a price are
-// labeled as modeled or proposed wherever they render.
+// (see src/lib/content/live.js). Numbers that describe a model are labeled as
+// modeled wherever they render. No price is published for now (pricing.js).
 // =============================================================================
 
 // The domain is unchanged by the rebrand (see PR #1101). When DNS moves, this

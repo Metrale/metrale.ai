@@ -41,7 +41,7 @@ const DOCS = [
     title: 'Pricing · Metrale',
     section: 'Find your payback period',
     url: `${ORIGIN}/pricing#payback`,
-    text: 'Three scenarios, every input editable, evidence class on every field. The license per GPU per year is proposed.',
+    text: 'Three scenarios, every input editable, evidence class on every field. The license per GPU per year is your own quote.',
   },
   {
     id: 'page:2',
@@ -341,7 +341,7 @@ test("estimate_economics runs the page's own model and says so", async () => {
   expect(r.modeled).toBe(true);
   expect(r.cite_as).toBe(1);
   expect(r.result).toEqual(fleetModel({ gpus: 64, uplift: 1.3 }));
-  expect(r.evidence.licensePerGpuYear).toMatch(/PROPOSED/);
+  expect(r.evidence.licensePerGpuYear).toMatch(/quote/);
   const api = await runTool('estimate_economics', JSON.stringify({ scenario: 'api' }), {
     index: new Index([]),
     tiers: ['public'],

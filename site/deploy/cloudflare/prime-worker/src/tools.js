@@ -66,7 +66,7 @@ export const TOOLS = [
     function: {
       name: 'estimate_economics',
       description:
-        'Run the payback model from the pricing page. Three scenarios: "fleet" (get more out of GPUs you own), "api" (replace a metered API bill with boxes you own), "energy" (tokens per joule). Any input left out takes the page default. Results are modeled, not measured, and must be labelled that way.',
+        'Run the payback model from the pricing page. Three scenarios: "fleet" (get more out of GPUs you own), "api" (replace a metered API bill with boxes you own), "energy" (tokens per joule). Any input left out takes the page default. Results are modeled, not measured, and must be labelled that way. The license inputs (licensePerGpuYear, licensePerBoxMonth) come only from a quote the visitor has: Metrale publishes no price, so leave them out unless the visitor gives one. Without them the result is before the license and the fleet scenario names no payback period.',
       parameters: {
         type: 'object',
         properties: {
@@ -318,7 +318,11 @@ export async function runTool(name, rawArgs, ctx) {
           scenario,
           modeled: true,
           inputs_used: used,
-          evidence: { uplift: 'USER, defaults below the measured GB10 ratio', licensePerGpuYear: 'PROPOSED list price', others: 'USER' },
+          evidence: {
+            uplift: 'USER, defaults below the measured GB10 ratio',
+            licensePerGpuYear: "USER, the visitor's quote: Metrale publishes no list price for now",
+            others: 'USER',
+          },
           result: fleetModel(used),
           page: pricing,
         };
@@ -332,7 +336,7 @@ export async function runTool(name, rawArgs, ctx) {
           inputs_used: used,
           evidence: {
             boxTokensPerSecond: top ? `MEASURED at C=${top.c} on ${data.ladder.box?.gpu ?? 'the published box'}` : 'default',
-            licensePerBoxMonth: 'PROPOSED',
+            licensePerBoxMonth: "USER, the visitor's quote: Metrale publishes no list price for now",
             others: 'USER',
           },
           result: apiModel(used),

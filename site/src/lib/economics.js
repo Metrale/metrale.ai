@@ -19,8 +19,9 @@
 //            `efficiency()` because a benchmark has to produce them.
 //
 // Every input is labeled with its evidence class in the UI: MEASURED comes
-// from ladder.generated.json, PROPOSED is a list price the team can change,
-// USER is whatever the visitor types. Nothing here rounds a claim up.
+// from ladder.generated.json and USER is whatever the visitor types, the license
+// included: no list price is published for now, so a license is the visitor's
+// quote and starts empty. Nothing here rounds a claim up.
 
 export const HOURS_PER_YEAR = 8760;
 export const JOULES_PER_KWH = 3_600_000;
@@ -32,7 +33,7 @@ export const FLEET_DEFAULTS = Object.freeze({
   gpuCostPerYear: 40_000, // amortized purchase or rental, per GPU, USER
   utilization: 0.6, // USER
   uplift: 1.2, // conservative, below the measured GB10 ratio at C=128
-  licensePerGpuYear: 2_400, // PROPOSED, realized at fleet scale
+  licensePerGpuYear: null, // USER, from a quote; no list price is published
   wattsPerGpu: 700, // H100 class, USER
   pue: 1.3, // USER
   usdPerKwh: 0.12, // USER
@@ -50,7 +51,7 @@ export const API_DEFAULTS = Object.freeze({
   wattsPerBox: 240, // USER
   pue: 1.2, // USER
   usdPerKwh: 0.12, // USER
-  licensePerBoxMonth: 50, // PROPOSED workstation license
+  licensePerBoxMonth: null, // USER, from a quote; no list price is published
 });
 
 /** Defaults for the tokens per watt scenario. */
@@ -80,7 +81,8 @@ export function powerCostPerYear({ watts, pue, usdPerKwh }) {
  * With uplift u, the same work needs gpus / u GPUs, so the capacity freed is
  * gpus * (1 - 1/u). Its value is what those GPUs cost to keep, plus what they
  * burn, plus any per GPU software they were carrying. The license is the
- * price of the uplift. Payback is license over monthly savings.
+ * price of the uplift. Payback is license over monthly savings, and without a
+ * quote there is no payback period to name.
  */
 export function fleetModel(input = {}) {
   const i = { ...FLEET_DEFAULTS, ...input };
@@ -90,11 +92,13 @@ export function fleetModel(input = {}) {
   const powerValue = freedGpus * power;
   const replaced = i.gpus * i.replacedSoftwarePerGpuYear;
   const grossSavings = capacityValue + powerValue + replaced;
-  const license = i.gpus * i.licensePerGpuYear;
+  const quoted = Number(i.licensePerGpuYear) > 0;
+  const license = quoted ? i.gpus * Number(i.licensePerGpuYear) : 0;
   const net = grossSavings - license;
-  const paybackMonths = grossSavings > 0 ? (license / grossSavings) * 12 : Infinity;
+  const paybackMonths = quoted && grossSavings > 0 ? (license / grossSavings) * 12 : Infinity;
   const spend = i.gpus * i.gpuCostPerYear;
   return {
+    quoted,
     freedGpus: round(freedGpus, 1),
     capacityValue: Math.round(capacityValue),
     powerValue: Math.round(powerValue),
@@ -113,8 +117,9 @@ export function fleetModel(input = {}) {
  *
  * Tokens per month come from the bill. Boxes needed come from measured
  * throughput at the stated utilization. The new monthly cost is amortized
- * capex plus power plus license for that many boxes. Savings percent is
- * against the old bill, which is where "70% or less" is checked.
+ * capex plus power, plus the license once a quote is entered, for that many
+ * boxes. Savings percent is against the old bill, which is where "70% or
+ * less" is checked.
  */
 export function apiModel(input = {}) {
   const i = { ...API_DEFAULTS, ...input };
@@ -124,12 +129,14 @@ export function apiModel(input = {}) {
   const boxes = Math.max(1, Math.ceil(boxesExact));
   const capexPerMonth = i.amortMonths > 0 ? (boxes * i.boxCapex) / i.amortMonths : 0;
   const powerPerMonth = (boxes * powerCostPerYear({ watts: i.wattsPerBox, pue: i.pue, usdPerKwh: i.usdPerKwh })) / 12;
-  const licensePerMonth = boxes * i.licensePerBoxMonth;
+  const quoted = Number(i.licensePerBoxMonth) > 0;
+  const licensePerMonth = quoted ? boxes * Number(i.licensePerBoxMonth) : 0;
   const newMonthly = capexPerMonth + powerPerMonth + licensePerMonth;
   const monthlySavings = i.monthlySpend - newMonthly;
   const costPerMillion = tokensPerMonth > 0 ? newMonthly / (tokensPerMonth / 1e6) : 0;
   const paybackMonths = monthlySavings > 0 ? (boxes * i.boxCapex) / monthlySavings : null;
   return {
+    quoted,
     tokensPerMonth: Math.round(tokensPerMonth),
     boxes,
     capexPerMonth: Math.round(capexPerMonth),

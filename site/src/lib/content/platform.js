@@ -312,8 +312,11 @@ export const economicsPage = {
     ],
   },
   stats: [
-    { value: '{payback}', label: 'modeled payback on a 256 GPU fleet at a 1.20x uplift, defaults shown on the pricing page' },
-    { value: '{apiSavings}', label: 'modeled savings replacing a metered API with owned boxes at measured throughput' },
+    {
+      value: '{fleetSavings}',
+      label: 'modeled savings a year on a 256 GPU fleet at a 1.20x uplift, before the license, defaults shown on the pricing page',
+    },
+    { value: '{apiSavings}', label: 'modeled savings before the license, replacing a metered API with owned boxes at measured throughput' },
     { value: '6', label: 'ledger dimensions per unit of work' },
     { value: '1', label: 'baseline per cluster, recorded before traffic moves' },
   ],

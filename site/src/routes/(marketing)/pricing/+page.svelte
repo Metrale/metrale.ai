@@ -4,7 +4,7 @@
   import PaybackCalculator from '$lib/components/marketing/PaybackCalculator.svelte';
   import FaqList from '$lib/components/marketing/FaqList.svelte';
   import CtaBand from '$lib/components/marketing/CtaBand.svelte';
-  import { pricingHero, tiers, anchors, contractEconomics, metering, paybackCopy, pricingCta } from '$lib/content/pricing.js';
+  import { pricingHero, tiers, metering, paybackCopy, pricingCta } from '$lib/content/pricing.js';
   import { faqFor } from '$lib/content/faq.js';
   import { routes } from '$lib/content/brand.js';
 </script>
@@ -22,7 +22,7 @@
             <p class="av-card-tag">
               {#if t.featured}<span class="av-chip av-chip-violet av-tier-flag">Most fleets start here</span><br />{/if}{#if t.badge}<span
                   class="av-chip av-chip-gold av-tier-flag">{t.badge}</span
-                ><br />{/if}{t.name}{#if t.proposed}<span class="av-evidence is-proposed">PROPOSED</span>{/if}
+                ><br />{/if}{t.name}
             </p>
             <div class="av-tier-price"><span class="av-num av-num-plain">{t.price}</span><span class="av-small">{t.per}</span></div>
             <p>{t.blurb}</p>
@@ -34,44 +34,6 @@
             >
           </div>
         {/each}
-      </div>
-    </div>
-  </section>
-
-  <section class="av-section">
-    <div class="av-container">
-      <div class="av-split" style="align-items:start">
-        <div class="av-reveal">
-          <p class="av-eyebrow">{anchors.eyebrow}</p>
-          <h2 class="av-h2">{anchors.title}</h2>
-          <p class="av-lede">{anchors.body}</p>
-          <table class="av-table" style="margin-top:1.5rem">
-            <thead><tr><th>Product</th><th>List</th><th>Basis</th></tr></thead>
-            <tbody>
-              {#each anchors.rows as r}
-                <tr class:is-accent={r.accent}
-                  ><td>{r.name}<br /><span class="av-small">{r.note}</span></td><td class="av-mono">{r.price}</td><td>{r.per}</td></tr
-                >
-              {/each}
-            </tbody>
-          </table>
-          <p class="av-small" style="margin-top:0.8rem">{anchors.foot}</p>
-        </div>
-        <div class="av-reveal">
-          <p class="av-eyebrow av-sx-green">{contractEconomics.eyebrow}</p>
-          <h2 class="av-h2">{contractEconomics.title}</h2>
-          <p class="av-lede">{contractEconomics.body}</p>
-          <div class="av-stack" style="margin-top:1.5rem">
-            {#each contractEconomics.rows as r, i}
-              <div class="av-tile av-acv" style="--w:{[34, 60, 100][i]}%">
-                <div class="av-row" style="justify-content:space-between">
-                  <span class="av-tile-label">{r.gpus}</span><span class="av-num av-num-plain" style="font-size:1.6rem">{r.acv}</span>
-                </div>
-                <div class="av-acv-bar"><span></span></div>
-              </div>
-            {/each}
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -142,20 +104,6 @@
   }
   .av-tier-price .av-num {
     font-size: 2.2rem;
-  }
-  .av-acv-bar {
-    height: 8px;
-    border-radius: 4px;
-    background: var(--bg2);
-    margin-top: 0.7rem;
-    overflow: hidden;
-  }
-  .av-acv-bar span {
-    display: block;
-    height: 100%;
-    width: var(--w);
-    background: linear-gradient(90deg, var(--ch-violet), var(--ch-cyan));
-    border-radius: 4px;
   }
   @media (max-width: 1080px) {
     .av-tiers {
