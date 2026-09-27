@@ -1,6 +1,7 @@
 # The docs
 
-`docs.metrale.ai`: the engine's book. The book itself (an mdBook) is written and
+`docs.metrale.ai`: the engine's book, with the engine's API reference (rustdoc)
+at `docs.metrale.ai/api/`. The book itself (an mdBook) is written and
 kept in the engine's repository, `Metrale/metrale-inference`, under
 `book/` beside the crates, by the engine team, skin and wordmark included.
 Nothing here changes it there. This directory publishes it at the company's
@@ -21,19 +22,35 @@ docs address, at the commit the site is built against.
    `dev.metrale.ai`, are retired and redirect to `blog.metrale.ai` and
    `metrale.ai/engine`. `docs/hosts.mjs` moves all three to `docs.metrale.ai`,
    `blog.metrale.ai` and `metrale.ai`, so the canonical addresses and `llms.txt`
-   name this host whichever engine commit the book comes from. The API
-   reference, `docs.dev.metrale.ai`, keeps its address. The unit test beside
-   the site's (`site/src/lib/docs-hosts.test.js`) pins the map.
+   name this host whichever engine commit the book comes from. Links to the
+   API reference move from `docs.dev.metrale.ai` to the same path under
+   `docs.metrale.ai/api/`, where it is published now; `docs.dev.metrale.ai`
+   redirects every path there. The unit test beside the site's
+   (`site/src/lib/docs-hosts.test.js`) pins the map.
 
 Then mdBook 0.4.40 builds it, the book's own two scripts add `llms.txt` and the
 per-page social metadata, and the icons, the card, the Pages headers and a
 `version.txt` (the engine commit and this repository's) are copied in.
+
+**The API reference.** The rustdoc that `cargo doc --workspace --no-deps` wrote
+into the same engine checkout's `target/doc` is copied to `/api/`, in place of
+the redirect stub the book puts there, with the front page the engine's own
+rustdoc site always had (straight to `metrale_core`). rustdoc links everything
+relative to the page, so its pages, assets and search work under the prefix
+unchanged. The workflow builds it the way the engine's docs workflow does: the
+engine's pinned toolchain, with `METRALE_SKIP_BUILD=1` and
+`CUDARC_CUDA_VERSION=13000` so the build scripts skip CUDA, and a Cargo cache.
+
 `docs/check.mjs` then reads every built page and fails on a host the build
-should have moved, on a missing title, skin, font or file, and on a link shipped as the
-text of its path.
+should have moved, on a missing title, skin, font or file, on a link shipped as the
+text of its path, and on an API reference that is not rustdoc's: the front
+page, a page for every crate its crate list names, its scripts and its search
+index. The host check reads the book's pages only: the API reference renders the
+engine's source as written.
 
 ```sh
 # from the repository root, with a checkout of the engine beside it
+(cd ../metrale-inference && METRALE_SKIP_BUILD=1 CUDARC_CUDA_VERSION=13000 cargo doc --workspace --no-deps)
 METRALE_ENGINE_ROOT=../metrale-inference node docs/build.mjs   # needs mdbook 0.4.40 on PATH
 node docs/check.mjs
 npx serve docs/build                                                 # or any static server
@@ -56,7 +73,7 @@ uses, once two repository variables exist:
 
 Until the first is set the deploy job is skipped, not failed. The deploy's last
 step waits until the host serves the commit it just published, read from
-`version.txt`.
+`version.txt`, and then asks for an API reference page.
 
 ## Moving the engine forward
 
@@ -77,5 +94,3 @@ started naming shows up in the check before it is published.
   Metrale's documentation should look like, starting from the reader, is
   proposed in [`OUTLINE.md`](OUTLINE.md) for the team to decide on; nothing of
   it is built until they do.
-- **The API reference** (rustdoc), which the engine team publishes at
-  `docs.dev.metrale.ai`.
