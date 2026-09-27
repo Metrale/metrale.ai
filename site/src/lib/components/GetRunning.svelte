@@ -4,7 +4,7 @@
   // first. Every command restates the launcher's own README, and
   // engine-lower.test.js holds the two in lockstep.
   import vendors from '$lib/models.generated.json';
-  import { flagshipRecipe, getRunning as copy, guideUrl, recipesUrl } from '$lib/data.js';
+  import { flagshipRecipe, getRunning as copy, guideUrl, launcherUrl } from '$lib/data.js';
   import { links } from '$lib/content/brand.js';
   import { currentInstall } from '$lib/install/host.svelte.js';
   import { copyLabel, copyOrSelect } from '$lib/clipboard.js';
@@ -112,7 +112,7 @@
         <p class="eg-links av-small">
           <a class="av-link" href={guideUrl} target="_blank" rel="noopener">{copy.docsCta} ↗</a>
           <a class="av-link" href={links.docs} target="_blank" rel="noopener">{copy.docsSiteCta} ↗</a>
-          <a class="av-link" href={recipesUrl} target="_blank" rel="noopener">{copy.readmeCta} ↗</a>
+          <a class="av-link" href={launcherUrl} target="_blank" rel="noopener">{copy.readmeCta} ↗</a>
         </p>
       </aside>
     </div>

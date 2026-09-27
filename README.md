@@ -17,8 +17,9 @@ the developer pages for the engine. SvelteKit on Vite, prerendered to static fil
 
 ## Build it
 
-The build reads its model list and its measurements from two public repositories, so
-check them out beside this one first:
+The build reads its model list (the engine's `recipes/`) and its measurements from the
+engine repository, and the launcher's README and installers from metralectl, so check both
+out beside this one first:
 
 ```sh
 git clone https://github.com/Metrale/metralectl.git
@@ -26,8 +27,8 @@ git clone --filter=blob:none https://github.com/Metrale/metrale-inference.git
 
 cd metrale.ai/site
 bun install
-export METRALE_RECIPES_ROOT="$(cd ../../metralectl/recipes && pwd)"
 export METRALE_ENGINE_ROOT="$(cd ../../metrale-inference && pwd)"
+export METRALE_LAUNCHER_ROOT="$(cd ../../metralectl && pwd)"
 export METRALE_BASELINES_ROOT="$METRALE_ENGINE_ROOT/tests/baselines"
 bun x --bun vite build        # writes site/build
 bun x --bun vite preview      # serves it on http://localhost:4173

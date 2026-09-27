@@ -11,7 +11,7 @@
   import { onMount } from 'svelte';
   import { crossesGroup } from '$lib/route-groups.js';
   import { detectHost } from '$lib/install/host.svelte.js';
-  import { faq as engineFaq, githubUrl, recipesUrl, discordUrl, hero } from '$lib/data.js';
+  import { faq as engineFaq, githubUrl, launcherUrl, discordUrl, hero } from '$lib/data.js';
   import { pages, SITE, company, links } from '$lib/content/index.js';
   import { faqFor } from '$lib/content/faq.js';
   let { children } = $props();
@@ -68,7 +68,7 @@
         url: `${SITE}/`,
         logo: `${SITE}/icon-512.png`,
         description: company.short,
-        sameAs: [githubUrl, recipesUrl, discordUrl, links.blog],
+        sameAs: [githubUrl, launcherUrl, discordUrl, links.blog],
       },
       {
         '@type': 'WebSite',

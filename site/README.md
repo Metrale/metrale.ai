@@ -9,10 +9,11 @@ Read `FACELIFT.md` for what is where and why. This file is the commands.
 ## Run it
 
 You need [git](https://git-scm.com), [bun](https://bun.sh), and clones of
-[metralectl](https://github.com/Metrale/metralectl), whose `recipes/` the
-build reads the model list from, and of
 [metrale-inference](https://github.com/Metrale/metrale-inference),
-the engine, whose benchmark records, ladder and changelog the pages print. The root
+the engine, whose recipes (the model list), benchmark records, ladder and
+changelog the pages print, and of
+[metralectl](https://github.com/Metrale/metralectl), the launcher, whose README
+and installers the pages restate and serve. The root
 [README](../README.md) has the commands; `engine.ref` names the engine commit CI
 builds against.
 
@@ -35,8 +36,8 @@ A GitHub login is optional. With `GH_TOKEN=$(gh auth token)` the build refreshes
 the star history. Without it the history falls back to the committed file and
 the build says so without failing.
 
-On Windows use Git Bash, and give the variable a forward slash path
-(`/c/Users/you/metralectl/recipes`).
+On Windows use Git Bash, and give the variables forward slash paths
+(`/c/Users/you/metrale-inference`).
 
 ## Test it
 

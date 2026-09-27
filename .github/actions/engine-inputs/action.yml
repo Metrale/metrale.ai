@@ -1,15 +1,16 @@
 # What a build reads from outside this repository, all public:
 #   the engine (ENGINE_SLUG in web-shared/sources.mjs), at site/engine.ref
 #                            benchmark records, gate descriptors and limits, the
-#                            ladders, the changelog and the baselines
-#                            (METRALE_ENGINE_ROOT)
-#   Metrale/metralectl       the recipe registry, the model list (METRALE_RECIPES_ROOT),
-#                            and the installers install.sh and install.ps1
+#                            ladders, the changelog, the baselines and the
+#                            recipes, which are the model list (METRALE_ENGINE_ROOT)
+#   the launcher (LAUNCHER_SLUG), at main
+#                            its README and the installers install.sh and
+#                            install.ps1 (METRALE_LAUNCHER_ROOT)
 # The variables are exported for the rest of the job, so `vite build` and the
 # browser suite (which builds on its own) see the same inputs.
 
 name: Engine inputs
-description: Check out the engine at its pin and the recipe registry, and export the METRALE_* variables.
+description: Check out the engine at its pin and the launcher, and export the METRALE_* variables.
 
 inputs:
   github-token:
@@ -25,15 +26,23 @@ runs:
       run: |
         slug=$(node --input-type=module -e "const m = await import('./web-shared/sources.mjs'); console.log(m.ENGINE_SLUG)")
         [ -n "$slug" ] || { echo "::error::web-shared/sources.mjs names no ENGINE_SLUG"; exit 1; }
+        launcher=$(node --input-type=module -e "const m = await import('./web-shared/sources.mjs'); console.log(m.LAUNCHER_SLUG)")
+        [ -n "$launcher" ] || { echo "::error::web-shared/sources.mjs names no LAUNCHER_SLUG"; exit 1; }
         echo "slug=$slug" >> "$GITHUB_OUTPUT"
+        echo "launcher=$launcher" >> "$GITHUB_OUTPUT"
         echo "ref=$(tr -d '[:space:]' < site/engine.ref)" >> "$GITHUB_OUTPUT"
 
-    - name: Checkout the recipe registry
+    - name: Checkout the launcher
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       with:
-        repository: Metrale/metralectl
-        path: .inputs/registry
+        repository: ${{ steps.engine.outputs.launcher }}
+        path: .inputs/launcher
         persist-credentials: false
+        sparse-checkout-cone-mode: false
+        sparse-checkout: |
+          /README.md
+          /scripts/install.sh
+          /scripts/install.ps1
 
     # Treeless, with history: the gate generator walks commit ancestry; the files
     # it reads are only the sparse paths below.
@@ -67,17 +76,18 @@ runs:
           /crates/bench/src/hardware/energy_sampler.rs
           /kernels/gb10/HARDWARE.toml
           /kernels/gb10/*/BENCH.toml
+          /recipes/
           /test_data/gate-records/
           /tests/baselines/
 
     # The install command the site prints is served from these two files, so both
     # are required: a missing one is a 404 for the headline instruction. They come
-    # from the registry checkout above, beside the command they install.
+    # from the launcher checkout above, beside the command they install.
     - name: Copy the installers
       shell: bash
       run: |
         for f in install.sh install.ps1; do
-          cp ".inputs/registry/scripts/$f" "site/static/$f"
+          cp ".inputs/launcher/scripts/$f" "site/static/$f"
           chmod 0755 "site/static/$f"
         done
 
@@ -87,14 +97,14 @@ runs:
         GH_TOKEN_IN: ${{ inputs.github-token }}
       run: |
         {
-          echo "METRALE_RECIPES_ROOT=$GITHUB_WORKSPACE/.inputs/registry/recipes"
           echo "METRALE_ENGINE_ROOT=$GITHUB_WORKSPACE/.inputs/engine"
+          echo "METRALE_LAUNCHER_ROOT=$GITHUB_WORKSPACE/.inputs/launcher"
           echo "METRALE_BASELINES_ROOT=$GITHUB_WORKSPACE/.inputs/engine/tests/baselines"
           echo "GH_TOKEN=$GH_TOKEN_IN"
         } >> "$GITHUB_ENV"
 
     # The front page prints `<command> run <flagship>`; this ties that name to a
-    # recipe that exists in the registry the build ships against.
+    # recipe that exists in the engine's recipes/ at the pinned commit.
     - name: The advertised recipe exists
       shell: bash
       working-directory: site

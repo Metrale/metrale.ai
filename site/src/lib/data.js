@@ -23,7 +23,7 @@
 // Public developer URL. adapter-static still writes engine.html; Cloudflare
 // Pages pretty-URLs /engine (200) and 308s /engine.html → /engine. Vite
 // preview serves /engine from that file too. Do not put .html in hrefs.
-import { CLI, ENGINE_REPO, REGISTRY_REPO } from '../../../web-shared/sources.mjs';
+import { CLI, ENGINE_REPO, LAUNCHER_REPO, RECIPES_URL } from '../../../web-shared/sources.mjs';
 export const ENGINE = '/engine';
 export const CONTROL = '/control';
 export { CLI };
@@ -32,7 +32,8 @@ export const discordUrl = 'https://discord.gg/RQcGakU2jW';
 export const blogUrl = 'https://blog.metrale.ai';
 export const redditUrl = 'https://www.reddit.com/r/LocalLLaMA/comments/1rmvxo3/';
 export const firstPostUrl = 'https://www.reddit.com/r/LocalLLaMA/comments/1rkefjw/solved_the_dgx_spark_102_stable_toks_qwen3535ba3b/';
-export const recipesUrl = REGISTRY_REPO;
+export const recipesUrl = RECIPES_URL;
+export const launcherUrl = LAUNCHER_REPO;
 export const guideUrl = `${ENGINE_REPO}/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md`;
 export const verifiedAnchor = `${ENGINE_REPO}/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md#8-what-verified-means-so-you-can-trust-an-image`;
 export const gateSrcUrl = `${ENGINE_REPO}/blob/main/tests/gate_results.py`;
@@ -398,7 +399,7 @@ export const contribute = {
     {
       tag: 'Models',
       title: 'Add or tune a recipe',
-      body: 'Recipes are the model source of truth. Add a model, tune a quantization, open a pull request against the registry.',
+      body: 'Recipes are the model source of truth. Add a model, tune a quantization, open a pull request against the engine recipes.',
       cta: 'The recipe registry',
       url: recipesUrl,
     },

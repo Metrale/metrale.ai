@@ -10,7 +10,7 @@ path. The zone and the Pages project are in the Metrale Cloudflare account.
 | `metrale-ai` | `metrale.ai` | `metrale-ai.pages.dev` |
 
 It is a **Direct Upload** project, not Pages' git integration. The build in
-`.github/actions/build-site` needs checkouts of the recipe registry and of the
+`.github/actions/build-site` needs checkouts of the launcher and of the
 engine at `site/engine.ref` (`.github/actions/engine-inputs`), and it carries gates a Pages-native build would bypass:
 the flagship-recipe check and the per-route `<title>` check. CI builds, CI
 uploads the gated output: `deploy.yml` on every merge to `main`, and `pr.yml`'s
