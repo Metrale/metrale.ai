@@ -24,7 +24,10 @@
 // was run, and a command reconstructed on the page from `params` would be a
 // command nobody ran. `perf_env`, `dirty_paths`, `dataset_fingerprint`, the
 // record `path`, its `.sig` signer and a `box_state` subset ride along for
-// the same panel (see src/lib/repro-steps.js).
+// the same panel (see src/lib/repro-steps.js), with `recipe_source`: where
+// the recipe a record names can be read — `record` when recipes/ at the
+// record's own commit has it, `generated` when only the commit this is
+// generated from does, null when neither has it.
 //
 // Regenerate with:   node site/scripts/gen-gates.mjs
 // No third-party deps: Node builtins + `git` via child_process.
@@ -39,6 +42,7 @@ import { assignTrendPredecessors } from '../src/lib/gate-lineage.js';
 import { declaredLimitsOf, mergeDeclaredLimits, parseToml } from './lib/bench-toml.mjs';
 import { foldLedger } from './lib/limit-ledger.mjs';
 import { engineRoot } from './lib/engine-root.mjs';
+import { RECIPES_DIR } from '../../web-shared/sources.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const REPO = engineRoot();
@@ -117,6 +121,25 @@ function gitIsAncestor(older, newer) {
 
 function gitCommitKnown(sha) {
   return Boolean(resolveCommit(sha));
+}
+
+// A recipe id is a path under recipes/ without `.yaml`; anything else is not
+// looked up (the git path argument is never built from an unchecked string).
+const RECIPE_ID = /^[\w.-]+(?:\/[\w.-]+)*$/;
+const recipeAtCache = new Map();
+function recipeAt(commit, file) {
+  if (!commit) return false;
+  const key = `${commit}:${file}`;
+  if (!recipeAtCache.has(key)) recipeAtCache.set(key, gitSoft(['ls-tree', '--name-only', commit, '--', file]) === file);
+  return recipeAtCache.get(key);
+}
+function recipeSource(rec, head) {
+  const id = rec.served_by;
+  if (typeof id !== 'string' || !RECIPE_ID.test(id) || id.split('/').some((p) => p === '..' || p === '.')) return null;
+  const file = `${RECIPES_DIR}/${id}.yaml`;
+  if (recipeAt(resolveCommit(rec.git_sha), file)) return 'record';
+  if (recipeAt(head, file)) return 'generated';
+  return null;
 }
 
 // --- registered suite from the descriptor SSOT -------------------------------
@@ -405,6 +428,7 @@ for (const b of Object.values(benchmarks)) {
   assignTrendPredecessors(b.records, gitIsAncestor);
   for (const rec of b.records) {
     rec.generated_ancestry = !gitCommitKnown(rec.git_sha) ? 'unknown' : gitIsAncestor(rec.git_sha, generatedHead) ? 'yes' : 'no';
+    rec.recipe_source = recipeSource(rec, generatedHead);
   }
 }
 

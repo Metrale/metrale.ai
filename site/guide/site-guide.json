@@ -1,6 +1,6 @@
 {
- "revision": 8,
- "date": "2026-09-26",
+ "revision": 9,
+ "date": "2026-09-27",
  "changes": [
   {
    "rev": 1,
@@ -129,6 +129,15 @@
    "base": "b6ceea9da",
    "note": "Pricing says contact us for now: the tiers carry no numbers, the market anchors and the contract table are gone, and the payback model's license is the visitor's own quote, so the front page and the platform page show modeled savings before the license instead of a payback period.",
    "touched": []
+  },
+  {
+   "rev": 9,
+   "date": "2026-09-27",
+   "base": "8a7bba03d",
+   "note": "Recipes link to the engine's recipes/; the launcher README link and sameAs name the launcher",
+   "touched": [
+    "links.recipes"
+   ]
   }
  ],
  "facts": [
@@ -951,38 +960,19 @@
   },
   {
    "key": "links.recipes",
-   "value": "https://github.com/Metrale/metralectl",
-   "rev": 1,
-   "date": "2026-09-24",
+   "value": "https://github.com/Metrale/metrale-inference/tree/main/recipes",
+   "rev": 2,
+   "date": "2026-09-27",
+   "was": [
+    {
+     "value": "https://github.com/Metrale/metralectl",
+     "until": "2026-09-27"
+    }
+   ],
    "used": [
-    "/benchmarks",
     "/company",
-    "/company/careers",
-    "/contact",
-    "/control",
-    "/demo",
-    "/diligence",
     "/engine",
-    "/",
-    "/labs",
-    "/platform",
-    "/platform/control",
-    "/platform/deployment",
-    "/platform/economics",
-    "/platform/engine",
-    "/platform/hardware",
-    "/platform/security",
-    "/pricing",
-    "/resources",
-    "/resources/contributors",
-    "/resources/events",
-    "/resources/updates",
-    "/solutions",
-    "/solutions/neoclouds",
-    "/solutions/smb-edge",
-    "/trust",
-    "/waitlist",
-    "/why-metrale"
+    "/platform/hardware"
    ]
   },
   {
@@ -3128,8 +3118,8 @@
      "button": false
     },
     {
-     "text": "github.com/Metrale/metralectl",
-     "href": "https://github.com/Metrale/metralectl",
+     "text": "github.com/Metrale/metrale-inference/tree/main/recipes",
+     "href": "https://github.com/Metrale/metrale-inference/tree/main/recipes",
      "kind": "out",
      "button": false
     },
@@ -3516,6 +3506,7 @@
       "guideUrl",
       "hero",
       "issuesUrl",
+      "launcherUrl",
       "mission",
       "models",
       "nav",
@@ -5295,7 +5286,7 @@
   "https://github.com/Metrale/metrale-inference/tree/main/kernels/strix": [
    "/"
   ],
-  "https://github.com/Metrale/metralectl": [
+  "https://github.com/Metrale/metrale-inference/tree/main/recipes": [
    "/company"
   ],
   "https://github.com/ggml-org/llama.cpp/pull/18680": [

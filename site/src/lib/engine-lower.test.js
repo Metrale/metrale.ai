@@ -7,12 +7,11 @@
 // page's copy could drift back to em dashes and colons with every test green.
 // And the install and run instructions restate another repository's README
 // and installer. The note above `flagshipRecipe` says a constant cannot span
-// repositories, but a test can read the registry checkout the build already
-// needs: METRALE_RECIPES_ROOT is its recipes/ directory, so its parent is the
-// registry, the same resolution scripts/check-flagship.mjs uses.
+// repositories, but a test can read the launcher checkout the build already
+// makes for the installers it serves: METRALE_LAUNCHER_ROOT.
 import { expect, test } from 'bun:test';
 import { existsSync, readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import {
   CLI,
   community,
@@ -81,21 +80,18 @@ test('every hardware name is written in full', () => {
   for (const [path, s] of prose) expect(s, `${path}: "${s}"`).not.toMatch(BOX_PLURAL);
 });
 
-// --- lockstep with the registry -------------------------------------------
+// --- lockstep with the launcher -------------------------------------------
 
-const RECIPES = process.env.METRALE_RECIPES_ROOT;
-const registry = RECIPES ? dirname(resolve(RECIPES)) : null;
-const registryFile = (rel) => {
-  if (!registry)
-    throw new Error('METRALE_RECIPES_ROOT is not set. Point it at the recipes/ directory of a registry checkout (site/AGENTS.md).');
-  const path = resolve(registry, rel);
-  if (!existsSync(path))
-    throw new Error(`${path} is missing. METRALE_RECIPES_ROOT must be the recipes/ directory of a full registry checkout.`);
+const LAUNCHER = process.env.METRALE_LAUNCHER_ROOT;
+const launcherFile = (rel) => {
+  if (!LAUNCHER) throw new Error('METRALE_LAUNCHER_ROOT is not set. Point it at a checkout of the launcher (site/AGENTS.md).');
+  const path = resolve(LAUNCHER, rel);
+  if (!existsSync(path)) throw new Error(`${path} is missing. METRALE_LAUNCHER_ROOT must be a checkout of the launcher.`);
   return readFileSync(path, 'utf8');
 };
 
 test('every command the page hands out is one the launcher README documents', () => {
-  const readme = registryFile('README.md');
+  const readme = launcherFile('README.md');
   const documented = [runCommand, quickInstall, runCommandRaw, `${CLI} doctor`, `${CLI} run ${flagshipRecipe} --print`, `uvx ${CLI} list`];
   for (const cmd of documented) expect(readme, cmd).toContain(cmd);
   for (const [path, cmd] of commands) expect(readme, `${path}: ${cmd}`).toContain(cmd);
@@ -105,7 +101,7 @@ test('every command the page hands out is one the launcher README documents', ()
 });
 
 test('what the page says the installer does, the installer does', () => {
-  const sh = registryFile('scripts/install.sh');
+  const sh = launcherFile('scripts/install.sh');
   const claims = getRunning.installer.items.join(' ') + ' ' + getRunning.steps[0].note;
   expect(claims).toContain('SHA256SUMS');
   expect(sh).toContain('SHA256SUMS');
@@ -116,7 +112,7 @@ test('what the page says the installer does, the installer does', () => {
   expect(sh).toContain('--uninstall');
   expect(claims).toContain('--uninstall');
   expect(sh).toMatch(/agent install/);
-  const ps = registryFile('scripts/install.ps1');
+  const ps = launcherFile('scripts/install.ps1');
   expect(ps).toMatch(/LOCALAPPDATA/);
   expect(claims).toContain(`%LOCALAPPDATA%\\Programs\\${CLI}`);
 });

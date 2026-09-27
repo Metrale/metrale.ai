@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
 
 // Regenerate src/lib/*.generated.json from their SSOTs on every build (and dev
-// server start). Env (METRALE_RECIPES_ROOT / METRALE_BASELINES_ROOT / GH_TOKEN) is
+// server start). Env (METRALE_ENGINE_ROOT / METRALE_BASELINES_ROOT / GH_TOKEN) is
 // passed through so CI and local hosts resolve their sources identically.
 function metraleGenerators() {
   const run = (script) =>

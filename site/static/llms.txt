@@ -158,7 +158,7 @@ model that has no recipe. Run any of them with `metralectl run <id>`.
 ## Links
 
 - Engine repo: https://github.com/Metrale/metrale-inference
-- Recipes (model SSOT): https://github.com/Metrale/metralectl
+- Recipes (model SSOT): https://github.com/Metrale/metrale-inference/tree/main/recipes
 - Deployment guide: https://github.com/Metrale/metrale-inference/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md
 - Benchmark results: https://github.com/Metrale/metrale-inference/blob/main/bench/ladder38/RESULTS.md
 - Discord: https://discord.gg/RQcGakU2jW

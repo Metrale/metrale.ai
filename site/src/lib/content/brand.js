@@ -15,7 +15,7 @@
 
 // The domain is unchanged by the rebrand (see PR #1101). When DNS moves, this
 // is the one constant to change. Everything absolute is built from it.
-import { ENGINE_REPO, REGISTRY_REPO } from '../../../../web-shared/sources.mjs';
+import { ENGINE_REPO, RECIPES_URL } from '../../../../web-shared/sources.mjs';
 export const SITE = 'https://metrale.ai';
 
 export const company = {
@@ -45,7 +45,7 @@ const localBlog = (import.meta.env ?? {}).VITE_BLOG_ORIGIN;
 
 export const links = {
   github: ENGINE_REPO,
-  recipes: REGISTRY_REPO,
+  recipes: RECIPES_URL,
   discord: 'https://discord.gg/RQcGakU2jW',
   blog: localBlog || 'https://blog.metrale.ai',
   docs: 'https://docs.metrale.ai',

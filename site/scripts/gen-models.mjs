@@ -2,9 +2,9 @@
 // =============================================================================
 // gen-models.mjs — generate src/lib/models.generated.json from the recipe SSOT
 // -----------------------------------------------------------------------------
-// SSOT: the recipe registry, https://github.com/Metrale/metralectl
-//   (a checkout's recipes/ directory, METRALE_RECIPES_ROOT — that public repo is
-//    the single source of truth for every supported model and its run command).
+// SSOT: the engine's recipes/ (RECIPES_URL in web-shared/sources.mjs), read
+//   from the engine checkout at site/engine.ref (METRALE_ENGINE_ROOT) — the
+//   single source of truth for every supported model and its run command.
 //
 // Regenerate with:   node site/scripts/gen-models.mjs
 //
@@ -21,13 +21,14 @@
 // plus a `description: |` literal block, and a `defaults:` scalar block.
 // =============================================================================
 
-import { CLI, REGISTRY_REPO } from '../../web-shared/sources.mjs';
+import { CLI, RECIPES_URL } from '../../web-shared/sources.mjs';
+import { recipesRoot } from './lib/engine-root.mjs';
 import { readdirSync, statSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname, basename, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const RECIPES_ROOT = process.env.METRALE_RECIPES_ROOT || '/workspace/metralectl/recipes';
-const SSOT_URL = REGISTRY_REPO;
+const RECIPES_ROOT = recipesRoot();
+const SSOT_URL = RECIPES_URL;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT = resolve(here, '..', 'src', 'lib', 'models.generated.json');

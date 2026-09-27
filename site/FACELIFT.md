@@ -254,8 +254,9 @@ else spells it: the reproduction steps, the record links and the contributor
 list all read it from there.
 
 The command people install is `metralectl` (`CLI` in `web-shared/sources.mjs`),
-and `install.sh` and `install.ps1` are copied in at build from its registry,
-Metrale/metralectl.
+and `install.sh` and `install.ps1` are copied in at build from its repository,
+Metrale/metralectl (`LAUNCHER_SLUG`). The recipes it runs are the engine's
+`recipes/`, read from the engine checkout at `site/engine.ref`.
 
 The artwork: the kit is a generator (`assets/brand/gen.js` with its geometry and
 letter outlines), and the site draws every lockup from that geometry through

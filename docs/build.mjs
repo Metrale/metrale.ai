@@ -8,11 +8,13 @@
 // pins (METRALE_ENGINE_ROOT, the same variable the site's generators read),
 // copies the book into docs/.book and makes two changes:
 //
-//   1. the links: the book links its tokens, its fonts and their licences to
-//      files outside book/ (web-shared/ and site/static/fonts/ in the engine's
-//      repository), which a checkout of book/ alone does not have. This
-//      repository keeps the same files at the same paths, so each link is
-//      replaced by the file it names, from here
+//   1. the links: a book that links its tokens, its fonts or their licences
+//      to files outside book/ (web-shared/ and site/static/fonts/ in the
+//      engine's repository) needs files a checkout of book/ alone does not
+//      have. This repository keeps the same files at the same paths, so each
+//      link is replaced by the file it names, from here. A book that keeps its
+//      own copies links nothing, and that is fine: docs/check.mjs still proves
+//      the tokens and the fonts ship, and are files rather than stubs
 //   2. the hosts: docs/hosts.mjs moves the engine team's hosts to the company's,
 //      so the canonical addresses and llms.txt name docs.metrale.ai
 //
@@ -92,7 +94,9 @@ for (const file of walk(join(WORK, 'theme'))) {
   copyFileSync(ours, file);
   links++;
 }
-if (!links) die('the book links nothing outside book/; look at theme/ before building, the tokens and the fonts may have moved');
+// Zero links is a book that carries its own tokens and fonts. Whether they
+// arrived is docs/check.mjs's question (tokens, fonts, no stubs), asked of the
+// build, so a count of links has nothing to add here.
 
 // ---- 2. the hosts ------------------------------------------------------------------------
 let moved = 0;
