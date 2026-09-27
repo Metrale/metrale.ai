@@ -7,6 +7,7 @@
   // the release-gate receipt. Every figure is read from generated JSON.
   import { verified, verifiedAnchor, gateSrcUrl, issuesUrl } from '$lib/data.js';
   import bench from '$lib/benchmarks.generated.json';
+  import gates from '$lib/gates.generated.json';
   import ladder from '$lib/ladder.generated.json';
   import counts from '$lib/live.generated.json';
   import { headroom, signed } from '$lib/ladder.js';
@@ -20,7 +21,7 @@
   // Derived from the committed ladder, so regenerating it rewrites this
   // sentence rather than leaving prose asserting a gap that closed.
   const top = headroom(ladder.rows);
-  const stamp = fill(verified.stamp, { sha: bench.generated_sha, date: bench.generated_date });
+  const stamp = fill(verified.stamp, { sha: gates.generated_sha, date: gates.generated_date });
   const signedBody = fill(verified.trust.signed.body, {
     signed: counts.gates.signed,
     records: counts.gates.records,

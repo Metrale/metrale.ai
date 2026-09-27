@@ -24,7 +24,9 @@ const rows = [...ladder.rows].sort((a, b) => a.c - b.c);
 const top = rows[rows.length - 1];
 const bestOf = (r) => r.baselines.find((b) => b.id === r.best_baseline_id)?.tok_s ?? 0;
 
-export const stamp = `engine ${bench.generated_sha} · ${ladder.generated_utc.slice(0, 10)}`;
+// The engine commit the site is pinned to (site/engine.ref), not the commit that last changed a
+// data file: gates.generated.json is regenerated from the pinned checkout on every build.
+export const stamp = `engine ${gates.generated_sha} · ${gates.generated_date}`;
 
 export const claim = {
   engine: subject.engine,
