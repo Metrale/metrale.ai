@@ -143,15 +143,18 @@ tests in `src/lib/content/site.test.js` fail until all four agree.
 `fill()` substitutes. When the ladder is regenerated the front page follows.
 
 **Every input to the payback model says what it is.** `MEASURED` comes from the
-published ladder. `PROPOSED` is a price we have proposed and can change. `USER`
-is the visitor's to edit. The 70% claim on the front page is the second
-scenario with its defaults, and the page says "modeled". The third scenario
+published ladder. `USER` is the visitor's to edit, the license included: no
+price is published, so the license is the visitor's quote and starts empty,
+and the fleet scenario shows a payback period once it is filled. The 70% claim
+on the front page is the second scenario with its defaults, and the page says
+"modeled". The third scenario
 counts in tokens per joule. Its throughput is `MEASURED` and its draw is `USER`,
 because the ladder publishes no power, and it prices energy only, so it makes
 no payback claim.
 
-**Prices are proposed.** The pricing page says so on every tier. They have not
-been approved as a public list.
+**No prices for now.** Since 2026-09-26 the pricing page says "Contact us"
+where the numbers were, and the guide sends a visitor who asks to the contact
+page. See open question 1 for what comes back when they return.
 
 **No customer logos.** The logo wall shows where the team worked before, under
 a line that says so, with a note that these are not customers or endorsements.
@@ -365,7 +368,17 @@ gate green.
 
 ## Open questions for the team
 
-1. **Prices.** Are the proposed list prices approved to be public?
+1. **Prices.** Held back on 2026-09-26: the tiers say "Contact us" until the
+   owners approve a public list. The proposed sheet is in git history, before
+   the commit that took it out. When prices return, these move together: the
+   tiers, the market anchors and the contract table in `pricing.js` (and the
+   section of `/pricing` that showed the last two), the license defaults in
+   `economics.js` and their labels in `PaybackCalculator.svelte`, the front
+   page's savings tile (`home.js`) and the platform stat (`platform.js`), which
+   showed the payback period, the guide's price rule (`prompt.js`) and its tool
+   evidence (`tools.js`), the FAQ, `gen-llms.mjs` with `static/llms.txt`, and
+   the tests that hold them (`economics.test.js`, `prime-worker.test.js`, the
+   pricing tests in `e2e/marketing.spec.js`).
 2. **Mail.** Every contact door but security is a role mailbox at metrale.com
    (item 29), and metrale.com has no mail records at all, so each of them
    bounces until the company sets its mail up. The security address,

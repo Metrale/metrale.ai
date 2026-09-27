@@ -12,7 +12,7 @@ What one answer does, in order:
    rate, and the day is under its budget.
 2. Builds the prompt (`src/prompt.js`): who the visitor said they are, the page
    they are on, the map of the site, and the rules: cite, never invent a number,
-   label measured against modeled against proposed, no fundraising terms
+   label measured against modeled, name no price, no fundraising terms
    without the partner tier.
 3. Streams the model (`src/xai.js`, xAI's chat completions, grok-4.7 by default).
    Its thinking streams to the page as it happens.

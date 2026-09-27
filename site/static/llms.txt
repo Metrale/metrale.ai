@@ -42,12 +42,12 @@ The legal entity is Metrale Corp.
 
 ## Pricing
 
-Proposed list prices, subject to contract. The pricing page carries the payback model.
+Prices are set with each customer for now: contact sales. The pricing page carries the payback model.
 
-- Open source engine: $0 MIT OR Apache-2.0
-- Workstation and edge: $50 per box per month, billed annually
-- Enterprise: $3,000 per GPU per year, list
-- Proof of value: Fixed fee four weeks, credited on conversion
+- Open source engine: Free (MIT OR Apache-2.0)
+- Workstation and edge: Contact us (priced per box, billed annually)
+- Enterprise: Contact us (priced per GPU per year)
+- Proof of value: Fixed fee (four weeks, credited on conversion)
 
 ## Metrale Engine
 

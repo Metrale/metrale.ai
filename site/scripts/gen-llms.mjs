@@ -82,9 +82,9 @@ push(
 for (const pg of pages.filter((x) => !x.noindex)) {
   push(`- [${pg.title}](${SITE}${pg.path === '/' ? '' : pg.path}): ${pg.description}`);
 }
-push('', '## Pricing', '', 'Proposed list prices, subject to contract. The pricing page carries the payback model.', '');
+push('', '## Pricing', '', 'Prices are set with each customer for now: contact sales. The pricing page carries the payback model.', '');
 for (const t of pricing.tiers) {
-  push(`- ${t.name}: ${t.price}${t.per ? ` ${t.per}` : ''}`);
+  push(`- ${t.name}: ${t.price}${t.per ? ` (${t.per})` : ''}`);
 }
 push(
   '',

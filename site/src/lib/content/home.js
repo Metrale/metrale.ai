@@ -179,8 +179,8 @@ export const value = {
     {
       key: 'savings',
       label: 'Higher savings',
-      value: '{payback}',
-      body: 'to pay back the license on a 256 GPU fleet at a 1.20x uplift. Every month after is upside. Edit the inputs yourself.',
+      value: '{fleetSavings}',
+      body: 'a year in GPUs and power freed on a 256 GPU fleet at a 1.20x uplift, before the license. Edit the inputs yourself.',
       href: `${routes.pricing}#payback`,
       cta: 'Open the model',
     },

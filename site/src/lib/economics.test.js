@@ -29,13 +29,23 @@ test('an uplift of 1.0 frees nothing and never pays back', () => {
   expect(r.paybackMonths).toBeNull();
 });
 
-test('the fleet defaults pay back inside a year with a positive three year net', () => {
+test('without a license quote the fleet model names no payback period', () => {
   const r = fleetModel();
-  expect(r.paybackMonths).toBeGreaterThan(0);
-  expect(r.paybackMonths).toBeLessThan(12);
-  expect(r.threeYearNet).toBeGreaterThan(0);
+  expect(r.quoted).toBe(false);
+  expect(r.paybackMonths).toBeNull();
+  expect(r.license).toBe(0);
+  expect(r.grossSavings).toBeGreaterThan(0);
   // 256 GPUs at 1.2x frees 256 * (1 - 1/1.2) = 42.67 GPUs.
   expect(r.freedGpus).toBeCloseTo(42.7, 1);
+});
+
+test('with a quote, payback is the license over the gross savings, in months', () => {
+  const gross = fleetModel().grossSavings;
+  const r = fleetModel({ licensePerGpuYear: 1000 });
+  expect(r.quoted).toBe(true);
+  expect(r.license).toBe(256 * 1000);
+  expect(r.paybackMonths).toBeCloseTo(((256 * 1000) / gross) * 12, 1);
+  expect(r.net).toBe(gross - 256 * 1000);
 });
 
 test('the fleet defaults are the ones the copy describes', () => {

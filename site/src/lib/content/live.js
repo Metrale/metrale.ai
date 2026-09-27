@@ -12,7 +12,7 @@ import ladder from '$lib/ladder.generated.json';
 import counts from '$lib/live.generated.json';
 import stars from '$lib/stars.generated.json';
 import { benchmarkHighlight } from '$lib/marketing.js';
-import { fleetModel, apiModel, paybackLabel } from '$lib/economics.js';
+import { fleetModel, apiModel } from '$lib/economics.js';
 import { company } from './brand.js';
 
 const highlight = benchmarkHighlight(ladder);
@@ -45,7 +45,13 @@ export const live = {
   gatePass: String(gatePass),
   recipes: String(recipeCount),
   stars: String(stars.count),
-  payback: paybackLabel(fleet.paybackMonths),
+  // Before the license: no price is published, so the defaults carry none.
+  fleetSavings: new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(fleet.grossSavings),
   apiSavings: `${Math.round(api.savingsPct)}%`,
   stamp: `${ladder.series?.[0]?.build_public ?? ''} · ${ladder.generated_utc?.slice(0, 10) ?? ''}`.trim(),
 };

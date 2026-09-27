@@ -1,5 +1,5 @@
 {
- "revision": 7,
+ "revision": 8,
  "date": "2026-09-26",
  "changes": [
   {
@@ -121,6 +121,14 @@
     "links.changelog",
     "links.issues"
    ]
+  },
+  {
+   "rev": 8,
+   "date": "2026-09-26",
+   "pr": 33,
+   "base": "b6ceea9da",
+   "note": "Pricing says contact us for now: the tiers carry no numbers, the market anchors and the contract table are gone, and the payback model's license is the visitor's own quote, so the front page and the platform page show modeled savings before the license instead of a payback period.",
+   "touched": []
   }
  ],
  "facts": [
@@ -4427,8 +4435,6 @@
     {
      "file": "src/lib/content/pricing.js",
      "exports": [
-      "anchors",
-      "contractEconomics",
       "metering",
       "paybackCopy",
       "pricingCta",
@@ -4464,6 +4470,12 @@
      "button": true
     },
     {
+     "text": "Contact us",
+     "href": "/contact",
+     "kind": "page",
+     "button": false
+    },
+    {
      "text": "Ask the rest in a working session",
      "href": "/demo#book",
      "kind": "page",
@@ -4477,7 +4489,7 @@
     },
     {
      "text": "Email sales",
-     "href": "mailto:sales@metrale.com?subject=Metrale%20pricing%20sheet",
+     "href": "mailto:sales@metrale.com?subject=Metrale%20pricing",
      "kind": "mail",
      "button": true
     }

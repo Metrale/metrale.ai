@@ -1,23 +1,24 @@
 // =============================================================================
-// /pricing. Transparent on purpose: the anchors are public list prices, the
-// Metrale numbers are the proposed sheet from the September 2026 deck, and the
-// payback model shows its inputs. Everything marked PROPOSED is the team's to
-// change here and nowhere else.
+// /pricing. How Metrale is priced, without the numbers for now: since
+// 2026-09-26 prices are set with each customer, so the tiers say "Contact us"
+// and the payback model's license is the visitor's own quote. The proposed
+// sheet, the market anchors and the contract table are in git history, before
+// the commit that took them out, for the day they return.
 // =============================================================================
 import { routes, contacts } from './brand.js';
 
 export const pricingHero = {
   eyebrow: 'Pricing',
   title: 'Priced against productive GPU capacity, not seats.',
-  lede: 'Enterprise AI infrastructure software already prices per GPU per year. Metrale sits inside that range, ships with the control plane and the economics layer, and shows its payback on this page. Proposed list prices, September 2026.',
-  stamp: 'Proposed sheet · September 2026',
+  lede: 'Per GPU per year for a fleet, per box for a workstation, with the control plane and the economics layer included. Prices are set with you for now: tell us the fleet and we price it, and the payback model below shows what it is worth.',
+  stamp: 'Contact us for pricing',
 };
 
 export const tiers = [
   {
     key: 'community',
     name: 'Open source engine',
-    price: '$0',
+    price: 'Free',
     per: 'MIT OR Apache-2.0',
     badge: 'Available now',
     blurb: 'The engine and every recipe, free. For developers, labs and anyone running open models on hardware they own.',
@@ -34,8 +35,8 @@ export const tiers = [
   {
     key: 'workstation',
     name: 'Workstation and edge',
-    price: '$50',
-    per: 'per box per month, billed annually',
+    price: 'Contact us',
+    per: 'priced per box, billed annually',
     blurb:
       'A DGX Spark or Strix Halo class box serving an office, a branch or a field team. Signed update channel, managed from the console.',
     includes: [
@@ -46,15 +47,13 @@ export const tiers = [
     ],
     cta: { text: 'Price a fleet of boxes', href: routes.contact },
     tone: 'plain',
-    proposed: true,
   },
   {
     key: 'enterprise',
     name: 'Enterprise',
-    price: '$3,000',
-    per: 'per GPU per year, list',
-    blurb:
-      'The full platform for GPU fleets. Realized pricing at fleet scale runs $1,800 to $2,400 per GPU per year. Support and forward deployed engineering priced separately.',
+    price: 'Contact us',
+    per: 'priced per GPU per year',
+    blurb: 'The full platform for GPU fleets. Support and forward deployed engineering are priced separately.',
     includes: [
       'Metrale Engine, signed stable and LTS channels',
       'Metrale Control, rollouts, routing, policy, repair',
@@ -64,7 +63,6 @@ export const tiers = [
     ],
     cta: { text: 'Book a demo', href: routes.demoForm },
     tone: 'accent',
-    proposed: true,
     featured: true,
   },
   {
@@ -85,35 +83,6 @@ export const tiers = [
     tone: 'plain',
   },
 ];
-
-export const anchors = {
-  eyebrow: 'Market anchor',
-  title: 'Where it sits.',
-  body: 'Established enterprise AI infrastructure software already prices against GPU capacity. Metrale lists inside the range and includes the layers the others sell separately.',
-  rows: [
-    { name: 'Red Hat AI Inference Server', price: '~$2,500', per: 'per accelerator per year', note: 'Hardened vLLM, published list price' },
-    { name: 'NVIDIA AI Enterprise', price: '$4,500', per: 'per GPU per year', note: 'Broad platform, OEM backed' },
-    {
-      name: 'Metrale Enterprise',
-      price: '~$3,000',
-      per: 'per GPU per year, list',
-      note: 'Engine, control plane and economics, realized $1,800 to $2,400 at scale',
-      accent: true,
-    },
-  ],
-  foot: 'Third party prices are public list prices at the time of writing and belong to their owners. Metrale prices are proposed and subject to contract.',
-};
-
-export const contractEconomics = {
-  eyebrow: 'Illustrative contract economics',
-  title: 'What a fleet costs to license.',
-  body: 'At realized fleet scale pricing. Illustrative, not a forecast.',
-  rows: [
-    { gpus: '64 GPUs', acv: '≈ $175K' },
-    { gpus: '256 GPUs', acv: '≈ $550K' },
-    { gpus: '1,000 GPUs', acv: '≈ $2.0M' },
-  ],
-};
 
 // What the platform meters, from the platform architecture brief of September
 // 2026 (internal) and the founders' notes the same day. Proposed, and labelled so.
@@ -144,10 +113,11 @@ export const metering = {
 export const paybackCopy = {
   eyebrow: 'Payback',
   title: 'Find your payback period.',
-  lede: 'If a thing costs three thousand dollars and makes you a thousand a month, it pays for itself in three months, and everything after is upside. That is the number to walk to the CFO with. Three scenarios, every input editable, evidence class on every field.',
+  lede: 'Payback is what a thing costs over what it saves each month, and everything after is upside. That is the number to walk to the CFO with. Three scenarios, every input editable, evidence class on every field. The license is priced with you, so its field starts empty: put your quote in to see the payback.',
+  noQuote: 'Put your license quote in to see the payback period in months.',
   fleet: {
     title: 'Get more out of the fleet you own',
-    body: 'The uplift frees GPUs. Freed GPUs are deferred purchases or rentals plus the power they burned. The license is what the uplift costs.',
+    body: 'The uplift frees GPUs. Freed GPUs are deferred purchases or rentals plus the power they burned. The license, priced with you, is what the uplift costs.',
     note: 'Uplift defaults to 1.20x, below the measured ratio on the GB10 ladder at C=128, because a datacenter part is not a DGX Spark until we publish the receipt.',
   },
   api: {
@@ -174,7 +144,6 @@ export const paybackCopy = {
   },
   classes: {
     MEASURED: 'From ladder.generated.json, the published concurrency ladder',
-    PROPOSED: 'A proposed list price from this page, the team can change it',
     USER: 'Yours to edit, the model recomputes as you type',
   },
   disclaimer:
@@ -185,8 +154,8 @@ export const pricingFaqTag = 'pricing';
 
 export const pricingCta = {
   eyebrow: 'Next step',
-  title: 'Get the sheet, or get the receipt.',
-  body: `Email ${contacts.sales} for the full price sheet, or book a working session and we run the ladder on your workload.`,
+  title: 'Get a price, or get the receipt.',
+  body: `Email ${contacts.sales} and we price your fleet, or book a working session and we run the ladder on your workload.`,
   primary: { text: 'Book a demo', href: routes.demoForm },
-  secondary: { text: 'Email sales', href: `mailto:${contacts.sales}?subject=Metrale%20pricing%20sheet` },
+  secondary: { text: 'Email sales', href: `mailto:${contacts.sales}?subject=Metrale%20pricing` },
 };
