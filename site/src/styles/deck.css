@@ -1,0 +1,207 @@
+/* =============================================================================
+   The verification deck's slide vocabulary.
+
+   Shared by every act at /diligence and defined once: a card, a two-column
+   split, a stat row, a table, a tagged list, a link list, and the one rule
+   that keeps a wide thing inside a slide — `.dk-scroll`, an overflow-x box
+   with min-width 0 so it can shrink inside a grid cell. Everything reads the
+   shared tokens, so light and dark come for free. The deck's own chrome and
+   each act's one-off layout stay scoped in their components; this file holds
+   what more than one act composes.
+   ========================================================================== */
+.dk .dk-scroll {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.dk .dk-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem 2rem;
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .dk .dk-cols {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+  .dk .dk-cols-even {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+.dk .dk-card {
+  min-width: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--sx);
+  border-radius: 10px;
+  padding: 1rem 1.15rem;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 18px 48px -24px rgba(0, 0, 0, 0.35);
+}
+.dk .dk-card-warn {
+  border-top-color: var(--amber);
+}
+.dk .dk-card-h {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sx-text);
+  margin-bottom: 0.55rem;
+}
+.dk .dk-card-warn .dk-card-h {
+  color: var(--amber);
+}
+.dk .dk-card p {
+  color: var(--t2);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.dk .dk-card p + p {
+  margin-top: 0.6rem;
+}
+.dk .dk-prose {
+  color: var(--t2);
+  line-height: 1.65;
+  max-width: 62ch;
+}
+.dk .dk-prose + .dk-prose {
+  margin-top: 0.8rem;
+}
+.dk .dk-prose strong {
+  color: var(--t1);
+  font-weight: 600;
+}
+.dk .dk-note {
+  margin-top: 0.9rem;
+  color: var(--t3);
+  font-size: 0.84rem;
+  line-height: 1.55;
+  max-width: 80ch;
+}
+.dk .dk-code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  color: var(--t1);
+  overflow-wrap: anywhere;
+}
+.dk .dk-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+}
+.dk .dk-stats > div {
+  min-width: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  display: grid;
+  gap: 0.25rem;
+}
+.dk .dk-stats b {
+  font-family: var(--font-mono);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--sx-text);
+  line-height: 1;
+}
+.dk .dk-stats span {
+  font-size: 0.78rem;
+  color: var(--t3);
+  line-height: 1.4;
+}
+.dk .dk-table {
+  width: 100%;
+  min-width: 26rem;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+.dk .dk-table th,
+.dk .dk-table td {
+  text-align: right;
+  padding: 0.42rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+.dk .dk-table th:first-child,
+.dk .dk-table td:first-child {
+  text-align: left;
+  padding-left: 0;
+}
+.dk .dk-table th {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--t3);
+}
+.dk .dk-table td.mono,
+.dk .dk-table th.mono {
+  font-variant-numeric: tabular-nums;
+}
+.dk .dk-list {
+  list-style: none;
+  display: grid;
+  gap: 0;
+}
+.dk .dk-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.15rem 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--t2);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+@media (min-width: 720px) {
+  .dk .dk-list li {
+    grid-template-columns: 11ch minmax(0, 1fr);
+    align-items: baseline;
+  }
+}
+.dk .dk-list .dk-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sx-text);
+}
+.dk .dk-links {
+  list-style: none;
+  display: grid;
+  gap: 0;
+}
+.dk .dk-links li {
+  display: grid;
+  grid-template-columns: 8ch minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.dk .dk-links li > span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--t3);
+}
+.dk .dk-links a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.dk .dk-links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

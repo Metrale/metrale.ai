@@ -8,13 +8,14 @@
   let { rows = [] } = $props();
 
   const glyph = { clear: '✓', open: '!', note: '·' };
+  const word = { clear: 'addressed', open: 'open', note: 'note' };
 </script>
 
 <ul class="au">
-  {#each rows as row, i}
-    <li class="au-row at" data-state={row.state} style="--n: {Math.floor(i / 4) + 1}">
+  {#each rows as row}
+    <li class="au-row" data-state={row.state}>
       <span class="au-g" aria-hidden="true">{glyph[row.state]}</span>
-      <span class="au-risk">{row.risk}</span>
+      <span class="au-risk">{row.risk}<span class="au-state mono">{word[row.state]}</span></span>
       <span class="au-ans">{row.answer}</span>
     </li>
   {/each}
@@ -25,33 +26,63 @@
     list-style: none;
     display: grid;
     gap: 0;
+    min-width: 0;
   }
   .au-row {
     display: grid;
-    grid-template-columns: 1.6em 22ch 1fr;
-    gap: 0.9em;
+    grid-template-columns: 1.4rem minmax(0, 1fr);
+    gap: 0.15rem 0.8rem;
     align-items: baseline;
-    padding: 0.3em 0;
+    padding: 0.5rem 0;
     border-bottom: 1px solid var(--border);
-    font-size: 0.78em;
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+  .au-ans {
+    grid-column: 2;
+    color: var(--t2);
+    overflow-wrap: anywhere;
+  }
+  @media (min-width: 900px) {
+    .au-row {
+      grid-template-columns: 1.4rem 24ch minmax(0, 1fr);
+    }
+    .au-ans {
+      grid-column: 3;
+    }
   }
   .au-g {
     font-weight: 700;
     text-align: center;
+    grid-row: span 2;
+  }
+  @media (min-width: 900px) {
+    .au-g {
+      grid-row: auto;
+    }
   }
   .au-row[data-state='clear'] .au-g {
-    color: var(--green);
+    color: var(--ch-green-text);
   }
   .au-row[data-state='open'] .au-g {
-    color: var(--amber);
+    color: var(--ch-gold-text);
   }
   .au-row[data-state='note'] .au-g {
     color: var(--t3);
   }
   .au-risk {
-    color: var(--t2);
-  }
-  .au-ans {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.15rem 0.5rem;
     color: var(--t1);
+    font-weight: 600;
+  }
+  .au-state {
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--t3);
   }
 </style>

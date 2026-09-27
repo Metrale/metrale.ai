@@ -214,6 +214,12 @@
 {/if}
 
 <style>
+  /* The bar's height, declared here and read by everything that must sit
+     under it (the developer pages' section bar, the verification deck), so
+     the header and its dependants cannot disagree. */
+  :global(:root) {
+    --nav-h: 68px;
+  }
   .av-header {
     /* 100 is the band the old nav used. Every modal on the developer pages sits
        at 110 or above and has to cover this bar, so do not raise it. */
@@ -230,7 +236,7 @@
     max-width: 1180px;
     margin: 0 auto;
     padding: 0 24px;
-    height: 68px;
+    height: var(--nav-h);
     display: flex;
     align-items: center;
     gap: 1.5rem;
@@ -517,7 +523,7 @@
   }
   .av-scrim {
     position: fixed;
-    inset: 68px 0 0;
+    inset: var(--nav-h) 0 0;
     z-index: 95;
     background: rgba(0, 0, 0, 0.35);
     border: 0;
@@ -540,15 +546,17 @@
     }
   }
   @media (max-width: 480px) {
+    :global(:root) {
+      --nav-h: 62px;
+    }
     .av-header-in {
       padding: 0 16px;
-      height: 62px;
     }
     .av-scrim {
-      top: 62px;
+      top: var(--nav-h);
     }
     .av-drawer {
-      max-height: calc(100dvh - 62px);
+      max-height: calc(100dvh - var(--nav-h));
     }
   }
 </style>
