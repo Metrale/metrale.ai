@@ -20,8 +20,11 @@
 //
 // Then mdBook builds it, the book's own scripts add llms.txt and the per-page
 // social metadata, and the icons, the card, the Pages headers and a version
-// stamp are copied in. docs/check.mjs proves the result before it ships.
+// stamp are copied in. The API reference, the rustdoc `cargo doc` wrote into the
+// same checkout's target/doc, goes under /api/ in place of the book's redirect
+// stub there. docs/check.mjs proves the result before it ships.
 //
+//   (cd <engine checkout> && METRALE_SKIP_BUILD=1 CUDARC_CUDA_VERSION=13000 cargo doc --workspace --no-deps)
 //   METRALE_ENGINE_ROOT=../<engine checkout> node docs/build.mjs   # needs mdbook on PATH
 //   MDBOOK=/path/to/mdbook node docs/build.mjs                           # or name the binary
 // =============================================================================
@@ -49,6 +52,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, '..');
 const ENGINE = resolve(process.env.METRALE_ENGINE_ROOT || join(repo, '..', ENGINE_SLUG.split('/')[1]));
 const BOOK = join(ENGINE, 'book');
+// Where cargo put the engine's rustdoc: its target directory, which CARGO_TARGET_DIR moves.
+const RUSTDOC = join(resolve(ENGINE, process.env.CARGO_TARGET_DIR || 'target'), 'doc');
 const WORK = join(here, '.book');
 const OUT = join(here, 'build');
 const MDBOOK = process.env.MDBOOK || 'mdbook';
@@ -58,6 +63,8 @@ const die = (msg) => {
   process.exit(1);
 };
 if (!existsSync(join(BOOK, 'book.toml'))) die(`no book at ${BOOK}. Point METRALE_ENGINE_ROOT at a checkout of the engine that has book/.`);
+if (!existsSync(join(RUSTDOC, 'crates.js')))
+  die(`no rustdoc at ${RUSTDOC}. Run \`cargo doc --workspace --no-deps\` in the engine checkout first (with METRALE_SKIP_BUILD=1 CUDARC_CUDA_VERSION=13000 on a host without CUDA).`);
 
 const walk = (dir) =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]));
@@ -122,6 +129,26 @@ execFileSync(process.execPath, [join(WORK, 'scripts-inject-meta.mjs'), join(WORK
 // ---- what ships beside the pages -------------------------------------------------------
 rmSync(OUT, { recursive: true, force: true });
 cpSync(join(WORK, 'output'), OUT, { recursive: true });
+
+// ---- the API reference, at /api/ ---------------------------------------------------------
+// The book redirects /api/ to the API reference; here the reference itself takes
+// the redirect's place. rustdoc links everything relative to the page (its
+// data-root-path), so the tree works unchanged under a prefix. The front page is
+// the one the engine's own rustdoc site has always had: straight to metrale_core.
+const API = join(OUT, 'api');
+rmSync(API, { recursive: true, force: true });
+cpSync(RUSTDOC, API, { recursive: true, filter: (src) => relative(RUSTDOC, src) !== '.lock' });
+writeFileSync(
+  join(API, 'index.html'),
+  `<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Metrale Engine API Reference</title>
+<meta http-equiv="refresh" content="0; url=metrale_core/index.html">
+</head><body>
+<p>Redirecting to <a href="metrale_core/index.html">metrale_core</a>…</p>
+</body></html>
+`
+);
 const STATIC = join(repo, 'site', 'static');
 for (const icon of ['favicon.svg', 'favicon.ico', 'favicon-32.png', 'favicon-16.png', 'apple-touch-icon.png', 'og-image.png']) {
   if (existsSync(join(STATIC, icon))) copyFileSync(join(STATIC, icon), join(OUT, icon));
@@ -141,8 +168,9 @@ const sha = (dir) => {
 writeFileSync(join(OUT, 'version.txt'), `engine ${sha(ENGINE)}\nsite ${sha(repo)}\n`);
 
 const html = walk(OUT).filter((f) => f.endsWith('.html')).length;
+const apiHtml = walk(API).filter((f) => f.endsWith('.html')).length;
 console.log(
-  `docs: ${links} links resolved, ${moved} files rehosted, ${html} pages built into ${OUT} (${(statSize(OUT) / 1024 / 1024).toFixed(1)} MB)`
+  `docs: ${links} links resolved, ${moved} files rehosted, ${html - apiHtml} book pages and ${apiHtml} API pages built into ${OUT} (${(statSize(OUT) / 1024 / 1024).toFixed(1)} MB)`
 );
 
 function statSize(dir) {
