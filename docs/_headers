@@ -9,8 +9,16 @@
 # the Rust playground mdBook's runnable code blocks call (play.rust-lang.org,
 # asked which crates it has on every page with Rust code). mdBook writes its theme and sidebar setup as
 # inline scripts that differ page by page, so script-src allows inline.
+# The API reference under /api/ (rustdoc) needs nothing more: its scripts,
+# styles, fonts and search index are all files beside it on this origin.
 
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), hid=(), magnetometer=(), microphone=(), payment=(), serial=(), usb=()
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com; font-src 'self'; connect-src 'self' https://play.rust-lang.org; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
+
+# The API reference under /api/ (rustdoc): its bundle's filenames carry their
+# digest, so they never change in place. No other rule here or in the book's
+# _headers sets Cache-Control on this path (the book's /*.html matches none of it).
+/api/static.files/*
+  Cache-Control: public, max-age=31536000, immutable

@@ -3,8 +3,10 @@
 //
 // Runs over docs/build after docs/build.mjs. It fails when a page still names
 // one of the engine team's hosts that docs/hosts.mjs moves, when the title or the Metrale layer is
-// missing, or when something the pages need beside them is missing. A count of
-// pages is printed so a build that silently lost chapters is noticed.
+// missing, or when something the pages need beside them is missing, and when the
+// API reference under /api/ is not rustdoc's: its front page, every crate its
+// crate list names, its assets and its search index. A count of pages is
+// printed so a build that silently lost chapters is noticed.
 //
 //   node docs/check.mjs
 
@@ -24,7 +26,12 @@ if (!existsSync(join(OUT, 'index.html'))) {
 }
 const walk = (dir) =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]));
-const pages = walk(OUT).filter((f) => f.endsWith('.html'));
+const API = join(OUT, 'api');
+const inApi = (f) => !relative(API, f).startsWith('..');
+const all = walk(OUT).filter((f) => f.endsWith('.html'));
+// The book's pages. The API reference is the engine's source as written (rustdoc
+// renders the source files too), so its text is not the book's to rehost.
+const pages = all.filter((f) => !inApi(f));
 
 for (const f of pages) {
   const hosts = unmoved(readFileSync(f, 'utf8'));
@@ -63,9 +70,24 @@ if (existsSync(join(OUT, 'llms.txt'))) {
   if (unmoved(llms).length) bad(`llms.txt still names ${unmoved(llms).join(', ')}`);
 }
 
-console.log(`docs: ${pages.length} pages checked`);
+// ---- the API reference ------------------------------------------------------------------
+// /api/index.html is rustdoc's front door, not the book's redirect stub that it
+// replaces (a stub that pointed there would point at itself).
+const apiIndex = existsSync(join(API, 'index.html')) ? readFileSync(join(API, 'index.html'), 'utf8') : '';
+if (!apiIndex) bad('api/index.html is missing');
+else if (!apiIndex.includes('url=metrale_core/index.html')) bad('api/index.html is not the API reference front page');
+const cratesJs = existsSync(join(API, 'crates.js')) ? readFileSync(join(API, 'crates.js'), 'utf8') : '';
+const crates = JSON.parse(cratesJs.match(/ALL_CRATES\s*=\s*(\[[^\]]*\])/)?.[1] ?? '[]');
+if (!crates.includes('metrale_core')) bad('api/crates.js does not list metrale_core');
+for (const c of crates) if (!existsSync(join(API, c, 'index.html'))) bad(`api/${c}/index.html is missing, though crates.js lists ${c}`);
+const hasFile = (dir, re) => existsSync(dir) && readdirSync(dir).some((n) => re.test(n));
+if (!hasFile(join(API, 'static.files'), /^main-[\w-]+\.js$/)) bad('api/static.files has no rustdoc main script');
+if (!hasFile(join(API, 'static.files'), /^search-[\w-]+\.js$/)) bad('api/static.files has no rustdoc search script');
+if (!hasFile(join(API, 'search.index'), /\.js$/) && !existsSync(join(API, 'search-index.js'))) bad('api/ has no search index');
+
+console.log(`docs: ${pages.length} book pages and ${all.length - pages.length} API pages (${crates.length} crates) checked`);
 if (fail.length) {
   for (const m of fail) console.error(`  FAIL  ${m}`);
   process.exit(1);
 }
-console.log('docs: the built book reads as Metrale Engine, names the company hosts, and ships what it needs');
+console.log('docs: the built book reads as Metrale Engine, names the company hosts, and ships what it needs, the API reference included');

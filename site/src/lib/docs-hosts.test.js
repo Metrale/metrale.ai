@@ -2,7 +2,8 @@
 
 // The docs build publishes the engine's book at docs.metrale.ai and moves the
 // engine team's hosts to the company's (docs/hosts.mjs). Whole origins move;
-// the API reference, which is only published by the engine team, stays.
+// the API reference moves under docs.metrale.ai/api/, where it is published
+// beside the book.
 
 import { expect, test } from 'bun:test';
 import { HOSTS, rehost, unmoved } from '../../../docs/hosts.mjs';
@@ -13,10 +14,11 @@ test('the book, its blog links and its project links move to the company hosts',
   expect(rehost('[the site](https://dev.metrale.ai)')).toBe('[the site](https://metrale.ai)');
 });
 
-test('the API reference keeps its address', () => {
-  const api = 'https://docs.dev.metrale.ai/metrale_core/';
-  expect(rehost(api)).toBe(api);
-  expect(unmoved(api)).toEqual([]);
+test('the API reference moves under /api, path kept', () => {
+  expect(rehost('https://docs.dev.metrale.ai/')).toBe('https://docs.metrale.ai/api/');
+  expect(rehost('https://docs.dev.metrale.ai/metrale_core/')).toBe('https://docs.metrale.ai/api/metrale_core/');
+  expect(unmoved('https://docs.dev.metrale.ai/metrale_core/')).toEqual(['https://docs.dev.metrale.ai']);
+  expect(unmoved(rehost('https://docs.dev.metrale.ai/metrale_core/'))).toEqual([]);
 });
 
 test('a host left behind is named once, and a moved text names none', () => {
