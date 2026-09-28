@@ -14,7 +14,7 @@ export const prerender = true;
  */
 export function GET() {
   const line = (p) =>
-    `- [${p.title}](${SITE}${p.href}): ${p.dek} (${tags[p.tag].name}, ${formatDate(p.date)}, ${p.readingMinutes} min)`;
+    `- [${p.title}](${SITE}${p.href}): ${p.description || p.dek} (${tags[p.tag].name}, ${formatDate(p.date)}, ${p.readingMinutes} min)`;
 
   const byTag = Object.entries(tags)
     .map(([slug, t]) => {

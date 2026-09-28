@@ -24,7 +24,7 @@ export function GET() {
       <pubDate>${new Date(p.date).toUTCString()}</pubDate>
       <category>${xml(p.tag)}</category>
       <dc:creator>${xml(authors[p.author].name)}</dc:creator>
-      <description>${xml(p.dek)}</description>
+      <description>${xml(p.description || p.dek)}</description>
     </item>`
     )
     .join('\n');
