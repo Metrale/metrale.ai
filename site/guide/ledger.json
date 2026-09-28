@@ -137,6 +137,14 @@
       "touched": [
         "links.recipes"
       ]
+    },
+    {
+      "rev": 10,
+      "date": "2026-09-28",
+      "pr": 44,
+      "base": "bf8bbf514",
+      "note": "The workstation tier is for teams and organizations on local devices, and its support line promises a response SLA instead of next business day; the support FAQ names the tier.",
+      "touched": []
     }
   ],
   "facts": {
