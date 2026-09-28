@@ -52,9 +52,9 @@ const vllm = (m) => m.series.find((s) => s.id === 'vllm-mtp');
 const RAW = 'vllm_moe_c1_16.json';
 
 describe('the committed inputs build', () => {
-  test('MoE: a baseline-only ladder with five rungs and no scored pair', () => {
+  test('MoE: a baseline-only ladder, C=1..128 through the energy leg, and no scored pair', () => {
     const l = build(MOE);
-    expect(l.concurrencies).toEqual([1, 2, 4, 8, 16]);
+    expect(l.concurrencies).toEqual([1, 2, 4, 8, 16, 32, 64, 128]);
     expect(l.rows).toBeUndefined();
     expect(l.summary).toBeUndefined();
     expect(l.harness_repo_sha256).toBe('f'.repeat(64));
@@ -189,6 +189,19 @@ describe('a pair is scored only when it is whole', () => {
   test('no matched-parity baseline', () => {
     expect(() => build(DENSE, (m) => (vllm(m).parity = 'unmatched'))).toThrow(/no matched-parity baseline/);
   });
+  test('a cost-scoped leg that covers every rung never votes in the throughput table', () => {
+    const l = build(DENSE);
+    const energy = l.series.find((s) => s.id === 'vllm-mtp-energy');
+    expect(energy.rungs.map((r) => r.c)).toEqual(l.concurrencies);
+    for (const row of l.rows) {
+      expect(row.baselines.map((b) => b.id)).not.toContain('vllm-mtp-energy');
+      expect(row.best_baseline_id).toBe('vllm-mtp');
+    }
+    // The control: without its scope the same leg is a second full-ladder matched baseline.
+    expect(() => build(DENSE, (m) => delete m.series.find((s) => s.id === 'vllm-mtp-energy').scope)).toThrow(
+      /more than one full-ladder matched-parity baseline \(vllm-mtp, vllm-mtp-energy\)/
+    );
+  });
   test('a baseline missing a subject rung', () => {
     expect(() => build(DENSE, (m) => delete vllm(m).sources['64'])).toThrow(/baseline vllm-mtp is missing rung C=64/);
   });
@@ -207,14 +220,16 @@ describe('the energy of a rung sums its reps and keeps the worst one', () => {
   const ENERGY = 'vllm-mtp-energy';
   const RAW_E = 'vllm_mtp_energy_38.json';
   const series = (l) => l.series.find((s) => s.id === ENERGY);
-  const repsAt = (raws, c) => raws[RAW_E].rungs.find((r) => r.concurrency === c).reps;
+  // 2026-09-28: A rung's reps live in the file its manifest names: C=1..16 in RAW_E, the wide
+  // rungs one file per fresh vLLM serve.
+  const repsAt = (raws, c, file = RAW_E) => raws[file].rungs.find((r) => r.concurrency === c).reps;
 
   test('the count, the window and the joules are sums, and every committed rung is trusted', () => {
     const l = build(DENSE);
     const s = series(l);
     expect(s.rungs.length).toBeGreaterThan(0);
     for (const rung of s.rungs) {
-      const reps = repsAt(DENSE.raws, rung.c);
+      const reps = repsAt(DENSE.raws, rung.c, rung.source);
       expect(rung.gpu_rail_power_samples).toBe(reps.reduce((a, r) => a + r.gpu_rail_power_samples, 0));
       expect(rung.gpu_rail_energy_window_s).toBe(r2(reps.reduce((a, r) => a + r.gpu_rail_window_s, 0)));
       const worst = reps.reduce((a, r) =>
