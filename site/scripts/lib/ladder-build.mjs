@@ -371,7 +371,13 @@ export function buildLadder(manifest, { subject, rawOf, harnessRepoSha256 }) {
   //
   // A rung missing WITHOUT being declared unmeasured is still a failure: that
   // is a gap nobody wrote down, which is the thing this file exists to refuse.
-  const covers = (b) => subj.rungs.every((row) => at(b, row.c));
+  // 2026-09-28: A `scope: 'cost'` leg never votes in the throughput table, even
+  // when it covers every rung. It is the same engine and instrument as a
+  // throughput leg, re-run to carry joules, so letting it in would make two
+  // full-ladder matched baselines, and the throughput reference cannot be two
+  // legs. concurrencyBaselinesOf (concurrency-comparison.js) applies the same rule
+  // to the concurrency views.
+  const covers = (b) => b.scope !== 'cost' && subj.rungs.every((row) => at(b, row.c));
   // Name the RUNG, not just the fact. The old check said
   // `baseline X is missing rung C=64`, and a diagnostic that loses the number
   // is a worse diagnostic even when the refusal is the same -- so the message

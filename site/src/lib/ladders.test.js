@@ -117,8 +117,10 @@ describe('the MoE one-shot of 2026-09-19', () => {
     expect(vllm.rungs.every((r) => r.tok_s > 0)).toBe(true);
   });
 
-  test('exactly C=1..16 from one raw file; 32/64/128 are absent from the ladder AND the raw file, with the reason', () => {
-    expect(moe.concurrencies).toEqual([1, 2, 4, 8, 16]);
+  test('exactly C=1..16 from one raw file; 32/64/128 are absent from the series AND the raw file, with the reason', () => {
+    // 2026-09-28: the ladder's concurrencies now reach 128 through the energy leg; this one-shot does not.
+    expect(moe.concurrencies).toEqual([1, 2, 4, 8, 16, 32, 64, 128]);
+    expect(vllm.rungs.map((r) => r.c)).toEqual([1, 2, 4, 8, 16]);
     expect(new Set(vllm.rungs.map((r) => r.source)).size).toBe(1);
     expect(vllm.unmeasured.rungs).toEqual([32, 64, 128]);
     expect(vllm.unmeasured.reason).toMatch(/powercycle/);
@@ -227,15 +229,30 @@ describe('the MoE energy leg of 2026-09-28', () => {
     expect(raw.started_utc.slice(0, 10)).toBe('2026-09-28');
   });
 
-  test('C=1..16 only; 32/64/128 declared unmeasured with the pause reason', () => {
-    expect(energy.rungs.map((r) => r.c)).toEqual([1, 2, 4, 8, 16]);
-    expect(energy.unmeasured.rungs).toEqual([32, 64, 128]);
-    expect(energy.unmeasured.reason).toMatch(/paused/);
+  // 2026-09-28: The wide rungs came later the same day, one raw file per fresh vLLM container.
+  test('C=1..128: C=1..16 from the first raw file, each wide rung from its own, nothing declared unmeasured', () => {
+    expect(energy.rungs.map((r) => [r.c, r.source])).toEqual([
+      [1, 'vllm_moe_energy_c1_16.json'],
+      [2, 'vllm_moe_energy_c1_16.json'],
+      [4, 'vllm_moe_energy_c1_16.json'],
+      [8, 'vllm_moe_energy_c1_16.json'],
+      [16, 'vllm_moe_energy_c1_16.json'],
+      [32, 'vllm_moe_energy_c32.json'],
+      [64, 'vllm_moe_energy_c64.json'],
+      [128, 'vllm_moe_energy_c128.json'],
+    ]);
+    expect(energy.unmeasured).toBeUndefined();
     expect(raw.rungs.map((r) => r.concurrency)).toEqual([1, 2, 4, 8, 16]);
+    for (const r of energy.rungs.filter((x) => x.c >= 32)) {
+      const doc = rawReader(subject)(r.source);
+      expect(doc.rungs.map((x) => x.concurrency)).toEqual([r.c]);
+      expect(doc.driver_sha256.slice(0, 10)).toBe('55a5963e4b');
+    }
   });
 
-  test('throughput agrees with vllm-mtp within 2% at every rung, which is what makes the joules quotable', () => {
-    for (const r of energy.rungs) {
+  test('throughput agrees with vllm-mtp within 2% at every rung both measured, which is what makes the joules quotable', () => {
+    // vllm-mtp stops at C=16, so the wide rungs have no throughput leg to agree with.
+    for (const r of energy.rungs.filter((x) => vllm.rungs.some((v) => v.c === x.c))) {
       const ref = vllm.rungs.find((x) => x.c === r.c);
       expect(Math.abs(r.tok_s / ref.tok_s - 1)).toBeLessThan(0.02);
     }
@@ -248,9 +265,12 @@ describe('the MoE energy leg of 2026-09-28', () => {
       [4, 0.274],
       [8, 0.191],
       [16, 0.142],
+      [32, 0.109],
+      [64, 0.092],
+      [128, 0.078],
     ]);
     for (const r of energy.rungs) {
-      const reps = raw.rungs.find((x) => x.concurrency === r.c).reps;
+      const reps = rawReader(subject)(r.source).rungs.find((x) => x.concurrency === r.c).reps;
       expect(r.gpu_rail_energy_window_tokens).toBe(reps.reduce((a, x) => a + x.completion_tokens, 0));
       expect(reps.every((x) => x.gpu_rail_trustworthy)).toBe(true);
     }
@@ -259,5 +279,7 @@ describe('the MoE energy leg of 2026-09-28', () => {
   test('the raw file is the one the manifest names, byte for byte', () => {
     const file = join(dirname(manifestPathOf(subject)), energy.rungs[0].source);
     expect(energy.source_note).toContain(hash('sha256', file));
+    for (const r of energy.rungs.filter((x) => x.c >= 32))
+      expect(energy.wide_note).toContain(hash('sha256', join(dirname(manifestPathOf(subject)), r.source)));
   });
 });
