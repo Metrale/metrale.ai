@@ -107,7 +107,10 @@ describe('the MoE one-shot of 2026-09-19', () => {
   const dense = ladder.series.find((s) => s.id === 'vllm-mtp');
 
   test('is a baseline-only ladder: no subject series, no rows, no summary, no zero anywhere', () => {
-    expect(moe.series.map((s) => [s.id, s.role])).toEqual([['vllm-mtp', 'baseline']]);
+    expect(moe.series.map((s) => [s.id, s.role, s.scope])).toEqual([
+      ['vllm-mtp', 'baseline', undefined],
+      ['vllm-mtp-energy', 'baseline', 'cost'],
+    ]);
     expect('rows' in moe).toBe(false);
     expect('summary' in moe).toBe(false);
     expect(moe.subject_note).toMatch(/no Metrale Engine run exists at this instrument/i);
@@ -150,7 +153,7 @@ describe('the MoE one-shot of 2026-09-19', () => {
     const tree = resolve(REPO, moe.workload.harness);
     expect(moe.harness_repo_sha256).toBe(hash('sha256', tree));
     expect(raw.driver_sha256.slice(0, 10)).toBe('41e242c072');
-    expect(Object.keys(moe.harness_shas)).toEqual([raw.driver_sha256.slice(0, 10), 'equivalence']);
+    expect(Object.keys(moe.harness_shas)).toEqual([raw.driver_sha256.slice(0, 10), '55a5963e4b', 'equivalence']);
     expect(moe.harness_shas.equivalence).toMatch(/replaced/);
   });
 
@@ -203,5 +206,58 @@ describe('the MoE one-shot of 2026-09-19', () => {
   test('the raw file is the one the manifest names, byte for byte', () => {
     const file = join(dirname(manifestPathOf(subject)), vllm.rungs[0].source);
     expect(vllm.source_note).toContain(hash('sha256', file));
+  });
+});
+
+describe('the MoE energy leg of 2026-09-28', () => {
+  const subject = subjects.find((s) => s.id === 'qwen36-35b-a3b');
+  const moe = ladders.subjects['qwen36-35b-a3b'];
+  const vllm = moe.series.find((s) => s.id === 'vllm-mtp');
+  const energy = moe.series.find((s) => s.id === 'vllm-mtp-energy');
+  const raw = rawReader(subject)(energy.rungs[0].source);
+
+  test('is vllm-mtp re-run with joules: same image, command and instrument, scoped to cost', () => {
+    expect(energy.scope).toBe('cost');
+    expect(energy.parity).toBe('matched');
+    expect(energy.build).toBe(vllm.build);
+    expect(energy.cli).toBe(vllm.cli);
+    expect(energy.env).toBe(vllm.env);
+    expect(energy.instrument).toEqual(vllm.instrument);
+    expect(raw.driver_sha256.slice(0, 10)).toBe('55a5963e4b');
+    expect(raw.started_utc.slice(0, 10)).toBe('2026-09-28');
+  });
+
+  test('C=1..16 only; 32/64/128 declared unmeasured with the pause reason', () => {
+    expect(energy.rungs.map((r) => r.c)).toEqual([1, 2, 4, 8, 16]);
+    expect(energy.unmeasured.rungs).toEqual([32, 64, 128]);
+    expect(energy.unmeasured.reason).toMatch(/paused/);
+    expect(raw.rungs.map((r) => r.concurrency)).toEqual([1, 2, 4, 8, 16]);
+  });
+
+  test('throughput agrees with vllm-mtp within 2% at every rung, which is what makes the joules quotable', () => {
+    for (const r of energy.rungs) {
+      const ref = vllm.rungs.find((x) => x.c === r.c);
+      expect(Math.abs(r.tok_s / ref.tok_s - 1)).toBeLessThan(0.02);
+    }
+  });
+
+  test('every rung carries joules summed over its three reps, as the raw file yields them', () => {
+    expect(energy.rungs.map((r) => [r.c, Math.round((r.gpu_rail_energy_j / r.gpu_rail_energy_window_tokens) * 1000) / 1000])).toEqual([
+      [1, 0.641],
+      [2, 0.4],
+      [4, 0.274],
+      [8, 0.191],
+      [16, 0.142],
+    ]);
+    for (const r of energy.rungs) {
+      const reps = raw.rungs.find((x) => x.concurrency === r.c).reps;
+      expect(r.gpu_rail_energy_window_tokens).toBe(reps.reduce((a, x) => a + x.completion_tokens, 0));
+      expect(reps.every((x) => x.gpu_rail_trustworthy)).toBe(true);
+    }
+  });
+
+  test('the raw file is the one the manifest names, byte for byte', () => {
+    const file = join(dirname(manifestPathOf(subject)), energy.rungs[0].source);
+    expect(energy.source_note).toContain(hash('sha256', file));
   });
 });
