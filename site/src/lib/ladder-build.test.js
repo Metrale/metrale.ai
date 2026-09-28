@@ -196,7 +196,7 @@ describe('a pair is scored only when it is whole', () => {
     expect(() => build(DENSE, (m) => (m.series[2].role = 'subject'))).toThrow(/more than one subject/);
     expect(() => build(MOE, (m) => (vllm(m).role = 'reference'))).toThrow(/unknown role "reference"/);
     expect(() => build(MOE, (m) => (m.series = []))).toThrow(/has no series/);
-    expect(() => build(MOE, (m) => (vllm(m).role = 'variant'))).toThrow(/no baseline series/);
+    expect(() => build(MOE, (m) => m.series.forEach((s) => (s.role = 'variant')))).toThrow(/no baseline series/);
     expect(() => build(MOE, (m) => (m.schema = 2))).toThrow(/schema 2, expected 1/);
   });
 });
