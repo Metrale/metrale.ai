@@ -85,7 +85,7 @@ export const faq = [
   {
     tags: ['pricing', 'deploy'],
     q: 'What support comes with it?',
-    a: 'Community support in Discord for the open source engine. Enterprise includes a named engineer, a response SLA and a shared channel. Forward deployed engineering for the pilot and the cutover is scoped per engagement and credited against the first year on conversion.',
+    a: 'Community support in Discord for the open source engine. Workstation and edge includes email support with a response SLA. Enterprise includes a named engineer, a response SLA and a shared channel. Forward deployed engineering for the pilot and the cutover is scoped per engagement and credited against the first year on conversion.',
   },
 ];
 

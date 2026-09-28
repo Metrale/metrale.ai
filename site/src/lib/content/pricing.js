@@ -38,11 +38,11 @@ export const tiers = [
     price: 'Contact us',
     per: 'priced per box, billed annually',
     blurb:
-      'A DGX Spark or Strix Halo class box serving an office, a branch or a field team. Signed update channel, managed from the console.',
+      'For teams and organizations on local devices: a DGX Spark or Strix Halo class box in an office, a branch or the field. Signed update channel, managed from the console.',
     includes: [
       'Signed stable and LTS channels',
       'Console access for every licensed box',
-      'Email support, next business day',
+      'Email support with a response SLA',
       'Volume pricing from 25 boxes',
     ],
     cta: { text: 'Price a fleet of boxes', href: routes.contact },
