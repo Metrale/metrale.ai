@@ -1,5 +1,5 @@
 {
-  "count": 0,
+  "count": 1,
   "url": "https://github.com/Metrale/metrale-inference",
   "history": [
     {
@@ -245,7 +245,11 @@
     {
       "date": "2026-09-24",
       "stars": 0
+    },
+    {
+      "date": "2026-09-29",
+      "stars": 1
     }
   ],
-  "generated_date": "2026-09-28"
+  "generated_date": "2026-09-29"
 }
