@@ -1,12 +1,12 @@
 {
   "gates": {
-    "sha": "923939d",
+    "sha": "39ab52e",
     "date": "2026-09-29",
     "registered": 35,
-    "concurrencyRecords": 21,
-    "concurrencyPass": 21,
-    "records": 169,
-    "signed": 169,
+    "concurrencyRecords": 24,
+    "concurrencyPass": 24,
+    "records": 196,
+    "signed": 196,
     "withRecords": 17,
     "newest": "2026-09-29"
   },
