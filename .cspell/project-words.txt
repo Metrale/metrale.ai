@@ -133,6 +133,7 @@ oncadence
 oncluster
 ondark
 ondetails
+oneshot
 onhelp
 onlight
 onlog

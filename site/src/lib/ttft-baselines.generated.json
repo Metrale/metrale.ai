@@ -1,0 +1,259 @@
+{
+  "generated_utc": "2026-09-30T00:19:32Z",
+  "engine": {
+    "osl": 8,
+    "fixtures": {
+      "long-32k": "4f961eabd9433e18166e795052b59239760d4e3cc7fa78c258d0bd1b623a1993"
+    }
+  },
+  "manifests": [
+    {
+      "manifest": "bench/baselines/qwen36-35b-a3b/ttft/published.json",
+      "checkpoint": "Qwen/Qwen3.6-35B-A3B-FP8",
+      "box": "dgx3 (spark-28c2)",
+      "measured": "measured 2026-09-27",
+      "series_note": "The 32k series' cold median (9303.1 ms) is not the gate ceiling: the ceiling is the steady one-shot cold TTFT (gate_ceilings), per the owner's method.",
+      "baselines": [
+        {
+          "id": "vllm-mtp-high-isl-ttft-cold-moe",
+          "gate": "high-isl-ttft-cold-moe",
+          "method": "gate-run",
+          "label": "vLLM + MTP",
+          "engine": "vLLM 0.27.1",
+          "build": "vllm/vllm-openai@sha256:0a51ea5b4ae2dc5d81890e5173f54203d2a3ae0cfffe51b8fd2afd4391bfd967 (image id sha256:2c211a1273b48e8929f893b267aeb1509e6b84654cdbde1bad56d79e3964224d, label vllm/vllm-openai:v0.27.1, vLLM commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac)",
+          "instrument": {
+            "mode": "cold",
+            "osl": 8,
+            "reps": 12,
+            "prompt": "sha256:4f961eabd9433e18166e795052b59239760d4e3cc7fa78c258d0bd1b623a1993",
+            "prompt_tokens": 32772
+          },
+          "median_ms": 9303.1,
+          "p90_ms": 9317.7,
+          "runs": 3,
+          "statistic": "median over 3 runs of each run's median and p90 (12 samples per run)",
+          "box_state": "harness post-check: valid on all 3 runs",
+          "checkpoint": "Qwen/Qwen3.6-35B-A3B-FP8",
+          "box": "dgx3 (spark-28c2)",
+          "manifest": "bench/baselines/qwen36-35b-a3b/ttft/published.json"
+        },
+        {
+          "id": "vllm-mtp-high-isl-ttft-warm-moe",
+          "gate": "high-isl-ttft-warm-moe",
+          "method": "gate-run",
+          "label": "vLLM + MTP",
+          "engine": "vLLM 0.27.1",
+          "build": "vllm/vllm-openai@sha256:0a51ea5b4ae2dc5d81890e5173f54203d2a3ae0cfffe51b8fd2afd4391bfd967 (image id sha256:2c211a1273b48e8929f893b267aeb1509e6b84654cdbde1bad56d79e3964224d, label vllm/vllm-openai:v0.27.1, vLLM commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac)",
+          "instrument": {
+            "mode": "warm",
+            "osl": 8,
+            "reps": 12,
+            "prompt": "sha256:4f961eabd9433e18166e795052b59239760d4e3cc7fa78c258d0bd1b623a1993",
+            "prompt_tokens": 32772
+          },
+          "median_ms": 583.7,
+          "p90_ms": 592.1,
+          "runs": 3,
+          "statistic": "median over 3 runs of each run's median and p90 (12 samples per run)",
+          "box_state": "harness post-check: valid on all 3 runs",
+          "checkpoint": "Qwen/Qwen3.6-35B-A3B-FP8",
+          "box": "dgx3 (spark-28c2)",
+          "manifest": "bench/baselines/qwen36-35b-a3b/ttft/published.json"
+        },
+        {
+          "id": "vllm-mtp-ttft-cold-gate",
+          "gate": "ttft-cold-gate",
+          "method": "gate-run",
+          "label": "vLLM + MTP",
+          "engine": "vLLM 0.27.1",
+          "build": "vllm/vllm-openai@sha256:0a51ea5b4ae2dc5d81890e5173f54203d2a3ae0cfffe51b8fd2afd4391bfd967 (image id sha256:2c211a1273b48e8929f893b267aeb1509e6b84654cdbde1bad56d79e3964224d, label vllm/vllm-openai:v0.27.1, vLLM commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac)",
+          "instrument": {
+            "mode": "cold",
+            "osl": 8,
+            "reps": 12,
+            "prompt": "lengths:256,1024,4096",
+            "prompt_tokens": null
+          },
+          "median_ms": 318.1,
+          "p90_ms": 1100.5,
+          "runs": 3,
+          "statistic": "median over 3 runs of each run's median and p90 (12 samples per run per length, pooled over 256/1024/4096)",
+          "box_state": "harness post-check: valid on all 3 runs",
+          "checkpoint": "Qwen/Qwen3.6-35B-A3B-FP8",
+          "box": "dgx3 (spark-28c2)",
+          "manifest": "bench/baselines/qwen36-35b-a3b/ttft/published.json"
+        },
+        {
+          "id": "vllm-mtp-ttft-warm-gate",
+          "gate": "ttft-warm-gate",
+          "method": "gate-run",
+          "label": "vLLM + MTP",
+          "engine": "vLLM 0.27.1",
+          "build": "vllm/vllm-openai@sha256:0a51ea5b4ae2dc5d81890e5173f54203d2a3ae0cfffe51b8fd2afd4391bfd967 (image id sha256:2c211a1273b48e8929f893b267aeb1509e6b84654cdbde1bad56d79e3964224d, label vllm/vllm-openai:v0.27.1, vLLM commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac)",
+          "instrument": {
+            "mode": "warm",
+            "osl": 8,
+            "reps": 12,
+            "prompt": "lengths:256,1024,4096",
+            "prompt_tokens": null
+          },
+          "median_ms": 330.7,
+          "p90_ms": 360.5,
+          "runs": 3,
+          "statistic": "median over 3 runs of each run's median and p90 (12 samples per run per length, pooled over 256/1024/4096)",
+          "box_state": "harness post-check: valid on all 3 runs",
+          "checkpoint": "Qwen/Qwen3.6-35B-A3B-FP8",
+          "box": "dgx3 (spark-28c2)",
+          "manifest": "bench/baselines/qwen36-35b-a3b/ttft/published.json"
+        },
+        {
+          "id": "oneshot-high-isl-ttft-cold-moe",
+          "gate": "high-isl-ttft-cold-moe",
+          "method": "one-shot",
+          "label": "vLLM + MTP",
+          "engine": "vLLM 0.27.1",
+          "build": "vllm/vllm-openai@sha256:0a51ea5b4ae2dc5d81890e5173f54203d2a3ae0cfffe51b8fd2afd4391bfd967 (image id sha256:2c211a1273b48e8929f893b267aeb1509e6b84654cdbde1bad56d79e3964224d, label vllm/vllm-openai:v0.27.1, vLLM commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac)",
+          "instrument": {
+            "mode": "cold",
+            "osl": 8,
+            "reps": 1,
+            "prompt": "sha256:4f961eabd9433e18166e795052b59239760d4e3cc7fa78c258d0bd1b623a1993",
+            "prompt_tokens": 32772
+          },
+          "median_ms": 9231.9,
+          "p90_ms": 9231.9,
+          "runs": 3,
+          "statistic": "median of 3 steady one-shot cold requests, one sample each (first request after a vLLM boot excluded)",
+          "box_state": null,
+          "checkpoint": "Qwen/Qwen3.6-35B-A3B-FP8",
+          "box": "dgx3 (spark-28c2)",
+          "manifest": "bench/baselines/qwen36-35b-a3b/ttft/published.json"
+        },
+        {
+          "id": "oneshot-high-isl-ttft-warm-moe",
+          "gate": "high-isl-ttft-warm-moe",
+          "method": "one-shot",
+          "label": "vLLM + MTP",
+          "engine": "vLLM 0.27.1",
+          "build": "vllm/vllm-openai@sha256:0a51ea5b4ae2dc5d81890e5173f54203d2a3ae0cfffe51b8fd2afd4391bfd967 (image id sha256:2c211a1273b48e8929f893b267aeb1509e6b84654cdbde1bad56d79e3964224d, label vllm/vllm-openai:v0.27.1, vLLM commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac)",
+          "instrument": {
+            "mode": "warm",
+            "osl": 8,
+            "reps": 1,
+            "prompt": "sha256:4f961eabd9433e18166e795052b59239760d4e3cc7fa78c258d0bd1b623a1993",
+            "prompt_tokens": 32772
+          },
+          "median_ms": 579.4,
+          "p90_ms": 579.4,
+          "runs": 3,
+          "statistic": "median of 3 steady one-shot warm requests, one sample each (first request after a vLLM boot excluded)",
+          "box_state": null,
+          "checkpoint": "Qwen/Qwen3.6-35B-A3B-FP8",
+          "box": "dgx3 (spark-28c2)",
+          "manifest": "bench/baselines/qwen36-35b-a3b/ttft/published.json"
+        }
+      ]
+    },
+    {
+      "manifest": "bench/baselines/qwen38-27b/ttft/published.json",
+      "checkpoint": "unsloth/Qwen3.8-27B-NVFP4",
+      "box": "dgx2 (spark-43fa)",
+      "measured": "measured 2026-09-27",
+      "series_note": "No vLLM series at the 32k gate instrument for this subject: its only run (high-isl-ttft-cold r1) was cancelled at 2026-09-27T22:27:29Z, before any sample was recorded, when the method changed to one-shot pairs; its record is status Failed, verdict cancelled, no metrics. It is not cited. The 32k baseline for this subject is `oneshot`.",
+      "baselines": [
+        {
+          "id": "vllm-mtp-ttft-cold-gate",
+          "gate": "ttft-cold-gate",
+          "method": "gate-run",
+          "label": "vLLM + MTP",
+          "engine": "vLLM 0.27.1",
+          "build": "vllm/vllm-openai@sha256:0a51ea5b4ae2dc5d81890e5173f54203d2a3ae0cfffe51b8fd2afd4391bfd967 (image id sha256:2c211a1273b48e8929f893b267aeb1509e6b84654cdbde1bad56d79e3964224d, label vllm/vllm-openai:v0.27.1, vLLM commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac)",
+          "instrument": {
+            "mode": "cold",
+            "osl": 8,
+            "reps": 12,
+            "prompt": "lengths:256,1024,4096",
+            "prompt_tokens": null
+          },
+          "median_ms": 625.6,
+          "p90_ms": 2674.7,
+          "runs": 3,
+          "statistic": "median over 3 runs of each run's median and p90 (12 samples per run per length, pooled over 256/1024/4096)",
+          "box_state": "The harness post-check marked r2, r3 INVALID: a thermal-throttle counter advanced during the run (throttled 0.90% and 1.88% of the run; the record's own words: \"this speed number is not comparable\"). Kept as the only vLLM measurement at this instrument on this box; not used for any gate ceiling.",
+          "checkpoint": "unsloth/Qwen3.8-27B-NVFP4",
+          "box": "dgx2 (spark-43fa)",
+          "manifest": "bench/baselines/qwen38-27b/ttft/published.json"
+        },
+        {
+          "id": "vllm-mtp-ttft-warm-gate",
+          "gate": "ttft-warm-gate",
+          "method": "gate-run",
+          "label": "vLLM + MTP",
+          "engine": "vLLM 0.27.1",
+          "build": "vllm/vllm-openai@sha256:0a51ea5b4ae2dc5d81890e5173f54203d2a3ae0cfffe51b8fd2afd4391bfd967 (image id sha256:2c211a1273b48e8929f893b267aeb1509e6b84654cdbde1bad56d79e3964224d, label vllm/vllm-openai:v0.27.1, vLLM commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac)",
+          "instrument": {
+            "mode": "warm",
+            "osl": 8,
+            "reps": 12,
+            "prompt": "lengths:256,1024,4096",
+            "prompt_tokens": null
+          },
+          "median_ms": 620.1,
+          "p90_ms": 1709.1,
+          "runs": 3,
+          "statistic": "median over 3 runs of each run's median and p90 (12 samples per run per length, pooled over 256/1024/4096)",
+          "box_state": "The harness post-check marked r1, r2, r3 INVALID: a thermal-throttle counter advanced during the run (throttled 0.08%, 0.02% and 0.21% of the run; the record's own words: \"this speed number is not comparable\"). Kept as the only vLLM measurement at this instrument on this box; not used for any gate ceiling.",
+          "checkpoint": "unsloth/Qwen3.8-27B-NVFP4",
+          "box": "dgx2 (spark-43fa)",
+          "manifest": "bench/baselines/qwen38-27b/ttft/published.json"
+        },
+        {
+          "id": "oneshot-high-isl-ttft-cold",
+          "gate": "high-isl-ttft-cold",
+          "method": "one-shot",
+          "label": "vLLM + MTP",
+          "engine": "vLLM 0.27.1",
+          "build": "vllm/vllm-openai@sha256:0a51ea5b4ae2dc5d81890e5173f54203d2a3ae0cfffe51b8fd2afd4391bfd967 (image id sha256:2c211a1273b48e8929f893b267aeb1509e6b84654cdbde1bad56d79e3964224d, label vllm/vllm-openai:v0.27.1, vLLM commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac)",
+          "instrument": {
+            "mode": "cold",
+            "osl": 8,
+            "reps": 1,
+            "prompt": "sha256:4f961eabd9433e18166e795052b59239760d4e3cc7fa78c258d0bd1b623a1993",
+            "prompt_tokens": 32772
+          },
+          "median_ms": 24115.2,
+          "p90_ms": 24115.2,
+          "runs": 2,
+          "statistic": "median of 2 steady one-shot cold requests, one sample each (first request after a vLLM boot excluded)",
+          "box_state": null,
+          "checkpoint": "unsloth/Qwen3.8-27B-NVFP4",
+          "box": "dgx2 (spark-43fa)",
+          "manifest": "bench/baselines/qwen38-27b/ttft/published.json"
+        },
+        {
+          "id": "oneshot-high-isl-ttft-warm",
+          "gate": "high-isl-ttft-warm",
+          "method": "one-shot",
+          "label": "vLLM + MTP",
+          "engine": "vLLM 0.27.1",
+          "build": "vllm/vllm-openai@sha256:0a51ea5b4ae2dc5d81890e5173f54203d2a3ae0cfffe51b8fd2afd4391bfd967 (image id sha256:2c211a1273b48e8929f893b267aeb1509e6b84654cdbde1bad56d79e3964224d, label vllm/vllm-openai:v0.27.1, vLLM commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac)",
+          "instrument": {
+            "mode": "warm",
+            "osl": 8,
+            "reps": 1,
+            "prompt": "sha256:4f961eabd9433e18166e795052b59239760d4e3cc7fa78c258d0bd1b623a1993",
+            "prompt_tokens": 32772
+          },
+          "median_ms": 2132.3,
+          "p90_ms": 2132.3,
+          "runs": 2,
+          "statistic": "median of 2 steady one-shot warm requests, one sample each (first request after a vLLM boot excluded)",
+          "box_state": null,
+          "checkpoint": "unsloth/Qwen3.8-27B-NVFP4",
+          "box": "dgx2 (spark-43fa)",
+          "manifest": "bench/baselines/qwen38-27b/ttft/published.json"
+        }
+      ]
+    }
+  ]
+}

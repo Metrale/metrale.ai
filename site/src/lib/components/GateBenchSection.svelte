@@ -4,13 +4,31 @@
   // must never be readable as a 35B one.
   import GateChart from './GateChart.svelte';
   import GateLadderChart from './GateLadderChart.svelte';
-  import { panelsFor, colorFor, shortModel, fmtDate, sampleCount, ladderPoints } from '$lib/gates.js';
+  import { panelsFor, colorFor, shortModel, fmtDate, sampleCount, ladderPoints, isTtftBench } from '$lib/gates.js';
   import { variantLabel } from '$lib/gate-variants.js';
+  import { baselineValue, describeTtftDiffers, speedup, ttftBaselineFor } from '$lib/ttft-baselines.js';
+  import ttftData from '$lib/ttft-baselines.generated.json';
 
-  let { benchId, name, records, onselect } = $props();
+  // `stat` is the TTFT tabs' Median | p90 choice; every other bench ignores it.
+  let { benchId, name, records, onselect, stat = null } = $props();
 
   const latest = $derived(records[records.length - 1]);
-  const panels = $derived(panelsFor(benchId, records));
+  const ttft = $derived(isTtftBench(benchId));
+  const panels = $derived(panelsFor(benchId, records, ttft ? { stat } : {}));
+  // One vLLM verdict per model on the chart: paired, refused or not measured.
+  const vllm = $derived(
+    ttft
+      ? [...new Set(records.map((r) => r.target_model))].map((model) => ({ model, ...ttftBaselineFor(benchId, model, records, ttftData) }))
+      : []
+  );
+  const drawn = $derived(
+    vllm
+      .filter((v) => v.state === 'paired')
+      .map((v) => ({ model: v.model, value: baselineValue(v.baseline, stat), label: v.baseline.label, from: v.from }))
+  );
+  const fmtMs = (v) => `${Math.round(v).toLocaleString('en-US')} ms`;
+  const methodOf = (b) =>
+    b.method === 'one-shot' ? `one-shot, ${b.runs} steady requests` : `gate run, ${b.runs} runs of ${b.instrument.reps} samples`;
   const headline = $derived.by(() => {
     const m = latest?.metrics ?? {};
     if (benchId === 'agentic-webserver')
@@ -23,11 +41,18 @@
         { label: 'overall', value: m.overall_accuracy },
         { label: 'normalized', value: m.normalized_single_turn_score },
       ];
-    if (benchId.startsWith('ttft'))
-      return [
-        { label: 'median', value: `${Math.round(m.median_ms).toLocaleString('en-US')} ms` },
-        { label: 'p90', value: `${Math.round(m.p90_ms).toLocaleString('en-US')} ms` },
+    if (ttft) {
+      const tiles = [
+        { label: 'median', value: fmtMs(m.median_ms) },
+        { label: 'p90', value: fmtMs(m.p90_ms) },
       ];
+      // The ratio against vLLM, for the statistic on screen and this record's
+      // model, only when the pairing drew a baseline.
+      const paired = vllm.find((v) => v.model === latest.target_model && v.state === 'paired');
+      const ratio = paired ? speedup(m[`${stat}_ms`], baselineValue(paired.baseline, stat)) : null;
+      if (ratio) tiles.push({ label: `vs vLLM · ${stat}`, value: ratio });
+      return tiles;
+    }
     if (benchId === 'concurrency-sweep') {
       // Guarded per key: the tiles must survive a record that predates the
       // metrics map (or one whose cells were all vacuous and published no
@@ -82,7 +107,36 @@
     {#if panel.kind === 'ladder'}
       <GateLadderChart {records} {panel} {onselect} />
     {:else}
-      <GateChart {records} {panel} {onselect} />
+      <GateChart {records} {panel} {onselect} baselines={drawn} />
     {/if}
   {/each}
+
+  {#if vllm.length > 0}
+    <ul class="gbs-vllm" aria-label="vLLM baseline for {name}">
+      {#each vllm as v (v.model)}
+        <li class="gbs-vllm-item" data-state={v.state}>
+          {#if v.state === 'paired'}
+            {@const b = v.baseline}
+            <strong>{b.label}</strong> on {shortModel(v.model)}:
+            <span class="mono">{fmtMs(baselineValue(b, stat))}</span>
+            {stat}, {b.engine}, {methodOf(b)}, {b.box}. {b.statistic}. Drawn from {fmtDate(v.from)}, the first run on the same prompt, reply
+            length, cache state and sample count.
+            {#if b.box_state}<span class="gbs-vllm-caveat">{b.box_state}</span>{/if}
+            {#each v.refused as r (r.baseline.id)}
+              <span class="gbs-vllm-refused"
+                >Not drawn: {r.baseline.label} {methodOf(r.baseline)}, which differs in {describeTtftDiffers(r.differs)}.</span
+              >
+            {/each}
+          {:else if v.state === 'refused'}
+            <strong>vLLM on {shortModel(v.model)}: not drawn.</strong>
+            {#each v.refused as r (r.baseline.id)}
+              {r.baseline.label} {methodOf(r.baseline)} differs from this gate in {describeTtftDiffers(r.differs)}.
+            {/each}
+          {:else}
+            <strong>vLLM on {shortModel(v.model)}: not measured.</strong> {v.reason}
+          {/if}
+        </li>
+      {/each}
+    </ul>
+  {/if}
 </article>

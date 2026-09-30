@@ -16,7 +16,7 @@ describe('the page entry points and the dashboard tabs are the same list', () =>
   });
 
   test('every entry resolves to its own tab when the dashboard reads the hash', () => {
-    const known = { tabIds: tabs.map((t) => t.id), subjectIds: [], rungs: [] };
+    const known = { tabIds: tabs.map((t) => t.id), subjectIds: [], rungs: [], stats: [] };
     for (const e of DASHBOARD_ENTRIES) expect(parseDashboardHash(entryHash(e.id), known).tab).toBe(e.id);
   });
 

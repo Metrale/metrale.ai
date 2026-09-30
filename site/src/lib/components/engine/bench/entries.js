@@ -16,6 +16,7 @@ export const DASHBOARD_ENTRIES = [
   { id: 'agentic', label: 'Agentic' },
   { id: 'bfcl', label: 'BFCL' },
   { id: 'ttft', label: 'TTFT' },
+  { id: 'ttft-long', label: 'High-ISL TTFT' },
   { id: 'decode', label: 'Decode' },
   { id: 'concurrency', label: 'Concurrency' },
   { id: 'cost', label: 'Cost' },

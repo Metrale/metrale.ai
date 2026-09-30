@@ -269,7 +269,7 @@ export const verified = {
   dashboard: {
     kicker: 'Benchmark dashboard',
     title: 'Every benchmark family, every signed run.',
-    body: 'Agentic, BFCL, TTFT, decode, concurrency and cost, one tab each. Every chart point opens its record, its signature and the steps to reproduce it.',
+    body: 'Agentic, BFCL, TTFT, high-ISL TTFT, decode, concurrency and cost, one tab each. Every chart point opens its record, its signature and the steps to reproduce it.',
     groupLabel: 'Open the dashboard on a benchmark family',
     cta: 'Open the dashboard',
   },

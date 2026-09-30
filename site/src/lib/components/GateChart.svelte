@@ -18,7 +18,12 @@
   import { clipCaret, loneTriangle } from '$lib/chart-marks.js';
   import RecordReceipt from './RecordReceipt.svelte';
 
-  let { records, panel, onselect } = $props();
+  // `baselines`: another engine's figure on the same instrument, one per
+  // model, already paired by the caller (ttft-baselines.js). Drawn as a flat
+  // reference in neutral ink from the first run it compares with, so colour
+  // keeps meaning "this model on this engine" and the line cannot be read as
+  // one of the engine's own runs.
+  let { records, panel, onselect, baselines = [] } = $props();
 
   const W = 720,
     H = 232,
@@ -35,12 +40,14 @@
   // Every bound in play widens the axis: a rule is part of the gate's claim —
   // including one re-cut after the newest record (drawn at its own date).
   const refLines = $derived(
-    series.flatMap((s) => {
-      const limits = s.nodes.map((n) => limitOf(s, n));
-      const recut = recutAfter(s);
-      if (recut !== null) limits.push(limitAsOf(s.nodes[s.nodes.length - 1].rec, s.metricKey, recut));
-      return limits.flatMap((l) => [l.min, l.max].filter((v) => v !== null).map((value) => ({ value })));
-    })
+    series
+      .flatMap((s) => {
+        const limits = s.nodes.map((n) => limitOf(s, n));
+        const recut = recutAfter(s);
+        if (recut !== null) limits.push(limitAsOf(s.nodes[s.nodes.length - 1].rec, s.metricKey, recut));
+        return limits.flatMap((l) => [l.min, l.max].filter((v) => v !== null).map((value) => ({ value })));
+      })
+      .concat(baselines.map((b) => ({ value: b.value })))
   );
 
   // A re-cut that post-dates the newest record: the time axis reaches out to
@@ -161,9 +168,23 @@
   // Everything labelled at the right edge — each series' end value and the
   // rule now in force — dodged apart in ONE pass, so a floor cannot print on
   // a final value, nor a median ceiling on another model's p90 ceiling.
+  const baselineLines = $derived(
+    baselines.map((b) => {
+      const py = y(clampValue(b.value, ext).y);
+      const x0 = Math.max(x(Math.max(b.from, ext.t0)), PL);
+      return {
+        d: `M${x0.toFixed(1)} ${py.toFixed(1)} H${W - PR}`,
+        py,
+        text: `${b.label}${models.length > 1 ? ` · ${shortModel(b.model)}` : ''} ${fmtV(b.value)}`,
+      };
+    })
+  );
   const edgeLabels = $derived.by(() => {
     const ends = series.filter((s) => s.nodes.length > 0).map((s) => ({ s, node: s.nodes[s.nodes.length - 1] }));
-    const rules = limitLines.flatMap((l) => l.labels.filter((t) => t.anchor === 'end'));
+    const rules = [
+      ...limitLines.flatMap((l) => l.labels.filter((t) => t.anchor === 'end')),
+      ...baselineLines.map((b) => ({ text: b.text, color: 'var(--t2)', x: W - PR, anchor: 'end', y: Math.max(b.py - 4, PT + 8) })),
+    ];
     const placed = dodgeLabels([...ends.map((e) => at(e.node).py - 9), ...rules.map((t) => t.y)], {
       height: LABEL_H,
       top: PT + 7,
@@ -209,7 +230,7 @@
   <figcaption class="gate-panel-head">
     <span class="gate-panel-title">{panel.title}</span>
     <span class="gate-panel-unit">{panel.unit}</span>
-    {#if models.length > 1 || showVariantKey || hasFail || hasAgg || hasClip || hasLimitLine || hasViol}
+    {#if models.length > 1 || showVariantKey || hasFail || hasAgg || hasClip || hasLimitLine || hasViol || baselines.length > 0}
       <span class="gate-legend">
         {#if models.length > 1}
           <span class="gl-group">
@@ -235,9 +256,17 @@
             {/each}
           </span>
         {/if}
-        {#if hasFail || hasAgg || hasClip || hasLone || hasLimitLine || hasViol}
+        {#if hasFail || hasAgg || hasClip || hasLone || hasLimitLine || hasViol || baselines.length > 0}
           <span class="gl-sep" aria-hidden="true"></span>
           <span class="gl-group">
+            {#if baselines.length > 0}
+              <span class="gate-legend-item">
+                <svg class="gl-swatch" viewBox="0 0 20 10" aria-hidden="true">
+                  <path class="gc-baseline" d="M1 5 H19" fill="none" />
+                </svg>
+                vLLM, same instrument
+              </span>
+            {/if}
             {#if hasLimitLine}
               <span class="gate-legend-item">
                 <svg class="gl-swatch" viewBox="0 0 20 10" aria-hidden="true">
@@ -316,6 +345,9 @@
          what the points are judged against, not a reading of its own. -->
     {#each limitLines as l}
       <path class="gc-limit" d={l.d} fill="none" stroke={l.color} />
+    {/each}
+    {#each baselineLines as b}
+      <path class="gc-baseline" d={b.d} fill="none" />
     {/each}
 
     <!-- Spread of each aggregated group, beneath the lines so it reads as

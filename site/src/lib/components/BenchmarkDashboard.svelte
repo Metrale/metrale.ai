@@ -12,7 +12,8 @@
   import TabStrip from './TabStrip.svelte';
   import { browser } from '$app/environment';
   import { replaceState } from '$app/navigation';
-  import { gateData, tabs, models, recordsFor, benchName, shortModel, colorFor } from '$lib/gates.js';
+  import { gateData, tabs, models, recordsFor, benchName, shortModel, colorFor, isTtftTab } from '$lib/gates.js';
+  import { TTFT_STATS } from '$lib/ttft-baselines.js';
   import { RECORD_SIGNING_DOC } from '$lib/receipt.js';
   import { SUBJECTS, rungsDeclared } from '$lib/concurrency-subjects.js';
   import { formatDashboardHash, isDeepLink, parseDashboardHash } from '$lib/dashboard-link.js';
@@ -27,7 +28,10 @@
     tabIds: tabs.map((t) => t.id),
     subjectIds: SUBJECTS.map((s) => s.id),
     rungs: [...new Set(SUBJECTS.flatMap((s) => rungsDeclared(s, recordsFor)))].sort((a, b) => a - b),
+    stats: [...TTFT_STATS],
   };
+  // The TTFT tabs' inner strip: one statistic at a time, both conditions.
+  const STAT_TABS = TTFT_STATS.map((id) => ({ id, label: id === 'median' ? 'Median' : 'p90' }));
   const readLink = () => parseDashboardHash(browser ? location.hash : '', known);
   const initial = readLink();
 
@@ -38,6 +42,9 @@
   // `c=64` link survives until the rung navigator mounts (a later step).
   let subject = $state(initial.subject);
   let rung = $state(initial.c);
+  // Median | p90 on both TTFT tabs. Shared between them, so flipping from TTFT
+  // to High-ISL TTFT keeps the statistic the reader chose.
+  let stat = $state(initial.stat);
   let modelFilter = $state('all');
   // The record(s) behind the clicked chart point. An array because one plotted
   // point can stand for several grouped runs — see GatePointCard.
@@ -51,6 +58,7 @@
   // hidden and subject/rung travel in the hash on both.
   const onCost = $derived(activeTab === 'cost');
   const onSubjectTab = $derived(onConcurrency || onCost);
+  const onTtft = $derived(isTtftTab(activeTab));
   const keep = (r) => modelFilter === 'all' || r.target_model === modelFilter;
   // One bench, one section — except on the concurrency tab, where the subject
   // tabs own every record (ConcurrencyTab) and the model select is hidden:
@@ -88,6 +96,7 @@
       tab: activeTab,
       subject: onSubjectTab ? subject : null,
       c: onSubjectTab ? rung : null,
+      stat: onTtft ? stat : null,
     });
     replaceState(hash ? `#${hash}` : location.pathname + location.search, {});
   });
@@ -105,6 +114,7 @@
     activeTab = link.tab;
     subject = link.subject;
     rung = link.c;
+    stat = link.stat;
   }
 
   function onkeydown(e) {
@@ -161,9 +171,20 @@
       {#if onCost}
         <CostTab bind:subject bind:rung benches={tab.benches} {recordsFor} onselect={(recs) => (selected = recs)} />
       {/if}
-      {#each sections as s (s.benchId)}
-        <GateBenchSection {...s} onselect={(recs) => (selected = recs)} />
-      {/each}
+      {#if onTtft}
+        <!-- Nested inside the outer tabpanel, like the subject strips. Each
+             stat tab controls the one panel below, which holds every section. -->
+        <TabStrip prefix="tt" label="TTFT statistic" tabs={STAT_TABS} bind:active={stat} />
+        <div id="tt-panel-{stat}" role="tabpanel" aria-labelledby="tt-tab-{stat}">
+          {#each sections as s (s.benchId)}
+            <GateBenchSection {...s} {stat} onselect={(recs) => (selected = recs)} />
+          {/each}
+        </div>
+      {:else}
+        {#each sections as s (s.benchId)}
+          <GateBenchSection {...s} onselect={(recs) => (selected = recs)} />
+        {/each}
+      {/if}
       {#if sections.length === 0 && !onSubjectTab}
         <p class="bd-empty">No records for this model in this benchmark family.</p>
       {/if}
