@@ -10,6 +10,7 @@ import { recordFileUrl } from './receipt.js';
 import { splitByVariant } from './gate-variants.js';
 import { foldPartitions } from './bfcl-partition.js';
 import { latestDeclaredSince, limitFor as limitForRecord, rungFloors as rungFloorsOf } from './gate-limits.js';
+import { TTFT_STATS, modeOf } from './ttft-baselines.js';
 
 export const gateData = gates;
 // A record links to its own file in the engine repository, on the branch it was
@@ -39,6 +40,7 @@ export { shortModel } from './series-colors.js';
 // ---- tab taxonomy -----------------------------------------------------------
 // One tab per benchmark family; a family only earns a tab when it has records.
 // ttft warm+cold share a tab (same metric, same model, two conditions).
+// Both TTFT tabs carry a Median | p90 strip (BenchmarkDashboard).
 // The two BFCL draws stay SEPARATE panels: different models AND different
 // sample draws — overlaying them on one axis would let a 27B number read as a
 // 35B one, or one draw's score read as comparable to another's.
@@ -46,6 +48,16 @@ const TAB_DEFS = [
   { id: 'agentic', label: 'Agentic', benches: ['agentic-webserver'] },
   { id: 'bfcl', label: 'BFCL', benches: ['bfcl-subset', 'bfcl-subset-echolp'] },
   { id: 'ttft', label: 'TTFT', benches: ['ttft-warm-gate', 'ttft-cold-gate'] },
+  // The 32k-token prompt, cold and warm, on both subjects: its own tab because
+  // it is its own instrument (one committed prompt, one-shot) and its numbers
+  // are two orders of magnitude above the synthetic gates'. The dense and MoE
+  // gates are separate benches, so the model select groups them as it does
+  // everywhere else, and no 27B run can read as a 35B one.
+  {
+    id: 'ttft-long',
+    label: 'High-ISL TTFT',
+    benches: ['high-isl-ttft-cold', 'high-isl-ttft-warm', 'high-isl-ttft-cold-moe', 'high-isl-ttft-warm-moe'],
+  },
   // Wired ahead of data: records for these land only after calibration on
   // the fixed instrument (2026-08-15 concurrency re-scope). Until then the
   // records-filter below keeps the tabs hidden, and the footer counts how
@@ -84,6 +96,14 @@ const TAB_DEFS = [
 // + peak_aggregate_tok_s), read from the tab definition so a bench added there
 // gets the ladder panels without a second edit.
 const CONCURRENCY_BENCHES = new Set(TAB_DEFS.find((t) => t.id === 'concurrency').benches);
+// The TTFT family: every bench on a TTFT tab, read from the tab definitions so
+// a TTFT gate added to either tab gets the Median | p90 split, the TTFT tiles
+// and the vLLM pairing without a second edit. A prefix test (`ttft*`) missed
+// the high-ISL gates, whose ids start with `high-isl-`.
+const TTFT_TABS = Object.freeze(['ttft', 'ttft-long']);
+const TTFT_BENCHES = new Set(TAB_DEFS.filter((t) => TTFT_TABS.includes(t.id)).flatMap((t) => t.benches));
+export const isTtftTab = (tabId) => TTFT_TABS.includes(tabId);
+export const isTtftBench = (benchId) => TTFT_BENCHES.has(benchId);
 export const tabs = TAB_DEFS.filter((t) => t.benches.some((b) => (gates.benchmarks[b]?.records ?? []).length > 0));
 
 export const models = [...new Set(Object.values(gates.benchmarks).flatMap((b) => b.records.map((r) => r.target_model)))].sort();
@@ -93,7 +113,13 @@ export const models = [...new Set(Object.values(gates.benchmarks).flatMap((b) =>
 // record through `limitFor` (gate-limits.js), so a ratcheted floor steps
 // where it was ratcheted and nothing is invented here.
 
-export function panelsFor(benchId, records) {
+/**
+ * @param {string} benchId
+ * @param {object[]} records
+ * @param {{stat?: 'median'|'p90'}} [opts] required for a TTFT bench: its tabs
+ *   show one statistic at a time, and a TTFT panel without one is a caller bug
+ */
+export function panelsFor(benchId, records, opts = {}) {
   if (records.length === 0) return [];
   const latest = records[records.length - 1];
   if (benchId === 'agentic-webserver') {
@@ -120,15 +146,19 @@ export function panelsFor(benchId, records) {
       },
     ];
   }
-  if (benchId.startsWith('ttft')) {
+  if (isTtftBench(benchId)) {
+    // One statistic per panel, chosen by the tab's Median | p90 strip. The two
+    // used to share an axis, and a p90 twice the median squeezed the median's
+    // run-to-run movement into a flat line.
+    const { stat } = opts;
+    if (!TTFT_STATS.includes(stat))
+      throw new Error(`panelsFor(${benchId}): a TTFT panel needs stat median or p90, got ${JSON.stringify(stat)}`);
     return [
       {
-        title: benchId === 'ttft-warm-gate' ? 'warm TTFT' : 'cold TTFT',
+        title: `${modeOf(benchId)} TTFT · ${stat}`,
         unit: 'ms',
-        metrics: [
-          { key: 'median_ms', label: 'median' },
-          { key: 'p90_ms', label: 'p90', dashed: true },
-        ],
+        stat,
+        metrics: [{ key: `${stat}_ms`, label: stat }],
       },
     ];
   }

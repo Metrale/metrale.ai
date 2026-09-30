@@ -27,6 +27,10 @@ function metraleGenerators() {
       run('gen-benchmarks.mjs');
       run('gen-gates.mjs');
       run('gen-ladder.mjs');
+      // The vLLM TTFT baselines the TTFT tabs pair with the gates. Structural:
+      // a manifest that fails a guard stops the build rather than reading as
+      // "not measured".
+      run('gen-ttft-baselines.mjs');
       // The product updates page renders CHANGELOG.md. Structural, like gen-gates.
       run('gen-changelog.mjs');
       // The roles on the careers page, from positions.jsonl. Structural: a bad

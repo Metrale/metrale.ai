@@ -3,6 +3,7 @@
 // dashboard-link.js — the benchmark dashboard's deep link.
 //
 //   /#bench=concurrency&subject=qwen36-35b-a3b&c=64
+//   /#bench=ttft-long&stat=p90
 //
 // A hash, not a query string: the page is prerendered and touching
 // `url.searchParams` during prerender is a build error, while the hash never
@@ -11,12 +12,13 @@
 // never throws on the hash, because a pasted URL is untrusted input. What is
 // valid (tab ids, subject ids, rungs) is passed in, so the resolution rules are
 // testable without the generated data and a stale hash cannot pick a tab or
-// subject that no longer exists.
+// subject that no longer exists. `stat` is the TTFT tabs' Median | p90 choice;
+// its own key rather than `subject`, which names a model on the other tabs.
 
 export const RUNG_ALL = 'all';
 
-const KEY = { tab: 'bench', subject: 'subject', rung: 'c' };
-const KNOWN_LISTS = ['tabIds', 'subjectIds', 'rungs'];
+const KEY = { tab: 'bench', subject: 'subject', rung: 'c', stat: 'stat' };
+const KNOWN_LISTS = ['tabIds', 'subjectIds', 'rungs', 'stats'];
 
 /** An unknown or missing tab is "not a deep link" — the dashboard opens as it would from a click. */
 export function resolveTab(raw, tabIds) {
@@ -40,6 +42,12 @@ export function resolveRung(raw, rungs) {
   return rungs.includes(c) ? c : RUNG_ALL;
 }
 
+/** One of the declared statistics, else the first (the median). `null` only when none are declared. */
+export function resolveStat(raw, stats) {
+  if (stats.includes(raw)) return raw;
+  return stats.length > 0 ? stats[0] : null;
+}
+
 function assertKnown(known) {
   for (const k of KNOWN_LISTS) {
     if (!Array.isArray(known?.[k])) throw new Error(`dashboard-link: known.${k} must be an array`);
@@ -48,8 +56,8 @@ function assertKnown(known) {
 
 /**
  * @param {unknown} hash `location.hash`, with or without its leading `#`
- * @param {{tabIds:string[], subjectIds:string[], rungs:number[]}} known
- * @returns {{tab:string|null, subject:string|null, c:string|number}}
+ * @param {{tabIds:string[], subjectIds:string[], rungs:number[], stats:string[]}} known
+ * @returns {{tab:string|null, subject:string|null, c:string|number, stat:string|null}}
  */
 export function parseDashboardHash(hash, known) {
   assertKnown(known);
@@ -58,6 +66,7 @@ export function parseDashboardHash(hash, known) {
     tab: resolveTab(params.get(KEY.tab), known.tabIds),
     subject: resolveSubject(params.get(KEY.subject), known.subjectIds),
     c: resolveRung(params.get(KEY.rung), known.rungs),
+    stat: resolveStat(params.get(KEY.stat), known.stats),
   };
 }
 
@@ -66,13 +75,15 @@ export const isDeepLink = (link) => link.tab !== null;
 /**
  * The hash for a dashboard state, without the `#`. No tab means no dashboard
  * to link to, so the result is empty; subject and rung are written only when
- * given, so a TTFT link does not carry a concurrency subject.
+ * given, so a TTFT link does not carry a concurrency subject, and `stat` only on
+ * a TTFT tab.
  */
-export function formatDashboardHash({ tab, subject = null, c = null }) {
+export function formatDashboardHash({ tab, subject = null, c = null, stat = null }) {
   if (tab === null || tab === undefined) return '';
   const params = new URLSearchParams();
   params.set(KEY.tab, tab);
   if (subject !== null && subject !== undefined) params.set(KEY.subject, subject);
   if (c !== null && c !== undefined) params.set(KEY.rung, String(c));
+  if (stat !== null && stat !== undefined) params.set(KEY.stat, stat);
   return params.toString();
 }

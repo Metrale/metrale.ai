@@ -12,8 +12,11 @@
 import { test, expect } from '@playwright/test';
 
 const THEMES = ['dark', 'light'];
-// The inner subject strips: TabStrip prefixes `cs` (Concurrency) and `co` (Cost).
-const SUBJECT_STRIP = { concurrency: 'cs', cost: 'co' };
+// The inner strips: TabStrip prefixes `cs` (Concurrency) and `co` (Cost) pick a
+// subject, and `tt` picks Median | p90 on both TTFT tabs. Keyed by the outer
+// tab's label, lower-cased; each strip is walked in full.
+const SUBJECT_STRIP = { concurrency: 'cs', cost: 'co', ttft: 'tt', 'high-isl ttft': 'tt' };
+const STRIP_SIZE = { cs: 3, co: 3, tt: 2 };
 
 /** Everything wider than the dialog or past the screen's right edge, named. */
 const overflowIn = (page) =>
@@ -80,13 +83,15 @@ test.describe('the benchmark dashboard at 390px', () => {
       await expect(page.locator('.bd[role="dialog"]')).toBeVisible();
       const tabs = page.locator('.bd-tabs [role="tab"]');
       const labels = (await tabs.allInnerTexts()).map((t) => t.trim());
-      expect(labels.length).toBeGreaterThanOrEqual(6);
+      expect(labels.length).toBeGreaterThanOrEqual(7);
       const found = [];
       for (const label of labels) {
-        await tabs.filter({ hasText: label }).click();
+        // Exact: "High-ISL TTFT" contains "TTFT", and a substring filter would
+        // match two tabs and click neither.
+        await page.locator('.bd-tabs').getByRole('tab', { name: label, exact: true }).click();
         const strip = SUBJECT_STRIP[label.toLowerCase()];
         const subjects = strip ? await page.locator(`.${strip}-tabs [role="tab"]`).evaluateAll((els) => els.map((e) => e.id)) : [null];
-        if (strip) expect(subjects.length).toBe(3);
+        if (strip) expect(subjects.length).toBe(STRIP_SIZE[strip]);
         for (const id of subjects) {
           if (id) await page.locator(`#${id}`).click();
           await page.waitForTimeout(100);
