@@ -22,6 +22,7 @@
 // trusting a build product — a 27B curve must never appear on a 35B tab.
 
 import { comparable, describeDiffers } from './ladder-baselines.js';
+import { ladderPoints } from './gates.js';
 
 export const subjectSeriesOf = (ladder) => ladder.series.find((s) => s.role === 'subject') ?? null;
 export const baselineSeriesOf = (ladder) => ladder.series.filter((s) => s.role === 'baseline');
@@ -89,6 +90,31 @@ export function comparisonStateOf(subject, records, ladders) {
   if (live) return 'live';
   if (baselineOnlyFor(subject, ladders)) return 'baseline';
   return 'none';
+}
+
+/**
+ * The published pair, when the live gate record stops short of it: the rungs
+ * the published ladder measured and the newest gate run did not. `null`
+ * whenever the tab already draws the published pair, or it reaches no rung
+ * the gate lacks.
+ *
+ * The MoE is the case: its concurrency gate declares C=1..16, and the engine
+ * publishes a ladder to C=128 on the same instrument. The gate records stay the
+ * certified evidence for the rungs they cover; the published pair is drawn
+ * beside them, labelled as published-ladder data, so a C=128 figure is never
+ * read as a gate record, and never left off the page either.
+ *
+ * @returns {{ladder: object, rungs: number[]} | null}
+ */
+export function publishedBeyondLive(subject, records, ladders) {
+  if (comparisonStateOf(subject, records, ladders) !== 'live') return null;
+  const ladder = publishedFor(subject, ladders);
+  if (!ladder) return null;
+  const gated = new Set(ladderPoints(liveRecordOf(records)).map((p) => p.c));
+  const rungs = subjectSeriesOf(ladder)
+    .rungs.map((r) => r.c)
+    .filter((c) => !gated.has(c));
+  return rungs.length > 0 ? { ladder, rungs } : null;
 }
 
 /**
@@ -176,5 +202,12 @@ export function batchCapOf(cli) {
   return m ? m[1] : null;
 }
 
-/** The legend chip every one-shot baseline gets: dated from its rungs, never typed. */
-export const oneShotChip = (b) => `${b.label} · one-shot · measured ${measuredRange(b.rungs)} · not re-run`;
+/**
+ * The legend chip every one-shot baseline gets: dated from its rungs, never
+ * typed. A leg whose declared gaps were filled from its energy re-run
+ * (ladder-build.mjs#fillDeclaredGaps) says which rungs came from where.
+ */
+export const oneShotChip = (b) =>
+  b.filled
+    ? `${b.label} · one-shot · measured ${measuredRange(b.rungs.filter((r) => !r.filled_from))} · C=${b.filled.rungs.join('/')} from ${b.filled.label}, ${b.filled.measured_days.join(', ')}`
+    : `${b.label} · one-shot · measured ${measuredRange(b.rungs)} · not re-run`;

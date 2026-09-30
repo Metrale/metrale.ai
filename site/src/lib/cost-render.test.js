@@ -586,3 +586,44 @@ describe('facility overhead', () => {
     expect(plot(p)).not.toContain('cost-band');
   });
 });
+
+// ---- the MoE published ladder, beside a gate that stops at C=16 -------------
+//
+// The owner's question, 2026-09-29: the MoE runs to C=128 and the Cost tab
+// stopped at C=16. The gate's chart stays what it was; the published ladder
+// gets its own chart, under its own title, labelled as published-ladder data.
+describe('the MoE Cost tab: the gate chart, then the published ladder to C=128', () => {
+  const moeRecords = recordsFor(MOE.gate).filter((r) => r.target_model === MOE.checkpoint);
+  const page = text(html(Panel, { subject: MOE, records: moeRecords, rung: 16, onselect: () => {}, ladders: LADDERS }));
+  const pub = costLadder(MOE, moeRecords, LADDERS, { publishedOnly: true });
+
+  test('the published cost pairs the Metrale Engine leg with the vLLM energy leg at every rung to C=128', () => {
+    expect(pub.state).toBe('published');
+    expect(pub.energyState).toBe('paired');
+    expect(pub.metrale.points.map((p) => p.c)).toEqual([1, 2, 4, 8, 16, 32, 64, 128]);
+    expect(pub.baselines.map((b) => b.id)).toEqual(['vllm-mtp-energy']);
+    // vllm-mtp is throughput-only, its filled rungs included: no joules drawn twice.
+    expect(pub.noEnergy.map((n) => n.label)).toEqual(['vLLM + MTP']);
+    expect(pub.verdicts.n).toBe(8);
+    expect(pub.verdicts.k).toBe(8);
+  });
+
+  test('the second chart is titled as the published ladder and the bridge says it is not a gate record', () => {
+    expect(page).toContain('$ per 1M tokens · published ladder, C=1..128 · total');
+    expect(page).toContain(`It is published-ladder data, not a gate record: ${verdictTile(pub.verdicts)}.`);
+    expect(page).toContain('The published ladder below measures C=32, 64, 128 too');
+    // The gate's own chart is still first, on its instrument.
+    expect(page.indexOf('$ per 1M tokens · ISL 128 / OSL 1024')).toBeLessThan(page.indexOf('published ladder, C=1..128'));
+    expect(page).not.toMatch(ZERO_COST);
+  });
+
+  test('the dense Cost tab, whose gate covers every rung, draws no second chart', () => {
+    expect(panel(realRecords, LADDERS)).not.toContain('published ladder, C=');
+  });
+
+  test('forcing the published chart on a subject with no published pair is refused', () => {
+    expect(() => costLadder({ ...MOE, published_manifest: null }, moeRecords, LADDERS, { publishedOnly: true })).toThrow(
+      /has no published pair to draw/
+    );
+  });
+});

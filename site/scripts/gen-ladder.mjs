@@ -87,8 +87,18 @@ for (const subject of subjects) {
   } catch (err) {
     die(`${subject.id}: cannot hash workload.harness ${manifest.workload?.harness}: ${err.message}`);
   }
+  // A subject manifest may name its vLLM legs by reference (`pairs_with`,
+  // lib/ladder-build.mjs#checkPairing) rather than restate them.
+  let pairsWith = null;
+  if (manifest.pairs_with !== undefined) {
+    const basePath = resolve(REPO, manifest.pairs_with);
+    pairsWith = {
+      manifest: readJson(basePath, `${subject.id} pairs_with manifest`),
+      rawOf: (file) => readJson(join(dirname(basePath), file), `${subject.id} pairs_with raw source ${file}`),
+    };
+  }
   try {
-    ladders[subject.id] = buildLadder(manifest, { subject, rawOf, harnessRepoSha256 });
+    ladders[subject.id] = buildLadder(manifest, { subject, rawOf, harnessRepoSha256, pairsWith });
   } catch (err) {
     die(`${subject.id}: ${err.message.replace(/^gen-ladder: /, '')}`);
   }

@@ -9,6 +9,7 @@
 import { describe, expect, test } from 'bun:test';
 import ladders from './ladders.generated.json';
 import subjects from './concurrency-subjects.json';
+import { vllmOnlyLadder } from '../../test-stubs/moe-vllm-only-ladder.js';
 import {
   absentReasonOf,
   baselineOnlyFor,
@@ -19,14 +20,19 @@ import {
   ladderFor,
   oneShotChip,
   pairWith,
+  publishedBeyondLive,
   publishedFor,
 } from './concurrency-comparison.js';
+import { recordsFor } from './gates.js';
 
 const byId = (id) => subjects.find((s) => s.id === id);
 const DENSE = byId('qwen38-27b');
 const MOE = byId('qwen36-35b-a3b');
 const DFLASH = byId('qwen38-27b-dflash');
-const moe = ladders.subjects[MOE.id];
+// The baseline-only shape these rules are written against: the MoE vLLM
+// manifest alone (test-stubs/moe-vllm-only-ladder.js). The real MoE ladder is
+// a scored pair since 2026-09-29, and is asserted as one below.
+const moe = vllmOnlyLadder;
 const vllm = moe.series.find((s) => s.id === 'vllm-mtp');
 
 // A passing main-branch gate record on the gate instrument, string-valued as
@@ -46,10 +52,13 @@ const gate = (over = {}) => ({
 const ON_GATE = { isl: 512, osl: 320, prompt_mode: 'natural', max_model_len: 4096, max_batch_size: 128, kv_cache_dtype: 'fp8' };
 const withInstrument = (instrument) => ({ ...moe, series: [{ ...vllm, instrument }] });
 const laddersWith = (ladder) => ({ subjects: { ...ladders.subjects, [MOE.id]: ladder } });
+// Every committed ladder, with the MoE's as the vLLM manifest alone would build it.
+const baseOnly = laddersWith(moe);
 
 describe('which ladder a subject gets', () => {
   test('its own, only for its checkpoint; none when it declares no manifest', () => {
-    expect(ladderFor(MOE, ladders)).toBe(moe);
+    expect(ladderFor(MOE, ladders)).toBe(ladders.subjects[MOE.id]);
+    expect(ladderFor(MOE, baseOnly)).toBe(moe);
     expect(ladderFor(DFLASH, ladders)).toBeNull();
     expect(ladderFor({ ...MOE, checkpoint: DENSE.checkpoint }, ladders)).toBeNull();
     expect(ladderFor({ ...MOE, published_manifest: null }, ladders)).toBeNull();
@@ -59,8 +68,10 @@ describe('which ladder a subject gets', () => {
   test('a pair and a baseline-only ladder are told apart by the subject series, not by name', () => {
     expect(publishedFor(DENSE, ladders)).toBe(ladders.subjects[DENSE.id]);
     expect(baselineOnlyFor(DENSE, ladders)).toBeNull();
-    expect(publishedFor(MOE, ladders)).toBeNull();
-    expect(baselineOnlyFor(MOE, ladders)).toBe(moe);
+    expect(publishedFor(MOE, ladders)).toBe(ladders.subjects[MOE.id]);
+    expect(baselineOnlyFor(MOE, ladders)).toBeNull();
+    expect(publishedFor(MOE, baseOnly)).toBeNull();
+    expect(baselineOnlyFor(MOE, baseOnly)).toBe(moe);
     const promoted = { ...moe, series: [...moe.series, { id: 'metrale', role: 'subject', rungs: [] }] };
     expect(publishedFor(MOE, laddersWith(promoted))).toBe(promoted);
     expect(baselineOnlyFor(MOE, laddersWith(promoted))).toBeNull();
@@ -73,10 +84,14 @@ describe('the state, in precedence order', () => {
     // instrument, so nothing pairs and the frozen pair is still the best
     // thing to draw. The case where it DOES pair is the describe below.
     expect(comparisonStateOf(DENSE, [gate({ target_model: DENSE.checkpoint })], ladders)).toBe('published');
-    expect(comparisonStateOf(MOE, [], ladders)).toBe('baseline');
-    expect(comparisonStateOf(MOE, [gate()], ladders)).toBe('live');
-    expect(comparisonStateOf(MOE, [gate({ verdict: 'FAIL' })], ladders)).toBe('baseline');
-    expect(comparisonStateOf(MOE, [gate({ branch: 'pr/x' })], ladders)).toBe('baseline');
+    expect(comparisonStateOf(MOE, [], baseOnly)).toBe('baseline');
+    expect(comparisonStateOf(MOE, [gate()], baseOnly)).toBe('live');
+    expect(comparisonStateOf(MOE, [gate({ verdict: 'FAIL' })], baseOnly)).toBe('baseline');
+    expect(comparisonStateOf(MOE, [gate({ branch: 'pr/x' })], baseOnly)).toBe('baseline');
+    // The committed MoE ladder is a pair: with no live record, or one that
+    // pairs with nothing, it is what the tab draws.
+    expect(comparisonStateOf(MOE, [], ladders)).toBe('published');
+    expect(comparisonStateOf(MOE, [gate()], ladders)).toBe('published');
     expect(comparisonStateOf(DFLASH, [], ladders)).toBe('none');
     expect(comparisonStateOf({ ...MOE, published_manifest: null }, [], ladders)).toBe('none');
   });
@@ -128,8 +143,9 @@ describe('pairing a one-shot with a gate record', () => {
 describe('the tile follows the chart', () => {
   test('pair, dated one-shot, other instrument, none', () => {
     expect(baselineTileOf(DENSE, [], ladders)).toBe('published pair');
-    expect(baselineTileOf(MOE, [], ladders)).toBe('one-shot · 2026-09-19');
-    expect(baselineTileOf(MOE, [gate()], ladders)).toBe('other instrument');
+    expect(baselineTileOf(MOE, [], baseOnly)).toBe('one-shot · 2026-09-19');
+    expect(baselineTileOf(MOE, [gate()], baseOnly)).toBe('other instrument');
+    expect(baselineTileOf(MOE, [], ladders)).toBe('published pair');
     expect(baselineTileOf(MOE, [gate()], laddersWith(withInstrument(ON_GATE)))).toBe('one-shot · 2026-09-19');
     expect(baselineTileOf(DFLASH, [], ladders)).toBe('none');
     expect(baselineTileOf(DFLASH, [gate({ benchmark_id: DFLASH.gate, target_model: DFLASH.checkpoint })], ladders)).toBe('none');
@@ -304,5 +320,29 @@ describe('a live record that pairs outranks the published pair', () => {
     // one takes the tab back to the snapshot rather than drawing a stale pair
     expect(comparisonStateOf(DENSE, [repointed(), gate({ target_model: DENSE.checkpoint })], ladders)).toBe('published');
     expect(comparisonStateOf(DENSE, [gate({ target_model: DENSE.checkpoint }), repointed()], ladders)).toBe('live');
+  });
+});
+
+// ── the published pair beside a gate that stops short of it ─────────────────
+describe('publishedBeyondLive', () => {
+  const moeRecords = recordsFor(MOE.gate).filter((r) => r.target_model === MOE.checkpoint);
+  const denseRecords = recordsFor(DENSE.gate).filter((r) => r.target_model === DENSE.checkpoint);
+
+  test('the MoE: a live gate run to C=16, and the published ladder to C=128, so C=32/64/128 are beyond it', () => {
+    expect(comparisonStateOf(MOE, moeRecords, ladders)).toBe('live');
+    const beyond = publishedBeyondLive(MOE, moeRecords, ladders);
+    expect(beyond.rungs).toEqual([32, 64, 128]);
+    expect(beyond.ladder).toBe(ladders.subjects[MOE.id]);
+  });
+
+  test('nothing when the gate covers every published rung (the dense ladder)', () => {
+    expect(comparisonStateOf(DENSE, denseRecords, ladders)).toBe('live');
+    expect(publishedBeyondLive(DENSE, denseRecords, ladders)).toBeNull();
+  });
+
+  test('nothing when the tab already draws the published pair, or has none to draw', () => {
+    expect(publishedBeyondLive(MOE, [], ladders)).toBeNull(); // state 'published'
+    expect(publishedBeyondLive(MOE, moeRecords, baseOnly)).toBeNull(); // a baseline-only ladder
+    expect(publishedBeyondLive(DFLASH, recordsFor(DFLASH.gate), ladders)).toBeNull();
   });
 });

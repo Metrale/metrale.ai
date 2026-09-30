@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-09-28T22:12:33Z",
+  "generated_utc": "2026-09-30T00:40:05Z",
   "subjects": {
     "qwen38-27b": {
       "manifest": "bench/ladder38/published.json",
@@ -785,37 +785,36 @@
       }
     },
     "qwen36-35b-a3b": {
-      "manifest": "bench/baselines/qwen36-35b-a3b/published.json",
-      "title": "Qwen3.6-35B-A3B-FP8 concurrency ladder: vLLM one-shot baseline",
-      "subtitle": "vLLM 0.27.1 + MTP, C=1..16 (throughput) and C=1..128 (energy leg), on the published ladder instrument; no Metrale Engine leg at this instrument yet",
-      "aggregate": "mean tok/s over 3 timed reps (1 warmup discarded)",
-      "results_doc": "bench/baselines/qwen36-35b-a3b/published.json",
-      "results_doc_url": "https://github.com/Metrale/metrale-inference/blob/main/bench/baselines/qwen36-35b-a3b/published.json",
+      "manifest": "bench/baselines/qwen36-35b-a3b/metrale_moe_published.json",
+      "title": "Qwen3.6-35B-A3B-FP8 concurrency ladder: Metrale Engine leg",
+      "subtitle": "Metrale Engine at main 39ab52e6 (#51), C=1..128, on the published ladder instrument of published.json",
+      "aggregate": "mean tok/s over 2 timed reps (1 warmup discarded)",
+      "results_doc": "bench/baselines/qwen36-35b-a3b/metrale_moe_published.json",
+      "results_doc_url": "https://github.com/Metrale/metrale-inference/blob/main/bench/baselines/qwen36-35b-a3b/metrale_moe_published.json",
       "workload": {
         "checkpoint": "Qwen/Qwen3.6-35B-A3B-FP8",
         "checkpoint_note": "MoE 35B, 256 experts top-8 (~3B active per token), FP8 block-scale weights, 40 layers; architecture qwen3_5_moe",
         "isl_tokens": 128,
-        "isl_note": "~200 rendered prompt tokens after the chat template (prompt_tokens_per_req is 200 in every rep of the raw file)",
+        "isl_note": "~200 rendered prompt tokens after the chat template",
         "osl_tokens": 1024,
-        "reps": 3,
+        "reps": 2,
         "warmup": 1,
         "temperature": 0,
         "seed": 42,
         "thinking": "disabled via chat_template_kwargs.enable_thinking=false",
         "sampling_parity": "presence_penalty and frequency_penalty pinned to 0.0 by the harness",
-        "harness": "bench/ladder38/harness_w55_conc_ladder.py"
+        "harness": "bench/ladder38/harness_w56_conc_ladder.py"
       },
       "box": {
         "name": "dgx2 (spark-43fa)",
         "gpu": "NVIDIA GB10 Grace Blackwell, 121.7 GB unified",
-        "note": "the box the published dense ladder's vLLM legs ran on; the serve was refused unless nothing else held the box"
+        "driver": "580.126.09",
+        "note": "the box of both vLLM legs in published.json (vllm-mtp 2026-09-19, vllm-mtp-energy 2026-09-28)"
       },
       "harness_shas": {
-        "41e242c072": "vLLM MoE leg, the only leg in this manifest. This was the sha256 of the copy committed at bench/ladder38/harness_w55_conc_ladder.py (md5 4aa694d8aabe404edc8f1e3eb2acbf31) when it ran; that file's comments have been edited since, so gen-ladder.mjs's harness_repo_sha256 (the tree copy) no longer equals it. The dense ladder's raw files carry earlier revisions of this same file (6412b12d4d, 1c77e1d8e9, 1f10d4887b); the deck prints the recorded and the repo hash side by side.",
-        "55a5963e4b": "The ENERGY leg (vllm-mtp-energy), 2026-09-28. harness_w56_conc_ladder.py -- the w55 harness plus power_window.py, which records gpu_rail_energy_j per rep; w55 has no power sampling, which is why vllm-mtp carries no joules. This is the sha256 of the copy committed at bench/ladder38/harness_w56_conc_ladder.py at 7cd54d45 and the one copied to dgx2 for the run: the raw file's driver_sha256 equals it (the harness hashes itself at startup). The dense ladder's energy leg ran an earlier revision of the same file (664302439b); the two differ in comments and in the new detection of in-band SSE error frames and truncated streams (both turn a would-be silent success into a counted error), not in the request body; power_window.py, which does the integral, differs only in comments.",
-        "equivalence": "One revision, one leg. The copy on dgx2 (/home/claude/ladder38-pinned/) was a DIFFERENT, older revision and was replaced with the repo copy before measuring; the driver_sha256 in the raw file is the proof of which copy ran, and the generator refuses any raw file whose driver sha is not listed here."
+        "55a5963e4b": "harness_w56_conc_ladder.py, the copy committed at bench/ladder38/harness_w56_conc_ladder.py (its sha256 is 55a5963e4beea50e8f7e12de6c70e0709a53ff0d62b020cddefdea24ae92a216). The same revision drove vllm-mtp-energy in published.json. It records gpu_rail_energy_j per rep by integrating nvidia-smi power.draw.average over the rep window."
       },
-      "harness_repo_sha256": "4649c9b001d1c984bdbaae9b9a97631b526a6725f4fe963a23a5c378f6d5cb3c",
+      "harness_repo_sha256": "55a5963e4beea50e8f7e12de6c70e0709a53ff0d62b020cddefdea24ae92a216",
       "concurrencies": [
         1,
         2,
@@ -827,6 +826,188 @@
         128
       ],
       "series": [
+        {
+          "id": "metrale",
+          "role": "subject",
+          "label": "Metrale Engine",
+          "engine": "Metrale Engine 1.0.0-beta-preview",
+          "build": "39ab52e6c9",
+          "build_note": "main at #51. The binary (sha256 f5aa8d3a17649c7e84e2ad28cc7746870b80d62dc9e124fb614c9a52410a66a5) was built from d45884cd, whose tree equals 39ab52e6 outside .benchmarks.",
+          "env": "METRALE_HOME=<a scratch directory>",
+          "env_note": "No METRALE_* lever was set. The serve's environment was read from /proc/<pid>/environ at launch and held only METRALE_HOME.",
+          "cli": "met serve Qwen/Qwen3.6-35B-A3B-FP8 --bind 127.0.0.1 --port 18891 --disable-thinking --enable-prefix-caching --gpu-memory-utilization 0.85 --kv-cache-dtype bf16 --kv-high-precision-layers auto --lm-head-dtype nvfp4 --max-batch-size 128 --max-seq-len 2048 --mtp-quantization bf16 --num-drafts 1 --request-timeout 0 --scheduler fifo --speculative --ssm-cache-slots 32 --weight-quantization declared",
+          "cli_note": "The argv read from /proc/<pid>/cmdline, with the binary's path shortened to `met`. It is the concurrency-sweep-moe gate's serve: the recipe qwen3.6/qwen3.6-35b-a3b-fp8-nvfp4head under the gate's BENCH.toml serve_overrides (weight_quantization declared, ctx 2048, batch cap 128, bf16 KV, util 0.85, fifo, num_drafts 1, thinking off, ssm_cache_slots 32, request_timeout 0).",
+          "speculation": "MTP, --num-drafts 1, at every width",
+          "weight_quantization": "declared: the checkpoint's own W8A8 experts; attention and GDN decode W8A16",
+          "instrument": {
+            "isl": 128,
+            "osl": 1024,
+            "prompt_mode": "essay",
+            "max_model_len": 2048,
+            "max_batch_size": 128,
+            "kv_cache_dtype": "bf16",
+            "reps": 2,
+            "warmup": 1,
+            "temperature": 0,
+            "seed": 42
+          },
+          "source_note": "Two legs, one fresh serve each, stopped by PID: C=32/64/128 on 2026-09-29 23:06-23:23 UTC, then C=1..16 23:31-23:37 UTC. The rung files are the harness output split by rung. Only `label` differs from the harness JSON (renamed after the rung file); every rep, every other top-level field and every value are as written. sha256: metrale_moe_energy_c1_16.json f533a07f0844c6cdde827fe27b23919b522f931029f8113df35461653f419abc, metrale_moe_energy_c32.json ed34d383e99d2a177a27057d8ffc0c59e23f8a6b7c5c2d1f82239d9d0d0eacd2, metrale_moe_energy_c64.json cd3ff1dfcf5fc062e9625705eed6afa56c2db9ed0d76f63c026e49c565834a30, metrale_moe_energy_c128.json 347dc0393fd738adc3ba6edb0e05adb692a8011cc81821bbf7e0d2d2bdc152e8. Zero request errors. Every rep is gpu_rail_trustworthy. A 10 Hz NVML total-energy sidecar ran beside both legs as a cross-check on the in-window figure.",
+          "evidence_note": "Published-ladder data, not a gate record. The concurrency-sweep-moe gate covers C=1..16, and its signed records under .benchmarks/ remain the certified evidence for those rungs. C=32/64/128 exist only here.",
+          "rungs": [
+            {
+              "c": 1,
+              "gpu_rail_energy_j": 924.96,
+              "gpu_rail_energy_window_tokens": 2048,
+              "gpu_rail_energy_window_s": 24.87,
+              "gpu_rail_power_samples": 99,
+              "gpu_rail_worst_rep_power_samples": 50,
+              "gpu_rail_worst_rep_window_s": 12.56,
+              "gpu_rail_sample_period_ms": 250,
+              "tok_s": 82.37,
+              "tok_s_median": 82.37,
+              "spread_pct": 2.03,
+              "reps": 2,
+              "ttft_p50_ms": 199.26,
+              "tpot_p50_ms": 11.96,
+              "source": "metrale_moe_energy_c1_16.json",
+              "measured_utc": "2026-09-29T23:31:20Z",
+              "harness_sha256": "55a5963e4b"
+            },
+            {
+              "c": 2,
+              "gpu_rail_energy_j": 1221.92,
+              "gpu_rail_energy_window_tokens": 3951,
+              "gpu_rail_energy_window_s": 31.66,
+              "gpu_rail_power_samples": 126,
+              "gpu_rail_worst_rep_power_samples": 61,
+              "gpu_rail_worst_rep_window_s": 15.34,
+              "gpu_rail_sample_period_ms": 250,
+              "tok_s": 124.76,
+              "tok_s_median": 124.76,
+              "spread_pct": 1.12,
+              "reps": 2,
+              "ttft_p50_ms": 304.16,
+              "tpot_p50_ms": 15.23,
+              "source": "metrale_moe_energy_c1_16.json",
+              "measured_utc": "2026-09-29T23:31:20Z",
+              "harness_sha256": "55a5963e4b"
+            },
+            {
+              "c": 4,
+              "gpu_rail_energy_j": 1788.17,
+              "gpu_rail_energy_window_tokens": 8169,
+              "gpu_rail_energy_window_s": 44.84,
+              "gpu_rail_power_samples": 179,
+              "gpu_rail_worst_rep_power_samples": 89,
+              "gpu_rail_worst_rep_window_s": 22.39,
+              "gpu_rail_sample_period_ms": 250,
+              "tok_s": 182.17,
+              "tok_s_median": 182.17,
+              "spread_pct": 0.87,
+              "reps": 2,
+              "ttft_p50_ms": 507.13,
+              "tpot_p50_ms": 21.18,
+              "source": "metrale_moe_energy_c1_16.json",
+              "measured_utc": "2026-09-29T23:31:20Z",
+              "harness_sha256": "55a5963e4b"
+            },
+            {
+              "c": 8,
+              "gpu_rail_energy_j": 2705.96,
+              "gpu_rail_energy_window_tokens": 16260,
+              "gpu_rail_energy_window_s": 64.76,
+              "gpu_rail_power_samples": 258,
+              "gpu_rail_worst_rep_power_samples": 129,
+              "gpu_rail_worst_rep_window_s": 32.5,
+              "gpu_rail_sample_period_ms": 250,
+              "tok_s": 251.09,
+              "tok_s_median": 251.09,
+              "spread_pct": 2.26,
+              "reps": 2,
+              "ttft_p50_ms": 929.72,
+              "tpot_p50_ms": 30.36,
+              "source": "metrale_moe_energy_c1_16.json",
+              "measured_utc": "2026-09-29T23:31:20Z",
+              "harness_sha256": "55a5963e4b"
+            },
+            {
+              "c": 16,
+              "gpu_rail_energy_j": 4132.05,
+              "gpu_rail_energy_window_tokens": 32289,
+              "gpu_rail_energy_window_s": 91.47,
+              "gpu_rail_power_samples": 365,
+              "gpu_rail_worst_rep_power_samples": 182,
+              "gpu_rail_worst_rep_window_s": 45.63,
+              "gpu_rail_sample_period_ms": 250,
+              "tok_s": 353.02,
+              "tok_s_median": 353.02,
+              "spread_pct": 1.06,
+              "reps": 2,
+              "ttft_p50_ms": 1747.45,
+              "tpot_p50_ms": 42.5,
+              "source": "metrale_moe_energy_c1_16.json",
+              "measured_utc": "2026-09-29T23:31:20Z",
+              "harness_sha256": "55a5963e4b"
+            },
+            {
+              "c": 32,
+              "gpu_rail_energy_j": 6471.91,
+              "gpu_rail_energy_window_tokens": 65078,
+              "gpu_rail_energy_window_s": 133.83,
+              "gpu_rail_power_samples": 534,
+              "gpu_rail_worst_rep_power_samples": 268,
+              "gpu_rail_worst_rep_window_s": 67.27,
+              "gpu_rail_sample_period_ms": 250,
+              "tok_s": 486.29,
+              "tok_s_median": 486.29,
+              "spread_pct": 0.76,
+              "reps": 2,
+              "ttft_p50_ms": 3310.73,
+              "tpot_p50_ms": 61.27,
+              "source": "metrale_moe_energy_c32.json",
+              "measured_utc": "2026-09-29T23:06:03Z",
+              "harness_sha256": "55a5963e4b"
+            },
+            {
+              "c": 64,
+              "gpu_rail_energy_j": 11615.64,
+              "gpu_rail_energy_window_tokens": 130464,
+              "gpu_rail_energy_window_s": 209.5,
+              "gpu_rail_power_samples": 837,
+              "gpu_rail_worst_rep_power_samples": 419,
+              "gpu_rail_worst_rep_window_s": 104.9,
+              "gpu_rail_sample_period_ms": 250,
+              "tok_s": 622.74,
+              "tok_s_median": 622.74,
+              "spread_pct": 0.17,
+              "reps": 2,
+              "ttft_p50_ms": 6469.44,
+              "tpot_p50_ms": 94.61,
+              "source": "metrale_moe_energy_c64.json",
+              "measured_utc": "2026-09-29T23:06:03Z",
+              "harness_sha256": "55a5963e4b"
+            },
+            {
+              "c": 128,
+              "gpu_rail_energy_j": 19086.72,
+              "gpu_rail_energy_window_tokens": 260789,
+              "gpu_rail_energy_window_s": 346.35,
+              "gpu_rail_power_samples": 1383,
+              "gpu_rail_worst_rep_power_samples": 690,
+              "gpu_rail_worst_rep_window_s": 172.91,
+              "gpu_rail_sample_period_ms": 250,
+              "tok_s": 752.96,
+              "tok_s_median": 752.96,
+              "spread_pct": 0.27,
+              "reps": 2,
+              "ttft_p50_ms": 12837.44,
+              "tpot_p50_ms": 154.68,
+              "source": "metrale_moe_energy_c128.json",
+              "measured_utc": "2026-09-29T23:06:03Z",
+              "harness_sha256": "55a5963e4b"
+            }
+          ]
+        },
         {
           "id": "vllm-mtp",
           "label": "vLLM + MTP",
@@ -859,14 +1040,6 @@
             "seed": 42
           },
           "instrument_note": "kv_cache_dtype is bf16 although the command says `--kv-cache-dtype auto`: auto takes the model dtype, and `--dtype bfloat16` is set, so the KV cache is bf16 BECAUSE the dtype is bfloat16. Spelled `bf16` because that is how a Metrale Engine gate record writes serve_overrides.kv_cache_dtype, which is what this fingerprint is compared against; vLLM's own spelling is bfloat16. No prompt_mode: the ladder harness has no fixture, it sends a nonce-prefixed padded prompt, so a gate record (natural fixture) can never fingerprint as this instrument. prompt_mode is essay because the pinned harness defaults to it (bench/ladder38/harness_w55_conc_ladder.py:75, PROMPT_MODE = os.environ.get(\"W55_PROMPT_MODE\", \"essay\")) and this series' recorded env (HF_HUB_OFFLINE=1 VLLM_USE_DEEP_GEMM=0 VLLM_TEST_FORCE_FP8_MARLIN=1) does not set it. DERIVED, NOT RECORDED: the raw file carries isl, osl, reps, warmup, temperature, seed and chat_template_kwargs but not prompt_mode, so re-check this if the raw file is ever replaced -- a harness that recorded it would make this a fact instead of an inference. It is declared because ladder-baselines.js treats an undeclared axis as a DIFFERENCE, never a match: without it a future concurrency-sweep-moe gate record measured on this exact instrument could never be drawn against this bar.",
-          "unmeasured": {
-            "rungs": [
-              32,
-              64,
-              128
-            ],
-            "reason": "The ladder stops at C=16 because of memory, not because of time. GB10 carries 121.7 GB of UNIFIED memory shared between CPU and GPU -- there is no separate VRAM to fall back on. At C >= 32 the vLLM + MTP working set (per-sequence KV cache plus MTP's speculative draft state) outgrows what that shared pool can carry alongside the host, and because the pool is shared, exhausting it takes the whole machine down rather than failing a single allocation: three physical powercycles in one day, at the safe util 0.85 and with --max-num-seqs already capped. We did not isolate it further because every attempt costs the box. These rungs were deliberately not run. They have no value here: not zero, not interpolated, and the generator refuses a raw file that contains them. 2026-09-28: this one-shot was not re-run, but the energy leg (vllm-mtp-energy) did drive C=32/64/128 on the same box with the same command, one fresh container per rung. All three rungs completed, with zero request errors and no stall; host MemAvailable never fell below 4.9 GB, and the box stayed up. So the memory explanation above held on 2026-08-18, and was not reproduced on 2026-09-28."
-          },
           "source_note": "One-shot: measured once, on 2026-09-19 on dgx2, and never re-run. Every rung comes from the single raw file vllm_moe_c1_16.json (sha256 7788d19a16bb32466a53f72fc13c70c8f9352fb888b758f786a54c1a6b7ad648, byte-identical to dgx2:/home/claude/ladder-moe-baseline/). Two earlier attempts the same evening produced no numbers and are not here: one died in DeepGEMM at weight load (kernel_override), one ran the ladder against a serve whose harness preflight had failed (no first token; TypeError on ttft_p50_ms). Zero request errors at every rung.",
           "rungs": [
             {
@@ -928,8 +1101,59 @@
               "source": "vllm_moe_c1_16.json",
               "measured_utc": "2026-09-19T22:25:43Z",
               "harness_sha256": "41e242c072"
+            },
+            {
+              "c": 32,
+              "tok_s": 453.58,
+              "tok_s_median": 454.14,
+              "spread_pct": 1.36,
+              "reps": 3,
+              "ttft_p50_ms": 1237.61,
+              "tpot_p50_ms": 67.75,
+              "source": "vllm_moe_energy_c32.json",
+              "measured_utc": "2026-09-28T20:14:18Z",
+              "harness_sha256": "55a5963e4b",
+              "filled_from": "vllm-mtp-energy"
+            },
+            {
+              "c": 64,
+              "tok_s": 563.62,
+              "tok_s_median": 563.42,
+              "spread_pct": 0.24,
+              "reps": 3,
+              "ttft_p50_ms": 2049.15,
+              "tpot_p50_ms": 108.6,
+              "source": "vllm_moe_energy_c64.json",
+              "measured_utc": "2026-09-28T20:30:12Z",
+              "harness_sha256": "55a5963e4b",
+              "filled_from": "vllm-mtp-energy"
+            },
+            {
+              "c": 128,
+              "tok_s": 672.94,
+              "tok_s_median": 673.55,
+              "spread_pct": 0.34,
+              "reps": 3,
+              "ttft_p50_ms": 3702.52,
+              "tpot_p50_ms": 180.94,
+              "source": "vllm_moe_energy_c128.json",
+              "measured_utc": "2026-09-28T20:49:23Z",
+              "harness_sha256": "55a5963e4b",
+              "filled_from": "vllm-mtp-energy"
             }
-          ]
+          ],
+          "filled": {
+            "from": "vllm-mtp-energy",
+            "label": "vLLM + MTP (energy)",
+            "rungs": [
+              32,
+              64,
+              128
+            ],
+            "measured_days": [
+              "2026-09-28"
+            ]
+          }
         },
         {
           "id": "vllm-mtp-energy",
@@ -1116,7 +1340,173 @@
           ]
         }
       ],
-      "subject_note": "No series has role \"subject\": no Metrale Engine run exists at this instrument for this checkpoint. This manifest deliberately mirrors bench/ladder38/published.json so that when one does, it is added as a series with role \"subject\" whose sources name its raw harness files, and gen-ladder.mjs scores the pair with the same code it scores the dense ladder with. Until then the generator emits no rows and no summary for this ladder, and the site says so instead of drawing a zero."
+      "pairs_with": "bench/baselines/qwen36-35b-a3b/published.json",
+      "pairs_with_note": "This manifest holds the Metrale Engine leg only. The vLLM legs it is compared against are the series of pairs_with (vllm-mtp for throughput, vllm-mtp-energy for joules), and are not restated here. A reader pairs the subject below with those series axis by axis: the same checkpoint, ISL 128 / OSL 1024 essay instrument, ctx 2048, batch cap 128, bf16 KV, thinking off, the same box, and the same harness revision as vllm-mtp-energy.",
+      "reps_note": "2 timed reps + 1 warmup per rung. The vLLM legs in published.json ran 3 timed reps + 1 warmup. The rep count is a sample count, not an instrument axis: every rep sends the same requests. It is disclosed here rather than matched.",
+      "baseline_workload": {
+        "checkpoint": "Qwen/Qwen3.6-35B-A3B-FP8",
+        "checkpoint_note": "MoE 35B, 256 experts top-8 (~3B active per token), FP8 block-scale weights, 40 layers; architecture qwen3_5_moe",
+        "isl_tokens": 128,
+        "isl_note": "~200 rendered prompt tokens after the chat template (prompt_tokens_per_req is 200 in every rep of the raw file)",
+        "osl_tokens": 1024,
+        "reps": 3,
+        "warmup": 1,
+        "temperature": 0,
+        "seed": 42,
+        "thinking": "disabled via chat_template_kwargs.enable_thinking=false",
+        "sampling_parity": "presence_penalty and frequency_penalty pinned to 0.0 by the harness",
+        "harness": "bench/ladder38/harness_w55_conc_ladder.py"
+      },
+      "baseline_harness_shas": {
+        "41e242c072": "vLLM MoE leg, the only leg in this manifest. This was the sha256 of the copy committed at bench/ladder38/harness_w55_conc_ladder.py (md5 4aa694d8aabe404edc8f1e3eb2acbf31) when it ran; that file's comments have been edited since, so gen-ladder.mjs's harness_repo_sha256 (the tree copy) no longer equals it. The dense ladder's raw files carry earlier revisions of this same file (6412b12d4d, 1c77e1d8e9, 1f10d4887b); the deck prints the recorded and the repo hash side by side.",
+        "55a5963e4b": "The ENERGY leg (vllm-mtp-energy), 2026-09-28. harness_w56_conc_ladder.py -- the w55 harness plus power_window.py, which records gpu_rail_energy_j per rep; w55 has no power sampling, which is why vllm-mtp carries no joules. This is the sha256 of the copy committed at bench/ladder38/harness_w56_conc_ladder.py at 7cd54d45 and the one copied to dgx2 for the run: the raw file's driver_sha256 equals it (the harness hashes itself at startup). The dense ladder's energy leg ran an earlier revision of the same file (664302439b); the two differ in comments and in the new detection of in-band SSE error frames and truncated streams (both turn a would-be silent success into a counted error), not in the request body; power_window.py, which does the integral, differs only in comments.",
+        "equivalence": "One revision, one leg. The copy on dgx2 (/home/claude/ladder38-pinned/) was a DIFFERENT, older revision and was replaced with the repo copy before measuring; the driver_sha256 in the raw file is the proof of which copy ran, and the generator refuses any raw file whose driver sha is not listed here."
+      },
+      "rows": [
+        {
+          "c": 1,
+          "engine": 82.37,
+          "baselines": [
+            {
+              "id": "vllm-mtp",
+              "label": "vLLM + MTP",
+              "parity": "matched",
+              "tok_s": 52.11
+            }
+          ],
+          "best_baseline_id": "vllm-mtp",
+          "ratio_vs_best": 1.581,
+          "ratio_vs_matched": 1.581,
+          "ratio_vs_fastest": 1.581,
+          "wins": true
+        },
+        {
+          "c": 2,
+          "engine": 124.76,
+          "baselines": [
+            {
+              "id": "vllm-mtp",
+              "label": "vLLM + MTP",
+              "parity": "matched",
+              "tok_s": 93.16
+            }
+          ],
+          "best_baseline_id": "vllm-mtp",
+          "ratio_vs_best": 1.339,
+          "ratio_vs_matched": 1.339,
+          "ratio_vs_fastest": 1.339,
+          "wins": true
+        },
+        {
+          "c": 4,
+          "engine": 182.17,
+          "baselines": [
+            {
+              "id": "vllm-mtp",
+              "label": "vLLM + MTP",
+              "parity": "matched",
+              "tok_s": 145.94
+            }
+          ],
+          "best_baseline_id": "vllm-mtp",
+          "ratio_vs_best": 1.248,
+          "ratio_vs_matched": 1.248,
+          "ratio_vs_fastest": 1.248,
+          "wins": true
+        },
+        {
+          "c": 8,
+          "engine": 251.09,
+          "baselines": [
+            {
+              "id": "vllm-mtp",
+              "label": "vLLM + MTP",
+              "parity": "matched",
+              "tok_s": 222.08
+            }
+          ],
+          "best_baseline_id": "vllm-mtp",
+          "ratio_vs_best": 1.131,
+          "ratio_vs_matched": 1.131,
+          "ratio_vs_fastest": 1.131,
+          "wins": true
+        },
+        {
+          "c": 16,
+          "engine": 353.02,
+          "baselines": [
+            {
+              "id": "vllm-mtp",
+              "label": "vLLM + MTP",
+              "parity": "matched",
+              "tok_s": 329.93
+            }
+          ],
+          "best_baseline_id": "vllm-mtp",
+          "ratio_vs_best": 1.07,
+          "ratio_vs_matched": 1.07,
+          "ratio_vs_fastest": 1.07,
+          "wins": true
+        },
+        {
+          "c": 32,
+          "engine": 486.29,
+          "baselines": [
+            {
+              "id": "vllm-mtp",
+              "label": "vLLM + MTP",
+              "parity": "matched",
+              "tok_s": 453.58
+            }
+          ],
+          "best_baseline_id": "vllm-mtp",
+          "ratio_vs_best": 1.072,
+          "ratio_vs_matched": 1.072,
+          "ratio_vs_fastest": 1.072,
+          "wins": true
+        },
+        {
+          "c": 64,
+          "engine": 622.74,
+          "baselines": [
+            {
+              "id": "vllm-mtp",
+              "label": "vLLM + MTP",
+              "parity": "matched",
+              "tok_s": 563.62
+            }
+          ],
+          "best_baseline_id": "vllm-mtp",
+          "ratio_vs_best": 1.105,
+          "ratio_vs_matched": 1.105,
+          "ratio_vs_fastest": 1.105,
+          "wins": true
+        },
+        {
+          "c": 128,
+          "engine": 752.96,
+          "baselines": [
+            {
+              "id": "vllm-mtp",
+              "label": "vLLM + MTP",
+              "parity": "matched",
+              "tok_s": 672.94
+            }
+          ],
+          "best_baseline_id": "vllm-mtp",
+          "ratio_vs_best": 1.119,
+          "ratio_vs_matched": 1.119,
+          "ratio_vs_fastest": 1.119,
+          "wins": true
+        }
+      ],
+      "summary": {
+        "rungs": 8,
+        "won": 8,
+        "all_won": true,
+        "min_ratio": 1.07,
+        "max_ratio": 1.581
+      }
     }
   }
 }

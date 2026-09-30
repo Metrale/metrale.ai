@@ -28,6 +28,19 @@ const hash = (algo, p) => createHash(algo).update(readFileSync(p)).digest('hex')
 const manifestPathOf = (s) => resolve(REPO, s.published_manifest);
 const rawReader = (s) => (file) => readJson(join(dirname(manifestPathOf(s)), file));
 const withManifest = subjects.filter((s) => s.published_manifest !== null);
+// A subject manifest may name its vLLM legs by reference (`pairs_with`): the
+// MoE's does. Its raw files sit beside the manifest that names them.
+const pairedOf = (s) => {
+  const m = readJson(manifestPathOf(s));
+  if (m.pairs_with === undefined) return null;
+  const path = resolve(REPO, m.pairs_with);
+  return { manifest: readJson(path), rawOf: (file) => readJson(join(dirname(path), file)) };
+};
+/** The manifest that names a series: the subject manifest, or the one it pairs with. */
+const manifestOfSeries = (s, series) => {
+  const own = readJson(manifestPathOf(s));
+  return own.series.some((x) => x.id === series.id) ? own : pairedOf(s).manifest;
+};
 const strip = ({ generated_utc, ...rest }) => rest;
 
 // Independent statistics.
@@ -58,6 +71,7 @@ describe('one generated ladder per subject with a manifest', () => {
         subject: s,
         rawOf: rawReader(s),
         harnessRepoSha256: hash('sha256', resolve(REPO, manifest.workload.harness)),
+        pairsWith: pairedOf(s),
       });
       expect(rebuilt).toEqual(ladders.subjects[s.id]);
     }
@@ -69,10 +83,11 @@ describe('every published rung recomputes from the raw file it names', () => {
     ladders.subjects[s.id].series.flatMap((series) => series.rungs.map((r) => [s.id, series.id, r.c, r.source, r]))
   );
   expect(cases.length).toBeGreaterThan(0);
-  const manifests = Object.fromEntries(withManifest.map((s) => [s.id, readJson(manifestPathOf(s))]));
 
   test.each(cases)('%s / %s C=%i from %s', (subjectId, seriesId, c, source, r) => {
     const s = withManifest.find((x) => x.id === subjectId);
+    const own = manifestOfSeries(s, { id: seriesId });
+    const manifests = { [subjectId]: own };
     const doc = rawReader(s)(source);
     const rung = doc.rungs.find((x) => x.concurrency === c);
     const tok = rung.reps.map((x) => x.tok_s);
@@ -102,30 +117,41 @@ describe('every published rung recomputes from the raw file it names', () => {
 describe('the MoE one-shot of 2026-09-19', () => {
   const subject = subjects.find((s) => s.id === 'qwen36-35b-a3b');
   const moe = ladders.subjects['qwen36-35b-a3b'];
-  const vllm = moe.series.find((s) => s.id === 'vllm-mtp');
+  const full = moe.series.find((s) => s.id === 'vllm-mtp');
+  // The one-shot's own rungs; C=32..128 were filled from its energy re-run.
+  const vllm = { ...full, rungs: full.rungs.filter((r) => !r.filled_from) };
   const raw = rawReader(subject)(vllm.rungs[0].source);
   const dense = ladder.series.find((s) => s.id === 'vllm-mtp');
+  const vllmManifest = pairedOf(subject).manifest;
 
-  test('is a baseline-only ladder: no subject series, no rows, no summary, no zero anywhere', () => {
+  test('is the vLLM side of a scored pair: the Metrale Engine leg is its own manifest, paired by reference', () => {
     expect(moe.series.map((s) => [s.id, s.role, s.scope])).toEqual([
+      ['metrale', 'subject', undefined],
       ['vllm-mtp', 'baseline', undefined],
       ['vllm-mtp-energy', 'baseline', 'cost'],
     ]);
-    expect('rows' in moe).toBe(false);
-    expect('summary' in moe).toBe(false);
-    expect(moe.subject_note).toMatch(/no Metrale Engine run exists at this instrument/i);
-    expect(vllm.rungs.every((r) => r.tok_s > 0)).toBe(true);
+    expect(moe.pairs_with).toBe('bench/baselines/qwen36-35b-a3b/published.json');
+    expect(vllmManifest.subject_note).toMatch(/no Metrale Engine run exists at this instrument/i);
+    expect(moe.subject_note).toBeUndefined();
+    expect(full.rungs.every((r) => r.tok_s > 0)).toBe(true);
   });
 
-  test('exactly C=1..16 from one raw file; 32/64/128 are absent from the series AND the raw file, with the reason', () => {
-    // 2026-09-28: the ladder's concurrencies now reach 128 through the energy leg; this one-shot does not.
+  test('exactly C=1..16 from one raw file; 32/64/128 are not in it, and come from the energy leg, each rung saying so', () => {
     expect(moe.concurrencies).toEqual([1, 2, 4, 8, 16, 32, 64, 128]);
     expect(vllm.rungs.map((r) => r.c)).toEqual([1, 2, 4, 8, 16]);
     expect(new Set(vllm.rungs.map((r) => r.source)).size).toBe(1);
-    expect(vllm.unmeasured.rungs).toEqual([32, 64, 128]);
-    expect(vllm.unmeasured.reason).toMatch(/powercycle/);
+    expect(full.unmeasured).toBeUndefined();
+    expect(full.filled.rungs).toEqual([32, 64, 128]);
+    expect(full.filled.from).toBe('vllm-mtp-energy');
+    // The reason the one-shot stopped is still the manifest's own.
+    expect(vllmManifest.series.find((s) => s.id === 'vllm-mtp').unmeasured.reason).toMatch(/powercycle/);
     expect(raw.rungs.map((r) => r.concurrency)).toEqual([1, 2, 4, 8, 16]);
-    for (const c of vllm.unmeasured.rungs) expect(vllm.rungs.find((r) => r.c === c)).toBeUndefined();
+    const energy = moe.series.find((s) => s.id === 'vllm-mtp-energy');
+    for (const c of full.filled.rungs) {
+      const r = full.rungs.find((x) => x.c === c);
+      expect(r.filled_from).toBe('vllm-mtp-energy');
+      expect(r.tok_s).toBe(energy.rungs.find((x) => x.c === c).tok_s);
+    }
   });
 
   test('the numbers communicated on 2026-09-19, as the raw file yields them', () => {
@@ -155,8 +181,10 @@ describe('the MoE one-shot of 2026-09-19', () => {
     const tree = resolve(REPO, moe.workload.harness);
     expect(moe.harness_repo_sha256).toBe(hash('sha256', tree));
     expect(raw.driver_sha256.slice(0, 10)).toBe('41e242c072');
-    expect(Object.keys(moe.harness_shas)).toEqual([raw.driver_sha256.slice(0, 10), '55a5963e4b', 'equivalence']);
-    expect(moe.harness_shas.equivalence).toMatch(/replaced/);
+    expect(Object.keys(moe.baseline_harness_shas)).toEqual([raw.driver_sha256.slice(0, 10), '55a5963e4b', 'equivalence']);
+    expect(moe.baseline_harness_shas.equivalence).toMatch(/replaced/);
+    // The Metrale Engine leg ran the revision of the energy leg.
+    expect(Object.keys(moe.harness_shas)).toEqual(['55a5963e4b']);
   });
 
   test('the instrument the fingerprint compares: read from the raw header, spelled as a gate record spells it', () => {
@@ -281,5 +309,42 @@ describe('the MoE energy leg of 2026-09-28', () => {
     expect(energy.source_note).toContain(hash('sha256', file));
     for (const r of energy.rungs.filter((x) => x.c >= 32))
       expect(energy.wide_note).toContain(hash('sha256', join(dirname(manifestPathOf(subject)), r.source)));
+  });
+});
+
+describe('the MoE Metrale Engine leg of 2026-09-29', () => {
+  const subject = subjects.find((s) => s.id === 'qwen36-35b-a3b');
+  const moe = ladders.subjects['qwen36-35b-a3b'];
+  const metrale = moe.series.find((s) => s.role === 'subject');
+
+  test('C=1..128 on the published instrument, two reps per rung, disclosed', () => {
+    expect(metrale.rungs.map((r) => r.c)).toEqual([1, 2, 4, 8, 16, 32, 64, 128]);
+    expect(metrale.rungs.every((r) => r.reps === 2)).toBe(true);
+    expect(moe.workload.reps).toBe(2);
+    expect(moe.baseline_workload.reps).toBe(3);
+    expect(moe.reps_note).toMatch(/2 timed reps \+ 1 warmup per rung\. The vLLM legs in published\.json ran 3/);
+    for (const r of metrale.rungs) {
+      const doc = rawReader(subject)(r.source);
+      expect(doc.driver_sha256.slice(0, 10)).toBe('55a5963e4b');
+      expect(doc.started_utc.slice(0, 10)).toBe('2026-09-29');
+      expect(r.gpu_rail_energy_j).toBeGreaterThan(0);
+    }
+  });
+
+  test('labelled published-ladder data, not a gate record', () => {
+    expect(metrale.evidence_note).toMatch(/^Published-ladder data, not a gate record\./);
+    expect(metrale.build).toBe('39ab52e6c9');
+  });
+
+  test('scored against vllm-mtp at every rung, and wins each', () => {
+    expect(moe.rows.map((r) => [r.c, r.engine, r.baselines.map((b) => b.id)])).toEqual(
+      metrale.rungs.map((r) => [r.c, r.tok_s, ['vllm-mtp']])
+    );
+    expect(moe.summary).toEqual({ rungs: 8, won: 8, all_won: true, min_ratio: 1.07, max_ratio: 1.581 });
+  });
+
+  test('every rung file is the one the manifest names, byte for byte', () => {
+    for (const f of new Set(metrale.rungs.map((r) => r.source)))
+      expect(metrale.source_note).toContain(hash('sha256', join(dirname(manifestPathOf(subject)), f)));
   });
 });

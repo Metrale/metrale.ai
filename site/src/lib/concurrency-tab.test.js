@@ -22,6 +22,7 @@ import { compile } from 'svelte/compiler';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { MOE_VLLM, vllmOnlyLadder } from '../../test-stubs/moe-vllm-only-ladder.js';
 
 const LIB = fileURLToPath(new URL('./', import.meta.url));
 const SELF = fileURLToPath(import.meta.url);
@@ -193,20 +194,26 @@ describe('the subject strip', () => {
   });
 });
 
-describe('the MoE tab with no gate record: a vLLM one-shot on the published instrument, no Metrale Engine leg', () => {
-  const page = renderTab('qwen36-35b-a3b', rfNoMoe);
-  const moe = ladders.subjects['qwen36-35b-a3b'];
+// ★ THE BASELINE-ONLY STATE, ON A FIXTURE. Until 2026-09-29 the MoE subject's
+// manifest held vLLM alone, and this was what its tab showed. It now pairs a
+// Metrale Engine leg by reference, so the state is rendered on the vLLM
+// manifest built on its own, with its throughput leg only (the energy leg
+// would fill C=32..128 and leave nothing unmeasured to render).
+const VLLM_ONLY = { subjects: { 'qwen36-35b-a3b': vllmOnlyLadder } };
+const renderBaselineOnly = (records = []) =>
+  html(Comparison.default, { subject: MOE_VLLM, records, rungs, onselect: () => {}, ladders: VLLM_ONLY });
+
+describe('a subject with a vLLM one-shot and no Metrale Engine leg (the MoE vLLM manifest alone)', () => {
+  const page = renderBaselineOnly();
+  const moe = vllmOnlyLadder;
   const vllm = moe.series.find((s) => s.id === 'vllm-mtp');
   // The server renderer escapes `&` and `<` in dynamic text, not `>`; the
   // manifest's error string carries a `->`.
   const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
-  test('header: checkpoint id verbatim, the one-shot dated from its rungs, and no verdict tile', () => {
-    expect(page).toContain('>Qwen/Qwen3.6-35B-A3B-FP8</span>');
-    expect(tile(page, 'records')).toBe('0');
-    expect(tile(page, 'gate concurrency-sweep')).toBe('declared, unmeasured');
-    expect(tile(page, 'vLLM baseline')).toBe('one-shot · 2026-09-19');
-    expect(page).not.toContain('gbs-verdict');
+  test('the tile names the one-shot, dated from its rungs', () => {
+    expect(Comparison.comparisonStateOf(MOE_VLLM, [], VLLM_ONLY)).toBe('baseline');
+    expect(Comparison.baselineTileOf(MOE_VLLM, [], VLLM_ONLY)).toBe('one-shot · 2026-09-19');
   });
 
   test('the vLLM series is drawn as squares at its measured rungs only, every value from the ladder', () => {
@@ -259,25 +266,22 @@ describe('the MoE tab with no gate record: a vLLM one-shot on the published inst
     );
     expect(page).not.toContain('undefined');
     expect(page).not.toContain('No concurrency run on main yet');
-    expect(page).not.toContain('latest gate sweep');
-    expect(page).not.toContain('cc-bridge');
   });
 
   test('NEGATIVE CONTROL: a passing gate run on main is drawn ALONE — the one-shot is on another instrument and the caption names the axes', () => {
-    const live = renderTab('qwen36-35b-a3b', withExtra([fakeRecord(MOE, [1, 2, 4])]));
-    expect(live).not.toContain('not yet measured');
+    const records = [fakeRecord(MOE, [1, 2, 4])];
+    const live = renderBaselineOnly(records);
     const svg = comparisonSvg(live);
     expect(svg.match(/class="gc-mark"/g)).toHaveLength(3);
     expect(svg).not.toContain('cmp-sq');
     expect(live).toContain('vLLM + MTP · other instrument · not drawn');
-    expect(tile(live, 'vLLM baseline')).toBe('other instrument');
+    expect(Comparison.baselineTileOf(MOE_VLLM, records, VLLM_ONLY)).toBe('other instrument');
     inOrder(
       live,
       '<strong>vLLM has not been run on this instrument</strong> (ISL 512 / OSL 320 · natural fixture · batch cap 128 · fp8 KV)',
       'The vLLM + MTP one-shot of 2026-09-19 is on another instrument and is not comparable: isl 512 → 128, osl 320 → 1024, prompt_mode natural → essay, max_model_len 4096 → 2048, kv_cache_dtype fp8 → bf16.',
       'filed under <code>bench/baselines/qwen36-35b-a3b/</code>, fills the comparison'
     );
-    expect(live).toContain('latest gate sweep · ISL 512 / OSL 320 · natural fixture · batch cap 128 · fp8 KV');
   });
 
   test('POSITIVE CONTROL: a one-shot whose fingerprint equals the gate record IS drawn against it', () => {
@@ -286,7 +290,7 @@ describe('the MoE tab with no gate record: a vLLM one-shot on the published inst
     // instrument would generate to. Only `instrument` is read by the check.
     const onGate = { isl: 512, osl: 320, prompt_mode: 'natural', max_model_len: 4096, max_batch_size: 128, kv_cache_dtype: 'fp8' };
     const fake = { subjects: { 'qwen36-35b-a3b': { ...moe, series: [{ ...vllm, instrument: onGate }] } } };
-    const props = { subject: MOE, records: [fakeRecord(MOE, [1, 2, 4])], rungs, onselect: () => {}, ladders: fake };
+    const props = { subject: MOE_VLLM, records: [fakeRecord(MOE, [1, 2, 4])], rungs, onselect: () => {}, ladders: fake };
     const drawn = html(Comparison.default, props);
     const svg = comparisonSvg(drawn);
     expect(svg.match(/class="cmp-sq"/g)).toHaveLength(vllm.rungs.length);
@@ -300,7 +304,61 @@ describe('the MoE tab with no gate record: a vLLM one-shot on the published inst
     );
     expect(drawn).not.toContain('not comparable');
     expect(drawn).not.toContain('not drawn');
-    expect(Comparison.baselineTileOf(MOE, props.records, fake)).toBe('one-shot · 2026-09-19');
+    expect(Comparison.baselineTileOf(MOE_VLLM, props.records, fake)).toBe('one-shot · 2026-09-19');
+  });
+});
+
+// ★ THE OWNER'S QUESTION, 2026-09-29: "I thought we went up to C=128 for MoE?"
+// The MoE gate stops at C=16, and its tab stopped there too. The engine now
+// publishes the MoE ladder to C=128, so the tab draws the gate's live
+// comparison AND, under its own title, the published pair: C=1..128,
+// labelled as published-ladder data, never as a gate record.
+describe('the MoE tab: the live gate to C=16, then the published ladder to C=128', () => {
+  const page = renderTab('qwen36-35b-a3b');
+  const moe = ladders.subjects['qwen36-35b-a3b'];
+  const metrale = moe.series.find((s) => s.role === 'subject');
+  const vllm = moe.series.find((s) => s.id === 'vllm-mtp');
+  const titles = [...page.matchAll(/class="gate-panel-title">([^<]*)</g)].map((m) => m[1]);
+
+  test('the live comparison first, then the published ladder, then the gate sweep', () => {
+    expect(titles[0]).toMatch(/^Metrale Engine vs vLLM · gate instrument · ISL 128 \/ OSL 1024/);
+    expect(titles[1]).toBe('Metrale Engine vs vLLM · published ladder, C=1..128 · ISL 128 / OSL 1024');
+    expect(titles[2]).toMatch(/^latest gate sweep/);
+  });
+
+  test('the bridge says where the gate stops, that its records are the certified evidence, and what the ladder is', () => {
+    inOrder(
+      page,
+      'The concurrency-sweep-moe gate stops at C=16, and its signed records above are the certified evidence for the rungs they cover.',
+      'The published ladder below also measures C=32, 64, 128',
+      'It is published-ladder data, not a gate record.'
+    );
+  });
+
+  test('the published table has a row at every rung to C=128, Metrale Engine against vLLM + MTP', () => {
+    for (const r of moe.rows) {
+      expect(page).toContain(`<th scope="row" class="mono">${r.c}</th><td class="mono cl-win">${r.engine.toFixed(2)}</td>`);
+    }
+    expect(moe.rows.at(-1)).toMatchObject({ c: 128, engine: metrale.rungs.at(-1).tok_s, wins: true });
+  });
+
+  test("vLLM's C=32..128 are named as the energy re-run's, in the chip and the caption", () => {
+    const t = text(page);
+    expect(t).toContain('vLLM + MTP · one-shot · measured 2026-09-19 · C=32/64/128 from vLLM + MTP (energy), 2026-09-28<');
+    // "measured once" dates the one-shot's own rungs, not the filled ones.
+    expect(t).toContain('vLLM was measured <strong>once</strong>, on 2026-09-19, with');
+    expect(t).toContain(
+      'vLLM + MTP at C=32, 64, 128 comes from vLLM + MTP (energy), the same image, command and instrument re-run with power sampling on 2026-09-28.'
+    );
+    expect(t).toContain(moe.reps_note);
+    expect(t).toContain(metrale.evidence_note);
+    expect(vllm.filled.rungs).toEqual([32, 64, 128]);
+  });
+
+  test('the dense tab, whose gate covers every published rung, draws no second ladder', () => {
+    const dense = renderTab('qwen38-27b');
+    expect(dense).not.toContain('published ladder, C=');
+    expect(dense).not.toContain('published-ladder data');
   });
 });
 
@@ -533,12 +591,14 @@ describe('the comparison state, decided once', () => {
   test('published only when the generated ladder is for THIS checkpoint and has a subject series', () => {
     expect(strip(publishedFor(DENSE))).toEqual(strip(publishedLadder));
     expect(publishedFor({ ...DENSE, checkpoint: 'Qwen/Qwen3.6-35B-A3B-FP8' })).toBeNull();
-    expect(publishedFor(MOE)).toBeNull();
-    expect(baselineOnlyFor(MOE).manifest).toBe(MOE.published_manifest);
+    expect(publishedFor(MOE).manifest).toBe(MOE.published_manifest);
+    expect(baselineOnlyFor(MOE)).toBeNull();
+    expect(baselineOnlyFor(MOE_VLLM, VLLM_ONLY).manifest).toBe(MOE_VLLM.published_manifest);
     expect(baselineOnlyFor(DENSE)).toBeNull();
     expect(comparisonStateOf(DENSE, [])).toBe('published');
     expect(comparisonStateOf(DFLASH, recordsFor(DFLASH.gate))).toBe('live');
-    expect(comparisonStateOf(MOE, [])).toBe('baseline');
+    expect(comparisonStateOf(MOE, [])).toBe('published');
+    expect(comparisonStateOf(MOE_VLLM, [], VLLM_ONLY)).toBe('baseline');
     // The published MoE runs are on the one-shot's instrument, so they pair.
     expect(
       comparisonStateOf(
@@ -546,7 +606,9 @@ describe('the comparison state, decided once', () => {
         recordsFor(MOE.gate).filter((r) => r.target_model === MOE.checkpoint)
       )
     ).toBe('live');
-    expect(comparisonStateOf(MOE, [fakeRecord(MOE, [1])])).toBe('live');
+    // A MoE run on another instrument pairs with nothing, so the tab falls back
+    // to the published pair, as the dense tab does on a retired-instrument run.
+    expect(comparisonStateOf(MOE, [fakeRecord(MOE, [1])])).toBe('published');
     expect(comparisonStateOf({ ...MOE, published_manifest: null }, [])).toBe('none');
   });
 
@@ -727,7 +789,7 @@ describe('the published pair: series pills and the ladder they drive', () => {
 // the VIEW only, and these pin both halves of that split.
 // ---------------------------------------------------------------------------
 describe('ITL naming', () => {
-  const page = renderTab('qwen36-35b-a3b', rfNoMoe);
+  const page = renderBaselineOnly();
 
   test('the column is headed ITL, not TPOT', () => {
     expect(page).toContain('>ITL p50<');

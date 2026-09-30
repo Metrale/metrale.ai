@@ -147,6 +147,11 @@
 
 .cl-meta {
   display: grid;
+  /* minmax(0, 1fr), not the implicit auto track: the per-rung detail table
+     and its 64-hex image digests would otherwise size the track to their
+     min-content (~750px) and push the card past a phone's width, where
+     .cl-tablewrap is meant to scroll instead. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.1rem;
   margin-top: 1.1rem;
 }
@@ -172,6 +177,8 @@
 }
 .cl-facts dd {
   margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-size: 0.86rem;
   color: var(--t1);
 }
@@ -193,6 +200,7 @@
 }
 .cl-note {
   margin: 0.45rem 0;
+  overflow-wrap: anywhere;
   font-size: 0.82rem;
   color: var(--t2);
   line-height: 1.55;
@@ -228,7 +236,12 @@
   display: block;
   overflow-x: auto;
   white-space: pre-wrap;
-  word-break: break-word;
+  /* `anywhere`, not `word-break: break-word`: only `anywhere` lowers the
+     min-content width, and the 1fr track of .cl-kv sizes to it. A 64-hex image
+     digest held that track at ~750px, so the published card overflowed a phone
+     once the MoE subject drew it inside the dashboard (found 2026-09-29). */
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
 .cl-kv-block code {
   line-height: 1.6;

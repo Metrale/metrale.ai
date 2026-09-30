@@ -30,10 +30,12 @@
     measuredRange as _measuredRange,
     oneShotChip,
     pairWith,
+    publishedBeyondLive as _publishedBeyondLive,
     publishedFor as _publishedFor,
   } from '$lib/concurrency-comparison.js';
 
   export const publishedFor = (subject, ladders = LADDERS) => _publishedFor(subject, ladders);
+  export const publishedBeyondLive = (subject, records, ladders = LADDERS) => _publishedBeyondLive(subject, records, ladders);
   export const baselineOnlyFor = (subject, ladders = LADDERS) => _baselineOnlyFor(subject, ladders);
   export const comparisonStateOf = (subject, records, ladders = LADDERS) => _comparisonStateOf(subject, records, ladders);
   export const baselineTileOf = (subject, records, ladders = LADDERS) => _baselineTileOf(subject, records, ladders);
@@ -54,12 +56,15 @@
   import { fmtLimit, limitLabel, rungSpans, stepPath, violationOf } from '$lib/gate-limits.js';
   import { toggleSeries } from '$lib/series-visibility.js';
 
-  let { subject, records, rungs, onselect, ladders = LADDERS } = $props();
+  // `publishedOnly`: draw the published pair whatever the live state is. The
+  // subject panel sets it for the rungs a gate does not reach
+  // (publishedBeyondLive), under its own title, beside the live chart.
+  let { subject, records, rungs, onselect, ladders = LADDERS, publishedOnly = false } = $props();
 
   const ladder = $derived(ladderFor(subject, ladders));
   const published = $derived(publishedFor(subject, ladders));
   const live = $derived(liveRecordOf(records));
-  const state = $derived(comparisonStateOf(subject, records, ladders));
+  const state = $derived(publishedOnly ? 'published' : comparisonStateOf(subject, records, ladders));
 
   // -- published pair: legend chips and caption, all read from the ladder ----
   // ★ THE SERIES THIS VIEW DRAWS, not every leg in the manifest. A leg with
@@ -73,7 +78,9 @@
   const series = $derived(published ? published.series.filter((s) => s.scope !== 'cost') : []);
   const metrale = $derived(series.find((s) => s.role === 'subject'));
   const baselines = $derived(series.filter((s) => s.role === 'baseline'));
-  const baselineRange = $derived(measuredRange(baselines.flatMap((b) => b.rungs)));
+  // A rung filled from another leg is that leg's measurement, dated in its
+  // own sentence below, not part of "measured once".
+  const baselineRange = $derived(measuredRange(baselines.flatMap((b) => b.rungs.filter((r) => !r.filled_from))));
   const engines = $derived([...new Set(baselines.map((b) => `${b.engine} (${b.build})`))]);
   // The legend pills toggle a series in and out of the ladder below. The
   // rule (never the last one) is series-visibility.js's; a refused press is
@@ -147,9 +154,12 @@
       : `the ${subject.gate} gate declares concurrencies = "${live.params?.concurrencies ?? 'not recorded'}"`;
     return `C=${c} · not run at this rung — ${why}`;
   };
+  // A vLLM leg whose declared gaps were filled from its energy re-run says so
+  // in the caption as well as its chip.
+  const filled = $derived(baselines.filter((b) => b.filled));
   const title = $derived(
     state === 'published'
-      ? `Metrale Engine vs vLLM · published campaign · ISL ${published.workload.isl_tokens} / OSL ${published.workload.osl_tokens}`
+      ? `Metrale Engine vs vLLM · ${publishedOnly ? `published ladder, C=${published.concurrencies[0]}..${published.concurrencies.at(-1)}` : 'published campaign'} · ISL ${published.workload.isl_tokens} / OSL ${published.workload.osl_tokens}`
       : state === 'live'
         ? `Metrale Engine vs vLLM · gate instrument · ${instrumentLabel(live)}`
         : 'Metrale Engine vs vLLM · not yet measured'
@@ -188,7 +198,15 @@
       {#each engines as e, i}{i ? '; ' : ''}<code>{e}</code>{/each} on {published.box.name}, and is not re-measured when Metrale Engine
       moves. Metrale Engine on this chart is the published campaign run of
       {measuredRange(metrale.rungs)} at <code>{metrale.build}</code>; the live series is in "Latest gate sweep" below.
+      {#each filled as b}
+        {b.label} at C={b.filled.rungs.join(', ')} comes from {b.filled.label}, the same image, command and instrument re-run with power
+        sampling on {b.filled.measured_days.join(', ')}.
+      {/each}
+      {#if published.reps_note}{published.reps_note}{/if}
     </p>
+    {#if metrale.evidence_note}
+      <p class="cmp-caption">{metrale.evidence_note}</p>
+    {/if}
   </figure>
 {:else if state === 'baseline'}
   <ConcurrencyBaseline {subject} ladder={baselineOnlyFor(subject, ladders)} {rungs} />

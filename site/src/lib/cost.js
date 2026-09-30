@@ -41,7 +41,7 @@
 //     and no default view that hides one.
 
 import { comparable, describeDiffers, instrumentKey } from './ladder-baselines.js';
-import { baselineSeriesOf, comparisonStateOf, ladderFor, liveRecordOf } from './concurrency-comparison.js';
+import { baselineSeriesOf, comparisonStateOf, ladderFor, liveRecordOf, publishedFor } from './concurrency-comparison.js';
 
 /**
  * The per-window energy keys, spelled exactly as `EnergyWindow::metrics`
@@ -465,9 +465,13 @@ const anyMeasured = (points) => points.some((p) => p.energy.state === 'measured'
  * @param {object} subject a concurrency-subjects.json entry
  * @param {object[]} records the subject's gate records, chronological
  * @param {object} ladders ladders.generated.json
+ * @param {{publishedOnly?: boolean}} [opts] draw the published pair whatever
+ *   the live state is: the Cost tab's second chart, for the rungs a gate does
+ *   not reach (concurrency-comparison.js#publishedBeyondLive)
  */
-export function costLadder(subject, records, ladders) {
-  const state = comparisonStateOf(subject, records, ladders);
+export function costLadder(subject, records, ladders, { publishedOnly = false } = {}) {
+  const state = publishedOnly ? 'published' : comparisonStateOf(subject, records, ladders);
+  if (state === 'published' && !publishedFor(subject, ladders)) throw new Error(`costLadder: ${subject.id} has no published pair to draw`);
   const ladder = ladderFor(subject, ladders);
   const live = liveRecordOf(records);
   const refused = [];
