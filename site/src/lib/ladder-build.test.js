@@ -21,17 +21,26 @@ const REPO = engineRoot();
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const clone = (x) => JSON.parse(JSON.stringify(x));
 
-/** A subject's manifest and raw files, loaded once, cloned per case. */
-function fixture(id) {
+/**
+ * A manifest and its raw files, loaded once, cloned per case. `path` defaults
+ * to the subject's published manifest.
+ */
+function fixture(id, path) {
   const subject = subjects.find((s) => s.id === id);
-  const dir = dirname(resolve(REPO, subject.published_manifest));
-  const manifest = readJson(resolve(REPO, subject.published_manifest));
+  const rel = path ?? subject.published_manifest;
+  const dir = dirname(resolve(REPO, rel));
+  const manifest = readJson(resolve(REPO, rel));
   const raws = {};
   for (const s of manifest.series) for (const f of Object.values(s.sources)) raws[f] ??= readJson(join(dir, f));
-  return { subject, manifest, raws };
+  return { subject: { ...subject, published_manifest: rel }, manifest, raws };
 }
-const MOE = fixture('qwen36-35b-a3b');
+// The MoE vLLM manifest on its own: a baseline-only ladder, the shape every
+// guard below is written against. The subject's published manifest pairs a
+// Metrale Engine leg with it by reference (see "a paired manifest" below).
+const MOE_VLLM = 'bench/baselines/qwen36-35b-a3b/published.json';
+const MOE = fixture('qwen36-35b-a3b', MOE_VLLM);
 const DENSE = fixture('qwen38-27b');
+const MOE_PAIRED = fixture('qwen36-35b-a3b');
 
 /** Build from a mutated copy: `mut(manifest, raws, subject)` edits in place. */
 function build(fix, mut) {
@@ -264,5 +273,160 @@ describe('helpers', () => {
   test('rounding keeps the decimals the site prints', () => {
     expect(r2(52.11033488999998)).toBe(52.11);
     expect(r3(1.0044)).toBe(1.004);
+  });
+});
+
+// ---- a paired manifest ------------------------------------------------------
+// The MoE's published manifest holds the Metrale Engine leg only and names the
+// vLLM manifest in `pairs_with`. Every rule that lets the two be scored as one
+// pair is broken here on purpose.
+function buildPaired(mutSubject, mutBase) {
+  const manifest = clone(MOE_PAIRED.manifest);
+  const base = clone(MOE.manifest);
+  mutSubject?.(manifest);
+  mutBase?.(base);
+  const reader = (raws) => (file) => {
+    if (!(file in raws)) throw new Error(`cannot read raw ${file}`);
+    return raws[file];
+  };
+  return buildLadder(manifest, {
+    subject: clone(MOE_PAIRED.subject),
+    rawOf: reader(MOE_PAIRED.raws),
+    harnessRepoSha256: 'f'.repeat(64),
+    pairsWith: { manifest: base, rawOf: reader(MOE.raws) },
+  });
+}
+const subjectOf = (m) => m.series[0];
+
+describe('a paired manifest', () => {
+  test('the committed pair scores C=1..128 against vllm-mtp, and says it pairs by reference', () => {
+    const l = buildPaired();
+    expect(l.concurrencies).toEqual([1, 2, 4, 8, 16, 32, 64, 128]);
+    expect(l.summary.rungs).toBe(8);
+    expect(l.rows.every((r) => r.best_baseline_id === 'vllm-mtp')).toBe(true);
+    expect(l.pairs_with).toBe(MOE_VLLM);
+    expect(l.reps_note).toMatch(/2 timed reps/);
+    expect(l.workload.reps).toBe(2);
+    expect(l.baseline_workload.reps).toBe(3);
+    // Each side's raw files were checked against its own workload.
+    expect(l.series.find((s) => s.role === 'subject').rungs.every((r) => r.reps === 2)).toBe(true);
+    expect(l.series.find((s) => s.id === 'vllm-mtp-energy').rungs.every((r) => r.reps === 3)).toBe(true);
+    // The vLLM manifest's "no subject yet" note describes that file alone, not the pair.
+    expect(l.subject_note).toBeUndefined();
+  });
+
+  test('refused without the manifest it names, or with one it does not name', () => {
+    expect(() =>
+      buildLadder(clone(MOE_PAIRED.manifest), { subject: MOE_PAIRED.subject, rawOf: () => ({}), harnessRepoSha256: 'f'.repeat(64) })
+    ).toThrow(/pairs_with .*: the generator was not handed that manifest/);
+    expect(() =>
+      buildLadder(clone(MOE.manifest), {
+        subject: MOE.subject,
+        rawOf: (f) => MOE.raws[f],
+        harnessRepoSha256: 'f'.repeat(64),
+        pairsWith: { manifest: clone(MOE.manifest), rawOf: (f) => MOE.raws[f] },
+      })
+    ).toThrow(/names no pairs_with, but a paired manifest was handed in/);
+  });
+
+  test.each([
+    ['checkpoint', 'other/checkpoint'],
+    ['isl_tokens', 512],
+    ['osl_tokens', 320],
+    ['warmup', 0],
+    ['temperature', 0.7],
+    ['seed', 7],
+  ])('a paired workload whose %s differs', (k, v) => {
+    expect(() => buildPaired(null, (b) => (b.workload[k] = v))).toThrow(new RegExp(`workload\\.${k} `));
+  });
+
+  test('a rep count that differs is disclosed or refused', () => {
+    expect(() => buildPaired((m) => delete m.reps_note)).toThrow(/reps 2 != 3 and no reps_note says why/);
+  });
+
+  test('another box, or a matched vLLM leg on another instrument', () => {
+    expect(() => buildPaired(null, (b) => (b.box.name = 'dgx3 (spark-28c2)'))).toThrow(/box dgx2 \(spark-43fa\) != dgx3/);
+    expect(() => buildPaired((m) => (subjectOf(m).instrument.kv_cache_dtype = 'fp8'))).toThrow(
+      /baseline vllm-mtp is matched but its kv_cache_dtype "bf16" != the subject's "fp8"/
+    );
+    expect(() => buildPaired((m) => delete subjectOf(m).instrument)).toThrow(/declares no instrument to pair on/);
+  });
+
+  test('a pairing manifest holds the subject only, and the paired one holds none', () => {
+    expect(() => buildPaired((m) => (subjectOf(m).role = 'baseline'))).toThrow(/exactly one series, role "subject"/);
+    expect(() => buildPaired(null, (b) => (b.series[1].role = 'subject'))).toThrow(/the paired manifest has its own subject series/);
+  });
+
+  test('each side keeps its own harness_shas', () => {
+    expect(() => buildPaired((m) => delete m.harness_shas['55a5963e4b'])).toThrow(/55a5963e4b produced metrale_moe_energy/);
+    expect(() => buildPaired(null, (b) => delete b.harness_shas['41e242c072'])).toThrow(/41e242c072 produced vllm_moe_c1_16.json/);
+  });
+});
+
+// ---- a declared gap filled from the same measurement ------------------------
+describe("vllm-mtp's declared gaps, filled from its energy re-run", () => {
+  const leg = (l, id) => l.series.find((s) => s.id === id);
+
+  test('C=32/64/128 come from vllm-mtp-energy, throughput only, each rung naming its source', () => {
+    const l = build(MOE);
+    const v = leg(l, 'vllm-mtp');
+    const e = leg(l, 'vllm-mtp-energy');
+    expect(v.rungs.map((r) => r.c)).toEqual([1, 2, 4, 8, 16, 32, 64, 128]);
+    expect(v.unmeasured).toBeUndefined();
+    expect(v.filled).toEqual({
+      from: 'vllm-mtp-energy',
+      label: 'vLLM + MTP (energy)',
+      rungs: [32, 64, 128],
+      measured_days: ['2026-09-28'],
+    });
+    for (const r of v.rungs.filter((x) => x.c >= 32)) {
+      const donor = e.rungs.find((x) => x.c === r.c);
+      expect(r.filled_from).toBe('vllm-mtp-energy');
+      expect(r.tok_s).toBe(donor.tok_s);
+      expect(r.source).toBe(donor.source);
+      // The joules stay with the Cost tab's leg, so they are never drawn twice.
+      expect(r.gpu_rail_energy_j).toBeUndefined();
+    }
+    for (const r of v.rungs.filter((x) => x.c <= 16)) expect(r.filled_from).toBeUndefined();
+  });
+
+  test.each([
+    ['engine', 'vLLM 0.28.0'],
+    ['build', 'vllm/vllm-openai:other'],
+    ['env', 'HF_HUB_OFFLINE=1'],
+    ['cli', 'vllm serve --max-model-len 2048 --max-num-seqs 128 --kv-cache-dtype auto'],
+  ])('nothing is filled when the energy leg differs in %s', (k, v) => {
+    const l = build(MOE, (m) => {
+      const e = m.series.find((s) => s.id === 'vllm-mtp-energy');
+      e[k] = v;
+      if (k === 'cli') e.instrument_note ??= 'test';
+    });
+    expect(leg(l, 'vllm-mtp').rungs.map((r) => r.c)).toEqual([1, 2, 4, 8, 16]);
+    expect(leg(l, 'vllm-mtp').unmeasured.rungs).toEqual([32, 64, 128]);
+    expect(leg(l, 'vllm-mtp').filled).toBeUndefined();
+  });
+
+  test('nor when its instrument differs, and only rungs declared unmeasured are ever filled', () => {
+    const l = build(MOE, (m) => {
+      const e = m.series.find((s) => s.id === 'vllm-mtp-energy');
+      e.instrument.prompt_mode = 'natural';
+    });
+    expect(leg(l, 'vllm-mtp').filled).toBeUndefined();
+    const partial = build(MOE, (m) => {
+      const v = m.series.find((s) => s.id === 'vllm-mtp');
+      v.unmeasured.rungs = [32, 64];
+      v.sources['128'] = 'vllm_moe_energy_c128.json';
+    });
+    expect(leg(partial, 'vllm-mtp').filled.rungs).toEqual([32, 64]);
+    expect(leg(partial, 'vllm-mtp').rungs.find((r) => r.c === 128).filled_from).toBeUndefined();
+  });
+
+  test('two identical energy legs to fill from is ambiguous, and refused', () => {
+    expect(() =>
+      build(MOE, (m) => {
+        const twin = clone(m.series.find((s) => s.id === 'vllm-mtp-energy'));
+        m.series.push({ ...twin, id: 'vllm-mtp-energy-2' });
+      })
+    ).toThrow(/has 2 identical cost legs to fill from/);
   });
 });

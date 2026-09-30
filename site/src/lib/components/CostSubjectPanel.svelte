@@ -13,7 +13,7 @@
   import GateChart from './GateChart.svelte';
   import LADDERS from '$lib/ladders.generated.json';
   import { colorFor, fmtDate } from '$lib/gates.js';
-  import { instrumentLabel } from '$lib/concurrency-comparison.js';
+  import { instrumentLabel, publishedBeyondLive } from '$lib/concurrency-comparison.js';
   import {
     DEFAULT_PUE,
     DEFAULT_USD_PER_KWH,
@@ -48,6 +48,12 @@
   let { subject, records, rung = $bindable(), onselect, ladders = LADDERS } = $props();
 
   const cost = $derived(costLadder(subject, records, ladders));
+  // The published pair's cost, for the rungs the gate does not reach: the MoE
+  // gate stops at C=16, its published ladder at C=128. Its own chart, under
+  // its own title, so a published-ladder point is never read as a gate record.
+  const beyond = $derived(publishedBeyondLive(subject, records, ladders));
+  const pubCost = $derived(beyond ? costLadder(subject, records, ladders, { publishedOnly: true }) : null);
+  const pubRungs = $derived(pubCost?.metrale ? pubCost.metrale.points.map((p) => p.c) : []);
   const empty = $derived(emptyStateOf(subject, records, ladders));
   const latest = $derived(records[records.length - 1] ?? null);
 
@@ -341,6 +347,26 @@
          `selectedRung` and `showAboveIdle` so it can never disagree with the
          chart it sits under. -->
     <CostSavings {cost} rung={selectedRung} {usdPerKwh} {pue} aboveIdle={showAboveIdle} />
+
+    {#if pubCost && pubCost.energyState === 'paired'}
+      <p class="cmp-bridge">
+        The chart above is the latest {subject.gate} gate run. The gate stops at C={Math.max(...rungsMeasured)}. The published ladder below
+        measures C={beyond.rungs.join(', ')} too, with GPU-rail joules, on the same instrument and box as the vLLM energy leg. It is published-ladder
+        data, not a gate record: {verdictTile(pubCost.verdicts)}.
+      </p>
+      <CostLadderChart
+        {subject}
+        cost={pubCost}
+        {usdPerKwh}
+        {pue}
+        rungs={pubRungs}
+        title="$ per 1M tokens · published ladder, C={pubRungs[0]}..{pubRungs.at(-1)} · {showAboveIdle && pubCost.idle.both
+          ? 'above idle (marginal)'
+          : 'total'}"
+        aboveIdle={showAboveIdle && pubCost.idle.both}
+        {onselect}
+      />
+    {/if}
   {/if}
 
   <!-- Chart B: efficiency over time, through GateChart so it inherits the

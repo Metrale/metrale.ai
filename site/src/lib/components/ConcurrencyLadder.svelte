@@ -180,7 +180,9 @@
       <svg
         viewBox="0 0 {W} {H}"
         role="img"
-        aria-label="Throughput in tokens per second versus concurrency, Metrale Engine compared with two vLLM configurations"
+        aria-label="Throughput in tokens per second versus concurrency, Metrale Engine compared with {baselines.length === 1
+          ? 'one vLLM configuration'
+          : `${baselines.length} vLLM configurations`}"
       >
         {#each yTicks as t}
           <line class="gc-grid" x1={PL} y1={y(t)} x2={W - PR} y2={y(t)} />
@@ -232,8 +234,8 @@
     <div class="cl-tablewrap">
       <table class="cl-table">
         <caption class="cl-caption">
-          Throughput in tok/s. Ratio is Metrale Engine over the matched vLLM + MTP configuration at that rung. The unmatched no-speculation
-          vLLM leg is shown, not scored.
+          Throughput in tok/s. Ratio is Metrale Engine over the matched vLLM + MTP configuration at that rung.
+          {#if baselines.some((b) => b.parity === 'unmatched')}The unmatched no-speculation vLLM leg is shown, not scored.{/if}
         </caption>
         <thead>
           <tr>

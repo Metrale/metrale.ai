@@ -33,6 +33,7 @@
 //     but when present every baseline must cover every subject rung.
 
 import { ENGINE_REPO } from '../../../web-shared/sources.mjs';
+import { REQUIRED_AXES } from '../../src/lib/ladder-baselines.js';
 
 export const KNOWN_ROLES = Object.freeze(['subject', 'baseline', 'variant']);
 
@@ -256,6 +257,8 @@ function checkUnmeasured(s, docs) {
 }
 
 function buildSeries(s, manifest, rawOf, docs) {
+  // Every raw file is checked against the workload of the manifest that NAMES
+  // it: a paired ladder (below) holds two manifests, whose rep counts may differ.
   for (const k of TYPED_NUMBER_KEYS) {
     if (k in s) fail(`series ${s.id} carries a typed "${k}" — numbers come from raw files, never the manifest`);
   }
@@ -295,14 +298,114 @@ function checkHarnessShas(manifest, docs) {
   }
 }
 
+// Workload axes a subject manifest and the manifest it pairs with must share.
+// `reps` is not among them: it is a sample count, disclosed in `reps_note`.
+const PAIRED_WORKLOAD = Object.freeze(['checkpoint', 'isl_tokens', 'osl_tokens', 'warmup', 'temperature', 'seed']);
+
+/**
+ * A subject manifest that names its baselines by reference (`pairs_with`)
+ * instead of restating them: the engine's MoE ladder keeps the vLLM legs in
+ * published.json and the Metrale Engine leg in its own file, so neither
+ * measurement's manifest is edited when the other is added.
+ *
+ * Refused unless the two describe one workload on one box: the same
+ * checkpoint, ISL, OSL, warmup, temperature and seed; a rep count that
+ * differs only with a `reps_note` saying so; the same box; and every
+ * matched-parity vLLM leg declaring the subject's own instrument on every
+ * REQUIRED axis of ladder-baselines.js. The subject manifest holds exactly one
+ * series, the subject; the other holds none.
+ */
+function checkPairing(manifest, base, path) {
+  const where = `${path} pairs_with ${manifest.pairs_with}`;
+  if (!base) fail(`${where}: the generator was not handed that manifest`);
+  if (manifest.series.length !== 1 || manifest.series[0].role !== 'subject')
+    fail(`${where}: a pairing manifest holds exactly one series, role "subject"`);
+  if (base.series.some((s) => s.role === 'subject')) fail(`${where}: the paired manifest has its own subject series`);
+  for (const k of PAIRED_WORKLOAD) {
+    if (JSON.stringify(manifest.workload?.[k]) !== JSON.stringify(base.workload?.[k]))
+      fail(`${where}: workload.${k} ${JSON.stringify(manifest.workload?.[k])} != ${JSON.stringify(base.workload?.[k])}`);
+  }
+  if (manifest.workload.reps !== base.workload.reps && !(typeof manifest.reps_note === 'string' && manifest.reps_note.trim()))
+    fail(`${where}: reps ${manifest.workload.reps} != ${base.workload.reps} and no reps_note says why`);
+  if (manifest.box?.name !== base.box?.name) fail(`${where}: box ${manifest.box?.name} != ${base.box?.name}`);
+  const inst = manifest.series[0].instrument;
+  if (!inst || typeof inst !== 'object') fail(`${where}: the subject series declares no instrument to pair on`);
+  for (const b of base.series.filter((x) => x.parity === 'matched')) {
+    for (const axis of REQUIRED_AXES) {
+      if (JSON.stringify(inst[axis]) !== JSON.stringify(b.instrument?.[axis]))
+        fail(
+          `${where}: baseline ${b.id} is matched but its ${axis} ${JSON.stringify(b.instrument?.[axis])} != the subject's ${JSON.stringify(inst[axis])}`
+        );
+    }
+  }
+}
+
+// What a filled rung keeps from its donor: the throughput and its timing, never
+// the joules. The donor is the Cost tab's leg; a throughput series carrying
+// its energy would draw the same joules twice there.
+const THROUGHPUT_FIELDS = Object.freeze([
+  'c',
+  'tok_s',
+  'tok_s_median',
+  'spread_pct',
+  'reps',
+  'ttft_p50_ms',
+  'tpot_p50_ms',
+  'source',
+  'measured_utc',
+  'harness_sha256',
+]);
+
+/**
+ * A throughput leg's declared gaps, filled from a `scope: 'cost'` leg of the
+ * SAME measurement: the same engine, image, environment, command and
+ * instrument, in the same manifest (so the same checkpoint and box). The MoE
+ * vllm-mtp one-shot stops at C=16; vllm-mtp-energy re-ran that exact command
+ * with power sampling and reached C=128. Only rungs the leg lists as
+ * `unmeasured` are filled, each rung says which leg it came from, and the leg
+ * carries `filled` so the page can say so. Anything short of identity fills
+ * nothing: a different command is a different leg, and it stays unmeasured.
+ */
+function fillDeclaredGaps(series) {
+  for (const b of series) {
+    if (b.role !== 'baseline' || b.scope === 'cost' || !b.unmeasured) continue;
+    const donors = series.filter(
+      (d) =>
+        d.role === 'baseline' &&
+        d.scope === 'cost' &&
+        d.manifest_part === b.manifest_part &&
+        ['engine', 'build', 'env', 'cli'].every((k) => d[k] === b[k]) &&
+        JSON.stringify(d.instrument) === JSON.stringify(b.instrument)
+    );
+    if (donors.length > 1) fail(`baseline ${b.id} has ${donors.length} identical cost legs to fill from; exactly one may`);
+    const donor = donors[0];
+    if (!donor) continue;
+    const got = b.unmeasured.rungs.filter((c) => donor.rungs.some((r) => r.c === c));
+    if (got.length === 0) continue;
+    for (const c of got) {
+      const r = donor.rungs.find((x) => x.c === c);
+      b.rungs.push({ ...Object.fromEntries(THROUGHPUT_FIELDS.map((k) => [k, r[k]])), filled_from: donor.id });
+    }
+    b.rungs.sort((x, y) => x.c - y.c);
+    const left = b.unmeasured.rungs.filter((c) => !got.includes(c));
+    const days = got.map((c) => donor.rungs.find((r) => r.c === c).measured_utc.slice(0, 10));
+    b.filled = { from: donor.id, label: donor.label, rungs: got, measured_days: [...new Set(days)].sort() };
+    if (left.length === 0) delete b.unmeasured;
+    else b.unmeasured = { ...b.unmeasured, rungs: left };
+  }
+}
+
 /**
  * @param {object} manifest   a published.json document
  * @param {object} io
  * @param {{id:string, checkpoint:string, published_manifest:string}} io.subject
  * @param {(file:string) => object} io.rawOf  parsed raw harness JSON by file name
  * @param {string} io.harnessRepoSha256  hex sha256 of the harness file in the tree
+ * @param {{manifest: object, rawOf: (file:string) => object}} [io.pairsWith]
+ *   the manifest `manifest.pairs_with` names, and its raw files; required
+ *   exactly when that field is set
  */
-export function buildLadder(manifest, { subject, rawOf, harnessRepoSha256 }) {
+export function buildLadder(manifest, { subject, rawOf, harnessRepoSha256, pairsWith = null }) {
   if (manifest.schema !== 1) fail(`${subject.published_manifest} has schema ${manifest.schema}, expected 1`);
   for (const k of TYPED_NUMBER_KEYS) {
     if (k in manifest) fail(`${subject.published_manifest} carries a typed "${k}" — numbers come from raw files`);
@@ -311,9 +414,18 @@ export function buildLadder(manifest, { subject, rawOf, harnessRepoSha256 }) {
     fail(`${subject.published_manifest} is for ${manifest.workload?.checkpoint}, subject ${subject.id} is ${subject.checkpoint}`);
   if (!Array.isArray(manifest.series) || manifest.series.length === 0) fail(`${subject.published_manifest} has no series`);
 
-  const docs = new Map();
-  const series = manifest.series.map((s) => buildSeries(s, manifest, rawOf, docs));
-  checkHarnessShas(manifest, docs);
+  if (manifest.pairs_with !== undefined) checkPairing(manifest, pairsWith?.manifest, subject.published_manifest);
+  else if (pairsWith) fail(`${subject.published_manifest} names no pairs_with, but a paired manifest was handed in`);
+  // One part per manifest: each checks its raw files against its own workload
+  // and its own harness_shas.
+  const parts = [{ manifest, rawOf, docs: new Map() }];
+  if (pairsWith) parts.push({ manifest: pairsWith.manifest, rawOf: pairsWith.rawOf, docs: new Map() });
+  const series = parts.flatMap((p, i) =>
+    p.manifest.series.map((s) => ({ ...buildSeries(s, p.manifest, p.rawOf, p.docs), manifest_part: i }))
+  );
+  for (const p of parts) checkHarnessShas(p.manifest, p.docs);
+  fillDeclaredGaps(series);
+  for (const s of series) delete s.manifest_part;
 
   const subjects = series.filter((s) => s.role === 'subject');
   if (subjects.length > 1) fail('manifest has more than one subject series');
@@ -337,6 +449,13 @@ export function buildLadder(manifest, { subject, rawOf, harnessRepoSha256 }) {
     series,
   };
   if (manifest.subject_note !== undefined) out.subject_note = manifest.subject_note;
+  if (pairsWith) {
+    out.pairs_with = manifest.pairs_with;
+    out.pairs_with_note = manifest.pairs_with_note;
+    out.reps_note = manifest.reps_note;
+    out.baseline_workload = pairsWith.manifest.workload;
+    out.baseline_harness_shas = pairsWith.manifest.harness_shas;
+  }
   if (!subj) return out;
 
   // A pair: score the subject against the MATCHED-parity baseline. Ratios and

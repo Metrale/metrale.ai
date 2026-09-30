@@ -20,6 +20,7 @@
     comparisonStateOf,
     instrumentLabel,
     liveRecordOf,
+    publishedBeyondLive,
     publishedFor,
   } from './ConcurrencyComparison.svelte';
   import GateLadderChart from './GateLadderChart.svelte';
@@ -33,6 +34,9 @@
   const live = $derived(liveRecordOf(records));
   const state = $derived(comparisonStateOf(subject, records));
   const published = $derived(publishedFor(subject));
+  // The published ladder's rungs the gate does not reach (the MoE gate stops
+  // at C=16, its published ladder at C=128), drawn under their own title.
+  const beyond = $derived(publishedBeyondLive(subject, records));
   // The vLLM baseline tile follows the chart's own decision (a pair, a dated
   // one-shot, one on another instrument, none); the date is read from the
   // one-shot's rungs, never typed.
@@ -93,6 +97,15 @@
   </header>
 
   <ConcurrencyComparison {subject} {records} {rungs} {onselect} />
+
+  {#if beyond}
+    <p class="cmp-bridge">
+      The {subject.gate} gate stops at C={Math.max(...ladderPoints(live).map((p) => p.c))}, and its signed records above are the certified
+      evidence for the rungs they cover. The published ladder below also measures C={beyond.rungs.join(', ')}, on the same instrument and
+      the same box as its vLLM legs. It is published-ladder data, not a gate record.
+    </p>
+    <ConcurrencyComparison {subject} {records} {rungs} {onselect} publishedOnly />
+  {/if}
 
   <!-- RungNavigator mounts here (plan-concurrency-ia.md §3): the "All · C=1 …
        C=128" strip over RungGrid / one GateChart per rung, fed by
