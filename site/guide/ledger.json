@@ -153,6 +153,14 @@
       "base": "9216ded87",
       "note": "SMB and edge is held back until the SMB motion is worked out: the page is not built, its address redirects to /solutions, which names it as coming soon, and the copy that pitched small teams with a box or two is gone. Neoclouds stays.",
       "touched": []
+    },
+    {
+      "rev": 12,
+      "date": "2026-09-30",
+      "pr": 59,
+      "base": "afe7f89af",
+      "note": "SMB and edge stays published, reworded: Metrale runs on hardware the business owns, the button prices a license rather than a box, and the guide never offers to supply a box. The hold from #57 is undone.",
+      "touched": []
     }
   ],
   "facts": {
