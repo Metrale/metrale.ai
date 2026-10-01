@@ -21,6 +21,7 @@ import {
   oneShotChip,
   pairWith,
   publishedBeyondLive,
+  publishedExtensionOf,
   publishedFor,
 } from './concurrency-comparison.js';
 import { recordsFor } from './gates.js';
@@ -344,5 +345,43 @@ describe('publishedBeyondLive', () => {
     expect(publishedBeyondLive(MOE, [], ladders)).toBeNull(); // state 'published'
     expect(publishedBeyondLive(MOE, moeRecords, baseOnly)).toBeNull(); // a baseline-only ladder
     expect(publishedBeyondLive(DFLASH, recordsFor(DFLASH.gate), ladders)).toBeNull();
+  });
+});
+
+describe('publishedExtensionOf', () => {
+  const moeRecords = recordsFor(MOE.gate).filter((r) => r.target_model === MOE.checkpoint);
+  const denseRecords = recordsFor(DENSE.gate).filter((r) => r.target_model === DENSE.checkpoint);
+  const moeLadder = ladders.subjects[MOE.id];
+  const subjectLeg = moeLadder.series.find((s) => s.role === 'subject');
+  const withSubject = (over) =>
+    laddersWith({ ...moeLadder, series: moeLadder.series.map((s) => (s.role === 'subject' ? { ...s, ...over } : s)) });
+
+  test('the MoE: the published leg carries the live chart on from C=16 to C=128', () => {
+    const ext = publishedExtensionOf(MOE, moeRecords, ladders);
+    expect(ext.series).toBe(subjectLeg);
+    expect(ext.rungs.map((r) => r.c)).toEqual([32, 64, 128]);
+    expect(ext.rungs).toEqual(subjectLeg.rungs.filter((r) => r.c > 16));
+  });
+
+  test('nothing when the gate already reaches every rung, or there is no live pair', () => {
+    expect(publishedExtensionOf(DENSE, denseRecords, ladders)).toBeNull();
+    expect(publishedExtensionOf(MOE, [], ladders)).toBeNull();
+    expect(publishedExtensionOf(MOE, moeRecords, baseOnly)).toBeNull();
+  });
+
+  test.each([
+    ['kv_cache_dtype', 'fp8'],
+    ['max_batch_size', 64],
+    ['prompt_mode', 'natural'],
+  ])('refused when the published leg declares another %s than the live record', (axis, v) => {
+    expect(publishedExtensionOf(MOE, moeRecords, withSubject({ instrument: { ...subjectLeg.instrument, [axis]: v } }))).toBeNull();
+    // control: the same ladder with the leg's own instrument extends
+    expect(publishedExtensionOf(MOE, moeRecords, withSubject({ instrument: { ...subjectLeg.instrument } }))).not.toBeNull();
+  });
+
+  test('only rungs wider than the gate: a gate reaching C=32 leaves C=64/128', () => {
+    const last = moeRecords.filter((r) => r.verdict === 'PASS' && !r.branch).at(-1);
+    const wider = moeRecords.map((r) => (r === last ? { ...r, metrics: { ...r.metrics, c32_aggregate_tok_s: 400 } } : r));
+    expect(publishedExtensionOf(MOE, wider, ladders).rungs.map((r) => r.c)).toEqual([64, 128]);
   });
 });

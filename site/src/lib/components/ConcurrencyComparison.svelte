@@ -31,11 +31,13 @@
     oneShotChip,
     pairWith,
     publishedBeyondLive as _publishedBeyondLive,
+    publishedExtensionOf as _publishedExtensionOf,
     publishedFor as _publishedFor,
   } from '$lib/concurrency-comparison.js';
 
   export const publishedFor = (subject, ladders = LADDERS) => _publishedFor(subject, ladders);
   export const publishedBeyondLive = (subject, records, ladders = LADDERS) => _publishedBeyondLive(subject, records, ladders);
+  export const publishedExtensionOf = (subject, records, ladders = LADDERS) => _publishedExtensionOf(subject, records, ladders);
   export const baselineOnlyFor = (subject, ladders = LADDERS) => _baselineOnlyFor(subject, ladders);
   export const comparisonStateOf = (subject, records, ladders = LADDERS) => _comparisonStateOf(subject, records, ladders);
   export const baselineTileOf = (subject, records, ladders = LADDERS) => _baselineTileOf(subject, records, ladders);
@@ -112,7 +114,13 @@
     PT = 14,
     PB = 30;
   const pts = $derived(live ? ladderPoints(live) : []);
-  const present = $derived(new Set(pts.map((p) => p.c)));
+  // The published leg above the gate's widest rung (publishedExtensionOf):
+  // the Metrale Engine curve carried on to where the vLLM line goes, in its
+  // own hollow mark, because those points are published-ladder data, not a
+  // gate record.
+  const ext = $derived(state === 'live' && !publishedOnly ? publishedExtensionOf(subject, records, ladders) : null);
+  const extPts = $derived(ext ? ext.rungs.map((r) => ({ c: r.c, v: r.tok_s, r })) : []);
+  const present = $derived(new Set([...pts, ...extPts].map((p) => p.c)));
   // "Not run at this rung" is a statement about a record that exists and
   // stops short; with no record every rung is simply empty chrome.
   const absent = $derived(live ? rungs.filter((c) => !present.has(c)) : []);
@@ -120,12 +128,22 @@
   // The per-rung floors that judged the live record (gate-limits.js): drawn
   // under the Metrale Engine curve, and held by the axis like any other claim.
   const floors = $derived(live ? rungFloors(live) : []);
-  const vMax = $derived(pts.length ? Math.max(drawnMax, ...pts.map((p) => p.v), ...floors.map((f) => f.value)) * 1.12 : 1);
+  const vMax = $derived(
+    pts.length ? Math.max(drawnMax, ...pts.map((p) => p.v), ...extPts.map((p) => p.v), ...floors.map((f) => f.value)) * 1.12 : 1
+  );
   const l0 = $derived(Math.log2(Math.min(...rungs)));
   const l1 = $derived(Math.log2(Math.max(...rungs)));
   const x = (c) => PL + (l1 === l0 ? 0.5 : (Math.log2(c) - l0) / (l1 - l0)) * (W - PL - PR);
   const y = (v) => PT + (1 - v / vMax) * (H - PT - PB);
   const path = $derived(pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.c).toFixed(1)} ${y(p.v).toFixed(1)}`).join(' '));
+  // From the gate's widest point on, so the two read as one engine's curve
+  // with a change of source, not as two series.
+  const extPath = $derived(
+    extPts.length && pts.length
+      ? [pts.at(-1), ...extPts].map((p, i) => `${i ? 'L' : 'M'}${x(p.c).toFixed(1)} ${y(p.v).toFixed(1)}`).join(' ')
+      : ''
+  );
+  const extRange = $derived(ext ? `C=${ext.rungs.map((r) => r.c).join(', ')}` : '');
   const floorSpans = $derived(rungSpans(floors, x));
   const floorPath = $derived(stepPath(floorSpans, 'min', y));
   const floorLabels = $derived(
@@ -224,6 +242,14 @@
                 <circle cx="10" cy="5" r="3" fill={color} />
               </svg>Metrale Engine · live · latest gate {fmtDate(live.recorded_at)} · {live.git_sha}
             </span>
+            {#if ext}
+              <span class="gate-legend-item">
+                <svg class="gl-swatch" viewBox="0 0 20 10" aria-hidden="true">
+                  <line x1="1" y1="5" x2="19" y2="5" stroke={color} stroke-width="1.5" stroke-dasharray="3 3" />
+                  <circle cx="10" cy="5" r="3" fill="var(--card)" stroke={color} stroke-width="1.5" />
+                </svg>Metrale Engine · published ladder · {extRange} · measured {measuredRange(ext.rungs)} · {ext.series.build}
+              </span>
+            {/if}
           </span>
           <span class="gl-sep" aria-hidden="true"></span>
           <span class="gl-group">
@@ -278,7 +304,7 @@
       viewBox="0 0 {W} {H}"
       role="img"
       aria-label={state === 'live'
-        ? `Metrale Engine throughput versus concurrency on the ${subject.gate} instrument; ${pair.drawn.length ? 'vLLM one-shot on the same instrument' : 'no vLLM series'}`
+        ? `Metrale Engine throughput versus concurrency on the ${subject.gate} instrument${ext ? `, continued at ${extRange} by the published ladder` : ''}; ${pair.drawn.length ? 'vLLM one-shot on the same instrument' : 'no vLLM series'}`
         : `Empty comparison axes for ${subject.checkpoint}; no run yet`}
     >
       {#each yTicks as t}
@@ -335,6 +361,17 @@
           </g>
         {/each}
       {/if}
+      {#if extPath}
+        <path class="cmp-ext" d={extPath} fill="none" stroke={color} stroke-width="1.5" stroke-dasharray="3 3" stroke-linejoin="round" />
+        {#each extPts as p}
+          <circle class="cmp-ext-mark" cx={x(p.c)} cy={y(p.v)} r="3.5" fill="var(--card)" stroke={color} stroke-width="1.5">
+            <title
+              >Metrale Engine · published ladder · C={p.c} · {fmtB(p.v)} tok/s · mean of {p.r.reps} reps · spread {p.r.spread_pct}% · {ext
+                .series.build} · not a gate record</title
+            >
+          </circle>
+        {/each}
+      {/if}
     </svg>
 
     {#if state === 'live' && pair.drawn.length}
@@ -344,6 +381,12 @@
         on {ladder.box.name}, on this instrument ({instrumentLabel(live)}), and is not re-measured when Metrale Engine moves. Metrale Engine
         is the newest passing run on main ({fmtDate(live.recorded_at)} ·
         <code>{live.git_sha}</code>).
+        {#if ext}
+          Above C={maxRung}, where the {subject.gate} gate stops, the hollow marks at {extRange} are the published ladder's Metrale Engine leg
+          at
+          <code>{ext.series.build}</code>, measured {measuredRange(ext.rungs)} on the same instrument and box as the vLLM line: published-ladder
+          data, not a gate record.
+        {/if}
         {#each pair.refused as r}
           The {r.series.label} one-shot of {measuredRange(r.series.rungs)} is on another instrument and is not drawn: {r.why}.
         {/each}

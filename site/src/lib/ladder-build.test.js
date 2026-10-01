@@ -31,7 +31,7 @@ function fixture(id, path) {
   const dir = dirname(resolve(REPO, rel));
   const manifest = readJson(resolve(REPO, rel));
   const raws = {};
-  for (const s of manifest.series) for (const f of Object.values(s.sources)) raws[f] ??= readJson(join(dir, f));
+  for (const s of manifest.series) for (const f of Object.values(s.sources).flat()) raws[f] ??= readJson(join(dir, f));
   return { subject: { ...subject, published_manifest: rel }, manifest, raws };
 }
 // The MoE vLLM manifest on its own: a baseline-only ladder, the shape every
@@ -305,11 +305,13 @@ describe('a paired manifest', () => {
     expect(l.summary.rungs).toBe(8);
     expect(l.rows.every((r) => r.best_baseline_id === 'vllm-mtp')).toBe(true);
     expect(l.pairs_with).toBe(MOE_VLLM);
-    expect(l.reps_note).toMatch(/2 timed reps/);
-    expect(l.workload.reps).toBe(2);
+    // Both sides ran 3 reps per rung, so nothing is disclosed as a difference.
+    expect(l.reps_note).toBeUndefined();
+    expect(l.workload.reps).toBe(3);
     expect(l.baseline_workload.reps).toBe(3);
-    // Each side's raw files were checked against its own workload.
-    expect(l.series.find((s) => s.role === 'subject').rungs.every((r) => r.reps === 2)).toBe(true);
+    // Each side's raw files were checked against its own workload: per-rep files for the subject.
+    const subj = l.series.find((s) => s.role === 'subject');
+    expect(subj.rungs.every((r) => r.reps === 3 && r.sources.length === 3)).toBe(true);
     expect(l.series.find((s) => s.id === 'vllm-mtp-energy').rungs.every((r) => r.reps === 3)).toBe(true);
     // The vLLM manifest's "no subject yet" note describes that file alone, not the pair.
     expect(l.subject_note).toBeUndefined();
@@ -341,7 +343,14 @@ describe('a paired manifest', () => {
   });
 
   test('a rep count that differs is disclosed or refused', () => {
-    expect(() => buildPaired((m) => delete m.reps_note)).toThrow(/reps 2 != 3 and no reps_note says why/);
+    expect(() => buildPaired(null, (b) => (b.workload.reps = 2))).toThrow(/reps 3 != 2 and no reps_note says why/);
+    // control: with a reps_note the pairing passes, and the vLLM raw headers (3 reps) refuse the edited workload instead
+    expect(() =>
+      buildPaired(
+        (m) => (m.reps_note = 'disclosed'),
+        (b) => (b.workload.reps = 2)
+      )
+    ).toThrow(/header reps=3 != workload\.reps=2/);
   });
 
   test('another box, or a matched vLLM leg on another instrument', () => {
@@ -358,7 +367,7 @@ describe('a paired manifest', () => {
   });
 
   test('each side keeps its own harness_shas', () => {
-    expect(() => buildPaired((m) => delete m.harness_shas['55a5963e4b'])).toThrow(/55a5963e4b produced metrale_moe_energy/);
+    expect(() => buildPaired((m) => delete m.harness_shas['55a5963e4b'])).toThrow(/55a5963e4b produced metrale_moe_ladder\/metrale_moe_c/);
     expect(() => buildPaired(null, (b) => delete b.harness_shas['41e242c072'])).toThrow(/41e242c072 produced vllm_moe_c1_16.json/);
   });
 });
@@ -428,5 +437,67 @@ describe("vllm-mtp's declared gaps, filled from its energy re-run", () => {
         m.series.push({ ...twin, id: 'vllm-mtp-energy-2' });
       })
     ).toThrow(/has 2 identical cost legs to fill from/);
+  });
+});
+
+describe('a rung given as per-rep files', () => {
+  // The C=1 rung of the vLLM raw file, split into three one-rep, no-warmup
+  // runs: the shape a harness process per timed rep writes. Pooling them must
+  // give the rung the single file gives, and every way the list can lie about
+  // the workload must be refused.
+  const PER = ['c1_r1.json', 'c1_r2.json', 'c1_r3.json'];
+  const PROTOCOL = 'one harness process per timed rep; one discarded warm-up rep per rung per serve';
+  const split = (m, raws) => {
+    const src = raws[RAW];
+    PER.forEach((f, i) => {
+      const rung = src.rungs.find((r) => r.concurrency === 1);
+      raws[f] = { ...clone(src), reps: 1, warmup: 0, rungs: [{ ...clone(rung), reps: [clone(rung.reps[i])] }] };
+    });
+    vllm(m).sources['1'] = [...PER];
+    m.protocol = PROTOCOL;
+  };
+  const c1 = (l) => l.series.find((s) => s.id === 'vllm-mtp').rungs.find((r) => r.c === 1);
+
+  test('pools to the rung the single file gives, and names every file', () => {
+    const whole = c1(build(MOE));
+    const pooled = c1(build(MOE, split));
+    for (const k of ['tok_s', 'tok_s_median', 'spread_pct', 'reps', 'ttft_p50_ms', 'tpot_p50_ms', 'measured_utc', 'harness_sha256'])
+      expect(pooled[k]).toEqual(whole[k]);
+    expect(pooled.source).toBe(PER.join(', '));
+  });
+  test('the earliest file dates the rung', () => {
+    const l = build(MOE, (m, raws) => {
+      split(m, raws);
+      raws[PER[0]].started_utc = '2026-10-02T00:00:00Z';
+      raws[PER[1]].started_utc = '2026-10-03T00:00:00Z';
+      raws[PER[2]].started_utc = '2026-10-01T00:00:00Z';
+    });
+    expect(c1(l).measured_utc).toBe('2026-10-01T00:00:00Z');
+  });
+  test('a count other than workload.reps', () => {
+    expect(() => build(MOE, (m, raws) => (split(m, raws), vllm(m).sources['1'].pop()))).toThrow(
+      /names 2 per-rep files but workload.reps is 3/
+    );
+  });
+  test('the same file twice', () => {
+    expect(() => build(MOE, (m, raws) => (split(m, raws), (vllm(m).sources['1'][2] = PER[0])))).toThrow(/names a per-rep file twice/);
+  });
+  test('no protocol', () => {
+    expect(() => build(MOE, (m, raws) => (split(m, raws), delete m.protocol))).toThrow(/states no protocol/);
+  });
+  test.each([
+    ['reps', 3],
+    ['warmup', 1],
+  ])('a per-rep file whose header %s is not a one-rep, no-warmup run', (k, v) => {
+    expect(() => build(MOE, (m, raws) => (split(m, raws), (raws[PER[1]][k] = v)))).toThrow(new RegExp(`c1_r2.json header ${k}=${v}`));
+  });
+  test('reps from two harness revisions', () => {
+    expect(() => build(MOE, (m, raws) => (split(m, raws), (raws[PER[2]].driver_sha256 = '0'.repeat(64))))).toThrow(
+      /pools reps from harness revisions/
+    );
+  });
+  test('an empty list, or a list holding a non-name', () => {
+    expect(() => build(MOE, (m, raws) => (split(m, raws), (vllm(m).sources['1'] = [])))).toThrow(/non-empty list of file names/);
+    expect(() => build(MOE, (m, raws) => (split(m, raws), (vllm(m).sources['1'][1] = 7)))).toThrow(/non-empty list of file names/);
   });
 });

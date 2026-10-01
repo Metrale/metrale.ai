@@ -118,6 +118,32 @@ export function publishedBeyondLive(subject, records, ladders) {
 }
 
 /**
+ * The published subject leg's rungs ABOVE the live gate's widest rung, for the
+ * live chart to carry the Metrale Engine curve on to where its vLLM line goes.
+ *
+ * The MoE gate measures C=1..16 and its vLLM line, filled from the energy leg,
+ * runs to C=128; without this the first chart showed vLLM alone above C=16.
+ * The points are the published ladder's, never a gate record's, and the chart
+ * draws them in their own mark and names their build and dates. Refused (null)
+ * unless the published subject leg is on the live record's own instrument,
+ * axis by axis (ladder-baselines.js) — an extension from another workload
+ * would join two instruments with one line. Only rungs wider than the gate's
+ * widest: a published value is never drawn between two gate points.
+ *
+ * @returns {{series: object, rungs: object[]} | null}
+ */
+export function publishedExtensionOf(subject, records, ladders) {
+  const beyond = publishedBeyondLive(subject, records, ladders);
+  if (!beyond) return null;
+  const live = liveRecordOf(records);
+  const series = subjectSeriesOf(beyond.ladder);
+  if (!comparable(live, fingerprintOf(beyond.ladder, series)).ok) return null;
+  const widest = Math.max(...ladderPoints(live).map((p) => p.c));
+  const rungs = series.rungs.filter((r) => r.c > widest && beyond.rungs.includes(r.c));
+  return rungs.length > 0 ? { series, rungs } : null;
+}
+
+/**
  * What ladder-baselines.js fingerprints for one baseline series: the axes it
  * declared, plus the checkpoint the whole ladder measured. The checkpoint is
  * read from the ladder, not copied into each series (SSOT).
