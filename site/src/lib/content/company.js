@@ -347,7 +347,7 @@ export const demoPage = {
           'Enterprise datacenter',
           'Neocloud or GPU provider',
           'Air gapped or sovereign',
-          'Workstation or SMB',
+          'Workstation or edge',
           'Research lab',
           'Investor or press',
           'Something else',
