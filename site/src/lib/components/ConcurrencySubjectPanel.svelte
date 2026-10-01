@@ -102,7 +102,8 @@
     <p class="cmp-bridge">
       The {subject.gate} gate stops at C={Math.max(...ladderPoints(live).map((p) => p.c))}, and its signed records above are the certified
       evidence for the rungs they cover. The published ladder below also measures C={beyond.rungs.join(', ')}, on the same instrument and
-      the same box as its vLLM legs. It is published-ladder data, not a gate record.
+      the same box as its vLLM legs, and the chart above carries its Metrale Engine leg at those rungs in hollow marks. It is
+      published-ladder data, not a gate record.
     </p>
     <ConcurrencyComparison {subject} {records} {rungs} {onselect} publishedOnly />
   {/if}

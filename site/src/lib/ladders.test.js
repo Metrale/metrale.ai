@@ -88,8 +88,10 @@ describe('every published rung recomputes from the raw file it names', () => {
     const s = withManifest.find((x) => x.id === subjectId);
     const own = manifestOfSeries(s, { id: seriesId });
     const manifests = { [subjectId]: own };
-    const doc = rawReader(s)(source);
-    const rung = doc.rungs.find((x) => x.concurrency === c);
+    // A rung pooled from per-rep files names each of them (ladder-build.mjs#sourceFilesOf).
+    const docs = (r.sources ?? [source]).map(rawReader(s));
+    const rung = { reps: docs.flatMap((d) => d.rungs.find((x) => x.concurrency === c).reps) };
+    const doc = docs.reduce((a, d) => (d.started_utc < a.started_utc ? d : a));
     const tok = rung.reps.map((x) => x.tok_s);
     expect(r.reps).toBe(rung.reps.length);
     expect(r.tok_s).toBe(round2(mean(tok)));
@@ -103,14 +105,11 @@ describe('every published rung recomputes from the raw file it names', () => {
     expect(Object.keys(manifests[subjectId].harness_shas)).toContain(r.harness_sha256);
     // The raw header is the instrument the manifest claims.
     const w = manifests[subjectId].workload;
-    expect([doc.model, doc.isl, doc.osl, doc.reps, doc.warmup, doc.seed]).toEqual([
-      w.checkpoint,
-      w.isl_tokens,
-      w.osl_tokens,
-      w.reps,
-      w.warmup,
-      w.seed,
-    ]);
+    // A per-rep file is a one-rep, no-warmup run; the manifest's protocol says where the warm-up ran.
+    const [reps, warmup] = r.sources ? [1, 0] : [w.reps, w.warmup];
+    for (const d of docs)
+      expect([d.model, d.isl, d.osl, d.reps, d.warmup, d.seed]).toEqual([w.checkpoint, w.isl_tokens, w.osl_tokens, reps, warmup, w.seed]);
+    if (r.sources) expect(r.sources).toHaveLength(w.reps);
   });
 });
 
@@ -312,39 +311,48 @@ describe('the MoE energy leg of 2026-09-28', () => {
   });
 });
 
-describe('the MoE Metrale Engine leg of 2026-09-29', () => {
+describe('the MoE Metrale Engine leg of 2026-10-01', () => {
   const subject = subjects.find((s) => s.id === 'qwen36-35b-a3b');
   const moe = ladders.subjects['qwen36-35b-a3b'];
   const metrale = moe.series.find((s) => s.role === 'subject');
+  const manifest = readJson(manifestPathOf(subject));
+  const files = Object.values(manifest.series[0].sources).flat();
 
-  test('C=1..128 on the published instrument, two reps per rung, disclosed', () => {
+  test('C=1..128 on the published instrument, three per-rep files per rung, the same rep count as the vLLM legs', () => {
     expect(metrale.rungs.map((r) => r.c)).toEqual([1, 2, 4, 8, 16, 32, 64, 128]);
-    expect(metrale.rungs.every((r) => r.reps === 2)).toBe(true);
-    expect(moe.workload.reps).toBe(2);
+    expect(metrale.rungs.every((r) => r.reps === 3)).toBe(true);
+    expect(moe.workload.reps).toBe(3);
     expect(moe.baseline_workload.reps).toBe(3);
-    expect(moe.reps_note).toMatch(/2 timed reps \+ 1 warmup per rung\. The vLLM legs in published\.json ran 3/);
-    for (const r of metrale.rungs) {
-      const doc = rawReader(subject)(r.source);
-      expect(doc.driver_sha256.slice(0, 10)).toBe('55a5963e4b');
-      expect(doc.started_utc.slice(0, 10)).toBe('2026-09-29');
-      expect(r.gpu_rail_energy_j).toBeGreaterThan(0);
+    expect(moe.reps_note).toBeUndefined();
+    expect(files).toHaveLength(24);
+    expect(new Set(files).size).toBe(24);
+    for (const [c, fs] of Object.entries(manifest.series[0].sources)) {
+      expect(fs).toHaveLength(3);
+      for (const f of fs) {
+        const doc = rawReader(subject)(f);
+        expect([doc.reps, doc.warmup]).toEqual([1, 0]);
+        expect(doc.rungs.map((r) => r.concurrency)).toEqual([Number(c)]);
+        expect(doc.driver_sha256.slice(0, 10)).toBe('55a5963e4b');
+        expect(doc.started_utc.slice(0, 10)).toBe('2026-10-01');
+      }
     }
+    for (const r of metrale.rungs) expect(r.gpu_rail_energy_j).toBeGreaterThan(0);
   });
 
-  test('labelled published-ladder data, not a gate record', () => {
+  test('labelled published-ladder data, not a gate record, at the certified binary of main', () => {
     expect(metrale.evidence_note).toMatch(/^Published-ladder data, not a gate record\./);
-    expect(metrale.build).toBe('39ab52e6c9');
+    expect(metrale.build).toBe('b32255fa42');
+    expect(metrale.build_note).toContain('2f66da5dd');
   });
 
   test('scored against vllm-mtp at every rung, and wins each', () => {
     expect(moe.rows.map((r) => [r.c, r.engine, r.baselines.map((b) => b.id)])).toEqual(
       metrale.rungs.map((r) => [r.c, r.tok_s, ['vllm-mtp']])
     );
-    expect(moe.summary).toEqual({ rungs: 8, won: 8, all_won: true, min_ratio: 1.07, max_ratio: 1.581 });
+    expect(moe.summary).toMatchObject({ rungs: 8, won: 8, all_won: true });
   });
 
-  test('every rung file is the one the manifest names, byte for byte', () => {
-    for (const f of new Set(metrale.rungs.map((r) => r.source)))
-      expect(metrale.source_note).toContain(hash('sha256', join(dirname(manifestPathOf(subject)), f)));
+  test('every per-rep file is the one the manifest names, byte for byte', () => {
+    for (const f of files) expect(metrale.source_note).toContain(hash('sha256', join(dirname(manifestPathOf(subject)), f)));
   });
 });

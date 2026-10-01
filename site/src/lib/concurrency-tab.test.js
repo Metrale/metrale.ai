@@ -331,8 +331,31 @@ describe('the MoE tab: the live gate to C=16, then the published ladder to C=128
       page,
       'The concurrency-sweep-moe gate stops at C=16, and its signed records above are the certified evidence for the rungs they cover.',
       'The published ladder below also measures C=32, 64, 128',
+      'the chart above carries its Metrale Engine leg at those rungs in hollow marks.',
       'It is published-ladder data, not a gate record.'
     );
+  });
+
+  // ★ THE OWNER'S QUESTION, 2026-10-01: the first chart showed Metrale Engine to
+  // C=16 and vLLM to C=128. The live chart now carries the Metrale Engine curve
+  // on from the gate's widest rung with the published leg, in hollow marks that
+  // say what they are.
+  test('the live chart carries Metrale Engine on to C=128 with the published leg, marked as such', () => {
+    const first = page.slice(page.indexOf(titles[0]), page.indexOf(titles[1]));
+    const marks = [...first.matchAll(/<circle class="cmp-ext-mark"[^>]*>\s*<title>([^<]*)<\/title>/g)].map((m) => m[1]);
+    expect(marks).toEqual(
+      metrale.rungs
+        .filter((r) => r.c > 16)
+        .map(
+          (r) =>
+            `Metrale Engine · published ladder · C=${r.c} · ${r.tok_s.toFixed(2)} tok/s · mean of ${r.reps} reps · spread ${r.spread_pct}% · ${metrale.build} · not a gate record`
+        )
+    );
+    expect(first).not.toContain('>not run</text>');
+    const t = text(first);
+    expect(t).toContain(`Metrale Engine · published ladder · C=32, 64, 128 · measured `);
+    expect(t).toContain('the hollow marks at C=32, 64, 128 are the published ladder');
+    expect(t).toContain('published-ladder data, not a gate record.');
   });
 
   test('the published table has a row at every rung to C=128, Metrale Engine against vLLM + MTP', () => {
@@ -350,7 +373,7 @@ describe('the MoE tab: the live gate to C=16, then the published ladder to C=128
     expect(t).toContain(
       'vLLM + MTP at C=32, 64, 128 comes from vLLM + MTP (energy), the same image, command and instrument re-run with power sampling on 2026-09-28.'
     );
-    expect(t).toContain(moe.reps_note);
+    expect(t).not.toContain('2 timed reps');
     expect(t).toContain(metrale.evidence_note);
     expect(vllm.filled.rungs).toEqual([32, 64, 128]);
   });

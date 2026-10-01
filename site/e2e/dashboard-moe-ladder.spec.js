@@ -21,6 +21,8 @@ test.describe('the MoE ladder to C=128', () => {
     await expect(page.locator('#cs-tab-qwen36-35b-a3b')).toHaveAttribute('aria-selected', 'true');
     const titles = page.locator('#cs-panel-qwen36-35b-a3b .gate-panel-title');
     await expect(titles.nth(0)).toContainText('Metrale Engine vs vLLM · gate instrument');
+    // The gate chart carries Metrale Engine on to C=128 with the published leg, in hollow marks.
+    await expect(page.locator('#cs-panel-qwen36-35b-a3b figure.cmp').first().locator('circle.cmp-ext-mark')).toHaveCount(3);
     await expect(titles.nth(1)).toHaveText('Metrale Engine vs vLLM · published ladder, C=1..128 · ISL 128 / OSL 1024');
     await expect(page.locator('#cs-panel-qwen36-35b-a3b')).toContainText('It is published-ladder data, not a gate record.');
     const row128 = page.locator('#cs-panel-qwen36-35b-a3b .cl-table tbody tr').filter({ has: page.locator('th', { hasText: /^128$/ }) });

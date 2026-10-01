@@ -17,7 +17,9 @@
 // Guards, each of which a test breaks on purpose:
 //   * a raw file's header (model, isl, osl, reps, warmup, temperature, seed)
 //     must equal the manifest's `workload` — the manifest describes the
-//     instrument, the raw file proves it;
+//     instrument, the raw file proves it; a rung given as a list of per-rep
+//     files holds each to a one-rep, no-warmup header, exactly `workload.reps`
+//     of them, under a stated `protocol` (sourceFilesOf);
 //   * the set of driver sha256 prefixes across the raw files must EQUAL the
 //     keys of `harness_shas` — an unlisted revision is the silent
 //     incomparability this file exists to prevent, and a listed one no file
@@ -100,7 +102,6 @@ function checkHeader(doc, file, workload) {
     fail(`${file} has no driver_sha256 — which harness produced it is unknown`);
 }
 
-/** One rung of one series: the reps for concurrency `c` inside `doc`. */
 /**
  * The GPU-rail energy of one rung, when the harness recorded it.
  *
@@ -188,23 +189,37 @@ function rungEnergy(seriesId, c, file, reps) {
   };
 }
 
-export function rungStats(seriesId, c, file, doc) {
-  const rung = (doc.rungs ?? []).find((r) => r.concurrency === c);
-  if (!rung) fail(`${file} has no rung for C=${c} (series ${seriesId})`);
-  const reps = rung.reps ?? [];
-  if (reps.length === 0) fail(`${file} rung C=${c} has no reps (series ${seriesId})`);
+/**
+ * One rung from one or more raw files: their reps for concurrency `c`, pooled.
+ * A rung given as a list of per-rep files (sourceFilesOf) is the same
+ * statistic over the same reps; only where they were written differs. The
+ * files must agree on the harness revision, because a rung whose reps came
+ * from two drivers is two instruments.
+ * @param {Array<[string, object]>} entries  [file, parsed raw doc] pairs
+ */
+function rungStatsOf(seriesId, c, entries) {
+  const files = entries.map(([f]) => f);
+  const label = files.join(', ');
+  const reps = entries.flatMap(([file, doc]) => {
+    const rung = (doc.rungs ?? []).find((r) => r.concurrency === c);
+    if (!rung) fail(`${file} has no rung for C=${c} (series ${seriesId})`);
+    if ((rung.reps ?? []).length === 0) fail(`${file} rung C=${c} has no reps (series ${seriesId})`);
+    return rung.reps;
+  });
+  const shas = [...new Set(entries.map(([, d]) => d.driver_sha256.slice(0, 10)))];
+  if (shas.length > 1) fail(`rung C=${c} (series ${seriesId}) pools reps from harness revisions ${shas.join(', ')}`);
 
   const tok = reps.map((r) => r.tok_s);
   if (tok.some((v) => typeof v !== 'number' || !Number.isFinite(v)))
-    fail(`${file} rung C=${c} has a non-numeric tok_s (series ${seriesId})`);
+    fail(`${label} rung C=${c} has a non-numeric tok_s (series ${seriesId})`);
   const ttft = reps.map((r) => r.ttft_p50_ms).filter((v) => typeof v === 'number');
   const tpot = reps.map((r) => r.tpot_p50_ms).filter((v) => typeof v === 'number');
   const errs = reps.reduce((a, r) => a + (r.n_err ?? 0), 0);
-  if (errs > 0) fail(`${file} rung C=${c} recorded ${errs} request errors — not publishable`);
+  if (errs > 0) fail(`${label} rung C=${c} recorded ${errs} request errors — not publishable`);
 
   return {
     c,
-    ...rungEnergy(seriesId, c, file, reps),
+    ...rungEnergy(seriesId, c, label, reps),
     tok_s: r2(mean(tok)),
     tok_s_median: r2(median(tok)),
     // Spread as a share of the mean: how much the rung moved run to run. A
@@ -213,10 +228,39 @@ export function rungStats(seriesId, c, file, doc) {
     reps: reps.length,
     ttft_p50_ms: ttft.length ? r2(median(ttft)) : null,
     tpot_p50_ms: tpot.length ? r2(median(tpot)) : null,
-    source: file,
-    measured_utc: doc.started_utc,
-    harness_sha256: doc.driver_sha256.slice(0, 10),
+    source: label,
+    // A pooled rung names each file, so a reader can recompute it.
+    ...(files.length > 1 ? { sources: files } : {}),
+    // The rung's first rep: per-rep files are interleaved, so the earliest
+    // start is when the rung began being measured.
+    measured_utc: entries.map(([, d]) => d.started_utc).sort()[0],
+    harness_sha256: shas[0],
   };
+}
+
+/**
+ * The raw files behind one rung, and the header each must carry.
+ *
+ * A source is one file (the harness ran the rung's reps back to back) or a
+ * list of per-rep files (one harness process per timed rep, `--reps 1
+ * --warmup 0`, so each rep can start from a cooled die and the reps of
+ * different rungs can be interleaved). A list is held to the manifest's own
+ * description: exactly `workload.reps` distinct files, each a one-rep,
+ * no-warmup run, and a `protocol` string saying how the reps were taken and
+ * where the workload's warm-up happened, because a header reading warmup 0
+ * would otherwise contradict the workload it is published under.
+ * @returns {{files: string[], header: object}}
+ */
+function sourceFilesOf(s, c, src, manifest) {
+  if (typeof src === 'string' && src !== '') return { files: [src], header: manifest.workload };
+  if (!Array.isArray(src) || src.length === 0 || src.some((f) => typeof f !== 'string' || f === ''))
+    fail(`series ${s.id} C=${c}: a source is a file name or a non-empty list of file names`);
+  if (new Set(src).size !== src.length) fail(`series ${s.id} C=${c} names a per-rep file twice`);
+  if (src.length !== manifest.workload.reps)
+    fail(`series ${s.id} C=${c} names ${src.length} per-rep files but workload.reps is ${manifest.workload.reps}`);
+  if (!(typeof manifest.protocol === 'string' && manifest.protocol.trim()))
+    fail(`series ${s.id} C=${c} is given as per-rep files but the manifest states no protocol`);
+  return { files: src, header: { ...manifest.workload, reps: 1, warmup: 0 } };
 }
 
 function checkInstrument(s, workload) {
@@ -265,21 +309,29 @@ function buildSeries(s, manifest, rawOf, docs) {
   if (!KNOWN_ROLES.includes(s.role)) fail(`series ${s.id} has unknown role ${JSON.stringify(s.role)}`);
   if (!s.sources || typeof s.sources !== 'object' || Object.keys(s.sources).length === 0) fail(`series ${s.id} names no sources`);
   const rungs = Object.entries(s.sources)
-    .map(([c, file]) => {
+    .map(([c, src]) => {
       const cn = Number(c);
       if (!isPosInt(cn)) fail(`series ${s.id} has a non-rung source key ${JSON.stringify(c)}`);
-      if (!docs.has(file)) {
-        const doc = rawOf(file);
-        checkHeader(doc, file, manifest.workload);
-        docs.set(file, doc);
+      const { files, header } = sourceFilesOf(s, cn, src, manifest);
+      for (const file of files) {
+        if (!docs.has(file)) {
+          const doc = rawOf(file);
+          checkHeader(doc, file, header);
+          docs.set(file, doc);
+        }
       }
-      return rungStats(s.id, cn, file, docs.get(file));
+      return rungStatsOf(
+        s.id,
+        cn,
+        files.map((f) => [f, docs.get(f)])
+      );
     })
     .sort((a, b) => a.c - b.c);
   if (s.role === 'baseline') checkInstrument(s, manifest.workload);
+  const named = Object.values(s.sources).flat();
   checkUnmeasured(
     s,
-    [...docs].filter(([file]) => Object.values(s.sources).includes(file))
+    [...docs].filter(([file]) => named.includes(file))
   );
   return { ...s, sources: undefined, rungs };
 }
