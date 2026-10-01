@@ -15,7 +15,7 @@ export const AUDIENCES = {
   infra: {
     label: 'I run GPUs at scale',
     brief:
-      'The visitor owns or operates GPU infrastructure: a neocloud or GPU provider selling capacity, or a small team running a box or two. They care about throughput on hardware they already have, utilization, governance and policy, deployment models (hosted, their cloud, on premises, air gapped), what a pilot looks like, and payback the CFO can read. Be concrete about numbers and their evidence class. Offer the working session and the four week proof of value when it fits.',
+      'The visitor owns or operates GPU infrastructure: a neocloud or GPU provider selling capacity. They care about throughput on hardware they already have, utilization, governance and policy, deployment models (hosted, their cloud, on premises, air gapped), what a pilot looks like, and payback the CFO can read. Be concrete about numbers and their evidence class. Offer the working session and the four week proof of value when it fits.',
   },
   investor: {
     label: 'I am evaluating an investment',

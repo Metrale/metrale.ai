@@ -3,8 +3,11 @@
   import PageHero from '$lib/components/marketing/PageHero.svelte';
   import CtaBand from '$lib/components/marketing/CtaBand.svelte';
   import { solutionsIndex as s, solutions, solutionCta } from '$lib/content/solutions.js';
-  import { routes, sectors, industryBySlug, solutionHref } from '$lib/content/brand.js';
+  import { routes, sectors, industryBySlug, solutionHref, parkedIndustries } from '$lib/content/brand.js';
   const hues = ['violet', 'cyan', 'green', 'gold'];
+  // Held-back pages the index names as coming soon, after the last sector's cards.
+  const soon = parkedIndustries.filter((i) => i.soon);
+  const extra = (k) => (k === sectors.length - 1 ? soon : []);
 </script>
 
 <PageShell path={routes.solutions}>
@@ -28,7 +31,7 @@
           <p class="av-eyebrow">{sec.label}</p>
           <h2 class="av-h2">{sec.blurb}</h2>
         </div>
-        <div class="av-grid av-grid-{Math.min(3, sec.industries.length)} av-reveal">
+        <div class="av-grid av-grid-{Math.min(3, sec.industries.length + extra(k).length)} av-reveal">
           {#each sec.industries as slug, j}
             {@const i = industryBySlug(slug)}
             <a class="av-card av-card-accent av-sx-{hues[(k + j) % 4]}" href={solutionHref(slug)}>
@@ -36,6 +39,12 @@
               <p>{solutions[slug].title}</p>
               <span class="av-link">Read the solution <span class="av-arrow">→</span></span>
             </a>
+          {/each}
+          {#each extra(k) as i}
+            <div class="av-card">
+              <h3>{i.name}</h3>
+              <p>{s.soon}</p>
+            </div>
           {/each}
         </div>
       </div>

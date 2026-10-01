@@ -12,7 +12,8 @@ import { routes, industries, parkedIndustries } from './brand.js';
 export const solutionsIndex = {
   eyebrow: 'Solutions',
   title: 'Built for the people who own the GPUs.',
-  lede: 'Two kinds of buyer, for now: operators who resell GPU time, and small teams that run a box or two. Pick yours.',
+  lede: 'For now, the operators who resell GPU time. SMB and edge is coming soon.',
+  soon: 'Coming soon.',
 };
 
 const base = Object.fromEntries([...industries, ...parkedIndustries].map((i) => [i.slug, i]));

@@ -145,6 +145,14 @@
       "base": "bf8bbf514",
       "note": "The workstation tier is for teams and organizations on local devices, and its support line promises a response SLA instead of next business day; the support FAQ names the tier.",
       "touched": []
+    },
+    {
+      "rev": 11,
+      "date": "2026-09-30",
+      "pr": 57,
+      "base": "9216ded87",
+      "note": "SMB and edge is held back until the SMB motion is worked out: the page is not built, its address redirects to /solutions, which names it as coming soon, and the copy that pitched small teams with a box or two is gone. Neoclouds stays.",
+      "touched": []
     }
   ],
   "facts": {

@@ -178,8 +178,8 @@ test.describe('navigation', () => {
     await page.getByRole('button', { name: 'Open menu' }).click();
     await expect(page.locator('#av-drawer')).toBeVisible();
     await page.locator('.av-drawer-head', { hasText: 'Solutions' }).click();
-    await page.locator('.av-drawer-items a', { hasText: 'SMB and edge' }).click();
-    await expect(page).toHaveURL(/\/solutions\/smb-edge/);
+    await page.locator('.av-drawer-items a', { hasText: 'Neoclouds and GPU providers' }).click();
+    await expect(page).toHaveURL(/\/solutions\/neoclouds/);
     await expect(page.locator('#av-drawer')).toBeHidden();
   });
 
