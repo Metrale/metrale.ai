@@ -24,8 +24,9 @@ The legal entity is Metrale Corp.
 - [Deployment · Metrale](https://metrale.ai/platform/deployment): Hosted with private connectivity, your cloud account, on premises or air gapped. Same binary, same recipes, same control plane.
 - [Hardware and models · Metrale](https://metrale.ai/platform/hardware): Verified silicon, targets in bring up, and every model recipe we ship, generated from the repository.
 - [Benchmarks · Metrale](https://metrale.ai/benchmarks): The concurrency ladder against vLLM and every gate record, generated from the repository. Reproduce any of them.
-- [Solutions · Metrale](https://metrale.ai/solutions): Built for the people who own the GPUs: neoclouds and GPU providers.
+- [Solutions · Metrale](https://metrale.ai/solutions): Built for the people who own the GPUs: neoclouds and GPU providers, and small teams running a box or two.
 - [Neoclouds and GPU providers · Metrale](https://metrale.ai/solutions/neoclouds): Metrale for neoclouds and GPU providers. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
+- [SMB and edge · Metrale](https://metrale.ai/solutions/smb-edge): Metrale for SMB and edge. Faster inference, stronger governance and a payback the CFO can read, on hardware you own.
 - [Pricing · Metrale](https://metrale.ai/pricing): Priced against productive GPU capacity, not seats. Community, workstation, enterprise and proof of value, with a payback model you can edit.
 - [Book a demo · Metrale](https://metrale.ai/demo): A working session on your workload. The console on demo data, the published ladder, the payback model with your inputs, and a scoped proof of value.
 - [Release notes · Metrale](https://metrale.ai/waitlist): Metrale Engine is open source and runs today. Leave an address and the hardware you run, and hear when the next release ships.

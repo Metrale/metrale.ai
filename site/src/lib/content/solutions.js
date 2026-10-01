@@ -12,8 +12,7 @@ import { routes, industries, parkedIndustries } from './brand.js';
 export const solutionsIndex = {
   eyebrow: 'Solutions',
   title: 'Built for the people who own the GPUs.',
-  lede: 'For now, the operators who resell GPU time. SMB and edge is coming soon.',
-  soon: 'Coming soon.',
+  lede: 'Two kinds of buyer, for now: operators who resell GPU time, and small teams that run a box or two. Pick yours.',
 };
 
 const base = Object.fromEntries([...industries, ...parkedIndustries].map((i) => [i.slug, i]));
@@ -245,8 +244,8 @@ export const solutions = {
   'smb-edge': {
     ...base['smb-edge'],
     eyebrow: 'Solutions · SMB and edge',
-    title: 'One box. One license. Stop renting tokens.',
-    lede: 'A DGX Spark or Strix Halo class box running Metrale serves an entire small business, branch or field team from under a desk. The same engine as the datacenter, licensed per box, managed from the same console.',
+    title: 'Your hardware. One license. Stop renting tokens.',
+    lede: 'Metrale runs on hardware your business owns. A DGX Spark or Strix Halo class box under a desk can serve a small business, a branch or a field team. The same engine as the datacenter, licensed per box, managed from the same console.',
     fit: [
       'A metered API bill that grew past the cost of owning the hardware',
       'Data that should not leave the office',
@@ -259,10 +258,10 @@ export const solutions = {
       'Field and branch deployments that must work offline',
     ],
     deployment:
-      'Workstation and edge license per box, installed in one command, updated from a signed channel. Add boxes and the console sees them.',
+      'Workstation and edge license per box, installed in one command on hardware you own, updated from a signed channel. Add boxes and the console sees them.',
     proof:
       'The workstation scenario on the pricing page replaces a metered API bill with owned boxes at measured throughput and lands at 70% or less of the old bill, with payback in months.',
-    cta: 'Price a box',
+    cta: 'Price a license',
   },
 };
 

@@ -47,16 +47,14 @@
     </div>
   </section>
 
-  {#if others.length}
-    <section class="av-section av-section-tight">
-      <div class="av-container">
-        <p class="av-eyebrow">Also built for</p>
-        <ul class="av-row">
-          {#each others as o}<li><a class="av-btn av-btn-sm av-btn-ghost" href={solutionHref(o.slug)}>{o.name}</a></li>{/each}
-        </ul>
-      </div>
-    </section>
-  {/if}
+  <section class="av-section av-section-tight">
+    <div class="av-container">
+      <p class="av-eyebrow">Also built for</p>
+      <ul class="av-row">
+        {#each others as o}<li><a class="av-btn av-btn-sm av-btn-ghost" href={solutionHref(o.slug)}>{o.name}</a></li>{/each}
+      </ul>
+    </div>
+  </section>
 
   <CtaBand
     eyebrow={solutionCta.eyebrow}

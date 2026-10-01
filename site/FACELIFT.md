@@ -156,6 +156,11 @@ no payback claim.
 where the numbers were, and the guide sends a visitor who asks to the contact
 page. See open question 1 for what comes back when they return.
 
+**SMB and edge: the business owns the box (2026-09-30).** Metrale is not
+deploying boxes to SMB clients. The page says the business runs Metrale on
+hardware it owns, its button prices a license rather than a box, and the
+guide never offers to supply, ship or place a box.
+
 **No customer logos.** The logo wall shows where the team worked before, under
 a line that says so, with a note that these are not customers or endorsements.
 `static/logos/README.md` records each mark's source and terms, and a test fails
@@ -366,17 +371,6 @@ gate green.
 - **The architecture diagram is sized from its text.** Plex Mono is 0.6 em a
   character, so a box's width is arithmetic. The comment in `ArchDiagram.svelte`
   has the rule, and a browser test measures every label against its box.
-
-**SMB and edge is held back (2026-09-30).** Metrale is not deploying boxes to
-SMB clients yet, so the page waits until the SMB motion is worked out. It sits
-in `parkedIndustries` with `soon: true`: not built, redirected to /solutions in
-`static/_redirects`, and named there as coming soon. Its copy stays in
-`solutions.js` and its stills stay installed. When it returns, these move
-together: the entry back into `industries` and `sectors` in `brand.js`, its
-redirect line out, the /solutions lede in `solutions.js` and the page
-description in `index.js`, the deployment fit line in `platform.js`, the
-guide's infra audience in `prompt.js`, the drawer test in
-`e2e/marketing.spec.js`, and the page back in `lighthouse/lighthouserc.json`.
 
 ## Open questions for the team
 

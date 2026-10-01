@@ -99,7 +99,7 @@ export const pages = [
   {
     path: routes.solutions,
     title: T('Solutions'),
-    description: 'Built for the people who own the GPUs: neoclouds and GPU providers.',
+    description: 'Built for the people who own the GPUs: neoclouds and GPU providers, and small teams running a box or two.',
     priority: 0.8,
   },
   ...industries.map((i) => ({
