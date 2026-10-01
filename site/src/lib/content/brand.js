@@ -139,14 +139,14 @@ export const routes = {
   diligence: '/diligence',
 };
 
-// The solutions the site publishes. Held to the two the company sells to today,
+// The solutions the site publishes. Held to the one the company sells to today,
 // at the owners' word; the rest are kept below as data, not built and not
-// linked, until there is a customer or a pilot to point at.
-export const industries = [
-  { slug: 'neoclouds', name: 'Neoclouds and GPU providers', short: 'GPU clouds' },
-  { slug: 'smb-edge', name: 'SMB and edge', short: 'SMB and edge' },
-];
+// linked, until there is a customer or a pilot to point at. `soon` marks a held
+// page the Solutions index names as coming soon: SMB and edge, held back on
+// 2026-09-30 until the SMB motion is worked out.
+export const industries = [{ slug: 'neoclouds', name: 'Neoclouds and GPU providers', short: 'GPU clouds' }];
 export const parkedIndustries = [
+  { slug: 'smb-edge', name: 'SMB and edge', short: 'SMB and edge', soon: true },
   { slug: 'enterprise-datacenter', name: 'Enterprise datacenters', short: 'Enterprise' },
   { slug: 'financial-services', name: 'Financial services', short: 'Banks' },
   { slug: 'healthcare', name: 'Healthcare', short: 'Hospitals' },
@@ -162,13 +162,13 @@ export const solutionHref = (slug) => `${routes.solutions}/${slug}`;
 export const industryBySlug = (slug) => industries.find((i) => i.slug === slug);
 
 // The Solutions menu and the solutions page walk these. One group while there
-// are two solutions; the grouping by sector returns with the held-back pages.
+// is one solution; the grouping by sector returns with the held-back pages.
 export const sectors = [
   {
     id: 'who',
     label: 'Who it is for',
-    blurb: 'The clouds that sell GPU time, and small teams with a box or two.',
-    industries: ['neoclouds', 'smb-edge'],
+    blurb: 'The clouds that sell GPU time.',
+    industries: ['neoclouds'],
   },
 ];
 

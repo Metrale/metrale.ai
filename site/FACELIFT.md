@@ -367,6 +367,17 @@ gate green.
   character, so a box's width is arithmetic. The comment in `ArchDiagram.svelte`
   has the rule, and a browser test measures every label against its box.
 
+**SMB and edge is held back (2026-09-30).** Metrale is not deploying boxes to
+SMB clients yet, so the page waits until the SMB motion is worked out. It sits
+in `parkedIndustries` with `soon: true`: not built, redirected to /solutions in
+`static/_redirects`, and named there as coming soon. Its copy stays in
+`solutions.js` and its stills stay installed. When it returns, these move
+together: the entry back into `industries` and `sectors` in `brand.js`, its
+redirect line out, the /solutions lede in `solutions.js` and the page
+description in `index.js`, the deployment fit line in `platform.js`, the
+guide's infra audience in `prompt.js`, the drawer test in
+`e2e/marketing.spec.js`, and the page back in `lighthouse/lighthouserc.json`.
+
 ## Open questions for the team
 
 1. **Prices.** Held back on 2026-09-26: the tiers say "Contact us" until the

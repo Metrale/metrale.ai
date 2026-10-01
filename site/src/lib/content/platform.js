@@ -402,7 +402,7 @@ export const deploymentPage = {
     {
       name: 'Workstation and edge',
       body: 'A DGX Spark or Strix Halo class box under a desk or in a branch office, licensed per box, managed by the same control plane.',
-      fit: 'SMB, branch offices, field deployments',
+      fit: 'Teams on local devices, branch offices, field deployments',
     },
   ],
   onboarding: {

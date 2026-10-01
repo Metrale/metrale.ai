@@ -1,6 +1,6 @@
 {
- "revision": 10,
- "date": "2026-09-28",
+ "revision": 11,
+ "date": "2026-09-30",
  "changes": [
   {
    "rev": 1,
@@ -146,6 +146,14 @@
    "base": "bf8bbf514",
    "note": "The workstation tier is for teams and organizations on local devices, and its support line promises a response SLA instead of next business day; the support FAQ names the tier.",
    "touched": []
+  },
+  {
+   "rev": 11,
+   "date": "2026-09-30",
+   "pr": 57,
+   "base": "9216ded87",
+   "note": "SMB and edge is held back until the SMB motion is worked out: the page is not built, its address redirects to /solutions, which names it as coming soon, and the copy that pitched small teams with a box or two is gone. Neoclouds stays.",
+   "touched": []
   }
  ],
  "facts": [
@@ -201,7 +209,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -237,7 +244,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -273,7 +279,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -316,7 +321,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -352,7 +356,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -388,7 +391,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -424,7 +426,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -528,7 +529,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -570,7 +570,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -606,7 +605,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -649,7 +647,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -716,7 +713,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -752,7 +748,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -794,7 +789,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -857,7 +851,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -936,7 +929,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -1025,7 +1017,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -1100,7 +1091,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -1691,7 +1681,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -1728,7 +1717,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -1765,7 +1753,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -1834,7 +1821,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -2136,9 +2122,7 @@
    "bytes": 103750,
    "rev": 1,
    "date": "2026-09-24",
-   "used": [
-    "/solutions/smb-edge"
-   ]
+   "used": []
   },
   {
    "path": "site/static/media/art/art-smb-library.webp",
@@ -2146,9 +2130,7 @@
    "bytes": 88452,
    "rev": 1,
    "date": "2026-09-24",
-   "used": [
-    "/solutions/smb-edge"
-   ]
+   "used": []
   },
   {
    "path": "site/static/media/art/art-smb-office.webp",
@@ -2156,9 +2138,7 @@
    "bytes": 60880,
    "rev": 1,
    "date": "2026-09-24",
-   "used": [
-    "/solutions/smb-edge"
-   ]
+   "used": []
   },
   {
    "path": "site/static/media/brand/mcube-96-poster.png",
@@ -2403,7 +2383,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -2644,7 +2623,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -2681,7 +2659,6 @@
     "/resources/updates",
     "/solutions",
     "/solutions/neoclouds",
-    "/solutions/smb-edge",
     "/trust",
     "/waitlist",
     "/why-metrale"
@@ -2773,11 +2750,6 @@
    "menu": "Solutions",
    "text": "Neoclouds and GPU providers",
    "href": "/solutions/neoclouds"
-  },
-  {
-   "menu": "Solutions",
-   "text": "SMB and edge",
-   "href": "/solutions/smb-edge"
   },
   {
    "menu": "Solutions",
@@ -2905,11 +2877,6 @@
    "column": "Solutions",
    "text": "Neoclouds and GPU providers",
    "href": "/solutions/neoclouds"
-  },
-  {
-   "column": "Solutions",
-   "text": "SMB and edge",
-   "href": "/solutions/smb-edge"
   },
   {
    "column": "Resources",
@@ -4764,6 +4731,7 @@
       "industryBySlug",
       "links",
       "nav",
+      "parkedIndustries",
       "routes",
       "sectors",
       "solutionHref"
@@ -4797,12 +4765,6 @@
     {
      "text": "Neoclouds and GPU providers You sell GPU time. Metrale makes every hour of it produce more",
      "href": "/solutions/neoclouds",
-     "kind": "page",
-     "button": false
-    },
-    {
-     "text": "SMB and edge One box. One license. Stop renting tokens. Read the solution",
-     "href": "/solutions/smb-edge",
      "kind": "page",
      "button": false
     },
@@ -4871,74 +4833,6 @@
     {
      "text": "See pricing",
      "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "SMB and edge",
-     "href": "/solutions/smb-edge",
-     "kind": "page",
-     "button": true
-    }
-   ],
-   "controls": [],
-   "forms": []
-  },
-  {
-   "path": "/solutions/smb-edge",
-   "title": "SMB and edge · Metrale",
-   "h1": "One box. One license. Stop renting tokens.",
-   "route": "src/routes/(marketing)/solutions/[slug]/+page.svelte",
-   "copy": [
-    {
-     "file": "src/lib/content/brand.js",
-     "exports": [
-      "footer",
-      "industries",
-      "links",
-      "nav",
-      "routes",
-      "solutionHref"
-     ]
-    },
-    {
-     "file": "src/lib/content/index.js",
-     "exports": [
-      "SITE",
-      "pages"
-     ]
-    },
-    {
-     "file": "src/lib/content/media.js",
-     "exports": [
-      "artsFor",
-      "heroClipFor"
-     ]
-    },
-    {
-     "file": "src/lib/content/solutions.js",
-     "exports": [
-      "solutionCta"
-     ]
-    }
-   ],
-   "generated": false,
-   "links": [
-    {
-     "text": "Price a box",
-     "href": "/demo#book",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "See pricing",
-     "href": "/pricing",
-     "kind": "page",
-     "button": true
-    },
-    {
-     "text": "Neoclouds and GPU providers",
-     "href": "/solutions/neoclouds",
      "kind": "page",
      "button": true
     }
