@@ -219,6 +219,14 @@ export function reproSteps(record, ctx) {
       ['commit', sha ? `${ENGINE_REPO}/commit/${sha}` : 'not recorded'],
       ['source branch', rec.branch || 'committed on main'],
       ['in dashboard history', rec.generated_ancestry ?? 'unknown'],
+      // The commit on main that added the record (gen-gates.mjs `landed`); the
+      // measured commit above is the campaign's branch head.
+      [
+        'landed on main',
+        rec.landed
+          ? `${ENGINE_REPO}/commit/${rec.landed.sha}${rec.landed.pr !== null ? ` (#${rec.landed.pr})` : ''}`
+          : 'not on main (a branch record)',
+      ],
     ],
     commands: [],
     notes: [],

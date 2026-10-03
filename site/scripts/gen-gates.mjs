@@ -27,7 +27,11 @@
 // the same panel (see src/lib/repro-steps.js), with `recipe_source`: where
 // the recipe a record names can be read — `record` when recipes/ at the
 // record's own commit has it, `generated` when only the commit this is
-// generated from does, null when neither has it.
+// generated from does, null when neither has it. Each committed record also
+// carries `landed`: the commit on the generated history that added its file
+// (scripts/lib/record-landing.mjs), which is what puts it in the dashboard's
+// history: its own `git_sha` is a squash-merged branch head, never an
+// ancestor of main.
 //
 // Regenerate with:   node site/scripts/gen-gates.mjs
 // No third-party deps: Node builtins + `git` via child_process.
@@ -42,6 +46,7 @@ import { assignTrendPredecessors } from '../src/lib/gate-lineage.js';
 import { declaredLimitsOf, mergeDeclaredLimits, parseToml } from './lib/bench-toml.mjs';
 import { foldLedger } from './lib/limit-ledger.mjs';
 import { engineRoot } from './lib/engine-root.mjs';
+import { parseRecordLanding } from './lib/record-landing.mjs';
 import { RECIPES_DIR } from '../../web-shared/sources.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -383,11 +388,26 @@ let fromBranches = 0;
 try {
   const remote = gitSoft(['remote']).split('\n')[0];
   if (remote) {
-    // Shallow-refresh all heads; tolerable if it fails (offline build).
+    // Refresh all heads; tolerable if it fails (offline build).
+    // ★ NEVER `--depth` ON A FULL CLONE. `git fetch --depth=1` makes the
+    // repository shallow at every fetched tip, so `rev-list --all` below (the
+    // ancestry map) lost most of the history the checkout had: 453 commits
+    // became 200, and every data point's card read "commit history
+    // unavailable" (2026-10-03). A treeless fetch keeps the history at the cost
+    // of commits and trees only; a clone that is already shallow stays shallow.
+    const shallow = gitSoft(['rev-parse', '--is-shallow-repository']) === 'true';
+    const promisor = gitSoft(['config', `remote.${remote}.promisor`]) === 'true';
     try {
-      git(['fetch', '--quiet', '--depth=1', remote, `+refs/heads/*:refs/remotes/${remote}/*`], {
-        timeout: 120_000,
-      });
+      git(
+        [
+          'fetch',
+          '--quiet',
+          ...(shallow ? ['--depth=1'] : promisor ? ['--filter=blob:none'] : []),
+          remote,
+          `+refs/heads/*:refs/remotes/${remote}/*`,
+        ],
+        { timeout: 120_000 }
+      );
     } catch (err) {
       console.error(`gen-gates: fetch degraded (${String(err.message || err).split('\n')[0]})`);
     }
@@ -419,6 +439,10 @@ try {
 // --- assemble ---------------------------------------------------------------
 const benchmarks = {};
 const generatedHead = gitSoft(['rev-parse', 'HEAD']);
+// The commit on the generated history that added each committed record's file.
+const landing = parseRecordLanding(
+  gitSoft(['log', '--format=@%H%x09%ct%x09%s', '--diff-filter=A', '--name-only', 'HEAD', '--', '.benchmarks'])
+);
 for (const rec of records.values()) {
   const b = (benchmarks[rec.benchmark_id] ??= { name: rec.benchmark_name, records: [] });
   b.records.push(rec);
@@ -427,7 +451,16 @@ for (const b of Object.values(benchmarks)) {
   b.records.sort((x, y) => x.recorded_at - y.recorded_at);
   assignTrendPredecessors(b.records, gitIsAncestor);
   for (const rec of b.records) {
-    rec.generated_ancestry = !gitCommitKnown(rec.git_sha) ? 'unknown' : gitIsAncestor(rec.git_sha, generatedHead) ? 'yes' : 'no';
+    // A committed record is in the dashboard's history by the commit that
+    // landed it; a branch record only if its own commit is an ancestor.
+    rec.landed = rec.branch ? null : (landing.get(rec.path) ?? null);
+    rec.generated_ancestry = rec.landed
+      ? 'yes'
+      : !gitCommitKnown(rec.git_sha)
+        ? 'unknown'
+        : gitIsAncestor(rec.git_sha, generatedHead)
+          ? 'yes'
+          : 'no';
     rec.recipe_source = recipeSource(rec, generatedHead);
   }
 }

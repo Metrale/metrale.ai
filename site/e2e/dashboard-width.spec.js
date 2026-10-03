@@ -81,6 +81,9 @@ test.describe('the benchmark dashboard at 390px', () => {
       await page.goto('/engine');
       await page.getByRole('button', { name: /view the benchmark dashboard/i }).click();
       await expect(page.locator('.bd[role="dialog"]')).toBeVisible();
+      // Every model, so every tab and every subject is measured, and the header's
+      // selects are on screen at phone width too.
+      await page.getByLabel('model', { exact: true }).selectOption('all');
       const tabs = page.locator('.bd-tabs [role="tab"]');
       const labels = (await tabs.allInnerTexts()).map((t) => t.trim());
       expect(labels.length).toBeGreaterThanOrEqual(7);

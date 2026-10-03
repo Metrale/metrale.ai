@@ -8,7 +8,7 @@
   // (#bench=cost&subject=…&c=…) both selects and follows a click.
   import TabStrip from './TabStrip.svelte';
   import CostSubjectPanel from './CostSubjectPanel.svelte';
-  import { SUBJECTS, formatUnassigned, recordsOf, unassignedRecords } from '$lib/concurrency-subjects.js';
+  import { formatUnassigned, recordsOf, unassignedRecords } from '$lib/concurrency-subjects.js';
   import { energyOf, rungsOf } from '$lib/cost.js';
 
   /**
@@ -17,12 +17,15 @@
    *   rung: string|number,
    *   benches: string[],
    *   recordsFor: (benchId: string) => object[],
+   *   subjects: Array<{id: string, label: string, checkpoint: string, gate: string}>,
    *   onselect: (recs: object[]) => void
    * }}
    */
-  let { subject = $bindable(), rung = $bindable(), benches, recordsFor, onselect } = $props();
+  let { subject = $bindable(), rung = $bindable(), benches, recordsFor, subjects, onselect } = $props();
 
-  const bySubject = $derived(SUBJECTS.map((s) => ({ s, records: recordsOf(s, recordsFor) })));
+  // `subjects` is the dashboard's scope: the subjects of the model in its
+  // header select (dashboard-scope.js#subjectsInScope), every one for all models.
+  const bySubject = $derived(subjects.map((s) => ({ s, records: recordsOf(s, recordsFor) })));
   // The chip states what the tab holds BEFORE it is opened, and it is derived:
   // a subject with records but no joules is a different state from one with no
   // records at all, and neither is "0".

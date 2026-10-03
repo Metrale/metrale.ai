@@ -1,14 +1,14 @@
 <script>
   // The Concurrency tab: one inner tab per subject (the SSOT list in
   // concurrency-subjects.json), one ConcurrencySubjectPanel for the active
-  // one. The subject strip IS the model filter on this tab — the dashboard's
-  // global model select is hidden while this tab is up.
+  // one. The subjects are those of the model in the dashboard's header select,
+  // so a model with two subjects (dense and DFlash) keeps two tabs here.
   //
   // `subject` is bound to the dashboard so the deep link
   // (#bench=concurrency&subject=…) both selects a tab and follows a click.
   import TabStrip from './TabStrip.svelte';
   import ConcurrencySubjectPanel from './ConcurrencySubjectPanel.svelte';
-  import { SUBJECTS, formatUnassigned, recordsOf, unassignedRecords } from '$lib/concurrency-subjects.js';
+  import { formatUnassigned, recordsOf, unassignedRecords } from '$lib/concurrency-subjects.js';
 
   /**
    * @type {{
@@ -16,12 +16,15 @@
    *   rungs: number[],
    *   benches: string[],
    *   recordsFor: (benchId: string) => object[],
+   *   subjects: Array<{id: string, label: string, checkpoint: string, gate: string}>,
    *   onselect: (recs: object[]) => void
    * }}
    */
-  let { subject = $bindable(), rungs, benches, recordsFor, onselect } = $props();
+  let { subject = $bindable(), rungs, benches, recordsFor, subjects, onselect } = $props();
 
-  const bySubject = $derived(SUBJECTS.map((s) => ({ s, records: recordsOf(s, recordsFor) })));
+  // `subjects` is the dashboard's scope: the subjects of the model in its
+  // header select (dashboard-scope.js#subjectsInScope), every one for all models.
+  const bySubject = $derived(subjects.map((s) => ({ s, records: recordsOf(s, recordsFor) })));
   // A subject with no records still gets a tab — the owner wants the empty
   // state shown — and the chip is inside the button, so the state is heard
   // when the tab is reached by arrow key, not only seen.

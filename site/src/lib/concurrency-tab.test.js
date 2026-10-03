@@ -73,7 +73,8 @@ const text = (x) =>
     .replace(/&#45;/g, '-')
     .replace(/&minus;/g, '−');
 
-const renderTab = (subject, rf = recordsFor) => html(Tab, { subject, rungs, benches, recordsFor: rf, onselect: () => {} });
+const renderTab = (subject, rf = recordsFor) =>
+  html(Tab, { subject, rungs, benches, recordsFor: rf, subjects: SUBJECTS, onselect: () => {} });
 
 /** The comparison chart's own <svg> (the first one after its title). */
 const comparisonSvg = (page) => {
@@ -111,7 +112,11 @@ const ladderSvg = (page) => {
 const DENSE = byId('qwen38-27b');
 const MOE = byId('qwen36-35b-a3b');
 const DFLASH = byId('qwen38-27b-dflash');
-const denseLatest = recordsFor('concurrency-sweep').at(-1);
+// The newest passing record ON MAIN: a newer one on an unmerged branch (the
+// dashboard unions every remote head) is not what the live chart draws.
+const denseLatest = recordsFor('concurrency-sweep')
+  .filter((r) => r.verdict === 'PASS' && !r.branch)
+  .at(-1);
 // ★ THE PUBLISHED-PAIR STATE IS A FALLBACK, NOT WHAT SHIPS. The gate measures
 // the published instrument and its newest passing record on main PAIRS with
 // the vLLM+MTP bar (the 'live' state below). The fallback is still reachable —
@@ -682,26 +687,49 @@ describe('the dashboard wires the hash to the subject', () => {
     }
   };
 
-  test('a concurrency deep link selects the subject tab it names and hides the model select', () => {
+  // The header's model select, as SSR renders it: the selected option's value.
+  const selectedModel = (page) =>
+    /<select id="bd-scope-model"[^>]*>(.*?)<\/select>/.exec(page)?.[1].match(/<option value="([^"]*)" selected/)?.[1];
+  const subjectTabs = (page) => [...page.matchAll(/id="cs-tab-([a-z0-9-]+)"/g)].map((m) => m[1]);
+
+  test('a concurrency deep link selects the subject tab it names, and the model select follows its checkpoint', () => {
     const page = open('#bench=concurrency&subject=qwen36-35b-a3b&c=64');
     expect(page).toMatch(/id="bd-tab-concurrency"[^>]*aria-selected="true"/);
     expect(page).toMatch(/id="cs-tab-qwen36-35b-a3b"[^>]*aria-selected="true"/);
     expect(page).toContain('id="cs-panel-qwen36-35b-a3b"');
-    expect(page).not.toContain('aria-label="Filter by model"');
+    expect(selectedModel(page)).toBe('Qwen/Qwen3.6-35B-A3B-FP8');
+    // The flagship has one subject, so the strip holds one tab: the charts do not crowd.
+    expect(subjectTabs(page)).toEqual(['qwen36-35b-a3b']);
     // The subject tabs replace the per-bench section: one gate sweep, not two.
     expect(page.match(/class="gate-panel-title">latest gate sweep/g) ?? []).toHaveLength(1);
     expect(page).not.toContain('<article class="gbs"');
   });
 
-  test('an unknown subject in the link lands on the first subject, never a blank panel', () => {
+  test("an unknown subject in the link lands on the flagship's first subject, never a blank panel", () => {
     const page = open('#bench=concurrency&subject=nvidia-35b');
-    expect(page).toMatch(/id="cs-tab-qwen38-27b"[^>]*aria-selected="true"/);
+    expect(selectedModel(page)).toBe('Qwen/Qwen3.6-35B-A3B-FP8');
+    expect(page).toMatch(/id="cs-tab-qwen36-35b-a3b"[^>]*aria-selected="true"/);
     expect(page).toContain('Metrale Engine vs vLLM · gate instrument · ISL 128 / OSL 1024');
   });
 
-  test('other tabs keep the model select and the per-bench sections', () => {
+  test("a link from before the model select: the subject's checkpoint picks the model, and its subjects share the strip", () => {
+    const page = open('#bench=concurrency&subject=qwen38-27b-dflash');
+    expect(selectedModel(page)).toBe('unsloth/Qwen3.8-27B-NVFP4');
+    expect(subjectTabs(page)).toEqual(['qwen38-27b', 'qwen38-27b-dflash']);
+    expect(page).toMatch(/id="cs-tab-qwen38-27b-dflash"[^>]*aria-selected="true"/);
+  });
+
+  test('a model in the link outranks the subject; "all" shows every subject', () => {
+    const page = open('#bench=concurrency&model=all&subject=qwen38-27b');
+    expect(selectedModel(page)).toBe('all');
+    expect(subjectTabs(page)).toEqual(SUBJECTS.map((s) => s.id));
+  });
+
+  test('a plain open lands on the flagship; other tabs keep the per-bench sections under the header select', () => {
     const page = open('#bench=ttft');
-    expect(page).toContain('aria-label="Filter by model"');
+    expect(selectedModel(page)).toBe('Qwen/Qwen3.6-35B-A3B-FP8');
+    expect(page).toContain('<label class="bd-model-label" for="bd-scope-hw">hardware</label>');
+    expect(page).toContain('<option value="gb10" selected="">GB10</option>');
     expect(page).toContain('<article class="gbs"');
     expect(page).not.toContain('role="tablist" aria-label="Concurrency subjects"');
   });
