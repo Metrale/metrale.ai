@@ -28,7 +28,7 @@ export const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 export const VIDEO_PROVIDERS = ['youtube', 'vimeo'];
 
 const REQUIRED = ['title', 'dek', 'categories', 'date', 'keywords', 'og-image'];
-const OPTIONAL = ['author', 'slug', 'updated', 'canonical', 'draft'];
+const OPTIONAL = ['author', 'slug', 'updated', 'canonical', 'draft', 'description'];
 const KNOWN = new Set([...REQUIRED, ...OPTIONAL]);
 
 const LIST_KEYS = new Set(['categories', 'keywords']);
