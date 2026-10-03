@@ -523,6 +523,9 @@
    whisker or another series — the labels are dodged apart, not moved off the
    data. */
 .gc-val {
+  /* Drawn at the newest point's edge: it must never take the click or tap
+     meant for that point (e2e/chart-point-tap.spec.js). */
+  pointer-events: none;
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
