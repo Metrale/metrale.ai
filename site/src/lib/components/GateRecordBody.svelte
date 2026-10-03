@@ -5,7 +5,8 @@
   // Split out of GatePointCard so a card standing for a GROUP of runs can swap
   // this whole block per tab, rather than the card growing a second rendering
   // path for the aggregated case. One receipt renders one way, always.
-  import { recordUrl, colorFor, fmtDateTime, sampleCount } from '$lib/gates.js';
+  import { recordUrl, colorFor, fmtDate, fmtDateTime, sampleCount } from '$lib/gates.js';
+  import { ENGINE_REPO } from '../../../../web-shared/sources.mjs';
 
   let { record } = $props();
   const r = $derived(record);
@@ -26,6 +27,19 @@
   <dd>
     <a href={recordUrl(r)} target="_blank" rel="noopener" title="The record in the engine repository">{r.git_sha}</a>
     {#if r.branch}<span class="gpc-branch"> · source {r.branch}</span>{/if}
+    <!-- The commit on main that brought the record in (gen-gates.mjs `landed`):
+         a campaign's own commit is a squash-merged branch head, never on main. -->
+    {#if r.landed}<span class="gpc-branch">
+        · landed on main in <a
+          href="{ENGINE_REPO}/commit/{r.landed.sha}"
+          target="_blank"
+          rel="noopener"
+          title="The commit that added this record to main">{r.landed.sha.slice(0, 10)}</a
+        >{#if r.landed.pr !== null}
+          (<a href="{ENGINE_REPO}/pull/{r.landed.pr}" target="_blank" rel="noopener">#{r.landed.pr}</a>){/if} · {fmtDate(
+          r.landed.committed_at
+        )}</span
+      >{/if}
     {#if r.generated_ancestry === 'no'}<span class="gpc-branch"> · not in dashboard commit history</span>{/if}
     {#if r.generated_ancestry === 'unknown'}<span class="gpc-branch"> · commit history unavailable</span>{/if}
   </dd>

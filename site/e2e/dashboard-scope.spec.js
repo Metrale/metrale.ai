@@ -65,3 +65,16 @@ test.describe('the hardware and model selects', () => {
     await expect(page.getByRole('button', { name: 'Close dashboard' })).toBeFocused();
   });
 });
+
+test.describe('a data point names its commit history', () => {
+  test('the card says which commit on main landed the record, never "commit history unavailable"', async ({ page }) => {
+    await open(page, '/engine#bench=ttft');
+    await page.locator('.bd-body .gc-pt').first().click();
+    const card = page.locator('.gpc');
+    await expect(card).toBeVisible();
+    await expect(card).toContainText(/landed on main in [0-9a-f]{10}/);
+    await expect(card).not.toContainText('commit history unavailable');
+    const link = card.getByTitle('The commit that added this record to main');
+    await expect(link).toHaveAttribute('href', /\/commit\/[0-9a-f]{40}$/);
+  });
+});

@@ -112,7 +112,11 @@ const ladderSvg = (page) => {
 const DENSE = byId('qwen38-27b');
 const MOE = byId('qwen36-35b-a3b');
 const DFLASH = byId('qwen38-27b-dflash');
-const denseLatest = recordsFor('concurrency-sweep').at(-1);
+// The newest passing record ON MAIN: a newer one on an unmerged branch (the
+// dashboard unions every remote head) is not what the live chart draws.
+const denseLatest = recordsFor('concurrency-sweep')
+  .filter((r) => r.verdict === 'PASS' && !r.branch)
+  .at(-1);
 // ★ THE PUBLISHED-PAIR STATE IS A FALLBACK, NOT WHAT SHIPS. The gate measures
 // the published instrument and its newest passing record on main PAIRS with
 // the vLLM+MTP bar (the 'live' state below). The fallback is still reachable —
