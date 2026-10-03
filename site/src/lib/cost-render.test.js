@@ -406,7 +406,14 @@ describe('the Cost tab', () => {
 
   test('carries all three subjects of the SSOT, with a derived chip for each', () => {
     const t = text(
-      html(Tab, { subject: DENSE.id, rung: 8, benches: ['concurrency-sweep', 'concurrency-sweep-dflash2'], recordsFor, onselect: () => {} })
+      html(Tab, {
+        subject: DENSE.id,
+        rung: 8,
+        benches: ['concurrency-sweep', 'concurrency-sweep-dflash2'],
+        recordsFor,
+        subjects: SUBJECTS,
+        onselect: () => {},
+      })
     );
     for (const s of SUBJECTS) expect(t).toContain(s.label);
     // The dense subject has joules now, so it carries NO derived chip; the
@@ -416,6 +423,7 @@ describe('the Cost tab', () => {
     const s = text(
       html(Tab, {
         subject: DENSE.id,
+        subjects: SUBJECTS,
         rung: 8,
         benches: ['concurrency-sweep', 'concurrency-sweep-dflash2'],
         recordsFor: stripped,
@@ -430,6 +438,7 @@ describe('the Cost tab', () => {
     const m = text(
       html(Tab, {
         subject: DENSE.id,
+        subjects: SUBJECTS,
         rung: 8,
         benches: ['concurrency-sweep', 'concurrency-sweep-dflash2'],
         recordsFor: noMoe,
@@ -439,7 +448,7 @@ describe('the Cost tab', () => {
     expect(m).toContain('no runs yet'); // the MoE subject, with no runs
   });
 
-  test('the dashboard opens it from a deep link and hides the global model select', () => {
+  test("the dashboard opens it from a deep link, scoped to the subject's model", () => {
     // BenchmarkDashboard reads location.hash at first render (SSR runs no
     // effects, so nothing writes it back).
     globalThis.location = { hash: '#bench=cost&subject=qwen38-27b', pathname: '/', search: '' };
@@ -452,6 +461,9 @@ describe('the Cost tab', () => {
     expect(d).toContain('Cost');
     // The tab strip carries a cost tab button with the dashboard's own prefix.
     expect(d).toContain('id="bd-tab-cost"');
+    expect(d).toMatch(/<option value="unsloth\/Qwen3.8-27B-NVFP4" selected="">/);
+    expect(d).toMatch(/id="co-tab-qwen38-27b"[^>]*aria-selected="true"/);
+    expect(d).not.toContain('id="co-tab-qwen36-35b-a3b"');
   });
 });
 

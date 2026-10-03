@@ -23,6 +23,8 @@ const panelTitles = (page) => page.locator('.bd-body .gate-panel-title').allInne
 test.describe('the TTFT tabs', () => {
   test('High-ISL TTFT shows the four 32k gates, and the stat strip switches every panel', async ({ page }) => {
     await openDashboard(page);
+    // Every model: the dashboard opens on the flagship, whose two 32k gates are the MoE pair.
+    await page.getByLabel('model', { exact: true }).selectOption('all');
     await outerTab(page, 'High-ISL TTFT').click();
     await expect(outerTab(page, 'High-ISL TTFT')).toHaveAttribute('aria-selected', 'true');
     // "TTFT" is its own tab and stays unselected: the exact match found the right one.
@@ -37,25 +39,25 @@ test.describe('the TTFT tabs', () => {
     await expect(statTab(page, 'Median')).toHaveAttribute('aria-selected', 'true');
     expect(await panelTitles(page)).toEqual(['cold TTFT · median', 'warm TTFT · median', 'cold TTFT · median', 'warm TTFT · median']);
     await expect(page.locator('.bd-body path.gc-baseline[d^="M"]:not([d="M1 5 H19"])')).toHaveCount(4);
-    await expect(page).toHaveURL(/#bench=ttft-long&stat=median$/);
+    await expect(page).toHaveURL(/#bench=ttft-long&hw=gb10&model=all&stat=median$/);
 
     await statTab(page, 'p90').click();
     await expect(statTab(page, 'p90')).toHaveAttribute('aria-selected', 'true');
     expect(await panelTitles(page)).toEqual(['cold TTFT · p90', 'warm TTFT · p90', 'cold TTFT · p90', 'warm TTFT · p90']);
-    await expect(page).toHaveURL(/#bench=ttft-long&stat=p90$/);
+    await expect(page).toHaveURL(/#bench=ttft-long&hw=gb10&model=all&stat=p90$/);
 
     // The statistic is shared by both TTFT tabs, and leaves with them.
     await outerTab(page, 'TTFT').click();
     await expect(statTab(page, 'p90')).toHaveAttribute('aria-selected', 'true');
     expect(await panelTitles(page)).toEqual(['warm TTFT · p90', 'cold TTFT · p90']);
-    await expect(page).toHaveURL(/#bench=ttft&stat=p90$/);
+    await expect(page).toHaveURL(/#bench=ttft&hw=gb10&model=all&stat=p90$/);
     await outerTab(page, 'BFCL').click();
     await expect(page.locator('.tt-tabs')).toHaveCount(0);
-    await expect(page).toHaveURL(/#bench=bfcl$/);
+    await expect(page).toHaveURL(/#bench=bfcl&hw=gb10&model=all$/);
   });
 
-  test('the deep link #bench=ttft-long&stat=p90 opens on that tab and statistic', async ({ page }) => {
-    await openDashboard(page, '/engine#bench=ttft-long&stat=p90');
+  test('the deep link #bench=ttft-long&model=all&stat=p90 opens on that tab, scope and statistic', async ({ page }) => {
+    await openDashboard(page, '/engine#bench=ttft-long&model=all&stat=p90');
     await expect(outerTab(page, 'High-ISL TTFT')).toHaveAttribute('aria-selected', 'true');
     await expect(statTab(page, 'p90')).toHaveAttribute('aria-selected', 'true');
     expect(await panelTitles(page)).toEqual(['cold TTFT · p90', 'warm TTFT · p90', 'cold TTFT · p90', 'warm TTFT · p90']);
@@ -70,6 +72,6 @@ test.describe('the TTFT tabs', () => {
     await page.keyboard.press('ArrowRight');
     await expect(statTab(page, 'p90')).toHaveAttribute('aria-selected', 'true');
     await expect(statTab(page, 'p90')).toBeFocused();
-    await expect(page).toHaveURL(/#bench=ttft&stat=p90$/);
+    await expect(page).toHaveURL(/#bench=ttft&hw=gb10&model=Qwen%2FQwen3\.6-35B-A3B-FP8&stat=p90$/);
   });
 });

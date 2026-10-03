@@ -23,7 +23,7 @@ const known = {
 
 describe('parseDashboardHash', () => {
   test('reads the documented link, with or without its #', () => {
-    const want = { tab: 'concurrency', subject: 'qwen36-35b-a3b', c: 64, stat: 'median' };
+    const want = { tab: 'concurrency', subject: 'qwen36-35b-a3b', subjectGiven: true, c: 64, stat: 'median', hw: null, model: null };
     expect(parseDashboardHash('#bench=concurrency&subject=qwen36-35b-a3b&c=64', known)).toEqual(want);
     expect(parseDashboardHash('bench=concurrency&subject=qwen36-35b-a3b&c=64', known)).toEqual(want);
   });
@@ -31,7 +31,7 @@ describe('parseDashboardHash', () => {
   test('no hash is not a deep link, and still carries the defaults', () => {
     for (const empty of ['', '#', undefined, null]) {
       const link = parseDashboardHash(empty, known);
-      expect(link).toEqual({ tab: null, subject: 'qwen38-27b', c: RUNG_ALL, stat: 'median' });
+      expect(link).toEqual({ tab: null, subject: 'qwen38-27b', subjectGiven: false, c: RUNG_ALL, stat: 'median', hw: null, model: null });
       expect(isDeepLink(link)).toBe(false);
     }
   });
@@ -62,7 +62,7 @@ describe('parseDashboardHash', () => {
   test('a stale link to a tab or subject that no longer exists is not honoured', () => {
     const fewer = { tabIds: ['ttft'], subjectIds: ['qwen38-27b'], rungs: [1], stats: ['median'] };
     const link = parseDashboardHash('#bench=concurrency&subject=qwen36-35b-a3b&c=64&stat=p90', fewer);
-    expect(link).toEqual({ tab: null, subject: 'qwen38-27b', c: RUNG_ALL, stat: 'median' });
+    expect(link).toEqual({ tab: null, subject: 'qwen38-27b', subjectGiven: false, c: RUNG_ALL, stat: 'median', hw: null, model: null });
   });
 
   test('refuses to run without the known lists rather than treating everything as unknown', () => {
@@ -112,7 +112,12 @@ describe('formatDashboardHash', () => {
         for (const c of [...known.rungs, RUNG_ALL]) {
           for (const stat of known.stats) {
             const state = { tab, subject, c, stat };
-            expect(parseDashboardHash('#' + formatDashboardHash(state), known)).toEqual(state);
+            expect(parseDashboardHash('#' + formatDashboardHash(state), known)).toEqual({
+              ...state,
+              subjectGiven: true,
+              hw: null,
+              model: null,
+            });
           }
         }
       }
@@ -132,5 +137,33 @@ describe('formatDashboardHash', () => {
     expect(formatDashboardHash({ tab: 'ttft' })).toBe('bench=ttft');
     expect(formatDashboardHash({ tab: 'ttft-long', stat: 'p90' })).toBe('bench=ttft-long&stat=p90');
     expect(formatDashboardHash({ tab: null, subject: 'qwen38-27b', c: 64 })).toBe('');
+  });
+});
+
+describe('the scope keys: hw and model', () => {
+  const scoped = { ...known, hwClasses: ['gb10'], modelIds: ['Qwen/Qwen3.6-35B-A3B-FP8', 'unsloth/Qwen3.8-27B-NVFP4'] };
+
+  test('round-trip, with the model id encoded', () => {
+    const hash = formatDashboardHash({ tab: 'bfcl', hw: 'gb10', model: 'unsloth/Qwen3.8-27B-NVFP4' });
+    expect(hash).toBe('bench=bfcl&hw=gb10&model=unsloth%2FQwen3.8-27B-NVFP4');
+    expect(parseDashboardHash(`#${hash}`, scoped)).toMatchObject({ tab: 'bfcl', hw: 'gb10', model: 'unsloth/Qwen3.8-27B-NVFP4' });
+  });
+
+  test('an unknown class or model is "not given", never a guess', () => {
+    const l = parseDashboardHash('#bench=bfcl&hw=h100&model=other%2Fmodel', scoped);
+    expect([l.hw, l.model]).toEqual([null, null]);
+    // `all` is the scope module's word, not a model id; it is not given here either.
+    expect(parseDashboardHash('#bench=bfcl&model=all', scoped).model).toBeNull();
+  });
+
+  test('without the optional lists nothing resolves, and a non-list is refused', () => {
+    expect(parseDashboardHash('#bench=bfcl&hw=gb10', known).hw).toBeNull();
+    expect(() => parseDashboardHash('#bench=bfcl', { ...known, hwClasses: 'gb10' })).toThrow(/hwClasses must be an array/);
+  });
+
+  test('subjectGiven says whether the link named a known subject', () => {
+    expect(parseDashboardHash('#bench=concurrency&subject=qwen36-35b-a3b', known).subjectGiven).toBe(true);
+    expect(parseDashboardHash('#bench=concurrency&subject=nvidia-35b', known).subjectGiven).toBe(false);
+    expect(parseDashboardHash('#bench=concurrency', known).subjectGiven).toBe(false);
   });
 });

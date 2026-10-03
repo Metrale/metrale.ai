@@ -65,8 +65,10 @@ const open = (hash) => {
 const panelTitles = (page) => [...page.matchAll(/class="gate-panel-title">([^<]*)</g)].map((m) => m[1]);
 const sectionNames = (page) => [...page.matchAll(/class="gbs-name">([^<]*)</g)].map((m) => m[1]);
 
-describe('the deep link #bench=ttft-long&stat=p90', () => {
-  const page = open('#bench=ttft-long&stat=p90');
+describe('the deep link #bench=ttft-long&stat=p90&model=all', () => {
+  // `model=all`: every model's gates, the way the tab read before the header's
+  // model select scoped it to the flagship (dashboard-scope.js).
+  const page = open('#bench=ttft-long&stat=p90&model=all');
 
   test('selects the High-ISL TTFT tab and the p90 statistic', () => {
     expect(page).toMatch(/id="bd-tab-ttft-long"[^>]*aria-selected="true"/);
@@ -86,8 +88,19 @@ describe('the deep link #bench=ttft-long&stat=p90', () => {
     expect(panelTitles(page)).toEqual(['cold TTFT · p90', 'warm TTFT · p90', 'cold TTFT · p90', 'warm TTFT · p90']);
   });
 
-  test('keeps the model select, which groups the dense and MoE gates', () => {
-    expect(page).toContain('aria-label="Filter by model"');
+  test('the header model select says every model is shown', () => {
+    expect(page).toMatch(/<option value="all" selected="">all models<\/option>/);
+  });
+
+  test('a plain link opens on the flagship: its two 32k gates, the dense pair hidden behind the select', () => {
+    const flagship = open('#bench=ttft-long&stat=p90');
+    expect(sectionNames(flagship)).toEqual(['High-ISL Cold TTFT Gate (MoE)', 'High-ISL Warm TTFT Gate (MoE)']);
+    expect(text(flagship)).toContain('High-ISL Cold TTFT Gate runs on Qwen3.8-27B-NVFP4 — switch the model to see its');
+    // The 27B's link shows its own pair.
+    expect(sectionNames(open('#bench=ttft-long&model=unsloth%2FQwen3.8-27B-NVFP4'))).toEqual([
+      'High-ISL Cold TTFT Gate',
+      'High-ISL Warm TTFT Gate',
+    ]);
   });
 
   test('draws a vLLM line on every panel and names it in the legend', () => {
@@ -110,7 +123,7 @@ describe('the Median | p90 strip on both TTFT tabs', () => {
   });
 
   test('an unknown stat lands on the median, never on an empty strip', () => {
-    const page = open('#bench=ttft-long&stat=p99');
+    const page = open('#bench=ttft-long&stat=p99&model=all');
     expect(page).toMatch(/id="tt-tab-median"[^>]*aria-selected="true"/);
     expect(panelTitles(page)).toHaveLength(4);
   });

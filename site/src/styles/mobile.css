@@ -619,9 +619,26 @@ video {
   .bd-controls {
     row-gap: 0.6rem;
   }
-  /* The model switcher drops under the strip and keeps the strip's inset. */
-  .bd-model {
-    padding-bottom: 0.75rem;
+  /* The scope selects drop under the title; the close button stays pinned
+     top-right beside it, and the title keeps clear of it. */
+  .bd-head {
+    position: relative;
+    flex-wrap: wrap;
+  }
+  .bd-head-titles {
+    padding-right: 3rem;
+  }
+  .bd-head-end {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+  .bd-head .bd-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1rem;
+  }
+  .bd-scope select {
+    max-width: 100%;
   }
   .gbs-tile {
     min-width: 6.2rem;
