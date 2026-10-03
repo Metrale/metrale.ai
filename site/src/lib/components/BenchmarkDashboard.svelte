@@ -108,7 +108,7 @@
   });
   const modelsHere = $derived(hw === null ? [] : options.modelsByClass[hw]);
   // Changing the class keeps the model when it has records there, else the flagship.
-  function onhw() {
+  function onHardwareChange() {
     model = resolveScope({ hw, model }, options, FLAGSHIP).model;
   }
   const tab = $derived(visibleTabs.find((t) => t.id === activeTab) ?? visibleTabs[0]);
@@ -216,7 +216,7 @@
                would fold the selected option's text into the select's name. -->
           <div class="bd-model">
             <label class="bd-model-label" for="bd-scope-hw">hardware</label>
-            <select id="bd-scope-hw" bind:value={hw} onchange={onhw}>
+            <select id="bd-scope-hw" bind:value={hw} onchange={onHardwareChange}>
               {#each options.classes as c}
                 <option value={c}>{c.toUpperCase()}</option>
               {/each}

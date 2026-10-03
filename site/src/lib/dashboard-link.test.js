@@ -150,7 +150,7 @@ describe('the scope keys: hw and model', () => {
   });
 
   test('an unknown class or model is "not given", never a guess', () => {
-    const l = parseDashboardHash('#bench=bfcl&hw=h100&model=other%2Fmodel', scoped);
+    const l = parseDashboardHash(`#bench=bfcl&hw=h100&model=${encodeURIComponent('other/model')}`, scoped);
     expect([l.hw, l.model]).toEqual([null, null]);
     // `all` is the scope module's word, not a model id; it is not given here either.
     expect(parseDashboardHash('#bench=bfcl&model=all', scoped).model).toBeNull();
