@@ -25,15 +25,6 @@
 #                                              the codebase chat, off until the
 #                                              engine publishes its index
 #   ws://127.0.0.1:34333                       the local agent /control drives
-# plus Cloudflare Web Analytics, which is not our code but the edge's own
-# injected beacon (ux-oracle found it CSP-blocked on production, 2026-10-05,
-# TODO.md D37 -- enabled by someone with dashboard access, not by a commit
-# here, so there is no call site in our JS to hold it to connect-src the way
-# the addresses above are held): static.cloudflareinsights.com serves
-# beacon.min.js (script-src), cloudflareinsights.com is where it reports
-# (connect-src, /cdn-cgi/rum). Exactly these two origins, nothing broader --
-# not *.cloudflareinsights.com, which would also admit an origin the beacon
-# does not use.
 # script-src allows inline here because every page carries a second, stricter
 # script policy of its own: SvelteKit writes a <meta> CSP naming the hash of
 # each inline script (csp in svelte.config.js), and a browser enforces both.
@@ -48,7 +39,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), hid=(), magnetometer=(), microphone=(), payment=(), serial=(), usb=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self'; connect-src 'self' https://metrale-prime.metrale.workers.dev https://openrouter.ai https://metrale.github.io ws://127.0.0.1:34333 https://cloudflareinsights.com; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self'; connect-src 'self' https://metrale-prime.metrale.workers.dev https://openrouter.ai https://metrale.github.io ws://127.0.0.1:34333; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
 
 # Documents. Both spellings of each route: Pages serves control.html at
 # /control, and a visitor or a link can ask for either.
