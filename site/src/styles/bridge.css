@@ -27,7 +27,17 @@
 .cs-btn:hover {
   border-color: var(--border-strong);
 }
-.cs-chip {
+/* Scoped to the two trees that actually use this "coming soon" chip
+   (ComingSoon.svelte's own .cs-wrap, and ConsoleDock.svelte's .dock), not a
+   bare .cs-chip: the benchmark dashboard's TabStrip.svelte independently
+   names its own concurrency-strip chip class the same way ("cs" = concurrency
+   strip there, "cs" = coming soon here), and bridge.css loads at the
+   (engine) layout level, so an unscoped rule here overrode the dashboard
+   chip's own styling wherever both trees share a layout (found in UX-O.R.A.C.L.E
+   review of metrale.ai#72, 2026-10-05: the dashboard chip rendered grey,
+   uppercase and bracketed, like this one, because this rule has higher
+   specificity and loads after dashboard.css). */
+:is(.cs-wrap, .dock) .cs-chip {
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 700;
@@ -35,18 +45,18 @@
   color: var(--t3);
   text-transform: uppercase;
 }
-.cs-chip::before {
+:is(.cs-wrap, .dock) .cs-chip::before {
   content: '[';
 }
-.cs-chip::after {
+:is(.cs-wrap, .dock) .cs-chip::after {
   content: ']';
 }
 /* Chip: sits in an actions bar or the command strip beside real controls. */
-.cs-chip-kind,
-.cs-btn.cs-chip {
+:is(.cs-wrap, .dock) .cs-chip-kind,
+:is(.cs-wrap, .dock) .cs-btn.cs-chip {
   font-size: 0.74rem;
 }
-.cs-btn.cs-chip {
+:is(.cs-wrap, .dock) .cs-btn.cs-chip {
   padding: 0.3rem 0.6rem;
 }
 /* Tile: the I/O-strip footprint — identical geometry to its live neighbours,
@@ -66,7 +76,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
 }
-.cs-btn.cs-chip .cs-label {
+:is(.cs-wrap, .dock) .cs-btn.cs-chip .cs-label {
   font-size: 0.74rem;
   font-weight: 600;
 }
