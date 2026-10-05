@@ -20,6 +20,7 @@ ciede
 Ckpt
 clippy
 cloc
+cloudflareinsights
 coderag
 CODISPATCH
 concs
