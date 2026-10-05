@@ -1,14 +1,14 @@
 {
   "gates": {
-    "sha": "79dea21",
-    "date": "2026-10-03",
-    "registered": 36,
-    "concurrencyRecords": 39,
-    "concurrencyPass": 39,
-    "records": 331,
-    "signed": 331,
+    "sha": "5eafc5c",
+    "date": "2026-10-05",
+    "registered": 42,
+    "concurrencyRecords": 46,
+    "concurrencyPass": 46,
+    "records": 399,
+    "signed": 399,
     "withRecords": 17,
-    "newest": "2026-10-02"
+    "newest": "2026-10-05"
   },
-  "recipes": 34
+  "recipes": 35
 }

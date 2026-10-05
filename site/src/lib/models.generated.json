@@ -234,6 +234,17 @@
             "recipeId": "qwen3.6-35b-a3b-nvfp4",
             "runnable": true,
             "command": "metralectl run qwen3.6-35b-a3b-nvfp4"
+          },
+          {
+            "displayName": "Qwen3.6 35B A3B NVFP4 Declared",
+            "hfId": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+            "params": "35B",
+            "quant": "nvfp4",
+            "topology": "single",
+            "recipeStem": "qwen3.6-35b-a3b-nvfp4-declared",
+            "recipeId": "qwen3.6-35b-a3b-nvfp4-declared",
+            "runnable": true,
+            "command": "metralectl run qwen3.6-35b-a3b-nvfp4-declared"
           }
         ]
       },
