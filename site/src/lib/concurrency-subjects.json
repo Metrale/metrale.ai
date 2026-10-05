@@ -22,5 +22,13 @@
     "gate": "concurrency-sweep-dflash2",
     "published_manifest": null,
     "baselines_dir": "bench/baselines/qwen38-27b-dflash"
+  },
+  {
+    "id": "qwen36-35b-a3b-nvfp4",
+    "label": "Qwen 3.6 35B A3B NVFP4",
+    "checkpoint": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+    "gate": "concurrency-sweep-moe-nvfp4",
+    "published_manifest": null,
+    "baselines_dir": "bench/baselines/qwen36-35b-a3b-nvfp4"
   }
 ]

@@ -404,7 +404,7 @@ describe('the Cost tab', () => {
     expect(tabs.map((t) => t.id)).toContain('cost');
   });
 
-  test('carries all three subjects of the SSOT, with a derived chip for each', () => {
+  test('carries every measured subject of the SSOT, with a derived chip for each', () => {
     const t = text(
       html(Tab, {
         subject: DENSE.id,
@@ -431,9 +431,13 @@ describe('the Cost tab', () => {
       })
     );
     expect(s).toContain('energy not yet measured'); // has runs, no joules
-    // Every subject carries runs with joules in the published records, so the
-    // third state is rendered with one subject's runs taken out.
-    expect(t).not.toContain('no runs yet');
+    // Every MEASURED subject carries runs with joules in the published
+    // records, so the "no runs yet" chip is rendered exactly once, on
+    // qwen36-35b-a3b-nvfp4's own tab — a real pending subject (PR #112's
+    // unmeasured gate), not a wiring bug sharing the chip across subjects.
+    const nvfp4 = SUBJECTS.find((x) => x.id === 'qwen36-35b-a3b-nvfp4');
+    expect(t).toContain(`${nvfp4.label} <span class="co-chip">no runs yet</span>`);
+    expect(t.match(/no runs yet/g)).toHaveLength(1);
     const noMoe = (bench) => (bench === 'concurrency-sweep-moe' ? [] : recordsFor(bench));
     const m = text(
       html(Tab, {

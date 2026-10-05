@@ -32,14 +32,23 @@ describe('the subject list', () => {
   test("is read from the repo-root JSON, unchanged, in the owner's order", () => {
     const onDisk = JSON.parse(readFileSync(new URL('./concurrency-subjects.json', import.meta.url), 'utf8'));
     expect(SUBJECTS).toEqual(onDisk);
-    expect(SUBJECTS.map((s) => s.id)).toEqual(['qwen38-27b', 'qwen36-35b-a3b', 'qwen38-27b-dflash']);
+    expect(SUBJECTS.map((s) => s.id)).toEqual(['qwen38-27b', 'qwen36-35b-a3b', 'qwen38-27b-dflash', 'qwen36-35b-a3b-nvfp4']);
   });
 
-  test('the MoE subject is the FP8 checkpoint the records carry, never an NVFP4 35B', () => {
+  test('the MoE FP8 subject is the FP8 checkpoint the records carry, not its NVFP4 sibling', () => {
     // BENCH.toml says `quant = "nvfp4"` for this entry; the checkpoint id is
     // what the record carries and what the tab must print.
     expect(byId('qwen36-35b-a3b').checkpoint).toBe(MOE);
-    expect(SUBJECTS.some((s) => /35B.*NVFP4/i.test(s.checkpoint))).toBe(false);
+  });
+
+  test('exactly one subject names a true 35B NVFP4 checkpoint, and it is qwen36-35b-a3b-nvfp4', () => {
+    // The FP8 entry above carries `quant = "nvfp4"` in BENCH.toml (the head's
+    // dtype, not the weights'), which could be mistaken for a second NVFP4
+    // 35B subject. There is exactly one real one, and this is it.
+    const matches = SUBJECTS.filter((s) => /35B.*NVFP4/i.test(s.checkpoint));
+    expect(matches.map((s) => s.id)).toEqual(['qwen36-35b-a3b-nvfp4']);
+    expect(byId('qwen36-35b-a3b-nvfp4').checkpoint).toBe('nvidia/Qwen3.6-35B-A3B-NVFP4');
+    expect(byId('qwen36-35b-a3b-nvfp4').published_manifest).toBeNull();
   });
 
   test('the MoE has its own gate id; dense and DFlash share a checkpoint', () => {
