@@ -28,12 +28,16 @@ const config = {
     // The script policy, written into every prerendered page as a <meta> CSP
     // with the hash of each inline script: no inline script runs unless it is
     // one of ours. 'wasm-unsafe-eval' is for the codebase chat's in-browser
-    // database (LatticeDB, WebAssembly). Everything else the site loads is
-    // governed by the header policy in static/_headers, which a <meta> cannot
-    // carry (frame-ancestors) and which covers the files that are not pages.
+    // database (LatticeDB, WebAssembly). static.cloudflareinsights.com is
+    // Cloudflare's own edge-injected analytics beacon, not ours, but a <meta>
+    // and a header CSP are both enforced -- allowing it only in static/_headers
+    // would still block it here (TODO.md D37). Everything else the site loads
+    // is governed by the header policy in static/_headers, which a <meta>
+    // cannot carry (frame-ancestors) and which covers the files that are not
+    // pages.
     csp: {
       mode: 'hash',
-      directives: { 'script-src': ['self', 'wasm-unsafe-eval', ...appHtmlHashes] },
+      directives: { 'script-src': ['self', 'wasm-unsafe-eval', 'https://static.cloudflareinsights.com', ...appHtmlHashes] },
     },
     prerender: {
       entries: ['*'],

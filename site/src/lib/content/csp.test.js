@@ -76,3 +76,48 @@ test('HSTS and a Permissions-Policy ride with it', () => {
   expect(headers['permissions-policy']).toContain('microphone=()');
   expect(headers['permissions-policy']).toContain('geolocation=()');
 });
+
+// --- Cloudflare Web Analytics (TODO.md D37) ---------------------------------
+// Enabled by someone with dashboard access, not by a commit here: the beacon
+// is Cloudflare's own edge-injected script, so there is no call site in our
+// JS to hold it to connect-src the way `allows()` above holds our own
+// endpoints. ux-oracle found it CSP-blocked on production (2026-10-05):
+// static.cloudflareinsights.com serves beacon.min.js (script-src),
+// cloudflareinsights.com is where it reports (connect-src). Exactly these
+// two origins, nothing broader.
+//
+// Two policies are active on every page (the comment at the top of
+// static/_headers explains why): this header CSP, and the <meta> CSP
+// SvelteKit writes from svelte.config.js's `kit.csp.directives`. A browser
+// enforces both, so the beacon script needs allowing in BOTH script-src
+// lists, or the stricter one (the <meta>, which has no reason otherwise to
+// know Cloudflare's analytics exists) still blocks it alone.
+
+const CF_BEACON_SCRIPT = 'https://static.cloudflareinsights.com';
+const CF_BEACON_CONNECT = 'https://cloudflareinsights.com';
+
+test('the header CSP allows exactly the beacon script origin and its connect origin, nothing broader', () => {
+  expect(csp['script-src']).toContain(CF_BEACON_SCRIPT);
+  expect(csp['connect-src']).toContain(CF_BEACON_CONNECT);
+  // Not a wildcard subdomain, and not the OTHER cloudflareinsights origin
+  // standing in for the one each directive actually needs.
+  expect(csp['script-src']).not.toContain('https://*.cloudflareinsights.com');
+  expect(csp['script-src']).not.toContain(CF_BEACON_CONNECT);
+  expect(csp['connect-src']).not.toContain('https://*.cloudflareinsights.com');
+  expect(csp['connect-src']).not.toContain(CF_BEACON_SCRIPT);
+});
+
+test('a lookalike origin is still refused (negative control)', () => {
+  // allows() is connect-src's own checker (its sources are 'self' and real
+  // origins only); script-src also carries keyword sources ('unsafe-inline')
+  // that are not URLs, so the lookalike check there is a direct membership
+  // test instead, not a call to allows().
+  expect(csp['script-src']).not.toContain('https://static.cloudflareinsights.com.evil.example');
+  expect(allows(csp['connect-src'] ?? [], 'https://cloudflareinsights.com.evil.example/cdn-cgi/rum')).toBe(false);
+});
+
+test('the <meta> CSP (svelte.config.js) allows the same script origin -- both policies are enforced, so one is not enough', async () => {
+  const { default: svelteConfig } = await import('../../../svelte.config.js');
+  const metaScriptSrc = svelteConfig.kit.csp.directives['script-src'];
+  expect(metaScriptSrc).toContain(CF_BEACON_SCRIPT);
+});

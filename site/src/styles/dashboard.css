@@ -573,6 +573,25 @@
 .gc-pt:hover .gc-agg circle:last-child {
   opacity: 1;
 }
+/* A focus indicator painted on the point's own shape, not relying on the
+   `outline` above: WebKit does not render CSS `outline` on SVG elements at
+   all, so a focused point looked identical to an unfocused one there (no
+   ring, no state change) -- ux-oracle found this live on production, post
+   #74's fix making points keyboard-reachable (metrale.ai#74, 2026-10-05).
+   `stroke` is an ordinary SVG paint property and renders the same in every
+   engine. Covers every `.gc-mark` shape: a bare circle or path (`:is(circle,
+   path)`), and the two circles nested inside the aggregated-point `<g
+   class="gc-mark gc-agg">` (the second selector's descendant combinator).
+   `opacity: 1` clears the aggregated ring's own 0.55 -- the ring reads as a
+   colour-signal fade there, not a disabled focus state. `--accent` clears
+   3:1 against `--card` in both themes (9.73 dark, 5.81 light; the kit's
+   brand token test holds these). */
+.gc-pt:focus-visible .gc-mark:is(circle, path),
+.gc-pt:focus-visible .gc-mark :is(circle, path) {
+  stroke: var(--accent);
+  stroke-width: 2.5px;
+  opacity: 1;
+}
 
 /* ---- grouped-point tabs --------------------------------------------------- */
 .gpc-tabs {
