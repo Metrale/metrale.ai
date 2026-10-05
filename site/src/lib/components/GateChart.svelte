@@ -81,6 +81,34 @@
     const { y: cy, clamped } = clampValue(n.v, ext);
     return { px: x(n.t), py: y(cy), clamped };
   };
+  // Hit circles default to r=11 (a generous tap target), but two points from
+  // DIFFERENT series can still land close enough in pixel space that their
+  // circles overlap -- whichever is painted last silently steals the other's
+  // click. gate-aggregate.js's spacing guarantee is per series only ("every
+  // series on a panel shares one time axis and is sampled at the same
+  // commits"), which is true for a single model's own metric variants but
+  // not across different models' independent commit histories, all drawn on
+  // one axis under model=all. Found via e2e/chart-point-tap.spec.js,
+  // 2026-10-03: a BFCL point's r=11 circle was intercepted by a different,
+  // pixel-adjacent point belonging to another model. Clamped to half the
+  // distance to the nearest OTHER point on the whole chart (any series),
+  // floored at the visible mark's own radius (~4) so a crowded point is
+  // never less clickable than it looks, so adjacent hit circles can never
+  // overlap and a click always resolves to the geometrically nearest point.
+  const hitRadii = $derived.by(() => {
+    const pts = series.flatMap((s) => s.nodes.map((n) => ({ n, ...at(n) })));
+    const radii = new Map();
+    for (const a of pts) {
+      let nearest = Infinity;
+      for (const b of pts) {
+        if (b.n === a.n) continue;
+        const d = Math.hypot(a.px - b.px, a.py - b.py);
+        if (d < nearest) nearest = d;
+      }
+      radii.set(a.n, Math.max(4, Math.min(11, nearest / 2 - 1)));
+    }
+    return radii;
+  });
   // One line through a series' nodes in time order; a clipped node's segment
   // meets it at the clamp row, where its caret sits.
   const linePath = (nodes) =>
@@ -402,7 +430,7 @@
           onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), onselect(n.members.map((m) => m.rec)))}
         >
           <title>{describe(s, n)} · click for {n.count > 1 ? `the ${n.count} records` : 'the record'}</title>
-          <circle class="gc-hit" cx={p.px} cy={p.py} r="11" />
+          <circle class="gc-hit" cx={p.px} cy={p.py} r={hitRadii.get(n) ?? 11} />
           {#if viol}
             <circle class="gc-viol" cx={p.px} cy={p.py} r="7.5" data-limit={viol} />
           {/if}

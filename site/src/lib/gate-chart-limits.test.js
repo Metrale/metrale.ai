@@ -352,6 +352,54 @@ describe('GateChart: the series is one line through its points in time order', (
   });
 });
 
+describe('GateChart: hit circles across different series never overlap (model=all)', () => {
+  // The bug this proves fixed (e2e/chart-point-tap.spec.js, 2026-10-03): two
+  // DIFFERENT models' points landing close in time get independently
+  // aggregated (gate-aggregate.js spaces a series out from ITSELF only), so
+  // under model=all their r=11 hit circles could overlap and a click on one
+  // point silently landed on the other instead.
+  const OTHER = 'Qwen/Qwen3.6-35B-A3B-FP8';
+  const hitCircles = (page) =>
+    [...page.matchAll(/<circle class="gc-hit" cx="([\d.]+)" cy="([\d.]+)" r="([\d.]+)"/g)].map((m) => ({
+      cx: +m[1],
+      cy: +m[2],
+      r: +m[3],
+    }));
+  // Two hours apart, same value: close in time and identical in y -- the
+  // shape of the real collision. A third point 3.6 days after the first
+  // anchors an axis width that puts the close pair's pixel gap at ~15px
+  // (between the 4px floor and the 11px default, so the fix's clamp -- not
+  // just its floor -- is what's under test) and leaves the far point's
+  // nearest neighbour ~630px away, nothing to shrink for.
+  const close = (model, hourOffset) =>
+    rec({ target_model: model, recorded_at: T0 + 2 * DAY + hourOffset * 3600, metrics: { server_decode_tok_s: 30 } });
+  const far = rec({ target_model: MODEL, recorded_at: T0 + 2 * DAY + 3.6 * DAY, metrics: { server_decode_tok_s: 30 } });
+  const page = html(GateChart, { panel: DECODE_PANEL, records: [close(MODEL, 0), close(OTHER, 2), far], onselect: () => {} });
+  const hits = hitCircles(page);
+
+  test('every pair of hit circles stays apart by at least the sum of their radii', () => {
+    expect(hits).toHaveLength(3);
+    for (let i = 0; i < hits.length; i += 1) {
+      for (let j = i + 1; j < hits.length; j += 1) {
+        const d = Math.hypot(hits[i].cx - hits[j].cx, hits[i].cy - hits[j].cy);
+        expect(d).toBeGreaterThanOrEqual(hits[i].r + hits[j].r - 0.01); // float rounding slack
+      }
+    }
+  });
+
+  test('the two close points shrank below the default radius; the far one kept it', () => {
+    // Render order follows series then node order, not record order, so
+    // identify by radius rather than position.
+    expect(hits.filter((h) => h.r < 11)).toHaveLength(2);
+    expect(hits.filter((h) => h.r === 11)).toHaveLength(1);
+  });
+
+  test('the floor holds even at the worst case: identical time and value', () => {
+    const p = html(GateChart, { panel: DECODE_PANEL, records: [close(MODEL, 0), close(OTHER, 0)], onselect: () => {} });
+    expect(hitCircles(p).map((h) => h.r)).toEqual([4, 4]);
+  });
+});
+
 // ---- the concurrency ladder: a floor per rung ------------------------------
 const sweep = (cells, floors, over = {}) =>
   rec({
