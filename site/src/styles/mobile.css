@@ -1023,12 +1023,13 @@ video {
 
 /* ---- cost section (all viewport rules live here, beside the dashboard's) --- */
 @media (max-width: 860px) {
-  .co-tabs {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    scrollbar-width: none;
-    max-width: 100%;
-  }
+  /* No .co-tabs override here on purpose: the base rule (dashboard.css) is
+     flex-wrap: wrap, same as its sibling .cs-tabs, which has never had a
+     mobile override. The override this replaced forced nowrap + a
+     scrollbar hidden by scrollbar-width: none, so a 4th tab went fully
+     off-screen at 390px with no visible cue it existed (ux-oracle,
+     metrale.ai#72, 2026-10-05) -- wrapping, same as .cs-tabs already does
+     safely, is the fix with no new affordance to design or get wrong. */
   /* SVG text scales with the 720-unit viewBox, like .gc-axis above. */
   .cost-rail {
     font-size: 15px;

@@ -181,15 +181,22 @@ describe('the subject strip', () => {
     const chips = [...page.matchAll(/<button[^>]*id="cs-tab-([^"]+)"[^>]*>[^<]*<span class="cs-chip">not yet measured<\/span>/g)].map(
       (m) => m[1]
     );
-    expect(chips).toEqual(['qwen36-35b-a3b']);
+    // qwen36-35b-a3b-nvfp4 (PR #112's unmeasured gate) has no records in the
+    // published fixture either, with or without rfNoMoe's manipulation, so it
+    // always carries the chip too.
+    expect(chips).toEqual(['qwen36-35b-a3b', 'qwen36-35b-a3b-nvfp4']);
   });
 
   test('NEGATIVE CONTROL: the chip follows the records, not the subject id', () => {
     const moeMeasured = withExtra([fakeRecord(MOE, [1, 4])]);
-    expect(renderTab('qwen38-27b', moeMeasured)).not.toContain('not yet measured');
+    const page = renderTab('qwen38-27b', moeMeasured);
+    // MoE now has a record, so ITS tab lost the chip; qwen36-35b-a3b-nvfp4's
+    // own chip (it has no record in this fixture either) must not be read as
+    // evidence the control failed to move anything.
+    expect(page).not.toMatch(/id="cs-tab-qwen36-35b-a3b"[^>]*>[^<]*<span class="cs-chip">not yet measured/);
     const dflashGone = (bench) => (bench === DFLASH.gate ? [] : recordsFor(bench));
-    const page = renderTab('qwen38-27b', dflashGone);
-    expect(page).toMatch(/id="cs-tab-qwen38-27b-dflash"[^>]*>[^<]*<span class="cs-chip">not yet measured/);
+    const page2 = renderTab('qwen38-27b', dflashGone);
+    expect(page2).toMatch(/id="cs-tab-qwen38-27b-dflash"[^>]*>[^<]*<span class="cs-chip">not yet measured/);
   });
 
   test('records no subject claims are listed, never dropped', () => {
