@@ -16,7 +16,7 @@ const THEMES = ['dark', 'light'];
 // subject, and `tt` picks Median | p90 on both TTFT tabs. Keyed by the outer
 // tab's label, lower-cased; each strip is walked in full.
 const SUBJECT_STRIP = { concurrency: 'cs', cost: 'co', ttft: 'tt', 'high-isl ttft': 'tt' };
-const STRIP_SIZE = { cs: 3, co: 3, tt: 2 };
+const STRIP_SIZE = { cs: 4, co: 4, tt: 2 };
 
 /** Everything wider than the dialog or past the screen's right edge, named. */
 const overflowIn = (page) =>
