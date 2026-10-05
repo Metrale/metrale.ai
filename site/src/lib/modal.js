@@ -42,7 +42,18 @@ const FOCUSABLE =
 const stack = [];
 
 export function modal(node) {
-  const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  // `instanceof HTMLElement` excludes a focused SVG element: SVGElement is a
+  // sibling of HTMLElement, not a subclass, so a gate chart's point (an
+  // `<svg><g role="button" tabindex="0">`) never satisfied this check.
+  // `opener` silently became null for every point-opened card, and on close
+  // `opener?.focus?.()` was a no-op — focus dropped to <body> instead of
+  // returning to the point, invisibly, because the point had no `focus()`
+  // itself to fail loudly on (found live by ux-oracle, metrale.ai#74,
+  // 2026-10-05: newly load-bearing once the point stopped being hidden from
+  // assistive tech by role="img" on its ancestor svg). `focus` is defined on
+  // the `HTMLOrSVGElement` mixin both interfaces implement, so checking for
+  // the method itself covers either element type without privileging one.
+  const opener = typeof document.activeElement?.focus === 'function' ? document.activeElement : null;
   // `focus()` is a no-op on an element that cannot hold focus, and a
   // `<div role="dialog">` cannot unless it is given a tabindex. The control
   // dialogs each wrote `tabindex="-1"` into their own markup; the four this
