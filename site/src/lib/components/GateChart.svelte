@@ -360,7 +360,15 @@
     {/if}
   </figcaption>
 
-  <svg viewBox="0 0 {W} {H}" role="img" aria-label="{panel.title} across gate runs">
+  <!-- role="group", not "img": this svg holds real interactive descendants
+       (the role="button" points below), and role="img" tells assistive tech
+       to treat the whole subtree as one flat picture, which hides every
+       point from a screen reader (axe "nested-interactive", found live on
+       production by ux-oracle, metrale.ai#72, 2026-10-05). aria-label keeps
+       the chart's own accessible name; "group" makes no claim about its
+       children beyond grouping them, so the points stay individually
+       reachable. -->
+  <svg viewBox="0 0 {W} {H}" role="group" aria-label="{panel.title} across gate runs">
     {#each yTicks as t}
       <line class="gc-grid" class:gc-grid-clipped={t.edge} x1={PL} y1={y(t.v)} x2={W - PR} y2={y(t.v)} />
       <text class="gc-axis" x={PL - 8} y={y(t.v) + 3.5} text-anchor="end">{tickLabel(fmtTick(t.v), t.edge)}</text>

@@ -15,7 +15,10 @@ test('at every width, a click on any point of a chart, the labelled newest ones 
   await expect(page.locator('.bd[role="dialog"]')).toBeVisible();
   // Every point, not only the last one in the DOM: a chart with two series
   // labels the newest point of each, and either label can sit over its point.
-  const points = page.locator('.bd-body svg[role="img"] .gc-pt');
+  // `.gc-pt` alone, not `svg[role="img"]`: the chart's svg is `role="group"`
+  // now (ux-oracle, metrale.ai#74, 2026-10-05 -- "img" hid these very points
+  // from a screen reader), and `.gc-pt` already names exactly these marks.
+  const points = page.locator('.bd-body svg .gc-pt');
   const n = await points.count();
   expect(n).toBeGreaterThan(0);
   for (let i = 0; i < n; i++) {

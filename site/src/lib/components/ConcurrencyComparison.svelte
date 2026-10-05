@@ -300,9 +300,14 @@
       {/if}
     </figcaption>
 
+    <!-- role="group" only in the "live" state, where this svg's points are
+       real role="button" descendants (line ~347) -- role="img" would hide
+       them from a screen reader entirely (ux-oracle, metrale.ai#72,
+       2026-10-05). The other states draw no interactive points, so "img"
+       is still the honest role there. -->
     <svg
       viewBox="0 0 {W} {H}"
-      role="img"
+      role={state === 'live' ? 'group' : 'img'}
       aria-label={state === 'live'
         ? `Metrale Engine throughput versus concurrency on the ${subject.gate} instrument${ext ? `, continued at ${extRange} by the published ladder` : ''}; ${pair.drawn.length ? 'vLLM one-shot on the same instrument' : 'no vLLM series'}`
         : `Empty comparison axes for ${subject.checkpoint}; no run yet`}
