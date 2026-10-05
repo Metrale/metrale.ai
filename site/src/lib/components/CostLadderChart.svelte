@@ -211,9 +211,13 @@
     </span>
   </figcaption>
 
+  <!-- role="group", not "img": see GateChart.svelte's identical note
+       (ux-oracle, metrale.ai#72, 2026-10-05) -- this svg's points are real
+       role="button" descendants, which role="img" would hide from a screen
+       reader entirely. -->
   <svg
     viewBox="0 0 {W} {H}"
-    role="img"
+    role="group"
     aria-label="Cost per million tokens against concurrency for {subject.label}, GPU rail only, {cost.baselines.length
       ? 'Metrale Engine against vLLM'
       : 'Metrale Engine alone — no comparable vLLM energy'}{pue.band

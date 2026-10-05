@@ -196,7 +196,11 @@
     </span>
   </figcaption>
 
-  <svg viewBox="0 0 {W} {H}" role="img" aria-label="{panel.title} for the latest gate runs">
+  <!-- role="group", not "img": see GateChart.svelte's identical note
+       (ux-oracle, metrale.ai#72, 2026-10-05) -- this svg's points are real
+       role="button" descendants, which role="img" would hide from a screen
+       reader entirely. -->
+  <svg viewBox="0 0 {W} {H}" role="group" aria-label="{panel.title} for the latest gate runs">
     <defs>
       <!-- Two variants share a hue, so their corridors cannot be told apart by
            opacity alone. Texture is the channel that survives that, and it also
