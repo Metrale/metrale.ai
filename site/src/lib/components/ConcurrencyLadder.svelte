@@ -12,6 +12,7 @@
   // which is where single-stream latency lives.
   import publishedLadder from '$lib/ladder.generated.json';
   import { visibleOf } from '$lib/series-visibility.js';
+  import { scrollRegion } from '$shared/scroll-region.js';
 
   // `embedded`: render as a block inside a section that already has a heading
   // and a container (the Verified entry). Default is the standalone section the
@@ -231,9 +232,15 @@
       </svg>
     </figure>
 
-    <!-- Wide tables scroll sideways, so each wrapper takes focus and a keyboard can scroll it (WCAG 2.1.1). -->
+    <!-- Wide tables scroll sideways: while one does, its wrapper is a named, focusable region (web-shared/scroll-region.js). -->
     <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-    <div class="cl-tablewrap" tabindex="0" role="region" aria-label="Throughput at each concurrency rung">
+    <div
+      class="cl-tablewrap"
+      tabindex="0"
+      role="region"
+      aria-label="Throughput at each concurrency rung"
+      use:scrollRegion={{ label: 'Throughput at each concurrency rung' }}
+    >
       <table class="cl-table">
         <caption class="cl-caption">
           Throughput in tok/s. Ratio is Metrale Engine over the matched vLLM + MTP configuration at that rung.
@@ -317,7 +324,13 @@
               every measurement already committed.
             </p>
             <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-            <div class="cl-tablewrap" tabindex="0" role="region" aria-label="Per-rung detail: throughput and latency by series">
+            <div
+              class="cl-tablewrap"
+              tabindex="0"
+              role="region"
+              aria-label="Per-rung detail: throughput and latency by series"
+              use:scrollRegion={{ label: 'Per-rung detail: throughput and latency by series' }}
+            >
               <table class="cl-table cl-table-dense">
                 <thead>
                   <tr>

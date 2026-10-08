@@ -86,9 +86,9 @@ export default defineConfig({
         // of its CSS, to read it. For a while /engine loaded 130 KB of marketing
         // components for the sake of a star count. The shared things are named
         // in av-chrome instead, which every route loads anyway: data.js, the
-        // install helpers, the route group rule, and the three small generated
-        // files both sides print (stars, the ladder, the live counts). Never the
-        // big ones.
+        // install helpers, the route group rule, the scroll-region action both
+        // sides' wide boxes use, and the three small generated files both sides
+        // print (stars, the ladder, the live counts). Never the big ones.
         // e2e/page-weight.spec.js fails if a developer page loads av-ui again,
         // or if any page grows a request.
         codeSplitting: {
@@ -96,7 +96,7 @@ export default defineConfig({
             {
               name: 'av-chrome',
               priority: 30,
-              test: /[\\/](src[\\/]lib[\\/]components[\\/]marketing[\\/](SiteNav|SiteFooter)\.svelte|src[\\/]lib[\\/]content[\\/](brand|index|faq)\.js|src[\\/]lib[\\/]route-groups\.js|src[\\/]lib[\\/]data\.js|src[\\/]lib[\\/]install[\\/]|src[\\/]lib[\\/](stars|ladder|live)\.generated\.json|web-shared[\\/]components[\\/](MetraleLockup|ThemeToggle)\.svelte|web-shared[\\/]theme\.js)/,
+              test: /[\\/](src[\\/]lib[\\/]components[\\/]marketing[\\/](SiteNav|SiteFooter)\.svelte|src[\\/]lib[\\/]content[\\/](brand|index|faq)\.js|src[\\/]lib[\\/]route-groups\.js|src[\\/]lib[\\/]data\.js|src[\\/]lib[\\/]install[\\/]|src[\\/]lib[\\/](stars|ladder|live)\.generated\.json|web-shared[\\/]components[\\/](MetraleLockup|ThemeToggle)\.svelte|web-shared[\\/](theme|scroll-region)\.js)/,
             },
             {
               name: 'av-ui',

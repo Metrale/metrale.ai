@@ -12,6 +12,7 @@
 -->
 <script>
   import { company } from '$lib/content/brand.js';
+  import { scrollRegion } from '$shared/scroll-region.js';
 
   const nodes = [
     { x: 160, hw: 'GB10 · NVFP4' },
@@ -21,9 +22,9 @@
   const duties = ['rollout', 'canary', 'policy', 'repair', 'scale'];
 </script>
 
-<!-- The diagram scrolls sideways on a phone, so it takes focus and a keyboard can scroll it (WCAG 2.1.1). -->
+<!-- The diagram scrolls sideways on a phone: while it does, it takes focus so a keyboard can scroll it (web-shared/scroll-region.js). -->
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-<figure class="av-diagram" tabindex="0" aria-label="Metrale platform architecture diagram">
+<figure class="av-diagram" tabindex="0" aria-label="Metrale platform architecture diagram" use:scrollRegion>
   <svg viewBox="0 0 1100 400" role="img">
     <title
       >Requests flow from your applications through the router to Metrale Engine nodes on your GPUs. Metrale Control manages rollout, policy

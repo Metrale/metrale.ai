@@ -13,12 +13,17 @@ import { fileURLToPath } from 'url';
 // Two things are needed: compile the runes, and resolve SvelteKit's `$lib`
 // alias, which vite supplies during a real build and bun does not.
 const LIB = join(dirname(fileURLToPath(import.meta.url)), 'src', 'lib');
+// `$shared` is svelte.config.js's alias for the repository's web-shared/.
+const SHARED = join(dirname(fileURLToPath(import.meta.url)), '..', 'web-shared');
 
 plugin({
   name: 'svelte-runes',
   setup(build) {
     build.onResolve({ filter: /^\$lib(\/|$)/ }, (args) => ({
       path: join(LIB, args.path.slice('$lib'.length)),
+    }));
+    build.onResolve({ filter: /^\$shared(\/|$)/ }, (args) => ({
+      path: join(SHARED, args.path.slice('$shared'.length)),
     }));
 
     // `$app/environment` is SvelteKit's, supplied by vite at build time and

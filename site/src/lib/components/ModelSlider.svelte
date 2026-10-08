@@ -6,6 +6,7 @@
   import { copyLabel, copyOrSelect } from '$lib/clipboard.js';
   import { models as copy, recipesUrl } from '$lib/data.js';
   import RunButton from './RunButton.svelte';
+  import { scrollRegion } from '$shared/scroll-region.js';
   import Head from './engine/lower/Head.svelte';
 
   // Flagship first: Qwen3.6 leads its vendor, then Qwen3.5, then the rest as-is.
@@ -173,9 +174,15 @@
               {#if details(r)}<span class="eg-row-detail">{details(r)}</span>{/if}
             </div>
             <div class="eg-cmd">
-              <!-- A command longer than its row scrolls sideways, so it takes focus and a keyboard can scroll it (WCAG 2.1.1). -->
+              <!-- A command longer than its row scrolls sideways: while it does, it is a named, focusable region (web-shared/scroll-region.js). -->
               <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-              <code class="av-mono" tabindex="0" role="region" aria-label={`Command to run ${r.displayName}`}>{r.command}</code>
+              <code
+                class="av-mono"
+                tabindex="0"
+                role="region"
+                aria-label={`Command to run ${r.displayName}`}
+                use:scrollRegion={{ label: `Command to run ${r.displayName}` }}>{r.command}</code
+              >
               <button
                 type="button"
                 class="eg-copy"
