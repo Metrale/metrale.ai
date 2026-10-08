@@ -46,11 +46,20 @@ const ICONS = ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png', 'og-image.p
 for (const needed of ['llms.txt', '_headers', ...ICONS, 'version.txt', 'fonts/fonts.css', 'theme/css/metrale-tokens.css']) {
   if (!existsSync(join(OUT, needed))) bad(`${needed} is missing beside the pages`);
 }
-// The icons and the social card are the brand kit's, the same bytes the site
-// serves (site/scripts/brand/kit.mjs puts them in site/static).
-for (const icon of ICONS) {
-  const ours = join(here, '..', 'site', 'static', icon);
-  if (existsSync(join(OUT, icon)) && !readFileSync(join(OUT, icon)).equals(readFileSync(ours))) bad(`${icon} is not the site's, from the brand kit`);
+// The icons and the social card are the brand kit's: the same bytes the site
+// serves (site/scripts/brand/kit.mjs puts them in site/static), and the two PNG
+// favicons the book links, from the vendored kit itself.
+const KIT_PNG = { 'favicon-16.png': 'favicon-16.png', 'favicon-32.png': 'favicon-32.png' };
+for (const icon of [...ICONS, ...Object.keys(KIT_PNG)]) {
+  const ours = KIT_PNG[icon] ? join(here, '..', 'assets', 'brand', 'dark', KIT_PNG[icon]) : join(here, '..', 'site', 'static', icon);
+  if (existsSync(join(OUT, icon)) && !readFileSync(join(OUT, icon)).equals(readFileSync(ours))) bad(`${icon} is not the brand kit's`);
+}
+// Every icon the book's head (theme/head.hbs) links is a file the build ships.
+// Read from the rendered front page, which is that template's output.
+for (const [, rel, href] of index.matchAll(/<link\b[^>]*\brel="([^"]*icon[^"]*)"[^>]*\bhref="([^"]+)"/g)) {
+  if (/^[a-z]+:/i.test(href)) continue;
+  const file = join(OUT, href.replace(/^(\.\/)+/, '').split(/[?#]/)[0]);
+  if (!existsSync(file)) bad(`the book's head links ${href} (rel="${rel}"), which the build does not ship`);
 }
 // The faces the book's own fonts.css declares, each a real file beside it. The
 // book's theme names its typeface; this checks that whatever it names ships.

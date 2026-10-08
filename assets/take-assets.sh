@@ -20,7 +20,7 @@ FILES=(
   BRAND-GUIDELINES.md
   tokens/brand.json
   svg/mark.svg svg/mark-compact.svg svg/logo-horizontal.svg svg/logo-horizontal-ondark.svg
-  favicon.ico favicon.svg site.webmanifest
+  favicon.ico favicon.svg site.webmanifest dark/favicon-16.png dark/favicon-32.png
   dark/apple-touch-icon-180.png dark/icon-192.png dark/icon-512.png dark/icon-maskable-512.png
   dark/og-image-1200x630.png dark/github-social-preview-1280x640.png
   fonts/manrope-latin-wght-normal.woff2 fonts/MANROPE-LICENSE.txt fonts/manrope-fallback.css

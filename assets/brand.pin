@@ -9,6 +9,8 @@ commit=e05c7a6bae28339efc2f806de40527267b3c934e
 03f1b34135aaf1b48ecb5cd43e113e4e45d9ef37  favicon.ico
 178703afceef136634fee1d6df4ddf47bae9d2c0  favicon.svg
 3d02a9748e9d11472bfb8836885a658cbcfc5858  site.webmanifest
+fd4ae71273a426a09a81f7160ec75bb00927139e  dark/favicon-16.png
+b6d3636a5ffacbda4206f04d4b944a2d70b5c3a5  dark/favicon-32.png
 e605dcd31b0a5331cbac2fdf82cce5918d658117  dark/apple-touch-icon-180.png
 34965938b4a7e2ec9740a154d5e2f44655f5f53c  dark/icon-192.png
 515d86fed20447e1961207ac87b6798abf9cc548  dark/icon-512.png
