@@ -161,6 +161,17 @@
       "base": "afe7f89af",
       "note": "SMB and edge stays published, reworded: Metrale runs on hardware the business owns, the button prices a license rather than a box, and the guide never offers to supply a box. The hold from #57 is undone.",
       "touched": []
+    },
+    {
+      "rev": 13,
+      "date": "2026-10-08",
+      "pr": 79,
+      "base": "d2e53858f",
+      "note": "The tab icon is the copper M from the v2 kit, on the site and the blog: favicon.svg, favicon.ico and the 16, 32 and 48 px PNGs. The app icons, the logo and the social card are unchanged.",
+      "touched": [
+        "favicon.ico",
+        "favicon.svg"
+      ]
     }
   ],
   "facts": {
@@ -874,16 +885,28 @@
       "date": "2026-09-24"
     },
     "site/static/favicon.ico": {
-      "sha": "05144ca27991",
-      "bytes": 21023,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "1dd250af1265",
+      "bytes": 2568,
+      "rev": 2,
+      "date": "2026-10-08",
+      "was": [
+        {
+          "sha": "05144ca27991",
+          "until": "2026-10-08"
+        }
+      ]
     },
     "site/static/favicon.svg": {
-      "sha": "34fb304a11af",
-      "bytes": 9120,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "85b550d11a60",
+      "bytes": 318,
+      "rev": 2,
+      "date": "2026-10-08",
+      "was": [
+        {
+          "sha": "34fb304a11af",
+          "until": "2026-10-08"
+        }
+      ]
     },
     "site/static/fonts/IBM-PLEX-MONO-LICENSE.txt": {
       "sha": "23b0a9d0c6d3",

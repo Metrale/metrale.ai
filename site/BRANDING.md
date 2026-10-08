@@ -23,9 +23,13 @@ the component draws anything of its own. Nothing is redrawn.
 - **Metrale Prime**, the guide: the mark with the swash lifted over the right
   shoulder, which reads as M′. `src/lib/prime/PrimeMark.svelte` draws it from
   the same definitions.
-- **Favicons and icons**: the kit's own cuts, in `static/`: the app icon on the
-  ground as `favicon.svg`, the kit's PNGs at 16, 32, 48, 180, 192, 512 and
-  1024, the maskable 512, and `favicon.ico`. The blog carries the same set.
+- **Favicons and icons**: the tab icons are the v2 kit's compact copper M,
+  ahead of the rest of the v2 change (2026-10-08): `favicon.svg` is the kit's
+  `svg/mark-compact.svg`, and `favicon.ico` and the PNGs at 16, 32 and 48 are
+  its transparent cuts. `app.html` links them with `?v=2`, so a browser holding
+  the old icon fetches the new one. The app icons are still this kit's cuts:
+  the PNGs at 180, 192, 512 and 1024 and the maskable 512. The blog carries the
+  same set.
 - **Social card**: `static/og-image.png`, rendered by `scripts/media/og.mjs`
   from `assets/brand/svg/wordmark-ondark.svg` and the front page headline, in
   Urbanist. The GitHub social preview is `assets/brand/social/`.

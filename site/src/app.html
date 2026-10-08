@@ -113,11 +113,14 @@
          Windows surfaces (pinned sites, jump lists) that ignore SVG entirely;
          the PNGs are the explicit sizes Safari and older Chrome pick from.
          apple-touch-icon is the LIGHT-ground cut on purpose: iOS composites
-         transparency onto black, which would swallow the mark. -->
-    <link rel="icon" type="image/svg+xml" href="%sveltekit.assets%/favicon.svg" />
-    <link rel="icon" href="%sveltekit.assets%/favicon.ico" sizes="32x32" />
-    <link rel="icon" type="image/png" sizes="32x32" href="%sveltekit.assets%/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="%sveltekit.assets%/favicon-16.png" />
+         transparency onto black, which would swallow the mark. The tab icons
+         are the v2 kit's compact copper M, and carry ?v=2: static files are
+         cached for a month, so a new address is what makes a returning
+         browser fetch the new icon. -->
+    <link rel="icon" type="image/svg+xml" href="%sveltekit.assets%/favicon.svg?v=2" />
+    <link rel="icon" href="%sveltekit.assets%/favicon.ico?v=2" sizes="32x32" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%sveltekit.assets%/favicon-32.png?v=2" />
+    <link rel="icon" type="image/png" sizes="16x16" href="%sveltekit.assets%/favicon-16.png?v=2" />
     <link rel="apple-touch-icon" sizes="180x180" href="%sveltekit.assets%/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="Metrale" />
     <link rel="manifest" href="%sveltekit.assets%/site.webmanifest" />
