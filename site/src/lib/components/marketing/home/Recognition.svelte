@@ -94,7 +94,7 @@
     font-size: 0.66rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--sx-text);
+    color: var(--accent-deep);
     white-space: nowrap;
     padding: 0.22rem 0.5rem;
     border: 1px solid color-mix(in srgb, var(--sx) 40%, transparent);

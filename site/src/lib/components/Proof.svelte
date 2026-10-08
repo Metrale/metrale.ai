@@ -80,7 +80,7 @@
     display: grid;
     place-items: center;
     background: color-mix(in srgb, var(--sx) 14%, transparent);
-    color: var(--sx-text);
+    color: var(--accent-deep);
   }
   .eg-proof-text {
     display: grid;

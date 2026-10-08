@@ -835,7 +835,7 @@
 .cs-tab.is-active {
   background: color-mix(in srgb, var(--sx) 12%, transparent);
   border-color: color-mix(in srgb, var(--sx) 45%, transparent);
-  color: var(--sx-text);
+  color: var(--accent-deep);
 }
 .cs-tab.is-active::before {
   background: var(--sx);
@@ -1290,7 +1290,7 @@
 .co-tab.is-active {
   background: color-mix(in srgb, var(--sx) 12%, transparent);
   border-color: color-mix(in srgb, var(--sx) 45%, transparent);
-  color: var(--sx-text);
+  color: var(--accent-deep);
 }
 .co-tab.is-active::before {
   background: var(--sx);
@@ -1647,7 +1647,7 @@
 .tt-tab.is-active {
   background: color-mix(in srgb, var(--sx) 12%, transparent);
   border-color: color-mix(in srgb, var(--sx) 45%, transparent);
-  color: var(--sx-text);
+  color: var(--accent-deep);
 }
 .tt-tab.is-active::before {
   background: var(--sx);

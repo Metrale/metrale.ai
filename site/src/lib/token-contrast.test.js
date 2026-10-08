@@ -39,3 +39,29 @@ test('the check can distinguish a passing colour from a failing one', () => {
   expect(over('#000000', '#FFFFFF', 0.5)).toBe('#808080');
   expect(over('rgba(0, 0, 0, 0.5)', '#FFFFFF')).toBe('#808080');
 });
+
+/**
+ * The table above measures copper text on a copper tint as --accent-deep. That
+ * only holds if the stylesheets use it: --accent and --sx-text (copper-light,
+ * copper-deep) fall under 4.5:1 on a copper tint over --card-2, and Chromium's
+ * axe cannot see it because the ground is a color-mix(). So no rule may set
+ * --accent or --sx-text as text on a copper background.
+ */
+test('copper text on a copper tint is --accent-deep in every stylesheet', async () => {
+  const { execFileSync } = await import('node:child_process');
+  const root = new URL('../../../', import.meta.url).pathname;
+  const files = execFileSync('git', ['ls-files', 'site/src', 'blog/src'], { cwd: root, encoding: 'utf8' })
+    .split('\n')
+    .filter((f) => /\.(css|svelte)$/.test(f));
+  const offenders = [];
+  for (const f of files) {
+    const css = readFileSync(root + f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    for (const [, sel, body] of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+      const bg = body.match(/background(?:-color)?:\s*([^;]*(?:--sx|--accent)[^;]*);/);
+      if (bg && !bg[1].includes('gradient') && /(?<![-\w])color:\s*var\(--(sx-text|accent)\)/.test(body))
+        offenders.push(`${f}: ${sel.trim().split('\n').pop()}`);
+    }
+  }
+  expect(files.length).toBeGreaterThan(50);
+  expect(offenders).toEqual([]);
+});

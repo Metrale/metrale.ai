@@ -468,7 +468,7 @@
     border-color: var(--accent);
   }
   .pr-aud-chip[aria-pressed='true'] {
-    color: var(--accent);
+    color: var(--accent-deep);
     border-color: var(--accent);
     background: var(--accent-soft);
   }

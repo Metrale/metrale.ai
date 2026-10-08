@@ -173,7 +173,9 @@
               {#if details(r)}<span class="eg-row-detail">{details(r)}</span>{/if}
             </div>
             <div class="eg-cmd">
-              <code class="av-mono">{r.command}</code>
+              <!-- A command longer than its row scrolls sideways, so it takes focus and a keyboard can scroll it (WCAG 2.1.1). -->
+              <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+              <code class="av-mono" tabindex="0" role="region" aria-label={`Command to run ${r.displayName}`}>{r.command}</code>
               <button
                 type="button"
                 class="eg-copy"
@@ -306,7 +308,7 @@
     color: var(--t1);
   }
   .eg-family.is-active {
-    color: var(--sx-text);
+    color: var(--accent-deep);
     border-color: color-mix(in srgb, var(--sx) 45%, transparent);
     background: color-mix(in srgb, var(--sx) 12%, transparent);
   }
@@ -319,7 +321,7 @@
   }
   .eg-family.is-active .eg-family-n {
     background: color-mix(in srgb, var(--sx) 18%, transparent);
-    color: var(--sx-text);
+    color: var(--accent-deep);
   }
   .eg-panel {
     padding: 0;

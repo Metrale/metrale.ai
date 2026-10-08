@@ -2249,7 +2249,7 @@ a.prov:hover {
 }
 .road-status {
   background: color-mix(in srgb, var(--sx) 16%, transparent);
-  color: var(--sx-text);
+  color: var(--accent-deep);
 }
 
 /* Informational cards stop levitating. A card that lifts is telling the reader
