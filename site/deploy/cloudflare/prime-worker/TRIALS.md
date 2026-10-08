@@ -69,6 +69,49 @@ What the set found and what changed because of it:
   finish in one round and the first token moved from two to eight seconds down
   to under one.
 
+## Which models have run on which hardware, 2026-10-07
+
+Asked "What models have been tested on what hardware?", the deployed guide
+answered with one checkpoint on one box: its rules and its ladder tool called
+the dense ladder the only measured performance number, though the site now
+publishes 399 signed gate records, a second ladder, the recipes and a hardware
+page. The knowledge base now carries that account (`scripts/prime/coverage.mjs`,
+the README's "Which models have run on which hardware"), `get_coverage` reads
+it, and the rules keep its four kinds of evidence apart.
+
+Three new cases, 17 to 19, on grok-4.7 at low against `wrangler dev`, with the
+base cut at site commit `dafefd893` and the engine at `5eafc5c8c2`. $0.063 in
+all.
+
+| case | question | rounds | tools after the first read | first token | total | tokens | per answer |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 17 | What models have been tested on what hardware? | 1 | none | 1.4 s | 4.4 s | 7,349 | $0.0151 |
+| 18 | Does it run on an H100? | 1 | none | 1.6 s | 9.8 s | 7,910 | $0.0172 |
+| 19 | Has Gemma 4 been benchmarked, and on what? | 2 | `get_coverage`, `get_benchmark`, `search_site` | 1.8 s | 6.8 s | 21,084 | $0.0307 |
+
+What the answers were like:
+
+- **17** answered from the overview passage alone: GB10 the only hardware with
+  signed records, by checkpoint; the two ladders; the recipes, two of them on
+  vLLM; the kernel sets per target with the site's status; and the README's
+  sentence that the other targets are not covered by the certification.
+- **18** said H100 is in bring up and not certified, with no signed record and
+  no recipe, quoted the changelog's H100 measurements as receipts and not as a
+  certification, and added that Hopper serves FP8 and BF16 only.
+- **19** said Gemma 4 has no signed record and no ladder, then listed its two
+  recipes and its kernel sets as the weaker evidence they are.
+
+What the offline checks found before any money was spent:
+
+- With every hardware passage titled in the question's words, "What hardware
+  does it run on?" read six short target passages and neither GB10 nor the
+  site's own answer. Only the overview carries those words now, and a target's
+  passage is titled with its name.
+- A search result carries 1,400 characters of a passage, so the overview leads
+  with its conclusion and stays under that length.
+- The rules said `${site}/pricing#payback` to the model, unfilled: the prompt
+  filled in the first site link of the rules and not the second.
+
 ## Rerunning it
 
 ```sh
@@ -76,7 +119,7 @@ cd deploy/cloudflare/prime-worker && npx wrangler@4 dev --port 8787
 cd ../../.. && node scripts/prime/trial.mjs --worker http://127.0.0.1:8787 --out ~/scratch/trial --label 4.7-low --budget 0.5
 ```
 
-`--only 1,4,7,9,16` is the comparison subset; `--var PRIME_MODEL:... --var PRIME_EFFORT:...`
+`--only 1,4,7,9,16` is the comparison subset and `--only 17,18,19` the hardware one; `--var PRIME_MODEL:... --var PRIME_EFFORT:...`
 on `wrangler dev` tries another configuration. The trial's transcripts are not
 in the repository: they are the model's words about the company on a given
 day, read once and kept out of a public tree.

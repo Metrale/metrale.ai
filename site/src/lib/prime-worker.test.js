@@ -10,6 +10,8 @@ import { Index, tokenize, resetIndex } from '../../deploy/cloudflare/prime-worke
 import { streamChat, costUsd, addUsage, usageSummary } from '../../deploy/cloudflare/prime-worker/src/xai.js';
 import { runTool, TOOLS } from '../../deploy/cloudflare/prime-worker/src/tools.js';
 import { systemPrompt } from '../../deploy/cloudflare/prime-worker/src/prompt.js';
+import { coverage } from '../../scripts/prime/coverage.mjs';
+import { ENGINE_REPO } from '../../../web-shared/sources.mjs';
 import { fleetModel } from './economics.js';
 
 const ORIGIN = 'https://metrale.ai';
@@ -365,11 +367,13 @@ test("estimate_economics runs the page's own model and says so", async () => {
 
 test('get_benchmark, list_pages, next_steps and repo_activity read the structured half', async () => {
   const c = { index: new Index([]), tiers: ['public'], data: DATA, env: {}, site: ORIGIN, sources: [] };
+  // A base cut before the hardware account carries one ladder, and still answers.
   const l = await runTool('get_benchmark', '{}', c);
-  expect(l.rows).toHaveLength(2);
-  expect(l.cite_as).toBe(1);
+  expect(l.ladders).toHaveLength(1);
+  expect(l.ladders[0].rows).toHaveLength(2);
+  expect(l.ladders[0].cite_as).toBe(1);
   expect(c.sources[0]).toMatchObject({ n: 1, title: 'The concurrency ladder', url: `${ORIGIN}/benchmarks` });
-  expect(l.rows[1]).toMatchObject({ concurrency: 128, metrale_tok_s: 478.11, matched_baseline_tok_s: 358.57 });
+  expect(l.ladders[0].rows[1]).toMatchObject({ concurrency: 128, metrale_tok_s: 478.11, matched_baseline_tok_s: 358.57 });
   const p = await runTool('list_pages', JSON.stringify({ query: 'pricing' }), c);
   expect(p.pages).toEqual([
     { path: '/pricing', url: `${ORIGIN}/pricing`, title: 'Pricing · Metrale', description: 'Priced against productive GPU capacity.' },
@@ -379,6 +383,236 @@ test('get_benchmark, list_pages, next_steps and repo_activity read the structure
   expect(n.steps.some((s) => s.url.includes('good+first+issue'))).toBe(true);
   const r = await runTool('repo_activity', JSON.stringify({ kind: 'releases', limit: 5 }), c);
   expect(r.releases[0].tag).toBe('b463');
+});
+
+// The hardware account as scripts/prime/coverage.mjs writes it, cut from small
+// inputs: two checkpoints with records on GB10, two ladders, three recipes, and
+// four kernel targets with the site's own status for three of them.
+const record = (bench, model, at, box = 'spark-28c2') => ({
+  path: `.benchmarks/${bench}/${at}.json`,
+  target_model: model,
+  hardware: { gpu: 'NVIDIA GB10', gpu_count: 1 },
+  perf_class: `gb10@${box}`,
+  recorded_at: at,
+  verdict: 'PASS',
+});
+const ladder = (checkpoint, rows) => ({
+  title: `${checkpoint} ladder`,
+  workload: { checkpoint },
+  box: { name: 'dgx2 (spark-43fa)', gpu: 'NVIDIA GB10 Grace Blackwell, 121.7 GB unified' },
+  series: [{ id: 'vllm-mtp', engine: 'vLLM 0.27.1' }],
+  rows: rows.map(([c, engine, tok_s]) => ({
+    c,
+    engine,
+    baselines: [{ id: 'vllm-mtp', label: 'vLLM + MTP', parity: 'matched', tok_s }],
+    ratio_vs_matched: Math.round((engine / tok_s) * 1000) / 1000,
+  })),
+  summary: { rungs: rows.length, won: rows.length, min_ratio: 1.1, max_ratio: 1.6 },
+  results_doc_url: 'https://github.com/x/engine/blob/main/bench/RESULTS.md',
+});
+const COVERAGE = coverage({
+  benchmarks: {
+    'concurrency-sweep-moe': {
+      name: 'Concurrency Sweep (MoE)',
+      records: [
+        record('concurrency-sweep-moe', 'Qwen/Qwen3.6-35B-A3B-FP8', 1790230160),
+        record('concurrency-sweep-moe', 'Qwen/Qwen3.6-35B-A3B-FP8', 1790645191, 'spark-43fa'),
+      ],
+    },
+    'decode-floor': { name: 'Decode Floor Gate', records: [record('decode-floor', 'unsloth/Qwen3.8-27B-NVFP4', 1790230160)] },
+  },
+  subjects: {
+    'qwen38-27b': ladder('unsloth/Qwen3.8-27B-NVFP4', [
+      [1, 23.59, 19.72],
+      [128, 478.11, 358.57],
+    ]),
+    'qwen36-35b-a3b': ladder('Qwen/Qwen3.6-35B-A3B-FP8', [
+      [1, 81.9, 52.11],
+      [128, 748.6, 672.94],
+    ]),
+  },
+  labels: [
+    { id: 'qwen38-27b', label: 'Qwen 3.8 27B' },
+    { id: 'qwen36-35b-a3b', label: 'Qwen 3.6 35B A3B' },
+  ],
+  recipes: [
+    {
+      id: 'qwen3.6/qwen3.6-35b-a3b-fp8-mtp',
+      text: 'model: Qwen/Qwen3.6-35B-A3B-FP8\nruntime: metrale\ncontainer: metrale/metrale-inference-gb10:latest\n',
+    },
+    {
+      id: 'deepseek-v4/deepseek-v4-flash-nvfp4-ep2',
+      text: 'model: nvidia/DeepSeek-V4-Flash-NVFP4\nruntime: metrale\ncontainer: metrale/metrale-inference-gb10:latest\nmax_nodes: 2\n',
+    },
+    { id: 'diffusion-gemma/diffusion-gemma-bf16', text: 'model: google/diffusiongemma-26B-A4B-it\ncontainer: vllm-node\n' },
+  ],
+  trees: [
+    {
+      dir: 'gb10',
+      hardware: { vendor: 'nvidia', arch: 'sm_121f' },
+      models: [{ dir: 'qwen3.6-35b-a3b', hf_id: 'Qwen/Qwen3.6-35B-A3B-FP8' }],
+    },
+    {
+      dir: 'hopper',
+      hardware: { vendor: 'nvidia', arch: 'sm_90a', inherits: 'gb10' },
+      models: [{ dir: 'qwen3.6-35b-a3b', hf_id: 'Qwen/Qwen3.6-35B-A3B-FP8' }],
+    },
+    { dir: 'b300', hardware: { vendor: 'nvidia', arch: 'sm_103a' }, models: [{ dir: 'kimi-k3' }] },
+    { dir: 'strix', hardware: { vendor: 'amd', arch: 'gfx1151' }, models: [{ dir: 'qwen3.6-27b', hf_id: 'Qwen/Qwen3.6-27B' }] },
+  ],
+  readme: [
+    '### Other hardware targets',
+    '',
+    'The tree also builds kernel sets for other hardware. They are built from source and are not covered by the GB10 certification.',
+    '',
+    '| NVIDIA H100 / H200 | `kernels/hopper` | `sm_90a` | 1 |',
+    '| NVIDIA B300 | `kernels/b300` | `sm_103a` | 1 |',
+    '| AMD Strix Halo, through SCALE | `kernels/strix` | `gfx1151` | 1 |',
+  ].join('\n'),
+  cards: [
+    { name: 'NVIDIA DGX Spark', chip: 'GB10 · Blackwell SM121', status: 'Verified', body: 'One multi model binary.' },
+    { name: 'NVIDIA H100 and H200', chip: 'Hopper · SM90', status: 'Bring up', body: 'Receipts in the changelog.' },
+    { name: 'AMD Strix Halo', chip: 'gfx1151 · RDNA 3.5', status: 'Runs through SCALE', body: 'Compiled through SCALE.' },
+    { name: 'Intel Arc Pro B70', chip: 'Battlemage', status: 'In talks', body: 'Nothing is signed.' },
+  ],
+  engine: { repo: 'https://github.com/x/engine', ref: '5eafc5c8c27d21a6' },
+});
+const HOPPER_DOC = {
+  id: 'doc:hopper',
+  tier: 'public',
+  kind: 'doc',
+  title: 'Changelog',
+  section: 'Added',
+  url: 'https://github.com/x/engine/blob/main/CHANGELOG.md#added',
+  text: 'Six Hopper owned decode kernels: C=1 TPOT 17.87 to 14.14 ms on 1×H100 80 GB with Qwen/Qwen3.8-27B-FP8.',
+};
+
+test('get_benchmark reads every published ladder, or the one for a model', async () => {
+  const c = { index: new Index([]), tiers: ['public'], data: { ...DATA, coverage: COVERAGE }, env: {}, site: ORIGIN, sources: [] };
+  const all = await runTool('get_benchmark', '{}', c);
+  expect(all.ladders.map((l) => [l.checkpoint, l.cite_as])).toEqual([
+    ['unsloth/Qwen3.8-27B-NVFP4', 1],
+    ['Qwen/Qwen3.6-35B-A3B-FP8', 2],
+  ]);
+  expect(all.ladders[1]).toMatchObject({ label: 'Qwen 3.6 35B A3B', against: 'vLLM + MTP, vLLM 0.27.1' });
+  expect(all.ladders[1].rows[1]).toEqual({
+    concurrency: 128,
+    metrale_tok_s: 748.6,
+    matched_baseline: 'vLLM + MTP',
+    matched_baseline_tok_s: 672.94,
+    ratio: 1.112,
+  });
+  expect(all.note).not.toMatch(/only measured/);
+  const moe = await runTool('get_benchmark', JSON.stringify({ model: 'Qwen3.6 35B' }), c);
+  expect(moe.ladders.map((l) => l.checkpoint)).toEqual(['Qwen/Qwen3.6-35B-A3B-FP8']);
+  expect(moe.ladders[0].cite_as).toBe(2);
+  const none = await runTool('get_benchmark', JSON.stringify({ model: 'Llama 4' }), c);
+  expect(none.ladders).toHaveLength(2);
+  expect(none.no_match).toBeDefined();
+});
+
+test('get_coverage keeps its evidence apart: the overview, then a hardware, then a model', async () => {
+  const c = {
+    index: new Index([...DOCS, HOPPER_DOC]),
+    tiers: ['public'],
+    data: { ...DATA, coverage: COVERAGE },
+    env: {},
+    site: ORIGIN,
+    sources: [],
+  };
+  const o = await runTool('get_coverage', '{}', c);
+  expect(Object.keys(o.evidence)).toEqual(['signed_record', 'ladder', 'recipe', 'kernel_set']);
+  expect(o.measured).toEqual([
+    {
+      cite_as: 1,
+      hardware: 'NVIDIA DGX Spark (GB10 · Blackwell SM121)',
+      gpu: 'NVIDIA GB10',
+      boxes: 2,
+      signed_records: 3,
+      from: '2026-09-24',
+      to: '2026-09-29',
+      checkpoints: [
+        { checkpoint: 'Qwen/Qwen3.6-35B-A3B-FP8', records: 2, gates: ['Concurrency Sweep (MoE)'] },
+        { checkpoint: 'unsloth/Qwen3.8-27B-NVFP4', records: 1, gates: ['Decode Floor Gate'] },
+      ],
+    },
+  ]);
+  expect(o.ladders.map((l) => [l.checkpoint, l.rungs])).toEqual([
+    ['unsloth/Qwen3.8-27B-NVFP4', 'C=1 to C=128'],
+    ['Qwen/Qwen3.6-35B-A3B-FP8', 'C=1 to C=128'],
+  ]);
+  expect(o.recipes).toMatchObject({
+    total: 3,
+    checkpoints: 3,
+    by_engine: { 'Metrale Engine': 2, vLLM: 1 },
+    across_two_or_more_boxes: ['deepseek-v4/deepseek-v4-flash-nvfp4-ep2'],
+    not_metrale_engine: ['google/diffusiongemma-26B-A4B-it, served by vLLM'],
+  });
+  expect(o.targets.map((t) => [t.hardware, t.site_status, t.signed_records, t.recipes])).toEqual([
+    ['NVIDIA DGX Spark (GB10 · Blackwell SM121)', 'Verified', 3, 2],
+    ['NVIDIA H100 / H200', 'Bring up', 0, 0],
+    ['NVIDIA B300', null, 0, 0],
+    ['AMD Strix Halo, through SCALE', 'Runs through SCALE', 0, 0],
+  ]);
+  expect(o.named_on_the_site_without_a_kernel_set).toEqual([
+    { cite_as: 2, hardware: 'Intel Arc Pro B70 (Battlemage)', site_status: 'In talks' },
+  ]);
+  expect(o.readme.says).toMatch(/not covered by the GB10 certification/);
+  // Three places to check, each numbered once: the dashboard, the hardware page, the README.
+  expect(c.sources.map((s) => s.url)).toEqual([
+    `${ORIGIN}/benchmarks`,
+    `${ORIGIN}/platform/hardware`,
+    'https://github.com/x/engine/blob/main/README.md#other-hardware-targets',
+  ]);
+
+  const h100 = await runTool('get_coverage', JSON.stringify({ hardware: 'H100' }), c);
+  expect(h100.hardware).toHaveLength(1);
+  expect(h100.hardware[0]).toMatchObject({
+    hardware: 'NVIDIA H100 / H200',
+    builds_on: 'gb10',
+    site_status: { status: 'Bring up' },
+    signed_records: 0,
+    recipes: [],
+  });
+  // A target with no record carries what the engine's documents say about it.
+  expect(h100.hardware[0].documents[0]).toMatchObject({ title: 'Changelog', section: 'Added' });
+  expect(h100.hardware[0].documents[0].text).toContain('1×H100 80 GB');
+  expect(c.sources.at(-1).url).toBe(HOPPER_DOC.url);
+
+  const spark = await runTool('get_coverage', JSON.stringify({ hardware: 'DGX Spark' }), c);
+  expect(spark.hardware.map((t) => t.hardware)).toEqual(['NVIDIA DGX Spark (GB10 · Blackwell SM121)']);
+  expect(spark.hardware[0].signed_records.checkpoints[0].gates[0]).toMatchObject({
+    name: 'Concurrency Sweep (MoE)',
+    records: 2,
+    newest_record: `${ENGINE_REPO}/blob/main/.benchmarks/concurrency-sweep-moe/1790645191.json`,
+  });
+  expect(spark.hardware[0].recipes.map((r) => [r.id, r.boxes])).toEqual([
+    ['deepseek-v4/deepseek-v4-flash-nvfp4-ep2', 2],
+    ['qwen3.6/qwen3.6-35b-a3b-fp8-mtp', 1],
+  ]);
+  expect(spark.hardware[0].documents).toBeUndefined();
+
+  const intel = await runTool('get_coverage', JSON.stringify({ hardware: 'Intel Arc' }), c);
+  expect(intel.hardware).toEqual([]);
+  expect(intel.named_on_the_site_without_a_kernel_set[0]).toMatchObject({ site_status: 'In talks', says: 'Nothing is signed.' });
+  expect((await runTool('get_coverage', JSON.stringify({ hardware: 'TPU v5' }), c)).no_match).toMatch(/NVIDIA H100 \/ H200/);
+
+  const moe = await runTool('get_coverage', JSON.stringify({ model: 'Qwen3.6 35B' }), c);
+  expect(moe.model.signed_records.map((r) => [r.checkpoint, r.records])).toEqual([['Qwen/Qwen3.6-35B-A3B-FP8', 2]]);
+  expect(moe.model.ladders.map((l) => l.checkpoint)).toEqual(['Qwen/Qwen3.6-35B-A3B-FP8']);
+  expect(moe.model.recipes.map((r) => [r.id, r.engine, r.hardware])).toEqual([
+    ['qwen3.6/qwen3.6-35b-a3b-fp8-mtp', 'Metrale Engine', 'NVIDIA DGX Spark (GB10 · Blackwell SM121)'],
+  ]);
+  expect(moe.model.kernel_sets.map((k) => [k.hardware, k.site_status, k.signed_records_on_this_hardware])).toEqual([
+    ['NVIDIA DGX Spark (GB10 · Blackwell SM121)', 'Verified', 3],
+    ['NVIDIA H100 / H200', 'Bring up', 0],
+  ]);
+  const gemma = await runTool('get_coverage', JSON.stringify({ model: 'diffusiongemma' }), c);
+  expect(gemma.model.recipes[0]).toMatchObject({ engine: 'vLLM', hardware: null });
+  expect((await runTool('get_coverage', JSON.stringify({ model: 'Llama 4' }), c)).model.no_match).toBeDefined();
+
+  const before = await runTool('get_coverage', '{}', { ...c, data: DATA });
+  expect(before.error).toMatch(/not in the knowledge base/);
 });
 
 test('capture_lead posts to the forms Worker as the prime source, once, and keeps the lead in KV without one', async () => {
@@ -466,6 +700,17 @@ test("the system prompt names the visitor's audience and page, and the partner t
   expect(s).not.toContain('partner tier');
   expect(s).toContain('No exclamation marks');
   expect(systemPrompt({ ...base, audience: '', page: null, partner: true })).toContain('partner tier');
+});
+
+test('the prompt fills in every site link, and keeps the kinds of hardware evidence apart', () => {
+  const s = systemPrompt({ site: ORIGIN, audience: '', page: null, pages: [], partner: false, manifest: {}, today: '2026-10-07' });
+  // Both links in the rules, not only the first: on 2026-10-07 the second still read "${site}/pricing#payback".
+  expect(s).not.toContain('${site}');
+  expect(s).toContain(`${ORIGIN}/contact`);
+  expect(s).toContain(`${ORIGIN}/pricing#payback`);
+  expect(s).toContain('get_coverage');
+  expect(s).toMatch(/signed gate records[\s\S]*ladders[\s\S]*launch recipes[\s\S]*kernel sets/);
+  expect(s).not.toMatch(/the only measured/i);
 });
 
 // ---- the request ----------------------------------------------------------------------------

@@ -3,19 +3,21 @@
 // tools.js — what Metrale Prime can do besides talk.
 // -----------------------------------------------------------------------------
 // Each tool is a JSON schema the model sees and a function the Worker runs. A
-// tool returns plain data; the model writes the sentence. The seven here are
+// tool returns plain data; the model writes the sentence. The eight here are
 // the scaffold of a multi function assistant, one per job:
 //
 //   search_site         information: the site, the docs, the blog, the history
-//   get_benchmark       measured numbers, from the published ladder only
+//   get_benchmark       measured numbers: every published ladder against vLLM
+//   get_coverage        which models have run on which hardware, and the evidence
 //   estimate_economics  the payback model, the same functions the pricing page runs
 //   list_pages          direction: where on the site a thing is
 //   next_steps          planning: what to do next, by who is asking
 //   repo_activity       the repository's releases, commits, pull requests, people
 //   capture_lead        intake: a visitor who wants a person to follow up
 //
-// `data` is the structured half of the knowledge base (pages, the ladder, the
-// history, links), written by scripts/prime/corpus.mjs next to the documents.
+// `data` is the structured half of the knowledge base (pages, the ladders, the
+// hardware account, the history, links), written by scripts/prime/corpus.mjs
+// next to the documents.
 // =============================================================================
 
 import {
@@ -37,14 +39,14 @@ export const TOOLS = [
     function: {
       name: 'search_site',
       description:
-        'Search everything Metrale has published: the pages of this website, the engine documentation in the repository, the blog, and the repository history. Returns numbered passages to cite as [n]. Search again with different words if the first results are thin.',
+        'Search everything Metrale has published: the pages of this website, the engine documentation in the repository, the record of which models have run on which hardware, the blog, and the repository history. Returns numbered passages to cite as [n]. Search again with different words if the first results are thin.',
       parameters: {
         type: 'object',
         properties: {
           query: { type: 'string', description: 'What to look for, in plain words. Five to twelve words works best.' },
           kinds: {
             type: 'array',
-            items: { type: 'string', enum: ['page', 'doc', 'post', 'history', 'deck', 'plan'] },
+            items: { type: 'string', enum: ['page', 'doc', 'record', 'post', 'history', 'deck', 'plan'] },
             description: 'Narrow to a kind of source. Omit to search everything the visitor may see.',
           },
         },
@@ -57,8 +59,29 @@ export const TOOLS = [
     function: {
       name: 'get_benchmark',
       description:
-        'The published concurrency ladder: Metrale against the matched vLLM configuration on the same box, every rung, with the workload and the link to the results log. The only source for measured performance numbers.',
-      parameters: { type: 'object', properties: {} },
+        'The published concurrency ladders, one per checkpoint: Metrale Engine against the matched vLLM configuration on the same box, every rung, with the workload and the link to the results log. Name a model to get its ladder only.',
+      parameters: {
+        type: 'object',
+        properties: { model: { type: 'string', description: 'Optional. A model or checkpoint in plain words, for example Qwen3.6 35B.' } },
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'get_coverage',
+      description:
+        "Which models have run on which hardware, and what evidence says so, strongest first: signed gate records by hardware and checkpoint, the published ladders against vLLM, the launch recipes and the hardware they run on, and the kernel sets the engine builds for each hardware target with the site's own status for it. Leave both filters out for the overview, or name a hardware or a model for its detail: the gates, the record links, the recipe ids and the documents about a target.",
+      parameters: {
+        type: 'object',
+        properties: {
+          hardware: {
+            type: 'string',
+            description: 'A GPU, box or target in plain words, for example GB10, DGX Spark, H100, B200, Strix Halo, Apple.',
+          },
+          model: { type: 'string', description: 'A model or checkpoint in plain words, for example Qwen3.6 35B, Gemma 4, DeepSeek V4.' },
+        },
+      },
     },
   },
   {
@@ -147,6 +170,52 @@ export const TOOLS = [
 const EMAIL = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']{2,}$/;
 const clip = (s, n) => (String(s ?? '').length > n ? String(s).slice(0, n - 1) + '…' : String(s ?? ''));
 const num = (v, fallback) => (Number.isFinite(Number(v)) ? Number(v) : fallback);
+// A visitor's words against a checkpoint or a target: "Qwen3.6 35B" squashes to
+// qwen3635b, which Qwen/Qwen3.6-35B-A3B-FP8 contains; "DGX Spark" is two words
+// the GB10 target's names carry.
+const squash = (s) =>
+  String(s ?? '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '');
+const wordsOf = (s) =>
+  String(s ?? '')
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((w) => w.length > 1);
+
+/** What each kind of evidence in get_coverage stands for, strongest first. */
+const EVIDENCE = {
+  signed_record:
+    'A gate measured the checkpoint on that hardware, and the record is committed with its signature in the engine repository. The strongest evidence.',
+  ladder: 'A published concurrency ladder: Metrale Engine against vLLM on the same box, with the same checkpoint and workload.',
+  recipe: 'A launch recipe: one validated way to serve one checkpoint, with its image and serve settings. Not a benchmark record.',
+  kernel_set: 'Kernels the engine builds for a hardware target. Code for that target, not a measurement.',
+};
+
+/** One published ladder as the model reads it. */
+function ladderOut(l, n) {
+  return {
+    cite_as: n,
+    label: l.label,
+    title: l.title,
+    subtitle: l.subtitle,
+    checkpoint: l.checkpoint,
+    aggregate: l.aggregate,
+    workload: l.workload,
+    box: l.box,
+    against: l.against,
+    generated_utc: l.generated_utc,
+    rows: (l.rows ?? []).map((r) => ({
+      concurrency: r.c,
+      metrale_tok_s: r.engine,
+      matched_baseline: r.baseline,
+      matched_baseline_tok_s: r.baseline_tok_s,
+      ratio: r.ratio,
+    })),
+    summary: l.summary,
+    results_doc_url: l.results_doc_url,
+  };
+}
 
 /**
  * One number per source for the whole answer. A passage found twice is cited
@@ -261,36 +330,251 @@ export async function runTool(name, rawArgs, ctx) {
     }
 
     case 'get_benchmark': {
-      const l = data.ladder;
-      if (!l) return { error: 'The ladder is not in the knowledge base.' };
-      const n = cite(ctx, {
-        id: 'tool:ladder',
-        title: 'The concurrency ladder',
-        section: l.box?.gpu ?? '',
-        url: `${site}${data.routes?.benchmarks ?? '/benchmarks'}`,
-        kind: 'page',
-        tier: 'public',
-      });
+      const page = `${site}${data.routes?.benchmarks ?? '/benchmarks'}`;
+      // Every published ladder, from the hardware account. A base cut before the
+      // account existed carries the one ladder, and still answers.
+      const all = data.coverage?.ladders?.length
+        ? data.coverage.ladders
+        : data.ladder
+          ? [{ id: 'ladder', label: data.ladder.title, checkpoint: data.ladder.workload?.checkpoint ?? '', ...data.ladder }]
+          : [];
+      if (!all.length) return { error: 'The ladder is not in the knowledge base.' };
+      const q = squash(args.model);
+      const picked = q ? all.filter((l) => squash(`${l.checkpoint} ${l.label} ${l.id}`).includes(q)) : all;
       return {
-        cite_as: n,
-        title: l.title,
-        subtitle: l.subtitle,
-        aggregate: l.aggregate,
-        workload: l.workload,
-        box: l.box,
-        generated_utc: l.generated_utc,
-        rows: (l.rows ?? []).map((r) => ({
-          concurrency: r.c,
-          metrale_tok_s: r.engine,
-          matched_baseline: r.baseline,
-          matched_baseline_tok_s: r.baseline_tok_s,
-          ratio: r.ratio,
-        })),
-        summary: l.summary,
-        results_doc_url: l.results_doc_url,
-        page: `${site}${data.routes?.benchmarks ?? '/benchmarks'}`,
-        note: 'Measured on the box named above, one checkpoint, one workload. It is the only measured performance number. Any other figure is a model.',
+        ladders: (picked.length ? picked : all).map((l) =>
+          ladderOut(
+            l,
+            cite(ctx, {
+              id: `tool:ladder:${l.id}`,
+              title: 'The concurrency ladder',
+              section: l.label,
+              url: page,
+              kind: 'page',
+              tier: 'public',
+            })
+          )
+        ),
+        ...(q && !picked.length ? { no_match: 'No published ladder is for that model. These are all of them.' } : {}),
+        page,
+        note: 'Each ladder was measured on the box it names, with one checkpoint and one workload. The signed gate records behind the dashboard are measured too (get_coverage). A figure from the payback model is modeled.',
       };
+    }
+
+    case 'get_coverage': {
+      const cov = data.coverage;
+      if (!cov)
+        return { error: 'The record of which models have run on which hardware is not in the knowledge base. Search the site instead.' };
+      const routes = data.routes ?? {};
+      const repo = cov.engine?.repo ?? ENGINE_REPO;
+      // Three places a visitor can check, numbered only when the result uses them.
+      const src = {
+        records: () =>
+          cite(ctx, {
+            id: 'tool:coverage:records',
+            title: 'The benchmark dashboard',
+            section: 'every signed gate record, by hardware and model',
+            url: `${site}${routes.benchmarks ?? '/benchmarks'}`,
+            kind: 'record',
+            tier: 'public',
+          }),
+        site: () =>
+          cite(ctx, {
+            id: 'tool:coverage:hardware',
+            title: 'Hardware and models',
+            section: 'verified silicon, targets in bring up, every recipe',
+            url: `${site}${routes.hardware ?? '/platform/hardware'}`,
+            kind: 'page',
+            tier: 'public',
+          }),
+        engine: () =>
+          cite(ctx, {
+            id: 'tool:coverage:targets',
+            title: 'Engine README',
+            section: 'Other hardware targets',
+            url: `${repo}/blob/main/README.md#other-hardware-targets`,
+            kind: 'doc',
+            tier: 'public',
+          }),
+      };
+      const nameOf = (cls) => cov.targets.find((t) => t.dir === cls)?.name ?? cls;
+      const targetCite = (t) => (t.site ? src.site() : src.engine());
+      const ladderLine = (l) => ({
+        cite_as: src.records(),
+        checkpoint: l.checkpoint,
+        hardware: l.box?.gpu ?? null,
+        box: l.box?.name ?? null,
+        against: l.against,
+        rungs: `C=${l.rows?.[0]?.c} to C=${l.rows?.at(-1)?.c}`,
+        ahead: l.summary ? `${l.summary.won} of ${l.summary.rungs} rungs, ${l.summary.min_ratio}x to ${l.summary.max_ratio}x` : null,
+        results: l.results_doc_url,
+      });
+      const gatesOf = (m) => m.gates.map((g) => ({ name: g.name, records: g.records, last: g.last, newest_record: g.newest }));
+      const hw = String(args.hardware ?? '').trim();
+      const model = String(args.model ?? '').trim();
+      const out = { evidence: EVIDENCE, engine_commit: cov.engine?.ref?.slice(0, 10) ?? null };
+
+      if (!hw && !model) {
+        const byCheckpoint = new Map();
+        for (const r of cov.recipes) byCheckpoint.set(r.checkpoint, [...(byCheckpoint.get(r.checkpoint) ?? []), r]);
+        return {
+          ...out,
+          measured: cov.measured.map((c) => ({
+            cite_as: src.records(),
+            hardware: nameOf(c.class),
+            gpu: c.gpu,
+            boxes: c.boxes.length,
+            signed_records: c.records,
+            from: c.first,
+            to: c.last,
+            checkpoints: c.models.map((m) => ({ checkpoint: m.checkpoint, records: m.records, gates: m.gates.map((g) => g.name) })),
+          })),
+          ladders: cov.ladders.map(ladderLine),
+          recipes: {
+            cite_as: src.site(),
+            total: cov.recipes.length,
+            checkpoints: byCheckpoint.size,
+            by_engine: cov.recipes.reduce((a, r) => ({ ...a, [r.engine]: (a[r.engine] ?? 0) + 1 }), {}),
+            by_hardware: cov.recipes.reduce(
+              (a, r) => (r.hardware ? { ...a, [nameOf(r.hardware)]: (a[nameOf(r.hardware)] ?? 0) + 1 } : a),
+              {}
+            ),
+            across_two_or_more_boxes: cov.recipes.filter((r) => r.nodes > 1).map((r) => r.id),
+            not_metrale_engine: cov.recipes
+              .filter((r) => r.engine !== 'Metrale Engine')
+              .map((r) => `${r.checkpoint}, served by ${r.engine}`),
+          },
+          targets: cov.targets.map((t) => ({
+            cite_as: targetCite(t),
+            hardware: t.name,
+            arch: t.arch,
+            site_status: t.site?.status ?? null,
+            signed_records: t.records,
+            recipes: t.recipes,
+            kernel_sets: t.models.length,
+            models: t.models.map((m) => m.family),
+          })),
+          named_on_the_site_without_a_kernel_set: cov.site_only.map((c) => ({
+            cite_as: src.site(),
+            hardware: `${c.name} (${c.chip})`,
+            site_status: c.status,
+          })),
+          readme: { cite_as: src.engine(), says: cov.note },
+          detail: 'Call again with a hardware or a model for the gates, the record links, the recipe ids and the documents about a target.',
+        };
+      }
+
+      if (hw) {
+        const asked = wordsOf(hw);
+        const score = (text) => {
+          const have = new Set(wordsOf(text));
+          return asked.filter((w) => have.has(w)).length;
+        };
+        const scored = cov.targets.map((t) => [
+          t,
+          score(`${t.dir} ${t.name} ${t.arch} ${t.vendor} ${t.site?.name ?? ''} ${t.site?.chip ?? ''}`),
+        ]);
+        const best = Math.max(0, ...scored.map(([, s]) => s));
+        const targets = best ? scored.filter(([, s]) => s === best).map(([t]) => t) : [];
+        const cards = cov.site_only.filter((c) => score(`${c.name} ${c.chip}`) >= Math.max(1, best));
+        out.hardware = targets.map((t) => {
+          const c = cov.measured.find((m) => m.class === t.dir);
+          const detail = {
+            cite_as: targetCite(t),
+            hardware: t.name,
+            arch: t.arch,
+            vendor: t.vendor,
+            builds_on: t.inherits,
+            site_status: t.site ? { status: t.site.status, says: t.site.says } : null,
+            kernel_sets: t.models.map((m) => [m.hf_id || m.family, m.params].filter(Boolean).join(', ')),
+            signed_records: c
+              ? {
+                  cite_as: src.records(),
+                  records: c.records,
+                  boxes: c.boxes,
+                  from: c.first,
+                  to: c.last,
+                  checkpoints: c.models.map((m) => ({ checkpoint: m.checkpoint, records: m.records, gates: gatesOf(m) })),
+                }
+              : 0,
+            recipes: cov.recipes.filter((r) => r.hardware === t.dir).map((r) => ({ id: r.id, checkpoint: r.checkpoint, boxes: r.nodes })),
+          };
+          if (!c) {
+            detail.readme = { cite_as: src.engine(), says: cov.note };
+            // What the engine's own documents say about a target with no record:
+            // a compile gate, a receipt in the changelog, a bring up note.
+            detail.documents = index.search(`${t.name} ${t.dir} ${t.arch}`, { k: 3, tiers, kinds: ['doc'] }).map(({ doc }) => ({
+              cite_as: cite(ctx, {
+                id: doc.id,
+                title: doc.title,
+                section: doc.section ?? '',
+                url: doc.url ?? '',
+                kind: doc.kind,
+                tier: doc.tier,
+              }),
+              title: doc.title,
+              section: doc.section ?? '',
+              text: clip(doc.text, 900),
+            }));
+          }
+          return detail;
+        });
+        if (cards.length)
+          out.named_on_the_site_without_a_kernel_set = cards.map((c) => ({
+            cite_as: src.site(),
+            hardware: `${c.name} (${c.chip})`,
+            site_status: c.status,
+            says: c.says,
+          }));
+        if (!targets.length && !cards.length)
+          out.no_match = `Nothing in the published record names that hardware. The targets are: ${cov.targets.map((t) => t.name).join('; ')}.`;
+      }
+
+      if (model) {
+        const q = squash(model);
+        const hit = (...s) => q.length > 1 && s.some((x) => squash(x).includes(q));
+        out.model = {
+          signed_records: cov.measured.flatMap((c) =>
+            c.models
+              .filter((m) => hit(m.checkpoint))
+              .map((m) => ({
+                cite_as: src.records(),
+                hardware: nameOf(c.class),
+                checkpoint: m.checkpoint,
+                records: m.records,
+                from: m.first,
+                to: m.last,
+                gates: gatesOf(m),
+              }))
+          ),
+          ladders: cov.ladders.filter((l) => hit(l.checkpoint, l.label)).map(ladderLine),
+          recipes: cov.recipes
+            .filter((r) => hit(r.checkpoint, r.id))
+            .map((r) => ({
+              cite_as: src.site(),
+              id: r.id,
+              checkpoint: r.checkpoint,
+              engine: r.engine,
+              hardware: nameOf(r.hardware),
+              boxes: r.nodes,
+            })),
+          kernel_sets: cov.targets.flatMap((t) =>
+            t.models
+              .filter((m) => hit(m.hf_id, m.family))
+              .map((m) => ({
+                cite_as: targetCite(t),
+                hardware: t.name,
+                site_status: t.site?.status ?? null,
+                model: m.hf_id || m.family,
+                signed_records_on_this_hardware: t.records,
+              }))
+          ),
+        };
+        if (!Object.values(out.model).some((v) => v.length))
+          out.model.no_match =
+            'Nothing in the published record names that model: no signed record, ladder, recipe or kernel set. Say so, and point at the hardware and models page.';
+      }
+      return out;
     }
 
     case 'estimate_economics': {

@@ -18,9 +18,11 @@ What one answer does, in order:
    Its thinking streams to the page as it happens.
 4. Runs the tools it asks for (`src/tools.js`) against the knowledge base
    (`src/corpus.js`), telling the page each one: `search_site`,
-   `get_benchmark`, `estimate_economics` (the pricing page's own payback model,
-   imported from `site/src/lib/economics.js`), `list_pages`, `next_steps`,
-   `repo_activity`, `capture_lead`.
+   `get_benchmark` (every published ladder), `get_coverage` (which models have
+   run on which hardware, and what evidence says so), `estimate_economics`
+   (the pricing page's own payback model, imported from
+   `site/src/lib/economics.js`), `list_pages`, `next_steps`, `repo_activity`,
+   `capture_lead`.
 5. Sends the sources, then the receipt: tokens, the dollars xAI charged (to
    the tick), time to first token, time to first answer token, total.
 6. Keeps a telemetry record (`src/telemetry.js`) with no message text in it,
@@ -89,6 +91,28 @@ log and the rest of the list at the top of the script), the blog, and a
 snapshot of the repository's history from the GitHub API (`gh api`, cached a
 day in `scripts/.cache/`). The health check reports the build time and the
 commit the base was cut from, and every answer's `meta` event carries them.
+
+### Which models have run on which hardware
+
+`scripts/prime/coverage.mjs` sorts the public record into four kinds of
+evidence, strongest first, and `get_coverage` answers from it:
+
+| evidence | read from |
+| --- | --- |
+| signed gate records, by hardware class, checkpoint and gate | `src/lib/gates.generated.json`, the dashboard's own input |
+| the published ladders against vLLM | `src/lib/ladders.generated.json` |
+| launch recipes: the checkpoint, the engine and the image (so the hardware) | `recipes/` in the engine checkout |
+| kernel sets per hardware target, with the site's status for each | `kernels/*/HARDWARE.toml` and `kernels/*/*/MODEL.toml` in the engine checkout, the README's "Other hardware targets" table, and the hardware page's cards in `src/lib/content/platform.js` |
+
+The same account is cut into passages, an overview first, so a plain question
+is answered in one round without the tool. The engine checkout needs the two
+`kernels/` paths above in its sparse set (`.github/actions/engine-inputs`). A
+base cut before the account existed still answers: `get_benchmark` falls back
+to the one ladder, and `get_coverage` says the account is missing.
+
+Upload a base that carries a new field before the Worker that reads it
+deploys: the Worker that is live ignores a field it does not know, and a new
+Worker against an old base answers with less.
 
 ## Money and limits
 

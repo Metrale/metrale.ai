@@ -106,7 +106,11 @@ function summarize(name, args, result) {
     case 'search_site':
       return `${result.results?.length ?? 0} passages for "${String(args.query ?? '').slice(0, 60)}"`;
     case 'get_benchmark':
-      return `the ladder, ${result.rows?.length ?? 0} rungs`;
+      return result.ladders?.length === 1
+        ? `the ladder, ${result.ladders[0].rows?.length ?? 0} rungs`
+        : `${result.ladders?.length ?? 0} ladders`;
+    case 'get_coverage':
+      return `what has run on ${[args.hardware, args.model].filter(Boolean).join(', ').slice(0, 60) || 'which hardware'}`;
     case 'estimate_economics':
       return `the ${args.scenario} scenario, modeled`;
     case 'list_pages':
@@ -125,6 +129,7 @@ function summarize(name, args, result) {
 const PHASES = {
   search_site: 'searching',
   get_benchmark: 'tool',
+  get_coverage: 'tool',
   estimate_economics: 'tool',
   list_pages: 'tool',
   next_steps: 'tool',
@@ -133,7 +138,8 @@ const PHASES = {
 };
 const TOOL_LABELS = {
   search_site: 'reading the site',
-  get_benchmark: 'opening the ladder',
+  get_benchmark: 'opening the ladders',
+  get_coverage: 'reading what has run on which hardware',
   estimate_economics: 'running the payback model',
   list_pages: 'reading the site map',
   next_steps: 'laying out next steps',
