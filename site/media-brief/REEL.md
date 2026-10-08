@@ -19,8 +19,8 @@ for the site and a 1080 by 1920 vertical for social from the same timeline.
 | --- | --- | --- |
 | Product footage | `static/media/console-*.mp4`, or re-record at 1920 by 1080 | The only source of UI. Never generated. |
 | Ambient footage | Prompts `V01` to `V07` | Until they exist, the procedural loops `broll-*.mp4` stand in |
-| Lockup | `assets/brand/logo-full-ondark.svg` | Vector. Animate a reveal, never redraw |
-| Type | IBM Plex Sans 600 for cards, IBM Plex Mono for labels | The site's faces, in `static/fonts/` |
+| Logo | `assets/brand/svg/logo-horizontal-ondark.svg` | Vector, the kit's dark-ground cut. Animate a reveal, never redraw |
+| Type | Manrope for cards, IBM Plex Mono for labels | The site's faces, in `static/fonts/` |
 | Music | A licensed library track | No generated music. Its licence is unclear |
 
 To re-record the product footage at full HD, change the four console clips to

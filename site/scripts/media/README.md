@@ -11,16 +11,14 @@ machine.
 | `encode.mjs` | Trims and encodes the raw recordings | `.media-raw/` | `static/media/<slot>.{mp4,webm,webp}` |
 | `install.mjs` | Puts any approved file into a slot | the file you give it | `static/media/`, `src/lib/content/art.json` |
 | `reel.mjs` | Assembles the product film | `media-brief/reel.json`, takes, raw recordings, `src/lib/content/` | `static/media/reel.{mp4,webm,webp}` |
-| `og.mjs` | Renders the social card | `build/`, `assets/brand/`, `src/lib/content/` | `static/og-image.png` |
 | `brief.mjs` | Renders the prompt sheet | `media-brief/shots.json` | `media-brief/PROMPTS.md` |
-| `serve.mjs` | Static server over `build/` used by the two above | | |
+| `serve.mjs` | Static server over `build/` used by the recorders and the film | | |
 
 ## The usual run
 
 ```sh
 bun x --bun vite build
 bun run media          # record.mjs, then encode.mjs
-bun run og
 bun run reel
 ```
 

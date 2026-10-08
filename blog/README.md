@@ -56,6 +56,6 @@ links and search results move; that zone is in another account.
 
 The posts are the engine team's own, as they keep them under `blog/` in the
 engine's repository, with their links pointed at this blog and the site rather
-than at the engine team's hosts. The share card, `static/og-image.png`, is drawn by the
-site's renderer: `node scripts/media/og.mjs --blog` from `site/`, after a site
-build.
+than at the engine team's hosts. The share card, `static/og-image.png`, and the
+favicons are the brand kit's own, copied in by `site/scripts/brand/kit.mjs` (see
+`site/BRAND-CHANGE.md`).

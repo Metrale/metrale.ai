@@ -12,7 +12,7 @@ the developer pages for the engine. SvelteKit on Vite, prerendered to static fil
 | [`blog/`](blog/) | the blog, a second SvelteKit app on the same tokens. Start with [`blog/README.md`](blog/README.md) |
 | [`docs/`](docs/) | the engine's book, published at docs.metrale.ai with the API reference at docs.metrale.ai/api/. Start with [`docs/README.md`](docs/README.md) |
 | [`web-shared/`](web-shared/) | design tokens and components shared with the blog |
-| [`assets/brand/`](assets/brand/) | the brand kit the site draws its artwork and palette from |
+| [`assets/brand/`](assets/brand/) | the brand files the site, blog and docs use, vendored from the brand kit at a pinned release by [`assets/take-assets.sh`](assets/take-assets.sh) |
 | [`.github/workflows/`](.github/workflows/) | the pull request checks, the deploy and the guide's Worker |
 
 ## Build it
@@ -51,6 +51,6 @@ same numbers. Moving it is a pull request like any other.
 ## License
 
 The code is licensed under the [GNU Affero General Public License v3.0](LICENSE). The
-Metrale name, the wordmark and the artwork in `assets/brand/` are the company's marks and are
+Metrale name, the logo and the artwork in `assets/brand/` are the company's marks and are
 not licensed for reuse. Third-party logos, fonts and media under `site/static/` keep their
 own terms, recorded beside them.
