@@ -1,6 +1,6 @@
 <script>
   // The ledger rail. Every section header on the page is one entry in a chain
-  // of custody: index, chevron in the section's colour, entry name, then the
+  // of custody: index, copper chevron, entry name, then the
   // provenance stamp for whatever the section claims.
   //
   // The index and the name are parsed out of the single `label` string that

@@ -17,6 +17,7 @@
   // A rung the baseline did not measure is a dotted guide and the recorded
   // reason, where the point would be. Never a mark at zero.
   import { absentReasonOf, concurrencyBaselinesOf, measuredRange, oneShotChip } from '$lib/concurrency-comparison.js';
+  import { scrollRegion } from '$shared/scroll-region.js';
 
   /** @type {{ subject: object, ladder: object, rungs: number[] }} */
   let { subject, ladder, rungs } = $props();
@@ -177,7 +178,15 @@
           usually called TPOT; the record keys keep that name (<code>tpot_p50_ms</code>) because renaming a recorded key would orphan every
           measurement already committed.
         </p>
-        <div class="cl-tablewrap">
+        <!-- The table scrolls sideways: while it does, its wrapper is a named, focusable region (web-shared/scroll-region.js). -->
+        <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+        <div
+          class="cl-tablewrap"
+          tabindex="0"
+          role="region"
+          aria-label="Per-rung detail: vLLM throughput and latency"
+          use:scrollRegion={{ label: 'Per-rung detail: vLLM throughput and latency' }}
+        >
           <table class="cl-table cl-table-dense">
             <thead>
               <tr>

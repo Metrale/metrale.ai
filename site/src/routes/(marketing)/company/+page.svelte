@@ -109,8 +109,8 @@
         <p class="av-lede">{mission.body}</p>
       </div>
       <div class="av-grid av-grid-4 av-reveal">
-        {#each mission.principles as p, i}
-          <div class="av-card av-card-accent av-sx-{['violet', 'cyan', 'green', 'gold'][i]}">
+        {#each mission.principles as p}
+          <div class="av-card av-card-accent">
             <h3>{p.title}</h3>
             <p>{p.body}</p>
           </div>
@@ -147,7 +147,7 @@
         </div>
         <div class="av-team av-reveal">
           {#each team.people as p}
-            <article class="av-member av-sx-{p.hue}">
+            <article class="av-member">
               <img class="av-member-photo" src={`/team/${p.photo}.webp`} alt="" width="320" height="320" loading="lazy" decoding="async" />
               <div>
                 <h3 class="av-h4">{p.name}</h3>

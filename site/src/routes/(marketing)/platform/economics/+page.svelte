@@ -4,7 +4,7 @@
   import { routes } from '$lib/content/brand.js';
 </script>
 
-<PlatformPage path={routes.economics} page={p} color="green">
+<PlatformPage path={routes.economics} page={p}>
   {#snippet before()}
     <section class="av-section av-section-tight">
       <div class="av-container">

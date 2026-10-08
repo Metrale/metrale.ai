@@ -15,7 +15,7 @@ reading the code first.
 3. **[README.md](README.md)** to run it. `media-brief/` if you are touching video or imagery.
    `static/logos/README.md` if you are touching a logo.
 4. **[BRANDING.md](BRANDING.md)** and **[BRAND-CHANGE.md](BRAND-CHANGE.md)** if you are touching
-   the name, the lockup, the palette or the type. `deploy/cloudflare/prime-worker/README.md` if
+   the name, the logo, the palette or the type. `deploy/cloudflare/prime-worker/README.md` if
    you are touching Metrale Prime, the guide, and its `TRIALS.md` for what was measured.
 5. **[ECOSYSTEM.md](ECOSYSTEM.md)** if you are touching the control plane, its chat, the agent
    client under `src/lib/agent/` or the corpus: the plan for the loopback foundation, and the
@@ -115,7 +115,7 @@ screen (`src/lib/reveal.js` sets `is-live`). An element reset in `metrale.css` i
 | A form's fields | `demoPage.form`, `waitlistPage.form`, `careers.form` in `company.js` |
 | Where forms post | `formEndpoint` in `brand.js`. Empty means they draft an email. The endpoint is the Worker in `deploy/cloudflare/forms-worker/` |
 | The guide, Metrale Prime (M′) | `primeEndpoint` in `brand.js` switches it on. The Worker is `deploy/cloudflare/prime-worker/` (its README has the setup), the page side is `src/lib/prime/`, its words are `src/lib/prime/copy.js`, and its knowledge base is cut from the build by `node scripts/prime/corpus.mjs`. It deploys from `.github/workflows/prime-worker.yml`, which also writes its secrets and re-cuts the knowledge base |
-| The brand name, the wordmark, the swatches | `BRAND-CHANGE.md`, the runbook. The name is one script, the artwork and the palette are its sections 2 and 3 |
+| The brand name, the logo, the swatches, the type | `BRAND-CHANGE.md`, the runbook. The name is one script; the logo, the palette and the type come from the brand kit, vendored by `assets/take-assets.sh` and derived by `scripts/brand/kit.mjs` (its sections 2 to 5) |
 | A team member's line | `team.people` in `company.js`, and only on that person's word |
 | Whether the team shows at all | `showTeam` in `company.js`. Off since 2026-09-21 at the founders' request; the people stay in `team.people` |
 | A published door | `contacts` in `brand.js`, role mailboxes at metrale.com since 2026-09-21; the founders' own addresses wait in `contactsDirect` |

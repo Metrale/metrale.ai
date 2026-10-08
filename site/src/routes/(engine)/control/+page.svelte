@@ -287,7 +287,7 @@
   <Nav />
 
   <main class="control">
-    <section id="fleet" class="sx-cyan">
+    <section id="fleet">
       <div class="container">
         <SectionHead
           level={1}
@@ -389,7 +389,7 @@
       </div>
     </section>
 
-    <section id="topology" class="section-alt sx-cyan">
+    <section id="topology" class="section-alt">
       <div class="container">
         <SectionHead
           label="// 02 · topology"
@@ -404,7 +404,7 @@
       </div>
     </section>
 
-    <section id="launch" class="sx-cyan">
+    <section id="launch">
       <div class="container">
         <SectionHead
           label="// 03 · launch"
@@ -415,7 +415,7 @@
       </div>
     </section>
 
-    <section id="alerts" class="section-alt sx-cyan">
+    <section id="alerts" class="section-alt">
       <div class="container">
         <SectionHead
           label="// 04 · alerts"

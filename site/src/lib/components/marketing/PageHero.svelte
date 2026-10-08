@@ -18,7 +18,7 @@
   import { onMount } from 'svelte';
   import { artsFor, heroClipFor } from '$lib/content/media.js';
   import VideoClip from './VideoClip.svelte';
-  let { eyebrow, title, lede = '', primary = null, secondary = null, who = '', color = 'violet', children } = $props();
+  let { eyebrow, title, lede = '', primary = null, secondary = null, who = '', children } = $props();
   const here = $derived(page.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/');
   const arts = $derived(artsFor(here));
   const art = $derived(arts[0] ?? null);
@@ -58,7 +58,7 @@
 <section class="av-hero av-page-hero" class:has-art={!!clip || !!art}>
   <div class="av-glow av-glow-a" aria-hidden="true"></div>
   <div class="av-container av-page-hero-grid">
-    <div class="av-page-hero-in av-sx-{color}">
+    <div class="av-page-hero-in">
       <p class="av-eyebrow">{eyebrow}</p>
       <h1 class="av-h1">{title}</h1>
       {#if lede}<p class="av-lede av-lede-lg">{lede}</p>{/if}
@@ -131,7 +131,7 @@
   }
   /* Every still is dark. A dark ground means a late one is a shadow, not a white hole. */
   .av-page-hero-art > div {
-    background: #0e1318;
+    background: var(--brand-ground);
     position: relative;
   }
   /* Several stills: the first gives the box its height, the rest lie over it, and
@@ -150,7 +150,7 @@
     object-fit: cover;
   }
   /* The hero ground is tinted, and the quiet caption grey measured 4.46:1 on the
-     violet tint, under the 4.5 it needs. One step darker clears it on every tint. */
+     section tint, under the 4.5 it needs. One step darker clears it on every tint. */
   .av-page-hero-art :global(.av-video-caption) {
     color: var(--t2);
   }

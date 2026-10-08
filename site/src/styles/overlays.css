@@ -33,7 +33,7 @@
 }
 .ov-epoch {
   font-size: 0.7rem;
-  color: var(--ch-cyan-text);
+  color: var(--accent);
   margin-right: auto;
 }
 .ov-foot .ov-abort {

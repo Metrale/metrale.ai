@@ -11,20 +11,20 @@
 // emitted. The built pages therefore READ the token file at runtime and cannot
 // drift from it, and changing the brand changes the code blocks with it.
 
-/** sentinel -> the token that actually paints it. Code is small text, so the
-    chevron hues go through their -text twins, which darken in the light theme
-    and resolve to the fill hue in the dark one. */
+/** sentinel -> the token that actually paints it. Code is small text, so every
+    colour is a text token: the inks and copper's two text steps, which clear
+    4.5:1 on the code surfaces in both themes. */
 export const COLOR_REPLACEMENTS = {
   // The surface belongs to `.codeblock pre` (--bg-sunk). Mapping shiki's own
   // background to `transparent` is what stops it fighting that rule — cheaper
   // and less brittle than stripping the inline style afterwards.
   '#000000': 'transparent',
   '#000001': 'var(--t2)', //           plain text, punctuation
-  '#000002': 'var(--ch-violet-text)', // keywords, storage, operators
-  '#000003': 'var(--ch-cyan-text)', //   functions, methods, tags
-  '#000004': 'var(--green)', //        strings
-  '#000005': 'var(--amber)', //        numbers, constants, booleans
-  '#000006': 'var(--ch-gold-text)', //   types, classes, attribute names
+  '#000002': 'var(--accent)', //       keywords, storage, operators
+  '#000003': 'var(--t1)', //           functions, methods, tags
+  '#000004': 'var(--accent-deep)', //  strings
+  '#000005': 'var(--accent-deep)', //  numbers, constants, booleans
+  '#000006': 'var(--t1)', //           types, classes, attribute names
   '#000007': 'var(--t3)', //           comments — the quietest ink, as in prose
   '#000008': 'var(--accent-deep)' //   regex, escapes
 };

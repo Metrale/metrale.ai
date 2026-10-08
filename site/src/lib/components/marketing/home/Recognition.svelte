@@ -2,8 +2,8 @@
   "Receipts, not adjectives." Four cards, each one a receipt: who issued it (their
   own logo), when, what it says, a tear line, and the source it links to with
   the host printed the way a receipt prints the till. Copy is `recognition` in
-  src/lib/content/home.js. `hue` picks one of the four brand colours for the
-  glow and the hover edge. `mark` is a BrandMark (see BrandMark.svelte).
+  src/lib/content/home.js. The glow and the hover edge are the brand's copper.
+  `mark` is a BrandMark (see BrandMark.svelte).
 -->
 <script>
   import { recognition } from '$lib/content/home.js';
@@ -15,13 +15,13 @@
 <section class="av-section" id="recognition">
   <div class="av-container">
     <div class="av-head av-center av-reveal">
-      <p class="av-eyebrow av-sx-gold" style="justify-content:center">{recognition.eyebrow}</p>
+      <p class="av-eyebrow" style="justify-content:center">{recognition.eyebrow}</p>
       <h2 class="av-h2">{recognition.title}</h2>
       <p class="av-lede">{recognition.lede}</p>
     </div>
     <div class="av-grid av-grid-4 av-reveal">
       {#each recognition.cards as c}
-        <a class="av-receipt av-sx-{c.hue}" href={c.href} target="_blank" rel="noopener">
+        <a class="av-receipt" href={c.href} target="_blank" rel="noopener">
           <span class="av-receipt-head">
             <BrandMark mark={c.mark} />
             <span class="av-receipt-date">{c.date}</span>
@@ -94,7 +94,7 @@
     font-size: 0.66rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--sx-text);
+    color: var(--accent-deep);
     white-space: nowrap;
     padding: 0.22rem 0.5rem;
     border: 1px solid color-mix(in srgb, var(--sx) 40%, transparent);

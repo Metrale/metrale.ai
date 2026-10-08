@@ -114,9 +114,7 @@ export function compileMarkdown(src, { filename, tags, authors, highlight, measu
         const text = this.parser.parseInline(token.tokens);
         const id = slugify(token.text);
         if (token.depth === 2) {
-          // index drives the violet -> cyan -> green -> gold chevron cycle,
-          // exactly as a hand-written <H2 index={n}> does.
-          return hold(`<H2 id="${id}" index={${h2++}}>${text}</H2>\n`);
+          return hold(`<H2 id="${id}">${text}</H2>\n`);
         }
         return hold(`<h${token.depth} id="${id}">${text}</h${token.depth}>\n`);
       },
@@ -149,7 +147,9 @@ export function compileMarkdown(src, { filename, tags, authors, highlight, measu
         };
         const head = token.header.map((c) => cell(c, 'th')).join('');
         const rows = token.rows.map((r) => `<tr>${r.map((c) => cell(c, 'td')).join('')}</tr>`).join('\n');
-        return hold(`<Table><thead><tr>${head}</tr></thead><tbody>\n${rows}\n</tbody></Table>\n`);
+        // The scrolling wrapper is a labelled region; its name is the columns it holds.
+        const label = 'Table: ' + token.header.map((c) => c.text.replace(/[`*_]/g, '').trim()).join(', ');
+        return hold(`<Table label={${JSON.stringify(label)}}><thead><tr>${head}</tr></thead><tbody>\n${rows}\n</tbody></Table>\n`);
       },
       html(token) {
         const text = String(token.text);

@@ -938,7 +938,7 @@ video {
     padding: 0 0.8rem;
   }
   .rr-selected .rr-main {
-    border-top-color: var(--ch-cyan);
+    border-top-color: var(--sx);
   }
   .rr-cols {
     display: none;

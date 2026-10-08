@@ -31,11 +31,11 @@ describe('the emitted component', () => {
     expect(meta.format).toBe('md');
   });
 
-  test('h2 headings get sequential indices so the chevron cycle works', () => {
+  test('h2 headings become the rail heading, each with its id', () => {
     const { svelte } = compile('## One\n\ntext\n\n## Two\n\n## Three\n');
-    expect(svelte).toContain('<H2 id="one" index={0}>');
-    expect(svelte).toContain('<H2 id="two" index={1}>');
-    expect(svelte).toContain('<H2 id="three" index={2}>');
+    expect(svelte).toContain('<H2 id="one">');
+    expect(svelte).toContain('<H2 id="two">');
+    expect(svelte).toContain('<H2 id="three">');
   });
 
   test('h3 stays a plain heading with an id', () => {
@@ -52,7 +52,7 @@ describe('the emitted component', () => {
 
   test('right-aligned table columns keep the numeric class', () => {
     const { svelte } = compile('| a | b |\n|---|--:|\n| 1 | 2 |\n');
-    expect(svelte).toContain('<Table>');
+    expect(svelte).toContain('<Table label={"Table: a, b"}>');
     expect(svelte).toContain('<th class="num">b</th>');
     expect(svelte).toContain('<td class="num">2</td>');
   });

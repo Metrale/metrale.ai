@@ -7,7 +7,7 @@
 <footer class="av-footer">
   <div class="av-footer-in">
     <div class="av-footer-brand">
-      <a href={routes.home} aria-label="Metrale home" data-sveltekit-reload><MetraleLockup kind="wordmark" width={244} /></a>
+      <a href={routes.home} aria-label="Metrale home" data-sveltekit-reload><MetraleLockup width={244} /></a>
       <p class="av-footer-slogan">{footer.slogan}</p>
       <p class="av-footer-lic">{footer.license}</p>
       <div class="av-footer-social">

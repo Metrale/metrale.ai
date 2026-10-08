@@ -15,7 +15,7 @@
       <h2 class="av-sr">The products</h2>
       <div class="av-grid av-grid-3 av-reveal">
         {#each p.tiles as t}
-          <a class="av-card av-card-accent av-sx-{t.color}" href={t.href}>
+          <a class="av-card av-card-accent" href={t.href}>
             <p class="av-card-tag">{t.tag}</p>
             <h3>{t.name}</h3>
             <p>{t.body}</p>

@@ -19,7 +19,7 @@
       <h2 class="av-sr">What joining gets you</h2>
       <div class="av-split av-split-wide" style="align-items:start">
         <div class="av-stack av-reveal" style="gap:1.5rem">
-          <ul class="av-list-check av-sx-green">
+          <ul class="av-list-check">
             {#each w.bullets as b}<li>{b}</li>{/each}
           </ul>
           <div class="av-card">

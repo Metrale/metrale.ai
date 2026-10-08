@@ -101,17 +101,14 @@ export const announcement = {
 
 // --- nav (SSOT for the /engine jump bar and the /control bar and drawer) -----
 export const nav = {
-  // `hue` is the section's colour in the jump bar, by the tokens' grammar:
-  // green for a verified result, violet for the engine, gold for the
-  // community, cyan for the control plane.
   links: [
-    { text: 'Verified', href: `${ENGINE}#verified`, hue: 'green' },
-    { text: 'Models', href: `${ENGINE}#models`, hue: 'violet' },
-    { text: 'Get running', href: `${ENGINE}#run`, hue: 'violet' },
-    { text: 'Community', href: `${ENGINE}#community`, hue: 'gold' },
-    { text: 'Reach out', href: `${ENGINE}#reach`, hue: 'gold' },
-    { text: 'Control', href: CONTROL, hue: 'cyan' },
-    { text: 'Blog', href: blogUrl, hue: 'gold' },
+    { text: 'Verified', href: `${ENGINE}#verified` },
+    { text: 'Models', href: `${ENGINE}#models` },
+    { text: 'Get running', href: `${ENGINE}#run` },
+    { text: 'Community', href: `${ENGINE}#community` },
+    { text: 'Reach out', href: `${ENGINE}#reach` },
+    { text: 'Control', href: CONTROL },
+    { text: 'Blog', href: blogUrl },
   ],
   menuLabel: 'Menu',
   closeLabel: 'Close menu',
@@ -426,13 +423,13 @@ export const roadmap = {
   rowTitle: 'What we are building next.',
   rowSub:
     'Everything shipped links to an issue, a pull request or the Discord thread where the work happens. Anything not yet committed carries its status, and we do not round it up.',
-  // `tone` picks the status chip's hue: violet is engine work, green is a
-  // result that runs today, gold is a conversation, plain is tracking.
+  // `tone` picks the status chip: ok (green) is a result that runs today,
+  // accent (copper) is work under way or a conversation, plain is tracking.
   items: [
     {
       title: 'Three node DGX Spark topology',
       status: 'Next up',
-      tone: 'violet',
+      tone: 'accent',
       body: 'Three DGX Spark units in one rig for models that will not fit across two. More memory, more experts, more concurrency headroom. We are wiring up the topology now.',
       cta: 'Discuss the topology in Discord',
       url: discordUrl,
@@ -440,7 +437,7 @@ export const roadmap = {
     {
       title: 'Intel Arc Pro B70',
       status: 'In talks',
-      tone: 'gold',
+      tone: 'accent',
       body: 'Active conversations with Intel about bringing the engine to the Arc Pro B70. Nothing is signed yet, and this card will say so until it is.',
       cta: 'Follow along in Discord',
       url: discordUrl,
@@ -448,7 +445,7 @@ export const roadmap = {
     {
       title: 'AMD Strix Halo',
       status: 'Runs through SCALE',
-      tone: 'green',
+      tone: 'ok',
       body: 'Native gfx1151 through SCALE. AMD provided a Strix Halo desktop and we brought the engine to it, custom kernels and all.',
       cta: 'The gfx1151 kernels',
       url: strixKernelsUrl,

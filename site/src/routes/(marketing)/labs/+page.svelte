@@ -7,13 +7,13 @@
 </script>
 
 <PageShell path={routes.labs}>
-  <PageHero eyebrow={l.eyebrow} title={l.title} lede={l.lede} primary={l.cta} secondary={l.cta2} color="violet" />
+  <PageHero eyebrow={l.eyebrow} title={l.title} lede={l.lede} primary={l.cta} secondary={l.cta2} />
   <section class="av-section av-section-alt">
     <div class="av-container">
       <h2 class="av-sr">Research tracks</h2>
       <div class="av-grid av-grid-4 av-reveal">
         {#each l.tracks as t}
-          <div class="av-card av-card-accent av-sx-{t.color}">
+          <div class="av-card av-card-accent">
             <h3 style="font-size:1rem">{t.title}</h3>
             <p style="font-size:0.9rem">{t.body}</p>
           </div>

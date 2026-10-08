@@ -4,14 +4,14 @@
   import { routes } from '$lib/content/brand.js';
 </script>
 
-<PlatformPage path={routes.deployment} page={p} color="gold">
+<PlatformPage path={routes.deployment} page={p}>
   {#snippet before()}
     <section class="av-section av-section-alt">
       <div class="av-container">
         <h2 class="av-sr">Deployment models</h2>
         <div class="av-grid av-grid-3 av-reveal">
-          {#each p.models as m, i}
-            <div class="av-card av-card-accent av-sx-{['violet', 'cyan', 'green', 'gold'][i % 4]}">
+          {#each p.models as m}
+            <div class="av-card av-card-accent">
               <h3>{m.name}</h3>
               <p>{m.body}</p>
               <p class="av-card-tag" style="margin-top:1rem;margin-bottom:0">Fits · {m.fit}</p>
@@ -37,7 +37,7 @@
             <p class="av-lede" style="font-size:1rem">{p.onboarding.foot}</p>
           </div>
           <div class="av-reveal">
-            <p class="av-eyebrow av-sx-cyan">Isolation</p>
+            <p class="av-eyebrow">Isolation</p>
             <h2 class="av-h2">{p.isolation.title}</h2>
             <table class="av-table" style="margin-top:1.5rem">
               <thead><tr><th>Tier</th><th>Isolation</th></tr></thead>

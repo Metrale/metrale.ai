@@ -8,8 +8,9 @@
 //   1. every caption is checked against the site's own copy. A sentence the
 //      pages do not say fails the build, so the film cannot drift from the site
 //   2. headless chromium renders one overlay per segment, in the site's fonts,
-//      from the vector lockup: a lower third for ambient footage, a framed
-//      window for product footage, a lockup card, an end card
+//      from the brand kit's vector logo and colours (assets/brand): a lower
+//      third for ambient footage, a framed window for product footage, a logo
+//      card, an end card
 //   3. ffmpeg cuts each segment (trim, speed, fit, overlay) and cross fades
 //      them into one file, then encodes what the site ships:
 //        static/media/reel.mp4, reel.webm and the poster reel.webp
@@ -76,52 +77,54 @@ const { routes, SITE } = await load('src/lib/content/brand.js');
 const home = modules[0];
 
 // --- 2. overlays ----------------------------------------------------------------
-const svg = (name) => readFileSync(resolve(repo, 'assets', 'brand', name), 'utf8').replace(/<\?xml[^>]*>\s*/, '');
-const lockupFull = svg('svg/wordmark-ondark.svg');
-const lockupH = svg('svg/wordmark-ondark.svg');
+// The kit's dark-ground cut of the logo (the footage is dark), and its colours.
+const kit = (name) => readFileSync(resolve(repo, 'assets', 'brand', name), 'utf8');
+const logo = kit('svg/logo-horizontal-ondark.svg');
+const C = JSON.parse(kit('tokens/brand.json')).color;
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const rgba = (hex, a) => `rgba(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(',')},${a})`;
 const css = `
-  @font-face { font-family: 'Urbanist'; font-weight: 100 900; src: url('/fonts/urbanist-latin-wght-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Manrope'; font-weight: 200 800; src: url('/fonts/manrope-latin-wght-normal.woff2') format('woff2'); }
   @font-face { font-family: 'IBM Plex Mono'; font-weight: 600; src: url('/fonts/ibm-plex-mono-latin-600-normal.woff2') format('woff2'); }
   html, body { margin: 0; width: ${W}px; height: ${H}px; overflow: hidden; background: transparent; }
-  body { position: relative; font-family: 'Urbanist', system-ui, sans-serif; color: #E4E7EC; }
-  .label { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: #BE9DF8; display: flex; align-items: center; gap: 12px; }
+  body { position: relative; font-family: 'Manrope', system-ui, sans-serif; color: ${C.ink}; }
+  .label { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: ${C.copperLight}; display: flex; align-items: center; gap: 12px; }
   .label::before { content: ''; width: 22px; height: 2px; background: currentColor; border-radius: 2px; }
   .cap { font-weight: 600; letter-spacing: -0.02em; line-height: 1.12; margin: 0; }
   /* The masters carry their own width and height. Without this the lockup
      renders at 1365 px and fills the frame. */
   .mark svg { display: block; width: 100%; height: auto; }
   /* ambient: a lower third over full bleed footage */
-  .scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(15,18,22,0.94) 0%, rgba(15,18,22,0.55) 26%, rgba(15,18,22,0) 52%), linear-gradient(to bottom, rgba(15,18,22,0.6) 0%, rgba(15,18,22,0) 22%); }
+  .scrim { position: absolute; inset: 0; background: linear-gradient(to top, ${rgba(C.ground, 0.94)} 0%, ${rgba(C.ground, 0.55)} 26%, ${rgba(C.ground, 0)} 52%), linear-gradient(to bottom, ${rgba(C.ground, 0.6)} 0%, ${rgba(C.ground, 0)} 22%); }
   .lower { position: absolute; left: 72px; right: 72px; bottom: 62px; display: grid; gap: 14px; }
   .lower .cap { font-size: 46px; max-width: 980px; }
-  .corner { position: absolute; left: 72px; top: 44px; width: 150px; }
+  .corner { position: absolute; left: 72px; top: 44px; width: 180px; }
   /* product: an opaque stage with a window cut out of it */
-  .stage { position: absolute; inset: 0; background: radial-gradient(900px 520px at 12% 0%, rgba(159,141,216,0.20), transparent 62%), radial-gradient(820px 520px at 100% 100%, rgba(111,217,236,0.16), transparent 60%), #0E1318;
+  .stage { position: absolute; inset: 0; background: ${C.ground};
     clip-path: path(evenodd, 'M0 0H${W}V${H}H0Z M${win.x + win.radius} ${win.y}H${win.x + win.w - win.radius}A${win.radius} ${win.radius} 0 0 1 ${win.x + win.w} ${win.y + win.radius}V${win.y + win.h - win.radius}A${win.radius} ${win.radius} 0 0 1 ${win.x + win.w - win.radius} ${win.y + win.h}H${win.x + win.radius}A${win.radius} ${win.radius} 0 0 1 ${win.x} ${win.y + win.h - win.radius}V${win.y + win.radius}A${win.radius} ${win.radius} 0 0 1 ${win.x + win.radius} ${win.y}Z'); }
-  .ring { position: absolute; left: ${win.x - 1}px; top: ${win.y - 1}px; width: ${win.w}px; height: ${win.h}px; border-radius: ${win.radius + 1}px; border: 1px solid rgba(159,141,216,0.35); box-shadow: 0 0 0 1px rgba(15,18,22,0.9), 0 30px 80px -20px rgba(0,0,0,0.8); }
+  .ring { position: absolute; left: ${win.x - 1}px; top: ${win.y - 1}px; width: ${win.w}px; height: ${win.h}px; border-radius: ${win.radius + 1}px; border: 1px solid ${rgba(C.copper, 0.45)}; box-shadow: 0 0 0 1px ${rgba(C.ground, 0.9)}, 0 30px 80px -20px rgba(0,0,0,0.8); }
   .under { position: absolute; left: ${win.x}px; right: ${win.x}px; top: ${win.y + win.h + 22}px; display: flex; align-items: baseline; gap: 22px; }
   .under .cap { font-size: 32px; }
   .under .label { flex-shrink: 0; }
   /* cards */
-  .veil { position: absolute; inset: 0; background: rgba(15,18,22,0.7); }
+  .veil { position: absolute; inset: 0; background: ${rgba(C.ground, 0.7)}; }
   .center { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 34px; text-align: center; }
   .center .mark { width: 520px; }
   .center .cap { font-size: 40px; }
-  .end { position: absolute; inset: 0; background: radial-gradient(900px 560px at 10% 0%, rgba(159,141,216,0.22), transparent 62%), radial-gradient(820px 520px at 100% 100%, rgba(111,217,236,0.16), transparent 60%), #0E1318; display: grid; place-content: center; justify-items: center; gap: 30px; text-align: center; padding: 0 140px; }
+  .end { position: absolute; inset: 0; background: ${C.ground}; display: grid; place-content: center; justify-items: center; gap: 30px; text-align: center; padding: 0 140px; }
   .end .mark { width: 360px; }
   .end .cap { font-size: 40px; max-width: 900px; }
-  .pill { display: inline-flex; padding: 16px 30px; border-radius: 999px; background: #9F8DD8; color: #0E1318; font-weight: 600; font-size: 24px; }
-  .url { font-family: 'IBM Plex Mono', monospace; font-size: 18px; letter-spacing: 0.1em; text-transform: uppercase; color: #82868F; }
+  .pill { display: inline-flex; padding: 16px 30px; border-radius: 999px; background: ${C.copperLight}; color: ${C.ground}; font-weight: 600; font-size: 24px; }
+  .url { font-family: 'IBM Plex Mono', monospace; font-size: 18px; letter-spacing: 0.1em; text-transform: uppercase; color: ${C.grayDark}; }
 `;
 function overlay(seg) {
   const cap = `<p class="cap">${esc(seg.caption)}</p>`;
   const label = seg.label ? `<span class="label">${esc(seg.label)}</span>` : '';
   if (seg.kind === 'ambient')
-    return `<div class="scrim"></div><div class="corner mark">${lockupH}</div><div class="lower">${label}${cap}</div>`;
+    return `<div class="scrim"></div><div class="corner mark">${logo}</div><div class="lower">${label}${cap}</div>`;
   if (seg.kind === 'product') return `<div class="stage"></div><div class="ring"></div><div class="under">${label}${cap}</div>`;
-  if (seg.kind === 'lockup') return `<div class="veil"></div><div class="center"><div class="mark">${lockupFull}</div>${cap}</div>`;
-  return `<div class="end"><div class="mark">${lockupFull}</div>${cap}<span class="pill">${esc(home.cta.primary.text)}</span><span class="url">${esc(new URL(SITE).host + routes.demo)}</span></div>`;
+  if (seg.kind === 'lockup') return `<div class="veil"></div><div class="center"><div class="mark">${logo}</div>${cap}</div>`;
+  return `<div class="end"><div class="mark">${logo}</div>${cap}<span class="pill">${esc(home.cta.primary.text)}</span><span class="url">${esc(new URL(SITE).host + routes.demo)}</span></div>`;
 }
 
 const server = await serve(BUILD);

@@ -93,7 +93,7 @@
   .eg-entry-tab:hover {
     border-color: color-mix(in srgb, var(--sx) 45%, transparent);
     background: color-mix(in srgb, var(--sx) 12%, transparent);
-    color: var(--sx-text);
+    color: var(--accent-deep);
   }
   .eg-entry-tab:hover::before {
     background: var(--sx);

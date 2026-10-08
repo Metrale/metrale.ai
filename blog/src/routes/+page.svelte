@@ -28,14 +28,14 @@
   <div class="chips" role="navigation" aria-label="Filter by category">
     <a class="chip" href="/" aria-current="page">All</a>
     {#each Object.entries(tags) as [slug, t]}
-      <a class="chip" href="/tags/{slug}"><span class="dot" style="--tag-c: {t.color}"></span>{t.name}</a>
+      <a class="chip" href="/tags/{slug}"><span class="dot"></span>{t.name}</a>
     {/each}
   </div>
 
   {#if featured}
     <a class="featured" href={featured.href}>
       <div class="feat-kicker">
-        <span class="mono-label" style="color: {tags[featured.tag].textColor}">{tags[featured.tag].name}</span>
+        <span class="mono-label post-tag">{tags[featured.tag].name}</span>
         <span class="sep" aria-hidden="true"></span>
         <span class="mono-label">Featured</span>
       </div>

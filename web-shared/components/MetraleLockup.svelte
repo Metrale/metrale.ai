@@ -1,51 +1,48 @@
 <!--
-  The Metrale brand artwork, as vector definitions.
+  The Metrale logo and mark, drawn from the brand kit's own files.
 
-  Every piece is drawn from the kit's own geometry: ../brand-art.js is written
-  by site/scripts/brand/lockup.mjs from assets/brand/src/geometry.js and
-  src/paths.json, and src/lib/lockup-artwork.test.js fails when it is behind.
-  Nothing here is redrawn; the only substitution is that each ink reads a
-  token (--m-ink-hi and friends in ../metrale-tokens.css) instead of the kit's
-  literal hex, so the light theme swaps the ink for the kit's light-ground ink
-  with no second file. The gradients keep the kit's directions.
+  ../brand-art.js is written by site/scripts/brand/kit.mjs from the kit's SVGs
+  (assets/brand/svg, metrale-assets pinned in assets/brand.pin), and
+  src/lib/brand-kit.test.js fails when it is behind them. Nothing here is
+  redrawn or recoloured: every piece carries the kit's own ink.
 
   Kinds:
-    defs      the definitions, rendered once per document by the root layout
-    wordmark  the default logo: the M, the letters, the gold swash. Min 140 px
-    mark      the M with the swash lifted above its right shoulder. Min 24 px
-    compact   the M alone, for favicons at and below 48 px. Min 16 px
-  'horizontal', 'full' and 'corp' are the previous kit's names and mean
-  wordmark now, so an older caller still draws the logo.
+    defs     the definitions, rendered once per document by the root layout
+    logo     mark, rule, METRALE. Minimum 160 px wide. The kit draws two cuts,
+             one per ground, and they are never swapped: with ground="theme"
+             (the default) both are referenced and the page's theme shows the
+             one for its ground; ground="dark" or "light" pins a cut for a
+             surface whose ground does not follow the theme
+    mark     the folded copper M. At 48 px and below the kit's compact cut is
+             drawn instead, its fold gap widened so it survives small sizes
 
-  The file keeps its old name so the imports across two apps did not have to
-  move in the same change as the artwork.
+  Sizing is by width, because the kit's minimums are widths. Clear space is
+  one stem (53 units) on every side, as CSS margin in proportion to the width
+  rather than viewBox padding, which would shrink the artwork below the minimum.
 
-  Sizing is by width, because the guideline minimums are widths. Clear space
-  is 76 units on every side (half the cyan bar), as CSS margin rather than
-  viewBox padding, which would silently shrink the artwork below the minimum.
+  The file keeps its name so the imports across two apps did not move with the
+  artwork.
 -->
 <script>
   import { ART } from '../brand-art.js';
 
-  let { kind = 'wordmark', width = null, label = null, class: klass = '' } = $props();
-  const KIND = { horizontal: 'wordmark', full: 'wordmark', corp: 'wordmark' };
-  const k = $derived(KIND[kind] ?? kind);
-  const NAMES = { wordmark: 'Metrale', mark: 'Metrale', compact: 'Metrale' };
-  const name = $derived(label ?? NAMES[k] ?? 'Metrale');
-  const box = $derived(ART.boxes[k] ?? ART.boxes.wordmark);
-  const viewBox = $derived(`${box.x0} ${box.y0} ${box.width} ${box.height}`);
-  // Clear space as a share of the rendered width: 76 units of the box.
-  const clear = $derived(ART.clear / box.width);
-  const style = $derived(width ? `width:${width}px;margin:${(width * clear).toFixed(2)}px` : null);
-  const FILL = { ink: 'url(#m-ink)', violet: 'url(#m-violet)', cyan: 'url(#m-cyan)', gold: 'url(#m-gold)' };
+  let { kind = 'logo', width = null, ground = 'theme', label = 'Metrale', class: klass = '' } = $props();
+  const DEFAULT_WIDTH = { logo: ART.minWidth.logo, mark: 32 };
+  const w = $derived(width ?? DEFAULT_WIDTH[kind]);
+  const art = $derived(kind === 'logo' ? ART.logo.dark : w <= ART.compactMaxWidth ? ART.compact : ART.mark);
+  const ref = $derived(kind === 'logo' ? null : w <= ART.compactMaxWidth ? 'm-compact' : 'm-mark');
+  const viewBox = $derived(art.viewBox.join(' '));
+  const style = $derived(`width:${w}px;margin:${((w * ART.clear) / art.viewBox[2]).toFixed(2)}px`);
 </script>
 
-{#snippet pieces(list)}
-  {#each list as p, i (i)}
-    {#if p.kind === 'rect'}
-      <rect x={p.x} y={p.y} width={p.w} height={p.h} fill={FILL[p.ink]} />
+{#snippet draw(nodes)}
+  {#each nodes as n, i (i)}
+    {#if n.tag === 'g'}
+      <g {...n.a}>{@render draw(n.children)}</g>
+    {:else if n.tag === 'rect'}
+      <rect {...n.a} />
     {:else}
-      <path d={p.d} fill={FILL[p.ink]} stroke={p.stroke ? FILL[p.ink] : undefined} stroke-width={p.stroke || undefined} stroke-linejoin={p.stroke ? 'round' : undefined} />
+      <path {...n.a} />
     {/if}
   {/each}
 {/snippet}
@@ -53,28 +50,40 @@
 {#if kind === 'defs'}
   <svg class="metrale-defs" width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
-      <linearGradient id="m-ink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--m-ink-hi)" /><stop offset="1" stop-color="var(--m-ink-lo)" /></linearGradient>
-      <linearGradient id="m-violet" x1="0" y1="0" x2="0.25" y2="1"><stop offset="0" stop-color="var(--m-lavender)" /><stop offset="1" stop-color="var(--m-violet)" /></linearGradient>
-      <linearGradient id="m-cyan" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--m-cyan-hi)" /><stop offset="1" stop-color="var(--m-cyan-lo)" /></linearGradient>
-      <linearGradient id="m-gold" x1="0.8" y1="0" x2="0.2" y2="1"><stop offset="0" stop-color="var(--m-gold-hi)" /><stop offset="1" stop-color="var(--m-gold-lo)" /></linearGradient>
-      <g id="m-wordmark">{@render pieces(ART.wordmark)}</g>
-      <g id="m-mark">{@render pieces(ART.mark)}</g>
-      <g id="m-compact">{@render pieces(ART.compact)}</g>
+      <g id="m-logo-ondark">{@render draw(ART.logo.dark.nodes)}</g>
+      <g id="m-logo-onlight">{@render draw(ART.logo.light.nodes)}</g>
+      <g id="m-mark">{@render draw(ART.mark.nodes)}</g>
+      <g id="m-compact">{@render draw(ART.compact.nodes)}</g>
     </defs>
   </svg>
 {:else}
-  <svg class="logo logo-{k} {klass}" {style} {viewBox} role="img" aria-label={name}>
-    <title>{name}</title>
-    <use href={`#m-${k}`} />
+  <svg class="logo logo-{kind} {klass}" {style} {viewBox} role="img" aria-label={label}>
+    <title>{label}</title>
+    {#if kind !== 'logo'}
+      <use href="#{ref}" />
+    {:else if ground === 'theme'}
+      <use class="cut-ondark" href="#m-logo-ondark" />
+      <use class="cut-onlight" href="#m-logo-onlight" />
+    {:else}
+      <use href={ground === 'light' ? '#m-logo-onlight' : '#m-logo-ondark'} />
+    {/if}
   </svg>
 {/if}
 
 <style>
-  .metrale-defs { position: absolute; }
-  .logo { display: block; height: auto; }
-  /* Defaults for a caller that passes no width. The header passes 152 and the
-     footer 244; both clear the 140 px floor for the wordmark. */
-  .logo-wordmark { width: 152px; margin: calc(152px * 0.044); }
-  .logo-mark { width: 32px; margin: calc(32px * 0.145); }
-  .logo-compact { width: 16px; }
+  .metrale-defs {
+    position: absolute;
+  }
+  .logo {
+    display: block;
+    height: auto;
+  }
+  /* The theme picks the cut: the dark-ground cut unless the page is light. */
+  .cut-onlight,
+  :global([data-theme='light']) .cut-ondark {
+    display: none;
+  }
+  :global([data-theme='light']) .cut-onlight {
+    display: inline;
+  }
 </style>

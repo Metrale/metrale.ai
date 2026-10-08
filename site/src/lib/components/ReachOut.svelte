@@ -8,7 +8,7 @@
   import DiscordIcon from './DiscordIcon.svelte';
 </script>
 
-<section id="reach" class="av av-section av-section-tight av-sx-gold">
+<section id="reach" class="av av-section av-section-tight">
   <div class="av-container">
     <div class="av-band">
       <div class="av-band-grid">

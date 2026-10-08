@@ -9,7 +9,6 @@
 </script>
 
 <Slide
-  act="green"
   eyebrow="Self-audit"
   title="Ten ways to fake this, answered"
   lede="Heiser's benchmarking-crimes taxonomy, run against our own campaign. Three rows stay open, because a checklist with nothing open is marketing."
@@ -18,7 +17,6 @@
 </Slide>
 
 <Slide
-  act="gold"
   eyebrow="Evidence"
   title="The reproduction kit, and the notebook behind it"
   lede="A reproduction that needs a conversation with us is not one. Everything below is already in the repository, and the campaign log records what failed as well as what held."
@@ -71,7 +69,6 @@
 </Slide>
 
 <Slide
-  act="gold"
   eyebrow="Provenance"
   title="Licence and invariants, enforced rather than declared"
   lede="The first question counsel asks about a serving engine is the licence; the second is what a machine refuses. Both, with the mechanism that keeps them honest."

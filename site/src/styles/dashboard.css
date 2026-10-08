@@ -1,6 +1,6 @@
 /* =============================================================================
    Benchmark dashboard modal — same warm-workshop dialect as app.css.
-   Copper stays the 35B flagship's series color; steel var(--ch-cyan) is the dense
+   Copper stays the 35B flagship's series color; steel is the dense
    27B's (pair validated for CVD + contrast on the paper surfaces). Verdict
    colors are STATUS colors (green/red) and never used for a series.
    Viewport rules for these components live in mobile.css (its stated SSOT).
@@ -134,8 +134,6 @@
   overflow-y: auto;
 }
 .bd {
-  --sx: var(--ch-green);
-  --sx-text: var(--ch-green-text);
   width: min(1120px, 100%);
   background: var(--bg);
   border: 1px solid var(--border-strong);
@@ -837,7 +835,7 @@
 .cs-tab.is-active {
   background: color-mix(in srgb, var(--sx) 12%, transparent);
   border-color: color-mix(in srgb, var(--sx) 45%, transparent);
-  color: var(--sx-text);
+  color: var(--accent-deep);
 }
 .cs-tab.is-active::before {
   background: var(--sx);
@@ -1292,7 +1290,7 @@
 .co-tab.is-active {
   background: color-mix(in srgb, var(--sx) 12%, transparent);
   border-color: color-mix(in srgb, var(--sx) 45%, transparent);
-  color: var(--sx-text);
+  color: var(--accent-deep);
 }
 .co-tab.is-active::before {
   background: var(--sx);
@@ -1649,7 +1647,7 @@
 .tt-tab.is-active {
   background: color-mix(in srgb, var(--sx) 12%, transparent);
   border-color: color-mix(in srgb, var(--sx) 45%, transparent);
-  color: var(--sx-text);
+  color: var(--accent-deep);
 }
 .tt-tab.is-active::before {
   background: var(--sx);

@@ -11,7 +11,7 @@
     </div>
     <div class="av-diffs">
       {#each differences.items as d}
-        <article class="av-diff av-reveal av-sx-{d.color}">
+        <article class="av-diff av-reveal">
           <div class="av-diff-n"><span class="av-step-n">{d.n}</span><span class="av-role">{d.pillar}</span></div>
           <div>
             <h3 class="av-h3">{d.title}</h3>

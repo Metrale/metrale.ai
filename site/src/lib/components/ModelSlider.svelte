@@ -6,6 +6,7 @@
   import { copyLabel, copyOrSelect } from '$lib/clipboard.js';
   import { models as copy, recipesUrl } from '$lib/data.js';
   import RunButton from './RunButton.svelte';
+  import { scrollRegion } from '$shared/scroll-region.js';
   import Head from './engine/lower/Head.svelte';
 
   // Flagship first: Qwen3.6 leads its vendor, then Qwen3.5, then the rest as-is.
@@ -79,16 +80,15 @@
     }, 2400);
   }
 
-  // The hue grammar from the tokens file: violet is the engine, cyan is
-  // silicon, green is a verified multi-node result, gold is a caution.
+  // A quantised checkpoint and a multi-node topology are tagged in copper, the
+  // brand's one accent; everything else is a plain chip.
   const quantChip = (q) => {
     const k = (q || '').toLowerCase();
-    if (k === 'nvfp4') return 'av-chip av-chip-violet';
-    if (k === 'fp8') return 'av-chip av-chip-cyan';
+    if (k === 'nvfp4' || k === 'fp8') return 'av-chip av-chip-accent';
     return 'av-chip';
   };
   const quantLabel = (q) => (q && q !== 'none' ? q.toUpperCase() : 'BF16');
-  const topoChip = (t) => (t === 'EP=2' ? 'av-chip av-chip-green' : t === 'TP=2' ? 'av-chip av-chip-gold' : 'av-chip');
+  const topoChip = (t) => (t === 'EP=2' || t === 'TP=2' ? 'av-chip av-chip-accent' : 'av-chip');
 
   // A registry field is sometimes a phrase ("nvfp4 (mixed precision above
   // layer 55)", "27B dense hybrid (48 GDN linear-attn + 16 softmax-attn
@@ -99,7 +99,7 @@
   const details = (r) => [detail(r.quant), detail(r.params)].filter(Boolean).join(', ');
 </script>
 
-<section id="models" class="av av-section av-sx-violet">
+<section id="models" class="av av-section">
   <div class="av-container">
     <Head eyebrow={copy.label} title={copy.title} lede={copy.sub} maxCh={22}>
       {#snippet aside()}
@@ -174,7 +174,15 @@
               {#if details(r)}<span class="eg-row-detail">{details(r)}</span>{/if}
             </div>
             <div class="eg-cmd">
-              <code class="av-mono">{r.command}</code>
+              <!-- A command longer than its row scrolls sideways: while it does, it is a named, focusable region (web-shared/scroll-region.js). -->
+              <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+              <code
+                class="av-mono"
+                tabindex="0"
+                role="region"
+                aria-label={`Command to run ${r.displayName}`}
+                use:scrollRegion={{ label: `Command to run ${r.displayName}` }}>{r.command}</code
+              >
               <button
                 type="button"
                 class="eg-copy"
@@ -307,7 +315,7 @@
     color: var(--t1);
   }
   .eg-family.is-active {
-    color: var(--sx-text);
+    color: var(--accent-deep);
     border-color: color-mix(in srgb, var(--sx) 45%, transparent);
     background: color-mix(in srgb, var(--sx) 12%, transparent);
   }
@@ -320,7 +328,7 @@
   }
   .eg-family.is-active .eg-family-n {
     background: color-mix(in srgb, var(--sx) 18%, transparent);
-    color: var(--sx-text);
+    color: var(--accent-deep);
   }
   .eg-panel {
     padding: 0;

@@ -9,6 +9,7 @@
   import { currentInstall } from '$lib/install/host.svelte.js';
   import { copyLabel, copyOrSelect } from '$lib/clipboard.js';
   import Head from './engine/lower/Head.svelte';
+  import { scrollRegion } from '$shared/scroll-region.js';
 
   // The command, the shell it goes in, and where it lands all move together:
   // a Windows visitor shown `bash` and `~/.local/bin` has been told three
@@ -52,7 +53,7 @@
   const codeOf = (e) => e.currentTarget.parentElement?.querySelector('code');
 </script>
 
-<section id="run" class="av av-section av-section-alt av-sx-violet">
+<section id="run" class="av av-section av-section-alt">
   <div class="av-container">
     <Head eyebrow={copy.label} title={copy.title} lede={copy.sub} maxCh={26} />
 
@@ -70,7 +71,15 @@
                 <h3>{s.title}</h3>
                 <div class="eg-cmd" role="group" aria-label={s.title}>
                   <span class="eg-prompt av-mono" aria-hidden="true">{install.prompt}</span>
-                  <code class="av-mono">{s.command}</code>
+                  <!-- A command longer than its row scrolls sideways: while it does, it is a named, focusable region (web-shared/scroll-region.js). -->
+                  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+                  <code
+                    class="av-mono"
+                    tabindex="0"
+                    role="region"
+                    aria-label={`Command: ${s.title}`}
+                    use:scrollRegion={{ label: `Command: ${s.title}` }}>{s.command}</code
+                  >
                   <button type="button" class="eg-copy" onclick={(e) => copyCmd(s.command, codeOf(e))} aria-label={`Copy ${s.command}`}>
                     {copied === s.command ? copyLabel(copyState) : 'Copy'}
                   </button>
@@ -91,7 +100,14 @@
             {#each copy.inspect.items as it}
               <li>
                 <div class="eg-cmd eg-cmd-sm">
-                  <code class="av-mono">{it.command}</code>
+                  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+                  <code
+                    class="av-mono"
+                    tabindex="0"
+                    role="region"
+                    aria-label={`Command: ${it.command}`}
+                    use:scrollRegion={{ label: `Command: ${it.command}` }}>{it.command}</code
+                  >
                   <button type="button" class="eg-copy" onclick={(e) => copyCmd(it.command, codeOf(e))} aria-label={`Copy ${it.command}`}>
                     {copied === it.command ? copyLabel(copyState) : 'Copy'}
                   </button>
@@ -157,10 +173,7 @@
     font-weight: 700;
     letter-spacing: -0.04em;
     line-height: 1;
-    background: linear-gradient(120deg, var(--ch-violet), var(--ch-cyan));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--accent);
   }
   .eg-step-body {
     display: grid;

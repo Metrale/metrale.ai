@@ -12,8 +12,8 @@
       <div class="av-hero-copy">
         <p class="av-eyebrow av-hero-kicker">{hero.kicker}</p>
         <ul class="av-pillars" aria-label="What Metrale delivers">
-          {#each hero.pillars as p, i}
-            <li class="av-pill {['av-sx-violet', 'av-sx-cyan', 'av-sx-green'][i]}"><i aria-hidden="true"></i>{p}</li>
+          {#each hero.pillars as p}
+            <li class="av-pill"><i aria-hidden="true"></i>{p}</li>
           {/each}
         </ul>
         <h1 class="av-h1">{hero.title[0]}<br /><span class="av-soft">{hero.title[1]}</span></h1>

@@ -1,53 +1,61 @@
 {
   "color": {
-    "ground": {
-      "dark": "#0E1318",
-      "light": "#FFFFFF"
-    },
-    "ink": {
-      "onDark": [
-        "#F7F7F9",
-        "#D9D9DE"
-      ],
-      "onLight": "#15181F"
-    },
-    "violet": [
-      "#CDBFF1",
-      "#9F8DD8"
-    ],
-    "cyan": [
-      "#6FD9EC",
-      "#5A96BD"
-    ],
-    "gold": [
-      "#E4C070",
-      "#AE8A3F"
-    ],
-    "product": {
-      "onDark": "#8A8F99",
-      "onLight": "#6B7079"
-    },
-    "ui": {
-      "grayText": "#6B7079"
-    }
+    "copper": "#C65A2E",
+    "copperDeep": "#9E4422",
+    "copperLight": "#D9774D",
+    "ground": "#0E1318",
+    "paper": "#F4F3F0",
+    "white": "#FFFFFF",
+    "ink": "#E6E6E9",
+    "inkDark": "#15181F",
+    "graphite": "#3C4049",
+    "cyan": "#61ACCC",
+    "violet": "#9F8DD8",
+    "violetDeep": "#6F5FB0",
+    "violetLight": "#5B3FD1",
+    "lavender": "#CDBFF1",
+    "gray": "#6B7079",
+    "grayDark": "#8A8F99"
+  },
+  "roles": {
+    "mark": "copper",
+    "ruleOnDark": "violetDeep",
+    "productOnDark": "violetDeep",
+    "ruleOnLight": "violetLight",
+    "productOnLight": "violetLight",
+    "companyOnDark": "ink",
+    "companyOnLight": "graphite",
+    "signal": "cyan",
+    "productUiTextOnDark": "violet"
   },
   "type": {
-    "family": "Urbanist",
-    "wordmarkWeight": 500,
-    "productWeight": 400,
-    "source": "https://fonts.google.com/specimen/Urbanist"
+    "family": "Manrope",
+    "logo": {
+      "weight": 300,
+      "tracking": "0.33em"
+    },
+    "productOnLight": {
+      "weight": 500
+    },
+    "body": 400,
+    "headings": 500,
+    "source": "https://fonts.google.com/specimen/Manrope"
   },
   "geometry": {
-    "baseline": 362,
-    "mWidth": 378,
-    "stem": 47,
-    "wordmarkWidth": 1709,
-    "clearSpaceUnit": 76
+    "mark": [
+      209,
+      162
+    ],
+    "stem": 53,
+    "slope": 0.55,
+    "gap": 6,
+    "faviconGap": 18,
+    "clearSpace": 53
   },
   "minimumSize": {
-    "markPx": 24,
-    "compactMarkPx": 16,
-    "wordmarkPx": 140,
-    "productLockupPx": 240
+    "horizontalPx": 160,
+    "productLockupPx": 240,
+    "stackedPx": 72,
+    "markPx": 16
   }
 }

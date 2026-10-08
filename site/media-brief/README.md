@@ -22,7 +22,7 @@ can pick up the media work without asking anyone what was meant.
 | `broll-desk-box` | Reel, SMB | Generated V05 from S03, 2026-09-18 |
 | `broll-hall` | Reel open | Generated V06 from S08, 2026-09-18 |
 | `broll-power` | Reel, economics | Generated V07 from S10, 2026-09-18 |
-| `og-image.png` | Link previews | `scripts/media/og.mjs`, from the brand masters |
+| `og-image.png` | Link previews | The brand kit's own card, copied by `scripts/brand/kit.mjs` |
 | `art-*` stills | Page heroes | Installed 2026-09-18 from S01–S11. Ledger in `takes/TAKES.md` |
 
 The slots are declared in `src/lib/content/media.js`. Every slot is three files
@@ -103,8 +103,8 @@ The research behind the structure, with sources in `shots.json`:
 
 These are not taste. Each one is a legal or a trust problem if broken.
 
-- **Never generate the logo.** The Metrale lockup is vector artwork in
-  `assets/brand/`. Composite it in an editor.
+- **Never generate the logo.** The Metrale logo is vector artwork from the
+  brand kit, vendored in `assets/brand/svg/`. Composite it in an editor.
 - **Never generate product UI.** Every screen on the site is a recording of the
   mockup or, later, the product. A generated dashboard is a fabricated claim.
 - **No readable text, numbers included.** Set text in the editor, in IBM Plex.
@@ -122,8 +122,9 @@ Look at it at full size, then at the size it will render.
 - It matches the "keep it if" line for its shot in `PROMPTS.md`.
 - Geometry holds: racks stay straight, rows stay parallel, nothing melts. For
   video, check the last second, that is where it usually goes wrong.
-- The palette holds: the ground is near black, the accents are lavender, cyan,
-  emerald and amber gold, and nothing reads as pure white.
+- The palette holds: the ground is near black, the one accent is copper, and
+  nothing reads as pure white. No cyan, no violet: violet is the brand's colour
+  for product names, set in type, never in imagery.
 - It passes every rule above.
 
 ### Installing a result
@@ -172,7 +173,6 @@ bun x --bun vite build && node scripts/media/reel.mjs
 bun x --bun vite build            # the recorder serves pages from build/
 node scripts/media/record.mjs     # b-roll, plus console clips with --console-origin
 node scripts/media/encode.mjs     # mp4, webm and poster for every recorded clip
-node scripts/media/og.mjs         # static/og-image.png
 node scripts/media/reel.mjs       # static/media/reel.*, from media-brief/reel.json
 ```
 

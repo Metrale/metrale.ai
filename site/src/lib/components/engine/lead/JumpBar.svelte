@@ -12,7 +12,7 @@
   <div class="av-container av-sectorbar-in">
     {#each nav.links as l}
       <a
-        class="av-sectorbar-link av-sx-{l.hue}"
+        class="av-sectorbar-link"
         href={l.href}
         target={l.href.startsWith('http') ? '_blank' : undefined}
         rel={l.href.startsWith('http') ? 'noopener' : undefined}><i aria-hidden="true"></i>{l.text}</a

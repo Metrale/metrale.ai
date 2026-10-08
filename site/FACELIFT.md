@@ -249,7 +249,8 @@ the public site links to an interactive console, and a test checks that.
 ## The brand
 
 The company is Metrale, its brand is Metrale AI, the engine is Metrale Engine,
-and the legal entity is Metrale Corp. The kit landed on 2026-09-21. Every page,
+and the legal entity is Metrale Corp. The kit landed on 2026-09-21 and its
+second version, copper-led, on 2026-10-08. Every page,
 the blog (its posts included, in the engine team's own text), the docs, the
 diligence deck, the social cards, the film's title cards, `llms.txt`, the
 JSON-LD and the web manifest say Metrale.
@@ -263,13 +264,18 @@ and `install.sh` and `install.ps1` are copied in at build from its repository,
 Metrale/metralectl (`LAUNCHER_SLUG`). The recipes it runs are the engine's
 `recipes/`, read from the engine checkout at `site/engine.ref`.
 
-The artwork: the kit is a generator (`assets/brand/gen.js` with its geometry and
-letter outlines), and the site draws every lockup from that geometry through
-one component and one generated module, so nothing is traced or redrawn and a
-new kit is a script run. The palette is the kit's, with the light theme's text
-hues lowered until they clear the contrast gates on every surface, including
-the chips' tints. The type is Urbanist, self hosted behind metric matched
-fallbacks, with IBM Plex Mono kept for numbers, labels and code. `BRANDING.md`
+The artwork: the kit is its own repository, Metrale/metrale-assets, and this
+one consumes it. `assets/take-assets.sh` vendors the files the sites use from a
+signed release into `assets/brand/` and pins them; `scripts/brand/kit.mjs`
+derives the icons, the card, the manifest, the font, the logo artwork and the
+palette block from those, and a unit test fails when a derived file is behind.
+One component draws every logo from the kit's own cuts, so nothing is traced or
+redrawn and a new kit is two script runs. Copper leads: the mark, links, calls
+to action and every section accent, in the kit's contrast-safe text steps on
+both grounds; green and amber are status only, violet is product names only,
+and there is no cyan. The type is Manrope, the kit's, self hosted behind the
+kit's metric matched fallback, with IBM Plex Mono kept for numbers, labels and
+code. `BRANDING.md`
 says how the site applies the kit; `BRAND-CHANGE.md` is the runbook for the
 next change, name, artwork, palette and type, in the order that keeps every
 gate green.
@@ -403,8 +409,8 @@ gate green.
 6. **Founders section.** Skipped for now on instruction. The company page has
    the story, not the people.
 7. **The codebase chat is off** until the engine publishes its own code index (item 33).
-8. **The GitHub social preview** is the kit's, in `assets/brand/social/`, and is
-   uploaded by hand in the repository settings.
+8. **The GitHub social preview** is the kit's `github-social-preview-1280x640.png`,
+   vendored in `assets/brand/dark/`, and is uploaded by hand in the repository settings.
 9. **"jev".** The brief names it beside Bend as a Labs topic. Nothing in the
    source material says what it is, so it is not on the page. Bend is. One
    line in `labs.tracks` in `src/lib/content/resources.js` adds it.
@@ -486,24 +492,26 @@ gate green.
     "Measure first.", on metron, the Greek word for measure, on the national accounts that
     made economies manageable, and on the same job done for inference. It is `name` in
     `company.js`, with its sources in the comment above it. Wording is the owners' to tune.
-24. **Green is not in the kit.** The Metrale kit draws violet, cyan and gold. The site's
-    grammar has four hues, and green carries governance and every verified result. It stays
-    as a UI signal (`--ch-green`, `--green`), not a brand colour. If the kit ever names a
-    fourth hue, swap it there and the meaning follows.
-25. **Ink on violet.** The kit's violet cannot carry white text (2.9:1), so every filled
-    button on both sites sets its text in the ground colour (`--on-accent`). Primary buttons
-    are pale on dark now. If that reads wrong to the team, the alternative is a deeper
-    violet derived from the kit's for fills, with white on it, which the kit does not draw.
-26. **Plex Mono stays.** The kit names Urbanist and no monospace. Numbers, labels, receipts
+24. **One brand colour.** Brand v2 (2026-10-08) is copper-led, by the owner's ruling. The
+    four section hues of the first kit (violet, cyan, green, gold) collapsed into copper:
+    sections, the ledger rail, chips and receipts. Green and amber stay as UI status only,
+    a verified result and a warning; violet is for product names only; the sites use no
+    cyan at all, so focus rings are copper too.
+25. **Ink on copper.** The kit's copper is 4.4:1 on the ground and 4.3:1 on white, under
+    what text needs, so it is the mark and non-text marks only. Text and filled buttons
+    take the kit's two steps: copper-light with ground ink on dark, copper-deep with white
+    ink on light (`--accent`, `--accent-fill`, `--on-accent`).
+26. **Plex Mono stays.** The kit names Manrope and no monospace. Numbers, labels, receipts
     and code keep IBM Plex Mono; the developer pages depend on it. A monospace from the
     kit, if one comes, is a one line change in the tokens.
-27. **The film and the cards were re-rendered from the new kit.** The social cards by
-    `scripts/media/og.mjs`, the film's title cards by `bun run reel`. The product clips
-    themselves were recorded from the mockup and do not show the logo.
+27. **The card and the film.** The social card is the kit's own og image, on the site and
+    the blog. The film's title cards are set from the kit by `bun run reel`, run once the
+    console recordings are retaken (item 28), so the film is cut once, from fresh takes.
 28. **The console recordings.** Re-recorded on 2026-09-21 from the mockup with the Metrale
     lockup and typeface in its chrome (`scripts/media/record.mjs`, `encode.mjs`, then
     `bun run reel`); the "Demo data" chip stays. The previous takes are kept outside the
-    repository in case they are wanted back.
+    repository in case they are wanted back. They show the first kit's logo in the mockup's
+    chrome, and are retaken once the mockup carries brand v2.
 
 29. **Role mailboxes at metrale.com.** On 2026-09-21 the founders asked for the team to be held
     back from the site for now, so every published door but security is a role mailbox at

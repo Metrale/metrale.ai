@@ -605,7 +605,7 @@
     max-width: 45%;
   }
   .pr-src-tier {
-    color: var(--ch-gold-text);
+    color: var(--accent);
   }
   .pr-sources-more {
     margin-top: 0.35rem;

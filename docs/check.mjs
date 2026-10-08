@@ -42,21 +42,34 @@ const index = readFileSync(join(OUT, 'index.html'), 'utf8');
 if (!index.includes('The Metrale Engine Book')) bad("the front page does not carry the book's title");
 if (!index.includes('metrale.js')) bad('the front page does not load the wordmark script');
 if (!index.includes('metrale.css')) bad('the front page does not load the Metrale skin');
-for (const needed of [
-  'llms.txt',
-  '_headers',
-  'og-image.png',
-  'favicon.svg',
-  'version.txt',
-  'fonts/fonts.css',
-  'fonts/urbanist-latin-wght-normal.woff2',
-  'theme/css/metrale-tokens.css',
-]) {
+const ICONS = ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png', 'og-image.png'];
+for (const needed of ['llms.txt', '_headers', ...ICONS, 'version.txt', 'fonts/fonts.css', 'theme/css/metrale-tokens.css']) {
   if (!existsSync(join(OUT, needed))) bad(`${needed} is missing beside the pages`);
 }
+// The icons and the social card are the brand kit's: the same bytes the site
+// serves (site/scripts/brand/kit.mjs puts them in site/static), and the two PNG
+// favicons the book links, from the vendored kit itself.
+const KIT_PNG = { 'favicon-16.png': 'favicon-16.png', 'favicon-32.png': 'favicon-32.png' };
+for (const icon of [...ICONS, ...Object.keys(KIT_PNG)]) {
+  const ours = KIT_PNG[icon] ? join(here, '..', 'assets', 'brand', 'dark', KIT_PNG[icon]) : join(here, '..', 'site', 'static', icon);
+  if (existsSync(join(OUT, icon)) && !readFileSync(join(OUT, icon)).equals(readFileSync(ours))) bad(`${icon} is not the brand kit's`);
+}
+// Every icon the book's head (theme/head.hbs) links is a file the build ships.
+// Read from the rendered front page, which is that template's output.
+for (const [, rel, href] of index.matchAll(/<link\b[^>]*\brel="([^"]*icon[^"]*)"[^>]*\bhref="([^"]+)"/g)) {
+  if (/^[a-z]+:/i.test(href)) continue;
+  const file = join(OUT, href.replace(/^(\.\/)+/, '').split(/[?#]/)[0]);
+  if (!existsSync(file)) bad(`the book's head links ${href} (rel="${rel}"), which the build does not ship`);
+}
+// The faces the book's own fonts.css declares, each a real file beside it. The
+// book's theme names its typeface; this checks that whatever it names ships.
+const fontsCss = existsSync(join(OUT, 'fonts', 'fonts.css')) ? readFileSync(join(OUT, 'fonts', 'fonts.css'), 'utf8') : '';
+const faces = [...fontsCss.matchAll(/url\(['"]?(?:\.\/)?([^'")]+\.woff2)['"]?\)/g)].map((m) => `fonts/${m[1]}`);
+if (fontsCss && !faces.length) bad('fonts/fonts.css declares no web font');
 // A link the build did not resolve is shipped as the text of its path.
-for (const f of ['theme/css/metrale-tokens.css', 'fonts/urbanist-latin-wght-normal.woff2']) {
-  if (existsSync(join(OUT, f)) && statSync(join(OUT, f)).size < 1024) bad(`${f} is a stub, not the file it links to`);
+for (const f of ['theme/css/metrale-tokens.css', ...faces]) {
+  if (!existsSync(join(OUT, f))) bad(`${f} is missing beside the pages`);
+  else if (statSync(join(OUT, f)).size < 1024) bad(`${f} is a stub, not the file it links to`);
 }
 // The security headers ride in _headers beside the book's cache rules.
 if (existsSync(join(OUT, '_headers'))) {

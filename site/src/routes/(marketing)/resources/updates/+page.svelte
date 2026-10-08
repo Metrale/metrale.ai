@@ -8,13 +8,7 @@
 </script>
 
 <PageShell path={routes.updates}>
-  <PageHero
-    eyebrow={u.eyebrow}
-    title={u.title}
-    lede={u.lede}
-    primary={{ text: u.more.text, href: u.more.href, external: true }}
-    color="green"
-  />
+  <PageHero eyebrow={u.eyebrow} title={u.title} lede={u.lede} primary={{ text: u.more.text, href: u.more.href, external: true }} />
   <section class="av-section av-section-alt">
     <div class="av-container av-narrow">
       <h2 class="av-sr">Releases</h2>
@@ -30,13 +24,10 @@
             </div>
             <div>
               {#each rel.sections as s}
-                <h3
-                  class="av-h4 av-sx-{s.kind === 'Added' ? 'green' : s.kind === 'Fixed' ? 'gold' : 'cyan'}"
-                  style="margin:0.3rem 0 0.5rem"
-                >
+                <h3 class="av-h4" style="margin:0.3rem 0 0.5rem">
                   {s.kind}
                 </h3>
-                <ul class="av-sx-{s.kind === 'Added' ? 'green' : s.kind === 'Fixed' ? 'gold' : 'cyan'}">
+                <ul>
                   {#each s.items as it}<li>{it}</li>{/each}
                 </ul>
               {/each}

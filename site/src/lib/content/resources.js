@@ -156,42 +156,34 @@ export const labs = {
     {
       title: 'Kernels and quantization',
       body: 'Hand tuned attention, MoE, GDN and quantized GEMM per hardware target. NVFP4, FP8 and K quant expert kernels on raw blocks. TurboQuant+ KV cache compression.',
-      color: 'violet',
     },
     {
       title: 'Speculative decoding',
       body: 'MTP draft heads, DFlash block diffusion, lookup drafts into a wide verify, and a resolver that picks the verify width itself.',
-      color: 'cyan',
     },
     {
       title: 'Memory and context',
       body: 'Tiered KV and SSM state across host RAM, NVMe and RDMA peers. Prefix caches that are prefilled once per fleet, not once per node. The context bus between agents.',
-      color: 'green',
     },
     {
       title: 'Compilers and languages',
       body: 'One CUDA source compiled for NVIDIA and AMD through SCALE. Rust as the systems language. Interest in massively parallel functional runtimes, Bend and HVM among them, for the next abstraction.',
-      color: 'gold',
     },
     {
       title: 'Protocols and transport',
       body: 'Node to node links designed for a hostile network, one sided RDMA primitives shared by every tier, and the Citadel protocol lineage the founder brought to the company.',
-      color: 'violet',
     },
     {
       title: 'Agentic benchmarks',
       body: 'BFCL and replayed agentic trajectories as gates, because a benchmark should look like the work.',
-      color: 'cyan',
     },
     {
       title: 'Day zero model bring up',
       body: 'DeepSeek V4.1 Flash, Kimi K3, GLM 5.3, Qwen 3.8 Flash Next and Gemma 4 in open pull requests. The goal is that model vendors check Metrale the same week they check vLLM.',
-      color: 'green',
     },
     {
       title: 'Inference economics',
       body: 'The correlation layer between operator telemetry and the ledger. Living benchmarks on the latest hardware and the latest models, because costs for equivalent quality keep falling and the measurement has to keep up.',
-      color: 'gold',
     },
   ],
   vision: {

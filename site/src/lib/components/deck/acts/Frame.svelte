@@ -8,7 +8,7 @@
   import { claim, fragile, proof, stamp } from '$lib/deck/content.js';
 </script>
 
-<Slide act="violet">
+<Slide>
   <div class="cover">
     <div class="cover-copy">
       <p class="cover-kicker mono">Verification steps</p>
@@ -57,7 +57,6 @@
 </Slide>
 
 <Slide
-  act="violet"
   eyebrow="Scope"
   title="What is claimed, and what is not"
   lede="Every noun in the claim is a knob someone could have turned. The fastest way to waste a week is to test something we never said."
@@ -92,7 +91,6 @@
 </Slide>
 
 <Slide
-  act="violet"
   eyebrow="Result"
   title="{claim.won} of {claim.rungs} rungs, {claim.min} to {claim.max}"
   lede="Aggregate decode tokens per second, both engines, every rung. Log2 X because the rungs double; the table carries the exact figures and the spread the chart only implies."

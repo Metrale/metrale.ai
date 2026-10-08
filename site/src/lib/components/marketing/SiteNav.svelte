@@ -32,7 +32,7 @@
     href && !href.startsWith('http') && (href === '/' ? path === '/' : path === href || path.startsWith(href + '/'));
   const groupCurrent = (g) => (g.columns ?? []).some((c) => c.items.some((i) => isCurrent(i.href)));
 
-  const canHover = () => typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (min-width: 1101px)').matches;
+  const canHover = () => typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (min-width: 1181px)').matches;
   function enter(label) {
     if (!canHover()) return;
     clearTimeout(closeTimer);
@@ -69,7 +69,7 @@
 <header class="av-header" class:is-drawer={drawer}>
   <div class="av-header-in">
     <a class="av-brand" href={routes.home} aria-label="Metrale home" data-sveltekit-reload>
-      <MetraleLockup kind="wordmark" width={152} />
+      <MetraleLockup width={160} />
     </a>
 
     <nav class="av-nav" aria-label="Main">
@@ -280,6 +280,7 @@
     color: var(--t2);
     cursor: pointer;
     text-decoration: none;
+    white-space: nowrap;
     transition:
       color 0.15s,
       background 0.15s;
@@ -529,9 +530,10 @@
     border: 0;
     cursor: pointer;
   }
-  /* Seven items need about 1080 px beside the lockup and the actions. Below
-     that the drawer takes over, before anything can crowd or wrap. */
-  @media (max-width: 1100px) {
+  /* Seven items in Manrope need about 1150 px beside the logo and the actions
+     (measured: the bar overflows by 4 px at 1145). Below 1180 the drawer takes
+     over, before anything can crowd or wrap. */
+  @media (max-width: 1180px) {
     .av-nav {
       display: none;
     }
@@ -543,6 +545,11 @@
     }
     .av-header-actions .av-cta {
       display: none;
+    }
+    /* With the links in the drawer, the toggle and the burger keep to the
+       right edge of the bar, where they sit at every other width. */
+    .av-header-actions {
+      margin-left: auto;
     }
   }
   @media (max-width: 480px) {

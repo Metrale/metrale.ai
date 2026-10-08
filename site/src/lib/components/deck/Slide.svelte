@@ -6,12 +6,12 @@
   // A slide is a scroll container: taller content scrolls vertically inside
   // it, and the deck's stage never grows. Nothing here scrolls sideways; a wide
   // component (a command, a table, the chart) carries its own overflow-x box.
-  import { getContext, untrack } from 'svelte';
+  import { getContext } from 'svelte';
 
-  let { act = 'violet', eyebrow = '', title = '', lede = '', children } = $props();
+  let { eyebrow = '', title = '', lede = '', children } = $props();
 
   const deck = getContext('deck');
-  const n = deck.register(untrack(() => act));
+  const n = deck.register();
   const active = $derived(deck.current() === n);
 </script>
 
@@ -25,7 +25,6 @@
   tabindex="0"
   aria-roledescription="slide"
   aria-label={title || `Slide ${n + 1}`}
-  style="--sx: var(--ch-{act}); --sx-text: var(--ch-{act}-text)"
 >
   <div class="sl-in">
     {#if eyebrow || title || lede}

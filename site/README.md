@@ -62,7 +62,6 @@ sentence breaks the house voice, so run it after editing copy.
 
 ```sh
 bun run media     # record and encode the procedural loops, keep the console clips
-bun run og        # render static/og-image.png
 ```
 
 The console clips are recordings of a private product mockup that is not in

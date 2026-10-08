@@ -107,6 +107,10 @@ jobs:
       - uses: ./.github/actions/engine-inputs
         with:
           github-token: ${{ github.token }}
+      # assets/brand is a pinned subset of the brand kit (metrale-assets), never
+      # edited here; the unit suite then holds every file derived from it.
+      - name: The vendored brand kit is the pinned release
+        run: bash assets/take-assets.sh --check
       - name: Unit tests
         working-directory: site
         run: bun run test:unit
@@ -120,7 +124,7 @@ jobs:
             printf '%s\n' "$stray" | sed 's/^/  /'
             exit 1
           fi
-      - name: Dark-theme text contrast
+      - name: Token contrast, both themes
         run: bun .contrast-check.mjs
 
   e2e:

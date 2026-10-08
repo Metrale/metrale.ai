@@ -7,12 +7,12 @@
   const statusChip = (tone) => (tone === 'plain' ? 'av-chip' : `av-chip av-chip-${tone}`);
 </script>
 
-<section id="contribute" class="av av-section av-section-alt av-sx-gold">
+<section id="contribute" class="av av-section av-section-alt">
   <div class="av-container">
     <Head eyebrow={contribute.label} title={contribute.title} lede={contribute.sub} maxCh={20}>
       {#snippet aside()}
         <div class="eg-licence">
-          <span class="av-chip av-chip-gold">MIT OR Apache-2.0</span>
+          <span class="av-chip av-chip-accent">MIT OR Apache-2.0</span>
           <p class="av-small">
             {contribute.licence}
             {#each contribute.licences as l}

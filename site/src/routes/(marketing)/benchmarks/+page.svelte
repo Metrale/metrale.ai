@@ -54,7 +54,6 @@
     lede="The website is a build artifact of the repository. The ladder comes from the published campaign, the gate records from committed baselines across every branch, stamped with commit and date. If a number is not in the repo, it is not on this page."
     primary={{ text: 'Reproduce it yourself', href: routes.diligence }}
     secondary={{ text: 'The campaign log', href: links.ladderLog, external: true }}
-    color="green"
   >
     <div class="av-grid av-grid-4 av-bench-stats">
       <div class="av-tile">
@@ -83,7 +82,7 @@
   <section class="av-section av-section-alt" id="ladder">
     <div class="av-container">
       <div class="av-head av-reveal">
-        <p class="av-eyebrow av-sx-green">The ladder</p>
+        <p class="av-eyebrow">The ladder</p>
         <h2 class="av-h2">{ladder.title}</h2>
         <p class="av-lede">{ladder.subtitle}. {ladder.box.note}.</p>
       </div>
@@ -94,7 +93,7 @@
   <section class="av-section" id="gates">
     <div class="av-container">
       <div class="av-head av-reveal">
-        <p class="av-eyebrow av-sx-cyan">The gates</p>
+        <p class="av-eyebrow">The gates</p>
         <h2 class="av-h2">Every gate record, across every branch.</h2>
         <p class="av-lede">
           {bench.methodology} Union of gate records at build time, so the newest run shows even before its pull request merges. Provenance on
@@ -131,7 +130,7 @@
           <div class="av-card">
             <div class="av-row" style="justify-content:space-between;margin-bottom:0.5rem">
               <p class="av-card-tag" style="margin:0">{h.chip}</p>
-              <span class="av-chip {h.status === 'Verified' ? 'av-chip-green' : 'av-chip-gold'}">{h.status}</span>
+              <span class="av-chip {h.status === 'Verified' ? 'av-chip-ok' : 'av-chip-warn'}">{h.status}</span>
             </div>
             <h3 style="font-size:1rem">{h.name}</h3>
             <p style="font-size:0.9rem">{h.body}</p>

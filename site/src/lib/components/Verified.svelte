@@ -30,7 +30,7 @@
   const h = verified.headline;
 </script>
 
-<section id="verified" class="av av-section av-section-alt av-sx-green">
+<section id="verified" class="av av-section av-section-alt">
   <div class="av-container">
     <div class="av-head-split">
       <div>

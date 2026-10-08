@@ -13,7 +13,7 @@
   const starCount = starsData.count > 0 ? starsData.count.toLocaleString('en-US') : '';
 </script>
 
-<section id="community" class="av av-section av-sx-gold">
+<section id="community" class="av av-section">
   <div class="av-container">
     <Head eyebrow={copy.label} title={copy.title} lede={copy.sub} maxCh={20}>
       {#snippet aside()}

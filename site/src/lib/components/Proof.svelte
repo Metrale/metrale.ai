@@ -18,7 +18,7 @@
   ];
 </script>
 
-<section id="proof" class="av av-section av-section-tight av-sx-green eg-proof" aria-label={proof.label}>
+<section id="proof" class="av av-section av-section-tight eg-proof" aria-label={proof.label}>
   <div class="av-container">
     <ul class="eg-proof-strip">
       {#each items as item (item.kind)}
@@ -80,7 +80,7 @@
     display: grid;
     place-items: center;
     background: color-mix(in srgb, var(--sx) 14%, transparent);
-    color: var(--sx-text);
+    color: var(--accent-deep);
   }
   .eg-proof-text {
     display: grid;

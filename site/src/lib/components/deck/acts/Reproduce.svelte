@@ -12,7 +12,6 @@
 </script>
 
 <Slide
-  act="cyan"
   eyebrow="Reference"
   title="The fingerprint, and every axis pinned on both engines"
   lede="Six lines decide whether anything after them is comparable; ten pins are what make the comparison fair. If your box differs on any of them you are measuring something else — fine, but say so."
@@ -34,7 +33,6 @@
 </Slide>
 
 <Slide
-  act="cyan"
   eyebrow="Steps 1 and 2"
   title="Prove the box, then build both artefacts"
   lede="Every check here has been the reason a run was thrown away in this campaign. The container serves models; the binary measures them. You need both, from the tree the record names."
@@ -79,7 +77,6 @@
 </Slide>
 
 <Slide
-  act="cyan"
   eyebrow="Steps 3 and 4"
   title="Bring up both legs"
   lede="Same box, same checkpoint, same client, back to back. The baseline is pinned by digest, not by tag; the subject is the whole certified configuration, rendered from the record the harness wrote."
@@ -107,7 +104,6 @@
 </Slide>
 
 <Slide
-  act="cyan"
   eyebrow="Step 5"
   title="Measure: the chart's own driver, then the gate's instrument"
   lede="Two instruments, not interchangeable. The campaign driver produced every number on the result slide; the gate's subcommand measures the gate's workload and is the only one that can mint a record."

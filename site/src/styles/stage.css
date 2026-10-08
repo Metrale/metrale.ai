@@ -95,7 +95,7 @@
 }
 .ih-prov {
   font-size: 0.68rem;
-  color: var(--ch-cyan-text);
+  color: var(--accent);
   white-space: nowrap;
   min-width: 4ch;
   overflow: hidden;
@@ -269,7 +269,7 @@
   flex: 1;
   min-width: 0;
   height: 30px;
-  color: var(--ch-cyan-text);
+  color: var(--accent);
 }
 .io-off {
   height: 100%;
@@ -391,7 +391,7 @@
 .dock-tab-on,
 .dock-tab.dock-tab-on {
   color: var(--t1);
-  border-bottom-color: var(--ch-cyan);
+  border-bottom-color: var(--sx);
   font-weight: 650;
 }
 .dock-tab-soon {
@@ -468,7 +468,7 @@
 .dt-route-badge {
   font-size: 0.66rem;
   font-weight: 400;
-  color: var(--ch-cyan-text);
+  color: var(--accent);
 }
 
 /* logs */
@@ -494,7 +494,7 @@
   padding: 0.25rem 0.6rem;
   font-size: 0.72rem;
   font-family: inherit;
-  color: var(--ch-cyan-text);
+  color: var(--accent);
   background: none;
   border: 1px solid var(--border-strong);
   border-radius: 6px;
@@ -528,7 +528,7 @@
 }
 .dt-recipe-on,
 .dt-recipe.dt-recipe-on {
-  border-color: var(--ch-cyan);
+  border-color: var(--sx);
 }
 .dt-recipe-off {
   color: var(--t3);
@@ -595,7 +595,7 @@
   padding: 0.2rem 0.5rem;
   font-size: 0.68rem;
   font-family: inherit;
-  color: var(--ch-cyan-text);
+  color: var(--accent);
   background: none;
   border: 1px solid var(--border-strong);
   border-radius: 6px;
@@ -677,7 +677,7 @@
 }
 .dt-logroute {
   font-size: 0.66rem;
-  color: var(--ch-cyan-text);
+  color: var(--accent);
 }
 .dt-logoutcome {
   color: var(--t2);
@@ -696,7 +696,7 @@
   min-width: 0;
   height: 22px;
   align-self: center;
-  color: var(--ch-cyan-text);
+  color: var(--accent);
 }
 
 /* Skeleton shimmer is meaning-carrying motion (a first sample in flight) and

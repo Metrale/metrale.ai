@@ -7,7 +7,7 @@
 {#if announcement.text}
   <div class="av av-announce">
     <div class="av-announce-in">
-      <span class="av-chip av-chip-violet">{announcement.tag}</span>
+      <span class="av-chip av-chip-accent">{announcement.tag}</span>
       <span>{announcement.text}</span>
       <a href={announcement.href}>{announcement.cta} →</a>
     </div>

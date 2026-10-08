@@ -1,62 +1,37 @@
 /**
- * Dark-theme text contrast gate.
+ * Token contrast gate, both themes.
  *
  * Every text token clears WCAG AA (4.5:1) on every surface a page paints text
- * on, in the dark theme, the one both properties open in. The light theme's text
- * is held by site/src/lib/light-text-contrast.test.js. The tokens come from
- * web-shared/metrale-tokens.css, the single source for the site and the blog;
- * the first definition of each is the dark theme's (`:root`).
+ * on, and every non-text mark (the copper rails, the focus ring) clears 3:1, in
+ * the dark theme and in the light one. The pairings are listed once, in
+ * site/scripts/brand/contrast.mjs, which the unit suite also asserts
+ * (site/src/lib/token-contrast.test.js); this prints the table. The tokens come
+ * from web-shared/metrale-tokens.css, the single source for the site and the
+ * blog, resolved through the brand kit's palette.
  *
  *   bun .contrast-check.mjs          # from the repository root
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { pairings } from './site/scripts/brand/contrast.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const tokensCss = readFileSync(resolve(here, 'web-shared/metrale-tokens.css'), 'utf8');
+const rows = pairings(readFileSync(resolve(here, 'web-shared/metrale-tokens.css'), 'utf8'));
 
-const token = (name) => {
-  const m = tokensCss.match(new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{6})\\b`));
-  if (!m) throw new Error(`token --${name} not found in web-shared/metrale-tokens.css`);
-  return m[1];
-};
-
-/* ---------- colour maths (WCAG 2.x relative luminance) ---------- */
-
-const srgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
-const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-const relLum = (v) => 0.2126 * lin(v[0]) + 0.7152 * lin(v[1]) + 0.0722 * lin(v[2]);
-const contrast = (a, b) => {
-  const [hi, lo] = [relLum(srgb(a)), relLum(srgb(b))].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
-};
-
-const surfaces = { bg: token('bg'), bg2: token('bg2'), card: token('card'), 'card-2': token('card-2') };
-const texts = { 't1 headings': token('t1'), 't2 body': token('t2'), 't3 metadata': token('t3') };
-
-/* ---------- report ---------- */
-
-const AA = 4.5;
-let worst = Infinity;
-let failed = 0;
-const head = ['text token', ...Object.keys(surfaces)];
-const rows = [];
-for (const [label, hex] of Object.entries(texts)) {
-  const cells = Object.values(surfaces).map((s) => contrast(hex, s));
-  worst = Math.min(worst, ...cells);
-  failed += cells.filter((c) => c < AA).length;
-  rows.push([`${label} ${hex}`, ...cells.map((c) => c.toFixed(2))]);
-}
-const w = head.map((h, i) => Math.max(h.length, ...rows.map((r) => r[i].length)));
-const line = (cells) => cells.map((c, i) => c.padEnd(w[i])).join('  ');
+const cells = rows.map((r) => [r.theme, r.kind, `--${r.fg} ${r.fgHex}`, `${r.on.startsWith('--') || r.on.includes(' ') ? r.on : '--' + r.on} ${r.onHex}`, r.ratio.toFixed(2), r.ratio >= r.floor ? 'ok' : `FAIL < ${r.floor}`]);
+const head = ['theme', 'kind', 'foreground', 'on', 'ratio', ''];
+const w = head.map((h, i) => Math.max(h.length, ...cells.map((c) => c[i].length)));
+const line = (c) => c.map((x, i) => x.padEnd(w[i])).join('  ');
 console.log(line(head));
 console.log(w.map((n) => '-'.repeat(n)).join('  '));
-for (const r of rows) console.log(line(r));
+for (const c of cells) console.log(line(c));
 console.log('');
 
-if (failed) {
-  console.error(`FAIL: ${failed} pairing(s) fall below AA ${AA}:1 in the dark theme. Lighten the text token or darken the surface.`);
+const failed = rows.filter((r) => r.ratio < r.floor);
+if (failed.length) {
+  console.error(`FAIL: ${failed.length} of ${rows.length} pairings fall below their floor. Change the token, not the floor.`);
   process.exit(1);
 }
-console.log(`PASS: every text token clears AA ${AA}:1 on every dark surface; tightest is ${worst.toFixed(2)}:1.`);
+const tight = (kind) => Math.min(...rows.filter((r) => r.kind === kind).map((r) => r.ratio)).toFixed(2);
+console.log(`PASS: ${rows.length} pairings in both themes; tightest text ${tight('text')}:1 (floor 4.5), tightest non-text ${tight('non-text')}:1 (floor 3).`);

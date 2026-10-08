@@ -287,7 +287,7 @@
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--ch-violet-text);
+    color: var(--accent);
   }
   .ld-title {
     font-size: 1.15rem;

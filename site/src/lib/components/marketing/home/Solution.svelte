@@ -11,7 +11,7 @@
     </div>
     <div class="av-layers av-reveal">
       {#each solution.layers as l}
-        <a class="av-card av-card-accent av-layer" class:is-cyan={l.color === 'cyan'} class:is-green={l.color === 'green'} href={l.href}>
+        <a class="av-card av-card-accent av-layer" href={l.href}>
           <p class="av-card-tag">{l.tag}</p>
           <h3>{l.name}</h3>
           <p class="av-layer-title">{l.title}</p>
