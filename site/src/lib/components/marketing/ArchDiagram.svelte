@@ -23,7 +23,7 @@
 
 <!-- The diagram scrolls sideways on a phone, so it takes focus and a keyboard can scroll it (WCAG 2.1.1). -->
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-<figure class="av-diagram" tabindex="0" role="region" aria-label="Metrale platform architecture diagram">
+<figure class="av-diagram" tabindex="0" aria-label="Metrale platform architecture diagram">
   <svg viewBox="0 0 1100 400" role="img">
     <title
       >Requests flow from your applications through the router to Metrale Engine nodes on your GPUs. Metrale Control manages rollout, policy
