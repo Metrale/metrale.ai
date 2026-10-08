@@ -1,8 +1,11 @@
 # What a build reads from outside this repository, all public:
 #   the engine (ENGINE_SLUG in web-shared/sources.mjs), at site/engine.ref
 #                            benchmark records, gate descriptors and limits, the
-#                            ladders, the changelog, the baselines and the
-#                            recipes, which are the model list (METRALE_ENGINE_ROOT)
+#                            ladders, the changelog, the baselines, the
+#                            recipes, which are the model list, and each
+#                            hardware target's HARDWARE.toml and MODEL.toml files,
+#                            which tell the guide what is built for what
+#                            (METRALE_ENGINE_ROOT)
 #   the launcher (LAUNCHER_SLUG), at main
 #                            its README and the installers install.sh and
 #                            install.ps1 (METRALE_LAUNCHER_ROOT)
@@ -74,7 +77,8 @@ runs:
           /crates/bench/src/benchmarks/
           /crates/bench/src/hardware/energy.rs
           /crates/bench/src/hardware/energy_sampler.rs
-          /kernels/gb10/HARDWARE.toml
+          /kernels/*/HARDWARE.toml
+          /kernels/*/*/MODEL.toml
           /kernels/gb10/*/BENCH.toml
           /recipes/
           /test_data/gate-records/

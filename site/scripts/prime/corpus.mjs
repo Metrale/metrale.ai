@@ -15,7 +15,8 @@
 // The sources, in order:
 //   the built pages in build/ (so the base says what the site says, word for
 //   word, and follows a copy change on the next build), static/llms.txt, the
-//   engine's documents from its checkout, the blog, and a snapshot of the
+//   engine's documents from its checkout, the record of which models have run
+//   on which hardware (coverage.mjs), the blog, and a snapshot of the
 //   repository's history from the GitHub API (cached in scripts/.cache/).
 //   With --private <dir>, every .txt and .md file in that directory becomes the
 //   partner tier. That directory is never inside this repository.
@@ -27,7 +28,7 @@
 //   --gh refreshes the history snapshot, --no-gh skips it.
 // =============================================================================
 
-import { ENGINE_SLUG } from '../../../web-shared/sources.mjs';
+import { ENGINE_REPO, ENGINE_SLUG } from '../../../web-shared/sources.mjs';
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -44,6 +45,7 @@ import {
   withdraw,
   isWithdrawn,
 } from './chunk.mjs';
+import { coverage, coveragePassages, tomlScalars } from './coverage.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const SITE_DIR = resolve(here, '..', '..');
@@ -77,6 +79,7 @@ if (!existsSync(BUILD)) die('build/ is missing. Run `bun x --bun vite build` fir
 
 const { pages, SITE, company, routes, links } = await load('src/lib/content/index.js');
 const { contacts } = await load('src/lib/content/brand.js');
+const { hardwarePage } = await load('src/lib/content/platform.js');
 const ladder = readJson(join(SITE_DIR, 'src', 'lib', 'ladder.generated.json'));
 
 const docs = [];
@@ -178,7 +181,58 @@ for (const [file, title, cap] of REPO_DOCS) {
   docCount++;
 }
 
-// ---- 3. the blog -----------------------------------------------------------------
+// ---- 3. which models have run on which hardware ------------------------------------
+// The signed records and the ladders are the site's own generated files; the
+// recipes and the kernel sets are read from the engine checkout, whose sparse
+// set includes every kernels/<hw>/HARDWARE.toml and kernels/<hw>/<model>/MODEL.toml.
+// Without the checkout the account keeps its records and ladders and says
+// nothing about recipes or targets, and the run says so.
+const LIB = join(SITE_DIR, 'src', 'lib');
+const engineRef = readFileSync(join(SITE_DIR, 'engine.ref'), 'utf8').trim();
+const recipeFiles = [];
+const trees = [];
+if (ENGINE) {
+  const walk = (dir) =>
+    readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+      e.isDirectory() ? walk(join(dir, e.name)) : /\.ya?ml$/.test(e.name) ? [join(dir, e.name)] : []
+    );
+  const recipesDir = join(ENGINE, 'recipes');
+  if (existsSync(recipesDir))
+    for (const file of walk(recipesDir))
+      recipeFiles.push({
+        id: file
+          .slice(recipesDir.length + 1)
+          .replace(/\\/g, '/')
+          .replace(/\.ya?ml$/, ''),
+        text: readFileSync(file, 'utf8'),
+      });
+  const kernels = join(ENGINE, 'kernels');
+  for (const hw of existsSync(kernels) ? readdirSync(kernels).sort() : []) {
+    const toml = join(kernels, hw, 'HARDWARE.toml');
+    if (!existsSync(toml)) continue;
+    const models = readdirSync(join(kernels, hw))
+      .filter((m) => existsSync(join(kernels, hw, m, 'MODEL.toml')))
+      .map((m) => ({ dir: m, ...tomlScalars(readFileSync(join(kernels, hw, m, 'MODEL.toml'), 'utf8'), 'model') }));
+    trees.push({ dir: hw, hardware: tomlScalars(readFileSync(toml, 'utf8'), 'hardware'), models });
+  }
+  if (trees.length < 2)
+    console.warn(
+      `corpus: ${trees.length} hardware target in ${kernels}; the checkout needs kernels/*/HARDWARE.toml and kernels/*/*/MODEL.toml (.github/actions/engine-inputs)`
+    );
+} else console.warn('corpus: without the engine checkout, the hardware account leaves out the recipes and the kernel sets');
+const hardware = coverage({
+  benchmarks: readJson(join(LIB, 'gates.generated.json')).benchmarks,
+  subjects: readJson(join(LIB, 'ladders.generated.json')).subjects,
+  labels: readJson(join(LIB, 'concurrency-subjects.json')),
+  recipes: recipeFiles,
+  trees,
+  readme: ENGINE && existsSync(join(ENGINE, 'README.md')) ? readFileSync(join(ENGINE, 'README.md'), 'utf8') : '',
+  cards: [...(hardwarePage.verified ?? []), ...(hardwarePage.bringup ?? [])],
+  engine: { repo: ENGINE_REPO, ref: engineRef },
+});
+for (const p of coveragePassages(hardware, { site: SITE })) add(p);
+
+// ---- 4. the blog -----------------------------------------------------------------
 
 const POSTS = join(REPO, 'blog', 'src', 'lib', 'posts');
 let postCount = 0;
@@ -195,7 +249,7 @@ if (existsSync(POSTS)) {
   }
 }
 
-// ---- 4. the repository's history, from the API -------------------------------------
+// ---- 5. the repository's history, from the API -------------------------------------
 
 let history = null;
 const cacheFile = join(CACHE, 'prime-gh.json');
@@ -325,7 +379,7 @@ if (history) {
     });
 }
 
-// ---- 5. the partner tier ------------------------------------------------------------
+// ---- 6. the partner tier ------------------------------------------------------------
 
 const partnerDocs = [];
 if (PRIVATE) {
@@ -364,7 +418,7 @@ if (PRIVATE) {
   }
 }
 
-// ---- 6. the structured half ----------------------------------------------------------
+// ---- 7. the structured half ----------------------------------------------------------
 
 let commit;
 try {
@@ -398,6 +452,9 @@ const data = {
     rows,
     summary: ladder.summary ?? null,
   },
+  // What has run on which hardware, and the evidence for each (coverage.mjs):
+  // the signed records, every published ladder, the recipes and the kernel sets.
+  coverage: hardware,
   history: history
     ? {
         as_of: history.as_of,
@@ -410,7 +467,7 @@ const data = {
     : null,
 };
 
-// ---- 7. write, and upload if asked ---------------------------------------------------
+// ---- 8. write, and upload if asked ---------------------------------------------------
 
 mkdirSync(OUT, { recursive: true });
 const built = data.built;
@@ -437,6 +494,9 @@ const manifest = {
 writeFileSync(join(OUT, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
 console.log(
   `corpus: ${docs.length} public passages (${pageCount} pages, ${docCount} documents, ${postCount} posts${history ? ', the history' : ''}), ${partnerDocs.length} partner passages, at commit ${commit || '?'}`
+);
+console.log(
+  `        hardware: ${hardware.measured.map((c) => `${c.records} records on ${c.class}`).join(', ') || 'no records'}, ${hardware.ladders.length} ladders, ${hardware.recipes.length} recipes, ${hardware.targets.length} kernel targets, engine ${engineRef.slice(0, 10)}`
 );
 console.log(
   `        ${JSON.stringify(manifest.kinds)}  ${Math.round(manifest.bytes.public / 1024)} KB public, ${Math.round(manifest.bytes.partner / 1024)} KB partner, ${Math.round(manifest.bytes.data / 1024)} KB data`

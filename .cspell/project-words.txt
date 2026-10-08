@@ -39,6 +39,7 @@ dflash
 dialable
 dichromat
 diffable
+diffusiongemma
 digitalservices
 dmarc
 drawerin

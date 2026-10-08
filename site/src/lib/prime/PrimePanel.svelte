@@ -346,7 +346,10 @@
     margin: 8px auto 0;
   }
 
+  /* Positioned so the response-time table (PrimeTelemetry) hangs from the
+     header's full width, inside the panel that clips what overflows it. */
   .pr-head {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;

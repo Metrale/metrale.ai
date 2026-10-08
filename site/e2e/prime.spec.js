@@ -222,6 +222,42 @@ test.describe('Metrale Prime', () => {
     await expect(page.locator('.pr-fine')).toContainText('Runs on grok-4.7 via xAI');
   });
 
+  test('the response-time table opens inside the panel, on a desk and on a phone, and Escape closes it first', async ({ page }) => {
+    await stubWorker(page);
+    await page.goto('/benchmarks');
+    await open(page);
+    await composer(page).fill('How much faster is it than vLLM?');
+    await composer(page).press('Enter');
+    await expect(page.locator('.pr-tele-num')).toHaveText('4.2s');
+    await page.locator('.pr-tele-btn').click();
+    const pop = page.locator('.pr-tele-pop');
+    await expect(pop.locator('tbody tr')).toHaveCount(1);
+    // On 2026-10-07 the table hung from the button, wider than the room to its
+    // left, and the panel cut off its first columns on a desk.
+    const fit = await page.evaluate(() => {
+      const box = (el) => el.getBoundingClientRect();
+      const panel = box(document.querySelector('.pr-panel'));
+      const card = box(document.querySelector('.pr-tele-pop'));
+      const cells = [...document.querySelectorAll('.pr-tele-pop th, .pr-tele-pop .pr-tele-title, .pr-tele-pop .pr-tele-ledger')].map(box);
+      const scroll = document.querySelector('.pr-tele-scroll');
+      return {
+        inside: card.left >= panel.left && card.right <= panel.right,
+        cellsShown: cells.every((c) => c.left >= panel.left && c.right <= panel.right),
+        // Every column in view without scrolling, the cost included, on a 390 px phone too.
+        tableFits: scroll.scrollWidth <= scroll.clientWidth,
+      };
+    });
+    expect(fit).toEqual({ inside: true, cellsShown: true, tableFits: true });
+    await expect(pop.locator('th').first()).toBeInViewport();
+    await page.keyboard.press('Escape');
+    await expect(pop).toHaveCount(0);
+    await expect(panel(page)).toBeVisible();
+    await page.locator('.pr-tele-btn').click();
+    await expect(pop).toBeVisible();
+    await composer(page).click();
+    await expect(pop).toHaveCount(0);
+  });
+
   test('who is asking changes the starters and travels with every request, and the transcript survives a reload', async ({ page }) => {
     const sent = await stubWorker(page, { text: 'Start with the [engine page](/engine) [1].' });
     await page.goto('/');
