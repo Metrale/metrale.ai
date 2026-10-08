@@ -12,10 +12,30 @@ import { scrollRegion } from '../../../web-shared/scroll-region.js';
 let observers;
 let fontListeners;
 let saved;
+let frames;
+let windowListeners;
 beforeEach(() => {
-  saved = { ResizeObserver: globalThis.ResizeObserver, document: globalThis.document };
+  saved = {
+    ResizeObserver: globalThis.ResizeObserver,
+    document: globalThis.document,
+    window: globalThis.window,
+    requestAnimationFrame: globalThis.requestAnimationFrame,
+    cancelAnimationFrame: globalThis.cancelAnimationFrame,
+  };
   observers = [];
   fontListeners = [];
+  frames = new Map();
+  windowListeners = [];
+  let next = 1;
+  globalThis.requestAnimationFrame = (fn) => {
+    frames.set(next, fn);
+    return next++;
+  };
+  globalThis.cancelAnimationFrame = (id) => frames.delete(id);
+  globalThis.window = {
+    addEventListener: (type, fn) => type === 'resize' && windowListeners.push(fn),
+    removeEventListener: (type, fn) => (windowListeners = windowListeners.filter((f) => f !== fn)),
+  };
   globalThis.ResizeObserver = class {
     constructor(cb) {
       this.cb = cb;
@@ -39,9 +59,14 @@ beforeEach(() => {
 });
 // Put back whatever the preload installed: other suites share these globals.
 afterEach(() => {
-  globalThis.ResizeObserver = saved.ResizeObserver;
-  globalThis.document = saved.document;
+  for (const [k, v] of Object.entries(saved)) globalThis[k] = v;
 });
+// Run the frame callbacks queued so far, as the browser does on the next frame.
+const nextFrame = () => {
+  const due = [...frames.values()];
+  frames.clear();
+  for (const fn of due) fn();
+};
 
 // What the server renders: the focusable form, right with scripts off.
 const box = (scrollWidth, clientWidth, attrs = { tabindex: '0', role: 'region', 'aria-label': 'Command to run X' }) => {
@@ -79,6 +104,26 @@ test('a resize and a late font are measured again, both ways', () => {
   expect(node.attrs()).toEqual({});
 });
 
+test('a scroll width that settles after the resize is caught on the next frame (WebKit)', () => {
+  const node = box(300, 300);
+  scrollRegion(node, { label: 'Command to run X' });
+  node.clientWidth = 200; // the box narrowed, but its scroll width has not caught up
+  node.scrollWidth = 200;
+  observers[0].cb();
+  expect(node.attrs()).toEqual({});
+  node.scrollWidth = 300; // it settles before the next frame
+  nextFrame();
+  expect(node.attrs()).toEqual({ tabindex: '0', role: 'region', 'aria-label': 'Command to run X' });
+});
+
+test('a window resize is measured even when the box reports no change of its own', () => {
+  const node = box(300, 300);
+  scrollRegion(node, { label: 'L' });
+  node.clientWidth = 250;
+  for (const f of windowListeners) f();
+  expect(node.attrs()).toEqual({ tabindex: '0', role: 'region', 'aria-label': 'L' });
+});
+
 test('without a label only the tabindex follows: a figure keeps its own role and name', () => {
   const node = box(300, 300, { tabindex: '0', 'aria-label': 'diagram' });
   scrollRegion(node);
@@ -93,7 +138,11 @@ test('destroy stops listening', () => {
   const action = scrollRegion(node, { label: 'L' });
   expect(observers[0].connected).toBe(true);
   expect(fontListeners).toHaveLength(1);
+  expect(windowListeners).toHaveLength(1);
+  observers[0].cb(); // leaves a frame queued
   action.destroy();
   expect(observers[0].connected).toBe(false);
   expect(fontListeners).toHaveLength(0);
+  expect(windowListeners).toHaveLength(0);
+  expect(frames.size).toBe(0);
 });

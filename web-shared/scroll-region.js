@@ -9,8 +9,12 @@
 //
 // So the markup renders the focusable form, which is right with scripts off,
 // and this Svelte action keeps it only while the box actually overflows,
-// measured again whenever the box changes size and whenever web fonts finish
-// loading (the brand face arrives after first paint and changes widths).
+// measured again whenever the box or the window changes size and whenever web
+// fonts finish loading (the brand face arrives after first paint and changes
+// widths). Each size change is measured once at once and once more on the next
+// animation frame: WebKit can report a box's new size before its scroll width
+// has settled, and without the second look a box stayed unreachable for seconds
+// after the window narrowed.
 //
 //   <code tabindex="0" role="region" aria-label={name} use:scrollRegion={{ label: name }}>
 //   <figure tabindex="0" aria-label={name} use:scrollRegion>   (keeps its own role and name)
@@ -38,8 +42,17 @@ export function scrollRegion(node, options = {}) {
       }
     }
   };
-  const resize = typeof ResizeObserver === 'function' ? new ResizeObserver(sync) : null;
+  let frame = 0;
+  const settle = () => {
+    sync();
+    if (typeof requestAnimationFrame !== 'function') return;
+    if (typeof cancelAnimationFrame === 'function') cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(sync);
+  };
+  const resize = typeof ResizeObserver === 'function' ? new ResizeObserver(settle) : null;
   resize?.observe(node);
+  const win = typeof window !== 'undefined' ? window : undefined;
+  win?.addEventListener?.('resize', settle);
   const fonts = typeof document !== 'undefined' ? document.fonts : undefined;
   fonts?.addEventListener?.('loadingdone', sync);
   fonts?.ready?.then(sync);
@@ -51,6 +64,8 @@ export function scrollRegion(node, options = {}) {
     },
     destroy() {
       resize?.disconnect();
+      win?.removeEventListener?.('resize', settle);
+      if (typeof cancelAnimationFrame === 'function') cancelAnimationFrame(frame);
       fonts?.removeEventListener?.('loadingdone', sync);
     },
   };
