@@ -4,6 +4,12 @@
   first token, total, tokens and cost per answer, and the session's cost. The
   numbers come from the Worker's usage event, so they are what the visitor was
   actually served, not what the page measured.
+
+  The table hangs from the panel's header (PrimePanel's .pr-head is its
+  positioned ancestor), the header's full width, so the panel's own edges hold
+  it. Hung from this button it was wider than the room to the button's left,
+  and on a desk the panel cut its first columns off. Escape or a click outside
+  closes it, before Escape closes the panel.
 -->
 <script>
   import { prime, summarize, cachedShare, tokensPerSecond } from './state.svelte.js';
@@ -11,6 +17,22 @@
   import { CHART_POINTS } from './config.js';
 
   let open = $state(false);
+  let root = $state(null);
+
+  $effect(() => {
+    if (!open) return;
+    const away = (e) => {
+      if (root && !root.contains(e.target)) open = false;
+    };
+    document.addEventListener('pointerdown', away);
+    return () => document.removeEventListener('pointerdown', away);
+  });
+  function onKeydown(e) {
+    if (e.key === 'Escape' && open) {
+      e.stopPropagation();
+      open = false;
+    }
+  }
   const recent = $derived(prime.telemetry.slice(-CHART_POINTS));
   const sum = $derived(summarize(prime.telemetry));
   const W = 84,
@@ -26,13 +48,14 @@
   const rate = (r) => (r === null || r === undefined ? '·' : String(Math.round(r)));
 </script>
 
-<div class="pr-tele">
+<div class="pr-tele" bind:this={root}>
   <button
     type="button"
     class="pr-tele-btn"
     aria-expanded={open}
     aria-label={`${copy.telemetry.heading}. ${sum.answers ? `${copy.telemetry.avg} ${secs(sum.avgTotal)}` : copy.telemetry.none}`}
     onclick={() => (open = !open)}
+    onkeydown={onKeydown}
   >
     <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} aria-hidden="true">
       {#if recent.length > 0}
@@ -51,32 +74,34 @@
       {#if sum.answers === 0}
         <p class="pr-tele-none">{copy.telemetry.none}</p>
       {:else}
-        <table>
-          <thead
-            ><tr
-              ><th>#</th><th>{copy.telemetry.first}</th><th>{copy.telemetry.total}</th><th>{copy.telemetry.tokens}</th><th
-                >{copy.telemetry.cached}</th
-              ><th>{copy.telemetry.rate}</th><th>{copy.telemetry.cost}</th></tr
-            ></thead
-          >
-          <tbody>
-            {#each prime.telemetry.slice(-CHART_POINTS) as t, i}
-              <tr
-                ><td>{prime.telemetry.length - Math.min(CHART_POINTS, prime.telemetry.length) + i + 1}</td><td>{secs(t.ttft_ms ?? 0)}</td
-                ><td>{secs(t.total_ms ?? 0)}</td><td>{(t.tokens ?? 0).toLocaleString('en-US')}</td><td>{pct(cachedShare(t))}</td><td
-                  >{rate(tokensPerSecond(t))}</td
-                ><td>{usd(t.cost_usd ?? 0)}</td></tr
-              >
-            {/each}
-          </tbody>
-          <tfoot>
-            <tr
-              ><td>{copy.telemetry.avg}</td><td>{secs(sum.avgFirst)}</td><td>{secs(sum.avgTotal)}</td><td
-                >{sum.tokens.toLocaleString('en-US')}</td
-              ><td>{pct(sum.cachedShare)}</td><td>{rate(sum.rate)}</td><td>{usd(sum.cost)}</td></tr
+        <div class="pr-tele-scroll">
+          <table>
+            <thead
+              ><tr
+                ><th>#</th><th>{copy.telemetry.first}</th><th>{copy.telemetry.total}</th><th>{copy.telemetry.tokens}</th><th
+                  >{copy.telemetry.cached}</th
+                ><th>{copy.telemetry.rate}</th><th>{copy.telemetry.cost}</th></tr
+              ></thead
             >
-          </tfoot>
-        </table>
+            <tbody>
+              {#each prime.telemetry.slice(-CHART_POINTS) as t, i}
+                <tr
+                  ><td>{prime.telemetry.length - Math.min(CHART_POINTS, prime.telemetry.length) + i + 1}</td><td>{secs(t.ttft_ms ?? 0)}</td
+                  ><td>{secs(t.total_ms ?? 0)}</td><td>{(t.tokens ?? 0).toLocaleString('en-US')}</td><td>{pct(cachedShare(t))}</td><td
+                    >{rate(tokensPerSecond(t))}</td
+                  ><td>{usd(t.cost_usd ?? 0)}</td></tr
+                >
+              {/each}
+            </tbody>
+            <tfoot>
+              <tr
+                ><td>{copy.telemetry.avg}</td><td>{secs(sum.avgFirst)}</td><td>{secs(sum.avgTotal)}</td><td
+                  >{sum.tokens.toLocaleString('en-US')}</td
+                ><td>{pct(sum.cachedShare)}</td><td>{rate(sum.rate)}</td><td>{usd(sum.cost)}</td></tr
+              >
+            </tfoot>
+          </table>
+        </div>
         <!-- The session's token ledger: what was read from cache, what was spent
              thinking, what was written. A token company keeps its own accounts. -->
         <p class="pr-tele-ledger">
@@ -95,9 +120,6 @@
 </div>
 
 <style>
-  .pr-tele {
-    position: relative;
-  }
   .pr-tele-btn {
     display: inline-flex;
     align-items: center;
@@ -144,15 +166,23 @@
   }
   .pr-tele-pop {
     position: absolute;
-    right: 0;
-    top: calc(100% + 8px);
+    left: 0.6rem;
+    right: 0.6rem;
+    top: calc(100% + 6px);
     z-index: 2;
-    width: min(470px, 92vw);
+    max-height: min(70dvh, 560px);
+    overflow-y: auto;
     padding: 0.9rem 1rem;
     background: var(--card);
     border: 1px solid var(--border-strong);
     border-radius: 14px;
     box-shadow: var(--shadow-lg);
+  }
+  /* A header wraps before a number does ("first token" takes two lines on a
+     390 px phone), and a screen narrower still scrolls the table sideways
+     inside the card rather than past the panel's edge. */
+  .pr-tele-scroll {
+    overflow-x: auto;
   }
   .pr-tele-title {
     margin: 0 0 0.5rem;
@@ -178,7 +208,6 @@
   td {
     padding: 0.22rem 0.2rem;
     text-align: right;
-    white-space: nowrap;
   }
   th {
     color: var(--t3);
@@ -186,9 +215,11 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
     font-size: 0.62rem;
+    vertical-align: bottom;
   }
   td {
     color: var(--t1);
+    white-space: nowrap;
   }
   th:first-child,
   td:first-child {
