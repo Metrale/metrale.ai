@@ -172,6 +172,55 @@
         "favicon.ico",
         "favicon.svg"
       ]
+    },
+    {
+      "rev": 14,
+      "date": "2026-10-08",
+      "pr": 78,
+      "base": "cd6fa9b95",
+      "note": "Brand v2: the brand files come from the vendored brand kit, metrale-assets v2.0.0 pinned in assets/brand.pin. The kit's favicons, icons, social card and Manrope replace the first kit's set and Urbanist, its two logo cuts are drawn by the one lockup component, and copper is the one accent, with no cyan. The docs ship the kit's PNG favicons.",
+      "touched": [
+        "apple-touch-icon-180.png",
+        "favicon-16.png",
+        "favicon-32.png",
+        "github-social-preview-1280x640.png",
+        "icon-192.png",
+        "icon-512.png",
+        "icon-maskable-512.png",
+        "og-image-1200x630.png",
+        "favicon.ico",
+        "favicon.svg",
+        "MANROPE-LICENSE.txt",
+        "manrope-fallback.css",
+        "manrope-latin-wght-normal.woff2",
+        "site.webmanifest",
+        "logo-horizontal-ondark.svg",
+        "logo-horizontal.svg",
+        "mark-compact.svg",
+        "mark.svg",
+        "apple-touch-icon.png",
+        "favicon.ico",
+        "favicon.svg",
+        "MANROPE-LICENSE.txt",
+        "manrope-latin-wght-normal.woff2",
+        "type.css",
+        "og-image.png",
+        "gen.js",
+        "github-social-preview-dark.png",
+        "github-social-preview-light.png",
+        "og-image-dark.png",
+        "geometry.js",
+        "ai-mark-mono-ondark.svg",
+        "ai-mark-mono.svg",
+        "ai-mark-onlight.svg",
+        "ai-mark.svg",
+        "app-icon-ai.svg",
+        "app-icon.svg",
+        "ancient-inscription.svg",
+        "ancient-seal.svg",
+        "ancient-stele.svg",
+        "github-social-preview-ai-dark.svg"
+      ]
     }
   ],
   "facts": {
@@ -464,446 +513,635 @@
     }
   },
   "assets": {
+    "assets/brand/dark/apple-touch-icon-180.png": {
+      "sha": "13aabe17b6b9",
+      "bytes": 2721,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/dark/favicon-16.png": {
+      "sha": "8bf0f6ebbc03",
+      "bytes": 413,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/dark/favicon-32.png": {
+      "sha": "af8e1646856d",
+      "bytes": 727,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/dark/github-social-preview-1280x640.png": {
+      "sha": "e788dca21416",
+      "bytes": 15955,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/dark/icon-192.png": {
+      "sha": "d8949c98e7e2",
+      "bytes": 2991,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/dark/icon-512.png": {
+      "sha": "790213808001",
+      "bytes": 8417,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/dark/icon-maskable-512.png": {
+      "sha": "c9d757823c85",
+      "bytes": 7633,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/dark/og-image-1200x630.png": {
+      "sha": "40fa8949a4eb",
+      "bytes": 14628,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/favicon.ico": {
+      "sha": "159a0ae169b2",
+      "bytes": 15086,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/favicon.svg": {
+      "sha": "2460a5a0b8de",
+      "bytes": 386,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/fonts/MANROPE-LICENSE.txt": {
+      "sha": "d826ab6583b1",
+      "bytes": 4383,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/fonts/manrope-fallback.css": {
+      "sha": "a6954d644ca8",
+      "bytes": 558,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/fonts/manrope-latin-wght-normal.woff2": {
+      "sha": "a30ddcd34970",
+      "bytes": 24836,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
     "assets/brand/gen.js": {
       "sha": "b333381afa17",
       "bytes": 19338,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
+    },
+    "assets/brand/site.webmanifest": {
+      "sha": "0037035a6e09",
+      "bytes": 573,
+      "rev": 1,
+      "date": "2026-10-08"
     },
     "assets/brand/social/github-social-preview-dark.png": {
       "sha": "0c4fe339bbd7",
       "bytes": 56159,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/social/github-social-preview-light.png": {
       "sha": "0365bfe2a987",
       "bytes": 45091,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/social/og-image-dark.png": {
       "sha": "a2ddf6b8a70a",
       "bytes": 53097,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/src/geometry.js": {
       "sha": "c4825d7c0eaf",
       "bytes": 14932,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/ai-mark-mono-ondark.svg": {
       "sha": "33d42b5e3b62",
       "bytes": 9130,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/ai-mark-mono.svg": {
       "sha": "b2b7cca2b8b6",
       "bytes": 9130,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/ai-mark-onlight.svg": {
       "sha": "aa1a11ab051f",
       "bytes": 9135,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/ai-mark.svg": {
       "sha": "a341ed623066",
       "bytes": 9135,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/app-icon-ai.svg": {
       "sha": "4c6b95c21a3b",
       "bytes": 9215,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/app-icon.svg": {
       "sha": "11e336b8cbee",
       "bytes": 9117,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/explorations/ancient-inscription.svg": {
       "sha": "15e5a8c1b26c",
       "bytes": 17113,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/explorations/ancient-seal.svg": {
       "sha": "bb64957cf657",
       "bytes": 27540,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/explorations/ancient-stele.svg": {
       "sha": "ce8b296fcacc",
       "bytes": 26418,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/github-social-preview-ai-dark.svg": {
       "sha": "6ad3ce6ee2c6",
       "bytes": 12842,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/github-social-preview-dark.svg": {
       "sha": "329f0b607452",
       "bytes": 12456,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/github-social-preview-full-stack-dark.svg": {
       "sha": "5bed1a9f62b9",
       "bytes": 16116,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/github-social-preview-ondark-transparent.svg": {
       "sha": "6026dba305ab",
       "bytes": 12395,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/header-ai-dark.svg": {
       "sha": "06c5ceebc421",
       "bytes": 12808,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/header-ai-light.svg": {
       "sha": "f19fc72e8ea9",
       "bytes": 12808,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/header-dark.svg": {
       "sha": "9ec8c1fb39bb",
       "bytes": 12471,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/header-full-stack-dark.svg": {
       "sha": "7a54732fb3e6",
       "bytes": 16387,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/header-full-stack-light.svg": {
       "sha": "5056b48c9289",
       "bytes": 16387,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/header-light.svg": {
       "sha": "98a85592edc2",
       "bytes": 12471,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/icon-dark.svg": {
       "sha": "34fb304a11af",
       "bytes": 9120,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/icon-light.svg": {
       "sha": "19ce4f1502ef",
       "bytes": 9120,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-ai-inline-ondark.svg": {
       "sha": "edd208b0eccc",
       "bytes": 12701,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-ai-inline-type-ondark.svg": {
       "sha": "fd4cf4344ff7",
       "bytes": 12880,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-ai-inline-type.svg": {
       "sha": "d97b743b3216",
       "bytes": 12880,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-ai-inline.svg": {
       "sha": "d9a839491814",
       "bytes": 12701,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-ai-mono-ondark.svg": {
       "sha": "ccb5f7c0cb92",
       "bytes": 12741,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-ai-mono.svg": {
       "sha": "fce72519172c",
       "bytes": 12741,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-ai-ondark.svg": {
       "sha": "3a9ec211d0ae",
       "bytes": 12751,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-ai.svg": {
       "sha": "8dd4b18c0d72",
       "bytes": 12751,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-full-stack-inline-ondark.svg": {
       "sha": "462594f5f4e3",
       "bytes": 16304,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-full-stack-inline.svg": {
       "sha": "08216fda8521",
       "bytes": 16304,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-full-stack-mono-ondark.svg": {
       "sha": "d03fd84fc43c",
       "bytes": 16028,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-full-stack-mono.svg": {
       "sha": "0e2312e49ec8",
       "bytes": 16028,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-full-stack-ondark.svg": {
       "sha": "fafbeade3a57",
       "bytes": 16034,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/lockup-full-stack.svg": {
       "sha": "920a9c3d537a",
       "bytes": 16034,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
+    },
+    "assets/brand/svg/logo-horizontal-ondark.svg": {
+      "sha": "6bc2e5e9baa5",
+      "bytes": 1917,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
+    "assets/brand/svg/logo-horizontal.svg": {
+      "sha": "081e277fd6dc",
+      "bytes": 1919,
+      "rev": 1,
+      "date": "2026-10-08"
     },
     "assets/brand/svg/mark-compact.svg": {
-      "sha": "be4e1dea1277",
-      "bytes": 8885,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "40192c6ff515",
+      "bytes": 338,
+      "rev": 2,
+      "date": "2026-10-08",
+      "was": [
+        {
+          "sha": "be4e1dea1277",
+          "until": "2026-10-08"
+        }
+      ]
     },
     "assets/brand/svg/mark-mono-ondark.svg": {
       "sha": "aa7502d74119",
       "bytes": 9024,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/mark-mono.svg": {
       "sha": "f49a7da8fd64",
       "bytes": 9024,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/mark-onlight.svg": {
       "sha": "f09894ef4cac",
       "bytes": 9028,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/mark.svg": {
-      "sha": "4d9e62650d26",
-      "bytes": 9028,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "68bf5b4ae1a3",
+      "bytes": 311,
+      "rev": 2,
+      "date": "2026-10-08",
+      "was": [
+        {
+          "sha": "4d9e62650d26",
+          "until": "2026-10-08"
+        }
+      ]
     },
     "assets/brand/svg/og-ai-dark.svg": {
       "sha": "0911f831c4a4",
       "bytes": 12841,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/og-ai-light.svg": {
       "sha": "30036024e933",
       "bytes": 12841,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/og-dark.svg": {
       "sha": "1c034669bff0",
       "bytes": 12455,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/og-full-stack-dark.svg": {
       "sha": "7916c5dea5f5",
       "bytes": 16116,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/og-full-stack-light.svg": {
       "sha": "1cd79e186a55",
       "bytes": 16116,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/og-light.svg": {
       "sha": "21bc83ab83fb",
       "bytes": 12455,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/slide-title-ai-dark.svg": {
       "sha": "e4bdfc2cac02",
       "bytes": 13378,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/slide-title-ai-light.svg": {
       "sha": "fa4a30611c86",
       "bytes": 13378,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/slide-title-dark.svg": {
       "sha": "7cbedd3cedc8",
       "bytes": 12991,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/slide-title-full-stack-dark.svg": {
       "sha": "8387f976fcb2",
       "bytes": 16641,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/slide-title-full-stack-light.svg": {
       "sha": "dbd9fee28590",
       "bytes": 16641,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/slide-title-light.svg": {
       "sha": "6812526905f8",
       "bytes": 12991,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/spec/clear-space.png": {
       "sha": "4991eeb3db05",
       "bytes": 126226,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/spec/clear-space.svg": {
       "sha": "115c940657ec",
       "bytes": 13030,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/spec/minimum-sizes.png": {
       "sha": "bbd698c57b8f",
       "bytes": 91593,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/spec/minimum-sizes.svg": {
       "sha": "6bec09e27d84",
       "bytes": 22366,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/spec/swash.svg": {
       "sha": "f869b247e6be",
       "bytes": 12472,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/wordmark-mono-ondark.svg": {
       "sha": "18debdb29a5b",
       "bytes": 4505,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/wordmark-mono.svg": {
       "sha": "c70bbc025613",
       "bytes": 4505,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/wordmark-ondark.svg": {
       "sha": "c5c5cc5e5a95",
       "bytes": 4511,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/svg/wordmark.svg": {
       "sha": "14c5a10b3a50",
       "bytes": 4511,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/tokens/brand.css": {
       "sha": "7c363a0d2e46",
       "bytes": 607,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/tokens/brand.scss": {
       "sha": "d4cdfd31936e",
       "bytes": 461,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "assets/brand/tokens/tailwind.colors.js": {
       "sha": "4b7ac5ca6658",
       "bytes": 376,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "site/static/apple-touch-icon.png": {
-      "sha": "c845319d18c4",
-      "bytes": 11477,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "13aabe17b6b9",
+      "bytes": 2721,
+      "rev": 2,
+      "date": "2026-10-08",
+      "was": [
+        {
+          "sha": "c845319d18c4",
+          "until": "2026-10-08"
+        }
+      ]
     },
     "site/static/favicon.ico": {
-      "sha": "1dd250af1265",
-      "bytes": 2568,
-      "rev": 2,
+      "sha": "159a0ae169b2",
+      "bytes": 15086,
+      "rev": 3,
       "date": "2026-10-08",
       "was": [
         {
           "sha": "05144ca27991",
           "until": "2026-10-08"
+        },
+        {
+          "sha": "1dd250af1265",
+          "until": "2026-10-08"
         }
       ]
     },
     "site/static/favicon.svg": {
-      "sha": "85b550d11a60",
-      "bytes": 318,
-      "rev": 2,
+      "sha": "2460a5a0b8de",
+      "bytes": 386,
+      "rev": 3,
       "date": "2026-10-08",
       "was": [
         {
           "sha": "34fb304a11af",
+          "until": "2026-10-08"
+        },
+        {
+          "sha": "85b550d11a60",
           "until": "2026-10-08"
         }
       ]
@@ -914,11 +1152,18 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/fonts/MANROPE-LICENSE.txt": {
+      "sha": "d826ab6583b1",
+      "bytes": 4383,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
     "site/static/fonts/URBANIST-LICENSE.txt": {
       "sha": "ee1221b1c2d0",
       "bytes": 4385,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "site/static/fonts/ibm-plex-mono-latin-400-normal.woff2": {
       "sha": "08949f728dc5",
@@ -932,23 +1177,37 @@
       "rev": 1,
       "date": "2026-09-24"
     },
-    "site/static/fonts/type.css": {
-      "sha": "6020a2f0e5af",
-      "bytes": 1740,
+    "site/static/fonts/manrope-latin-wght-normal.woff2": {
+      "sha": "a30ddcd34970",
+      "bytes": 24836,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-10-08"
+    },
+    "site/static/fonts/type.css": {
+      "sha": "2ce71bf5b459",
+      "bytes": 1621,
+      "rev": 2,
+      "date": "2026-10-08",
+      "was": [
+        {
+          "sha": "6020a2f0e5af",
+          "until": "2026-10-08"
+        }
+      ]
     },
     "site/static/fonts/urbanist-latin-wght-italic.woff2": {
       "sha": "163e60078a8a",
       "bytes": 29632,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "site/static/fonts/urbanist-latin-wght-normal.woff2": {
       "sha": "7981ef90c246",
       "bytes": 27752,
       "rev": 1,
-      "date": "2026-09-24"
+      "date": "2026-09-24",
+      "removed": "2026-10-08"
     },
     "site/static/logos/amd-dark.svg": {
       "sha": "831d1d6f2454",
@@ -1473,10 +1732,16 @@
       "date": "2026-09-24"
     },
     "site/static/og-image.png": {
-      "sha": "d6af820721ed",
-      "bytes": 102070,
-      "rev": 1,
-      "date": "2026-09-24"
+      "sha": "40fa8949a4eb",
+      "bytes": 14628,
+      "rev": 2,
+      "date": "2026-10-08",
+      "was": [
+        {
+          "sha": "d6af820721ed",
+          "until": "2026-10-08"
+        }
+      ]
     },
     "site/static/team/eric-gonzalez.webp": {
       "sha": "0b38045abdf1",
