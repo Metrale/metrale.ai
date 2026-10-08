@@ -579,18 +579,18 @@ test('get_coverage keeps its evidence apart: the overview, then a hardware, then
   expect(h100.hardware[0].documents[0].text).toContain('1×H100 80 GB');
   expect(c.sources.at(-1).url).toBe(HOPPER_DOC.url);
 
-  const spark = await runTool('get_coverage', JSON.stringify({ hardware: 'DGX Spark' }), c);
-  expect(spark.hardware.map((t) => t.hardware)).toEqual(['NVIDIA DGX Spark (GB10 · Blackwell SM121)']);
-  expect(spark.hardware[0].signed_records.checkpoints[0].gates[0]).toMatchObject({
+  const gb10 = await runTool('get_coverage', JSON.stringify({ hardware: 'DGX Spark' }), c);
+  expect(gb10.hardware.map((t) => t.hardware)).toEqual(['NVIDIA DGX Spark (GB10 · Blackwell SM121)']);
+  expect(gb10.hardware[0].signed_records.checkpoints[0].gates[0]).toMatchObject({
     name: 'Concurrency Sweep (MoE)',
     records: 2,
     newest_record: `${ENGINE_REPO}/blob/main/.benchmarks/concurrency-sweep-moe/1790645191.json`,
   });
-  expect(spark.hardware[0].recipes.map((r) => [r.id, r.boxes])).toEqual([
+  expect(gb10.hardware[0].recipes.map((r) => [r.id, r.boxes])).toEqual([
     ['deepseek-v4/deepseek-v4-flash-nvfp4-ep2', 2],
     ['qwen3.6/qwen3.6-35b-a3b-fp8-mtp', 1],
   ]);
-  expect(spark.hardware[0].documents).toBeUndefined();
+  expect(gb10.hardware[0].documents).toBeUndefined();
 
   const intel = await runTool('get_coverage', JSON.stringify({ hardware: 'Intel Arc' }), c);
   expect(intel.hardware).toEqual([]);
