@@ -32,7 +32,7 @@
     href && !href.startsWith('http') && (href === '/' ? path === '/' : path === href || path.startsWith(href + '/'));
   const groupCurrent = (g) => (g.columns ?? []).some((c) => c.items.some((i) => isCurrent(i.href)));
 
-  const canHover = () => typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (min-width: 1101px)').matches;
+  const canHover = () => typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (min-width: 1181px)').matches;
   function enter(label) {
     if (!canHover()) return;
     clearTimeout(closeTimer);
@@ -545,6 +545,11 @@
     }
     .av-header-actions .av-cta {
       display: none;
+    }
+    /* With the links in the drawer, the toggle and the burger keep to the
+       right edge of the bar, where they sit at every other width. */
+    .av-header-actions {
+      margin-left: auto;
     }
   }
   @media (max-width: 480px) {
