@@ -52,7 +52,7 @@ describe('the emitted component', () => {
 
   test('right-aligned table columns keep the numeric class', () => {
     const { svelte } = compile('| a | b |\n|---|--:|\n| 1 | 2 |\n');
-    expect(svelte).toContain('<Table>');
+    expect(svelte).toContain('<Table label={"Table: a, b"}>');
     expect(svelte).toContain('<th class="num">b</th>');
     expect(svelte).toContain('<td class="num">2</td>');
   });

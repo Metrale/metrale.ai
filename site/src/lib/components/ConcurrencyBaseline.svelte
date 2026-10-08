@@ -177,7 +177,9 @@
           usually called TPOT; the record keys keep that name (<code>tpot_p50_ms</code>) because renaming a recorded key would orphan every
           measurement already committed.
         </p>
-        <div class="cl-tablewrap">
+        <!-- The table scrolls sideways, so it takes focus and a keyboard can scroll it (WCAG 2.1.1). -->
+        <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+        <div class="cl-tablewrap" tabindex="0" role="region" aria-label="Per-rung detail: vLLM throughput and latency">
           <table class="cl-table cl-table-dense">
             <thead>
               <tr>

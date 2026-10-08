@@ -231,7 +231,9 @@
       </svg>
     </figure>
 
-    <div class="cl-tablewrap">
+    <!-- Wide tables scroll sideways, so each wrapper takes focus and a keyboard can scroll it (WCAG 2.1.1). -->
+    <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+    <div class="cl-tablewrap" tabindex="0" role="region" aria-label="Throughput at each concurrency rung">
       <table class="cl-table">
         <caption class="cl-caption">
           Throughput in tok/s. Ratio is Metrale Engine over the matched vLLM + MTP configuration at that rung.
@@ -314,7 +316,8 @@
               usually called TPOT; the record keys keep that name (<code>tpot_p50_ms</code>) because renaming a recorded key would orphan
               every measurement already committed.
             </p>
-            <div class="cl-tablewrap">
+            <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+            <div class="cl-tablewrap" tabindex="0" role="region" aria-label="Per-rung detail: throughput and latency by series">
               <table class="cl-table cl-table-dense">
                 <thead>
                   <tr>

@@ -147,7 +147,9 @@ export function compileMarkdown(src, { filename, tags, authors, highlight, measu
         };
         const head = token.header.map((c) => cell(c, 'th')).join('');
         const rows = token.rows.map((r) => `<tr>${r.map((c) => cell(c, 'td')).join('')}</tr>`).join('\n');
-        return hold(`<Table><thead><tr>${head}</tr></thead><tbody>\n${rows}\n</tbody></Table>\n`);
+        // The scrolling wrapper is a labelled region; its name is the columns it holds.
+        const label = 'Table: ' + token.header.map((c) => c.text.replace(/[`*_]/g, '').trim()).join(', ');
+        return hold(`<Table label={${JSON.stringify(label)}}><thead><tr>${head}</tr></thead><tbody>\n${rows}\n</tbody></Table>\n`);
       },
       html(token) {
         const text = String(token.text);
