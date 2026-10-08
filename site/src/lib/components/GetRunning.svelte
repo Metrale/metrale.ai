@@ -52,7 +52,7 @@
   const codeOf = (e) => e.currentTarget.parentElement?.querySelector('code');
 </script>
 
-<section id="run" class="av av-section av-section-alt av-sx-violet">
+<section id="run" class="av av-section av-section-alt">
   <div class="av-container">
     <Head eyebrow={copy.label} title={copy.title} lede={copy.sub} maxCh={26} />
 
@@ -157,10 +157,7 @@
     font-weight: 700;
     letter-spacing: -0.04em;
     line-height: 1;
-    background: linear-gradient(120deg, var(--ch-violet), var(--ch-cyan));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--accent);
   }
   .eg-step-body {
     display: grid;

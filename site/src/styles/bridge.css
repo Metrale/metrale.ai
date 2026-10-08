@@ -195,7 +195,7 @@
 }
 /* Second-hand identity never wears a verified pin's green. */
 .cmd-count-vouched {
-  color: var(--ch-cyan-text);
+  color: var(--t3);
 }
 .cmd-count-unreachable {
   color: var(--amber);
@@ -365,7 +365,7 @@
   color: var(--t1);
 }
 .rr-selected .rr-main {
-  border-left-color: var(--ch-cyan);
+  border-left-color: var(--sx);
   background: var(--bg2);
 }
 .rr-main:hover {
@@ -416,7 +416,7 @@
   color: var(--green);
 }
 .rr-trust-vouched {
-  color: var(--ch-cyan-text);
+  color: var(--t3);
 }
 .rr-trust-unreachable {
   color: var(--amber);
@@ -460,7 +460,7 @@
   flex-shrink: 0;
   font-size: 0.72rem;
   font-family: inherit;
-  color: var(--ch-cyan-text);
+  color: var(--accent);
   background: none;
   border: 1px solid var(--border-strong);
   border-radius: 6px;

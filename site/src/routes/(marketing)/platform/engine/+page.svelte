@@ -4,4 +4,4 @@
   import { routes } from '$lib/content/brand.js';
 </script>
 
-<PlatformPage path={routes.engine} page={enginePage} color="violet" />
+<PlatformPage path={routes.engine} page={enginePage} />

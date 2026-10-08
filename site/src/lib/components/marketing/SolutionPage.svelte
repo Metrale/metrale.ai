@@ -16,26 +16,25 @@
     lede={s.lede}
     primary={{ text: s.cta, href: routes.demoForm }}
     secondary={{ text: 'See pricing', href: routes.pricing }}
-    color="cyan"
   />
 
   <section class="av-section av-section-alt">
     <div class="av-container">
       <h2 class="av-sr">Where it fits</h2>
       <div class="av-grid av-grid-3 av-reveal">
-        <div class="av-card av-sx-violet">
+        <div class="av-card">
           <p class="av-card-tag">Why it fits</p>
           <ul class="av-list-check">
             {#each s.fit as f}<li>{f}</li>{/each}
           </ul>
         </div>
-        <div class="av-card av-sx-cyan">
+        <div class="av-card">
           <p class="av-card-tag">Workloads that move first</p>
           <ul class="av-list-check">
             {#each s.workloads as w}<li>{w}</li>{/each}
           </ul>
         </div>
-        <div class="av-card av-sx-green">
+        <div class="av-card">
           <p class="av-card-tag">How it deploys</p>
           <p>{s.deployment}</p>
         </div>

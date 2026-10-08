@@ -1,5 +1,6 @@
 import { test, expect, describe } from 'bun:test';
 import { readFileSync } from 'node:fs';
+import { contrast, readTokens } from '../../scripts/brand/tokens.mjs';
 import { MODEL_COLORS, MODEL_COLORS_LIGHT, MODEL_SLUGS, UNKNOWN_MODEL_COLOR, colorFor } from './series-colors.js';
 
 /**
@@ -26,35 +27,19 @@ const LIGHT_BAR = 4;
 const tokens = readFileSync(new URL('../../../web-shared/metrale-tokens.css', import.meta.url), 'utf8');
 
 /**
- * Both themes declare the same token names, so a match has to be scoped to one
- * block. Neither block nests braces, which is what makes the lazy match to the
- * first column-zero `}` safe. (Same helper as light-text-contrast.test.js.)
+ * The token file names the brand kit's colours rather than restating them, so
+ * each theme's values are read resolved through scripts/brand/tokens.mjs: the
+ * light theme is the dark one with the light block over it, which is what the
+ * browser paints. `declared` is what each block writes itself.
  */
-const block = (selector) => {
-  const m = tokens.match(new RegExp(`${selector}\\s*\\{([\\s\\S]*?)\\n\\}`));
-  if (!m) throw new Error(`${selector} is not in web-shared/metrale-tokens.css`);
-  return m[1];
-};
-const DARK = block(':root');
-const LIGHT = block('\\[data-theme="light"\\]');
+const T = readTokens(tokens);
+const DARK = T.dark;
+const LIGHT = T.light;
 
-const hexIn = (src, where, name) => {
-  const m = src.match(new RegExp(`--${name}:\\s*([^;]+);`));
-  if (!m) throw new Error(`--${name} is not in the ${where} block of web-shared/metrale-tokens.css`);
-  const v = m[1].trim();
-  if (!/^#[0-9a-fA-F]{6}$/.test(v)) throw new Error(`--${name} is "${v}" in the ${where} block, not a hex literal`);
+const hexIn = (map, where, name) => {
+  const v = map[name];
+  if (!/^#[0-9a-fA-F]{6}$/.test(v ?? '')) throw new Error(`--${name} resolves to "${v}" in the ${where} theme, not a hex colour`);
   return v;
-};
-
-const srgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
-const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-const relLum = (hex) => {
-  const v = srgb(hex);
-  return 0.2126 * lin(v[0]) + 0.7152 * lin(v[1]) + 0.0722 * lin(v[2]);
-};
-const contrast = (a, b) => {
-  const [hi, lo] = [relLum(a), relLum(b)].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
 };
 
 /**
@@ -123,9 +108,13 @@ test('the dark series values are the shipped 2026-08-30 set, unchanged', () => {
 });
 
 test('the light block declares exactly the same series tokens as the dark block', () => {
-  const names = (src) => [...src.matchAll(/--series-([a-z0-9-]+):/g)].map((m) => m[1]).sort();
-  expect(names(LIGHT)).toEqual(names(DARK));
-  expect(names(DARK)).toEqual(Object.values(MODEL_SLUGS).sort());
+  const names = (declared) =>
+    Object.keys(declared)
+      .filter((n) => n.startsWith('series-'))
+      .map((n) => n.slice('series-'.length))
+      .sort();
+  expect(names(T.declared.light)).toEqual(names(T.declared.dark));
+  expect(names(T.declared.dark)).toEqual(Object.values(MODEL_SLUGS).sort());
 });
 
 test('colorFor resolves through the theme token with the dark hex as fallback', () => {

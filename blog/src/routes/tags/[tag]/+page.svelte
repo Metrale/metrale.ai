@@ -17,7 +17,7 @@
   <div class="band">
     <div class="tag-h">
       <svg width="17" height="27" viewBox="0 0 396 636" fill="none" stroke-width="76" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M38 38L358 318L38 598" stroke={data.tag.color} />
+        <path d="M38 38L358 318L38 598" stroke="var(--sx)" />
       </svg>
       <h1>{data.tag.name}</h1>
     </div>
@@ -28,7 +28,7 @@
     <a class="chip" href="/">All</a>
     {#each Object.entries(tags) as [slug, t]}
       <a class="chip" href="/tags/{slug}" aria-current={slug === data.slug ? 'page' : undefined}>
-        <span class="dot" style="--tag-c: {t.color}"></span>{t.name}
+        <span class="dot"></span>{t.name}
       </a>
     {/each}
   </div>

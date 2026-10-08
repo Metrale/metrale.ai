@@ -226,7 +226,7 @@
 .cc-bar-fill {
   height: 100%;
   border-radius: 999px;
-  background: var(--bar);
+  background: var(--accent-fill);
   transition: width 0.25s linear;
 }
 /* indeterminate sheen — reuses the bd-shimmer keyframes from dashboard.css */

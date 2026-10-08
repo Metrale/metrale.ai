@@ -79,16 +79,15 @@
     }, 2400);
   }
 
-  // The hue grammar from the tokens file: violet is the engine, cyan is
-  // silicon, green is a verified multi-node result, gold is a caution.
+  // A quantised checkpoint and a multi-node topology are tagged in copper, the
+  // brand's one accent; everything else is a plain chip.
   const quantChip = (q) => {
     const k = (q || '').toLowerCase();
-    if (k === 'nvfp4') return 'av-chip av-chip-violet';
-    if (k === 'fp8') return 'av-chip av-chip-cyan';
+    if (k === 'nvfp4' || k === 'fp8') return 'av-chip av-chip-accent';
     return 'av-chip';
   };
   const quantLabel = (q) => (q && q !== 'none' ? q.toUpperCase() : 'BF16');
-  const topoChip = (t) => (t === 'EP=2' ? 'av-chip av-chip-green' : t === 'TP=2' ? 'av-chip av-chip-gold' : 'av-chip');
+  const topoChip = (t) => (t === 'EP=2' || t === 'TP=2' ? 'av-chip av-chip-accent' : 'av-chip');
 
   // A registry field is sometimes a phrase ("nvfp4 (mixed precision above
   // layer 55)", "27B dense hybrid (48 GDN linear-attn + 16 softmax-attn
@@ -99,7 +98,7 @@
   const details = (r) => [detail(r.quant), detail(r.params)].filter(Boolean).join(', ');
 </script>
 
-<section id="models" class="av av-section av-sx-violet">
+<section id="models" class="av av-section">
   <div class="av-container">
     <Head eyebrow={copy.label} title={copy.title} lede={copy.sub} maxCh={22}>
       {#snippet aside()}

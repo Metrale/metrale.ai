@@ -12,26 +12,30 @@
 // runs once with a seeded generator, so the layout is the same on every
 // machine and every run; draw is pure in (layout, phase).
 
+import brand from '../../../../assets/brand/tokens/brand.json';
+
 export const LOOP = 10; // seconds per loop
 export const W = 1280; // logical frame, scaled to cover the canvas
 export const H = 720;
 export const TAU = Math.PI * 2;
 
+// The kit's ground, copper and grey (assets/brand/tokens/brand.json), the
+// site's dark surfaces stepped off that ground (web-shared/metrale-tokens.css),
+// and the UI's green for a busy GPU. Copper is the only brand hue.
 export const ink = {
-  bg: '#0E1318',
-  bg2: '#141821',
-  card: '#191E27',
-  card2: '#1F252F',
-  sunk: '#0A0C0F',
-  border: '#24262B',
-  borderStrong: '#303338',
-  t3: '#82868F',
-  violet: '#BE9DF8',
-  cyan: '#49C3DB',
+  bg: brand.color.ground,
+  bg2: '#131922',
+  card: '#181F28',
+  card2: '#1E2631',
+  sunk: '#090C10',
+  border: '#232A34',
+  borderStrong: '#2F3742',
+  t3: brand.color.grayDark,
+  copper: brand.color.copper,
+  copperLight: brand.color.copperLight,
   green: '#12B981',
-  gold: '#EFB338',
 };
-const HUES = [ink.violet, ink.cyan, ink.green, ink.gold];
+const HUES = [ink.copper, ink.copperLight, ink.green];
 
 // mulberry32: small, fast, and identical everywhere.
 export function mulberry32(seed) {
@@ -80,7 +84,7 @@ function vignette(ctx, strength = 0.55) {
   ctx.fillRect(0, 0, W, H);
 }
 
-// One chevron of the mark: arm 320 wide by 280 tall, so a chevron `size` tall
+// One chevron: arm 320 wide by 280 tall, so a chevron `size` tall
 // is size * 320 / 560 wide. Round caps and joins, like the artwork.
 function chevron(ctx, x, y, size) {
   const h = size / 2;
@@ -134,8 +138,8 @@ const field = {
   draw(ctx, { layers }, phase) {
     ctx.fillStyle = ink.bg;
     ctx.fillRect(0, 0, W, H);
-    glow(ctx, W * 0.32, H * 0.5, 540, ink.violet, 0.11 + 0.04 * Math.sin(phase));
-    glow(ctx, W * 0.78, H * 0.62, 470, ink.cyan, 0.07 + 0.03 * Math.sin(phase + 2.1));
+    glow(ctx, W * 0.32, H * 0.5, 540, ink.copperLight, 0.11 + 0.04 * Math.sin(phase));
+    glow(ctx, W * 0.78, H * 0.62, 470, ink.copper, 0.07 + 0.03 * Math.sin(phase + 2.1));
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     for (const l of layers) {
@@ -183,7 +187,7 @@ const tokens = {
           amp: 0.12 + rng() * 0.2,
           n: 1 + Math.floor(rng() * 3),
           off: rng() * TAU,
-          hue: u < 0.1 ? ink.violet : u < 0.24 ? ink.gold : u < 0.4 ? ink.cyan : ink.green,
+          hue: u < 0.1 ? ink.copperLight : u < 0.24 ? ink.copperLight : u < 0.4 ? ink.copper : ink.green,
         });
       }
     }
@@ -196,7 +200,7 @@ const tokens = {
         span,
         items: Array.from({ length: 15 }, () => ({
           x: rng() * span,
-          hue: [ink.cyan, ink.violet, ink.green][Math.floor(rng() * 3)],
+          hue: [ink.copper, ink.copperLight, ink.green][Math.floor(rng() * 3)],
           r: 2 + rng() * 2,
           wob: rng() * TAU,
         })),
@@ -209,13 +213,13 @@ const tokens = {
     ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = rgba(ink.t3, 0.1);
     for (let x = 20; x < W; x += 40) for (let y = 20; y < H; y += 40) ctx.fillRect(x, y, 1.5, 1.5);
-    glow(ctx, W * 0.5, H * 0.48, 620, ink.violet, 0.06 + 0.02 * Math.sin(phase));
+    glow(ctx, W * 0.5, H * 0.48, 620, ink.copperLight, 0.06 + 0.02 * Math.sin(phase));
 
     // links, dashed, dashes travelling three periods per loop
     ctx.setLineDash([6, 10]);
     ctx.lineDashOffset = -mod((phase / TAU) * 16 * 3, 16); // wrapped to the dash period, so the last frame is the first
     ctx.lineWidth = 1.2;
-    ctx.strokeStyle = rgba(ink.cyan, 0.32);
+    ctx.strokeStyle = rgba(ink.copper, 0.32);
     for (const g of L.gpus) {
       const right = L.gpus.find((o) => o.y === g.y && o.x === g.x + g.w + L.gx);
       if (!right) continue;
@@ -235,12 +239,12 @@ const tokens = {
       const my = g.y + g.h / 2;
       ctx.fillStyle = ink.bg;
       ctx.fillRect(mx - 7, my - 8, 14, 16);
-      ctx.strokeStyle = rgba(ink.cyan, 0.7);
+      ctx.strokeStyle = rgba(ink.copper, 0.7);
       ctx.lineWidth = 1.4;
       ctx.beginPath();
       ctx.arc(mx, my - 2, 3, Math.PI, 0);
       ctx.stroke();
-      ctx.fillStyle = rgba(ink.cyan, 0.7);
+      ctx.fillStyle = rgba(ink.copper, 0.7);
       ctx.fillRect(mx - 4.5, my - 2, 9, 7);
     }
 
@@ -319,7 +323,7 @@ const rack = {
         leds.push({
           r,
           c,
-          hue: u < 0.7 ? ink.green : u < 0.88 ? ink.cyan : u < 0.95 ? ink.gold : ink.violet,
+          hue: u < 0.7 ? ink.green : u < 0.88 ? ink.copper : u < 0.95 ? ink.copperLight : ink.copperLight,
           n: 1 + Math.floor(rng() * 4),
           off: rng() * TAU,
           zk: 0.5 + rng() * 0.9,
@@ -328,7 +332,7 @@ const rack = {
     }
     const pulses = Array.from({ length: 6 }, () => ({
       z0: rng() * ZMAX,
-      hue: rng() < 0.55 ? ink.cyan : ink.violet,
+      hue: rng() < 0.55 ? ink.copper : ink.copperLight,
       len: 0.5 + rng() * 0.7,
     }));
     return { leds, pulses, rowsPerBay, ledsPerRow };
@@ -353,7 +357,7 @@ const rack = {
     g.addColorStop(1, ink.bg);
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, W, vpy);
-    glow(ctx, vpx, vpy, 260, ink.cyan, 0.16 + 0.03 * Math.sin(phase));
+    glow(ctx, vpx, vpy, 260, ink.copper, 0.16 + 0.03 * Math.sin(phase));
 
     const frac = phase / TAU;
     const wallX = 1.0;
@@ -409,7 +413,7 @@ const rack = {
     // the aisle strip and its pulses
     const [sx1, sy1] = P(0, bottom, -0.6);
     const [sx2, sy2] = P(0, bottom, ZMAX);
-    ctx.strokeStyle = rgba(ink.cyan, 0.16);
+    ctx.strokeStyle = rgba(ink.copper, 0.16);
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(sx1, sy1);

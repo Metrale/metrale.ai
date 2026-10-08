@@ -10,7 +10,6 @@
 </script>
 
 <Slide
-  act="green"
   eyebrow="Step 6"
   title="Mint a record: the command that gates every pull request"
   lede="The same subcommand in its other mode. It serves the benchmark's own recipe on a free port, waits for a cold NVFP4 load, measures, tears down, and writes a signed record; --url and --pull-request-gate are mutually exclusive by design, so an experiment can never become evidence by accident."
@@ -68,7 +67,6 @@
 </Slide>
 
 <Slide
-  act="green"
   eyebrow="Mechanism"
   title="Where the margin comes from"
   lede="Ask this before the numbers. A speedup with no stated mechanism and no known ceiling is a configuration artefact waiting to be found."

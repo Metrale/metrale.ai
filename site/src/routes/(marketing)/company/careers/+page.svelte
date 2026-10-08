@@ -18,8 +18,7 @@
 
   const all = generated.positions;
   const teams = ['All', ...teamsOf(all)];
-  const hues = ['violet', 'cyan', 'green', 'gold'];
-  const statusHue = { planned: 'gold', open: 'green', filled: '' };
+  const statusChip = { planned: '', open: 'av-chip-accent', filled: '' };
   const mailFor = (role) => `mailto:${contacts.careers}?subject=${encodeURIComponent(role)}`;
   // The form offers the roles from the same file, so a role added there is in
   // the select without a second edit.
@@ -44,14 +43,13 @@
     lede={c.lede}
     primary={c.apply}
     secondary={{ text: 'The repository', href: links.github, external: true }}
-    color="gold"
   />
 
   <section class="av-section av-section-alt">
     <div class="av-container">
       <div class="av-split av-split-wide av-reveal" style="align-items:start">
         <div>
-          <p class="av-eyebrow av-sx-gold">{c.culture.eyebrow}</p>
+          <p class="av-eyebrow">{c.culture.eyebrow}</p>
           <h2 class="av-creed">
             {#each c.culture.lines as line}<span>{line}</span>{/each}
           </h2>
@@ -59,7 +57,7 @@
         </div>
         <div class="av-grid av-grid-2">
           {#each c.benefits as b, i}
-            <div class="av-card av-lively av-sx-{hues[i]}">
+            <div class="av-card av-lively">
               <span class="av-lively-n av-mono" aria-hidden="true">0{i + 1}</span>
               <h3>{b.title}</h3>
               <p>{b.body}</p>
@@ -129,7 +127,7 @@
                 ><span class="av-role-head"
                   >{r.title}
                   <span class="av-small av-role-meta">{r.location} · {r.team}</span>
-                  <span class="av-chip av-chip-{statusHue[r.status]} av-role-status">{statusLabel(r.status)}</span></span
+                  <span class="av-chip {statusChip[r.status]} av-role-status">{statusLabel(r.status)}</span></span
                 ><span class="av-plus" aria-hidden="true">+</span></summary
               >
               <div class="av-answer">
@@ -137,13 +135,13 @@
                 <div class="av-role-more">
                   <div>
                     <p class="av-card-tag">{c.search.work}</p>
-                    <ul class="av-list-check av-sx-green">
+                    <ul class="av-list-check">
                       {#each r.does as d}<li>{d}</li>{/each}
                     </ul>
                   </div>
                   <div>
                     <p class="av-card-tag">{c.search.requirements}</p>
-                    <ul class="av-list-check av-sx-violet">
+                    <ul class="av-list-check">
                       {#each r.requirements as d}<li>{d}</li>{/each}
                     </ul>
                   </div>
@@ -195,7 +193,7 @@
     opacity: 0.85;
   }
   .av-creed span:nth-child(4) {
-    color: var(--ch-gold-text);
+    color: var(--accent);
   }
 
   /* The search and the team chips over the roles. One row on a desk, stacked
@@ -228,9 +226,9 @@
     border-color: var(--accent);
   }
   .av-roles-chip.is-on {
-    color: var(--ch-violet-text);
-    border-color: color-mix(in srgb, var(--ch-violet) 40%, transparent);
-    background: color-mix(in srgb, var(--ch-violet) 12%, transparent);
+    color: var(--accent-deep);
+    border-color: color-mix(in srgb, var(--sx) 40%, transparent);
+    background: color-mix(in srgb, var(--sx) 12%, transparent);
   }
   .av-roles-chip:focus-visible {
     outline: 2px solid var(--accent);

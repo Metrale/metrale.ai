@@ -32,9 +32,6 @@ export const blog = {
   name: 'Metrale blog',
   kicker: 'blog.metrale.ai',
   title: 'Notes from the inference layer',
-  // The second line of the share card, static/og-image.png. Regenerate the card
-  // with `node scripts/media/og.mjs --blog` from site/ after changing either.
-  card: 'Kernel work, benchmarks, product notes.',
   lede:
     'Kernel work, measured benchmarks, and what it takes to run frontier models on hardware you own. ' +
     'Everything we publish is reproducible from a commit.',
@@ -44,20 +41,14 @@ export const blog = {
 };
 
 /**
- * The four chevron colours carry fixed meanings on metrale.ai — violet
- * = engine, cyan = silicon, green = verified, gold = community. Categories
- * inherit those meanings rather than inventing a fifth palette.
- *
- * Two fields, one meaning: `color` is the mark's own hue and belongs on fills,
- * rules and chevron strokes; `textColor` is the same hue darkened in the light
- * theme so a category name set as small text clears WCAG AA on paper. In the
- * dark theme the two resolve to the same value.
+ * The categories. They are told apart by name: the brand has one accent,
+ * copper, and the reading pages draw every category in it.
  */
 export const tags = {
-  engineering: { name: 'Engineering', color: 'var(--ch-cyan)', textColor: 'var(--ch-cyan-text)', blurb: 'Kernels, memory, and the parts of the engine that decide the number.' },
-  benchmarks: { name: 'Benchmarks', color: 'var(--ch-gold)', textColor: 'var(--ch-gold-text)', blurb: 'What we measured, on what hardware, with the harness attached.' },
-  releases: { name: 'Releases', color: 'var(--ch-green)', textColor: 'var(--ch-green-text)', blurb: 'What shipped, what it changes, and what it does not.' },
-  design: { name: 'Design', color: 'var(--ch-violet)', textColor: 'var(--ch-violet-text)', blurb: 'The interface and the brand, measured the same way the engine is.' }
+  engineering: { name: 'Engineering', blurb: 'Kernels, memory, and the parts of the engine that decide the number.' },
+  benchmarks: { name: 'Benchmarks', blurb: 'What we measured, on what hardware, with the harness attached.' },
+  releases: { name: 'Releases', blurb: 'What shipped, what it changes, and what it does not.' },
+  design: { name: 'Design', blurb: 'The interface and the brand, measured the same way the engine is.' }
 };
 
 export const authors = {

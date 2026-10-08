@@ -97,7 +97,7 @@
     <div class="breadcrumb mono-label">
       <a href="/">Blog</a>
       <span aria-hidden="true">/</span>
-      <a href="/tags/{post.tag}" style="color: {tag.textColor}">{tag.name}</a>
+      <a href="/tags/{post.tag}" class="post-tag">{tag.name}</a>
     </div>
     <h1 class="post-title">{post.title}</h1>
     <p class="post-dek">{post.dek}</p>
@@ -144,7 +144,7 @@
           <span class="postnav-label mono-label">
             <svg class="postnav-chev back" viewBox="0 0 396 636" fill="none" stroke-width="76"
               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M38 38L358 318L38 598" stroke="var(--ch-violet)" />
+              <path d="M38 38L358 318L38 598" stroke="var(--sx)" />
             </svg>Previous
           </span>
           <span class="postnav-title">{data.older.title}</span>
@@ -155,7 +155,7 @@
           <span class="postnav-label mono-label">
             Next<svg class="postnav-chev" viewBox="0 0 396 636" fill="none" stroke-width="76"
               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M38 38L358 318L38 598" stroke="var(--ch-violet)" />
+              <path d="M38 38L358 318L38 598" stroke="var(--sx)" />
             </svg>
           </span>
           <span class="postnav-title">{data.newer.title}</span>

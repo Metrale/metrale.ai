@@ -65,7 +65,11 @@
 //
 // The search fixed the shipped trio, required >=4:1 on both surfaces, kept
 // clear of the UI accent (#BE9DF8 then; the Metrale accent #CDBFF1 was not
-// part of that search) so a series does not read as a link, and
+// part of that search; since brand v2 the accent is the kit's copper, and the
+// series were kept as they are by the owner's ruling of 2026-10-08, so the
+// copper series and the copper accent now share a hue family, and a series is
+// told from a link by its legend and its place in a chart) so a series does not
+// read as a link, and
 // reserved the green band (a series must not read as a PASS verdict), then
 // maximised the worst pair under normal/protan/deutan vision:
 //   rose   #cd517a   4.52:1 / 4.02:1

@@ -28,7 +28,7 @@
   <div class="av-container">
     <div class="av-split av-split-wide">
       <div class="av-reveal">
-        <p class="av-eyebrow av-sx-green">{proof.eyebrow}</p>
+        <p class="av-eyebrow">{proof.eyebrow}</p>
         <h2 class="av-h2">{proof.title}</h2>
         <p class="av-lede">{proof.body}</p>
         <div class="av-proof-stats">

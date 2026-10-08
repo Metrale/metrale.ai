@@ -114,9 +114,7 @@ export function compileMarkdown(src, { filename, tags, authors, highlight, measu
         const text = this.parser.parseInline(token.tokens);
         const id = slugify(token.text);
         if (token.depth === 2) {
-          // index drives the violet -> cyan -> green -> gold chevron cycle,
-          // exactly as a hand-written <H2 index={n}> does.
-          return hold(`<H2 id="${id}" index={${h2++}}>${text}</H2>\n`);
+          return hold(`<H2 id="${id}">${text}</H2>\n`);
         }
         return hold(`<h${token.depth} id="${id}">${text}</h${token.depth}>\n`);
       },

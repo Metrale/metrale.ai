@@ -14,11 +14,11 @@
   import { fill } from '$lib/content/live.js';
   import { routes } from '$lib/content/brand.js';
 
-  let { path, page, color = 'violet', extra = null, before = null } = $props();
+  let { path, page, extra = null, before = null } = $props();
 </script>
 
 <PageShell {path}>
-  <PageHero eyebrow={page.eyebrow} title={page.title} lede={page.lede} who={page.who} {color} />
+  <PageHero eyebrow={page.eyebrow} title={page.title} lede={page.lede} who={page.who} />
   <PageClip {path} />
 
   {#if before}{@render before()}{/if}
@@ -29,7 +29,7 @@
         <h2 class="av-sr">What it does</h2>
         <div class="av-grid av-grid-3 av-reveal">
           {#each page.features as f, i}
-            <div class="av-card av-sx-{['violet', 'cyan', 'green', 'gold'][i % 4]}">
+            <div class="av-card">
               <div class="av-card-icon" aria-hidden="true"><span class="av-mono">0{i + 1}</span></div>
               <h3>{f.title}</h3>
               <p>{f.body}</p>
@@ -55,8 +55,8 @@
           <p class="av-lede">{block.note}</p>
         </div>
         <div class="av-grid av-grid-3 av-reveal">
-          {#each block.items as b, i}
-            <div class="av-card av-card-accent av-sx-{['violet', 'cyan', 'green', 'gold'][i % 4]}">
+          {#each block.items as b}
+            <div class="av-card av-card-accent">
               <h3>{b.title}</h3>
               <p>{b.body}</p>
             </div>
@@ -72,8 +72,8 @@
     <section class="av-section av-section-tight">
       <div class="av-container">
         <div class="av-grid av-grid-4 av-reveal">
-          {#each page.stats as s, i}
-            <div class="av-tile av-sx-{['violet', 'cyan', 'green', 'gold'][i % 4]}">
+          {#each page.stats as s}
+            <div class="av-tile">
               <div class="av-num" style="font-size:2.2rem">
                 {fill(s.value)}{#if s.unit}<span style="font-size:0.5em;font-weight:500"> {s.unit}</span>{/if}
               </div>

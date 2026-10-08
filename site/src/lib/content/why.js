@@ -15,11 +15,10 @@ export const whyHero = {
   pillars: [
     {
       name: 'Speed',
-      color: 'violet',
       body: 'Compiled per hardware, model and quantization. More tokens per GPU, and the curve keeps climbing where agent fleets run.',
     },
-    { name: 'Security', color: 'cyan', body: 'One signed Rust binary, no interpreter in the request path, nothing leaves your perimeter.' },
-    { name: 'Governance', color: 'green', body: 'Every token has a receipt. Every GPU hour has an owner. Finance can sign it.' },
+    { name: 'Security', body: 'One signed Rust binary, no interpreter in the request path, nothing leaves your perimeter.' },
+    { name: 'Governance', body: 'Every token has a receipt. Every GPU hour has an owner. Finance can sign it.' },
   ],
 };
 
@@ -27,7 +26,6 @@ export const pillars = [
   {
     n: '01',
     name: 'Speed',
-    color: 'violet',
     title: 'The same GPUs produce more inference, and the curve holds where it matters.',
     lede: 'Generic runtimes ship one code path for every accelerator and tune it in Python. Metrale compiles the path for the silicon in front of it.',
     blocks: [
@@ -55,7 +53,6 @@ export const pillars = [
   {
     n: '02',
     name: 'Security',
-    color: 'cyan',
     title: 'Nothing leaves your perimeter, and there is nothing in the request path you did not sign.',
     lede: 'A serving stack that pulls two hundred dependencies at startup is a supply chain you did not audit. Metrale is one binary.',
     blocks: [
@@ -83,7 +80,6 @@ export const pillars = [
   {
     n: '03',
     name: 'Governance',
-    color: 'green',
     title: 'Every token has a receipt. Every GPU hour has an owner.',
     lede: 'The industry measures inference in tokens per second. Enterprises pay for it in dollars per workload. Metrale owns the layer between the two.',
     blocks: [

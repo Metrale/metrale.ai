@@ -29,7 +29,7 @@
       <h2 class="av-sr">What the session covers</h2>
       <div class="av-split av-split-wide" style="align-items:start">
         <div class="av-stack av-reveal" style="gap:1.5rem">
-          <ul class="av-list-check av-sx-green">
+          <ul class="av-list-check">
             {#each d.bullets as b}<li>{b}</li>{/each}
           </ul>
           <!-- The film, once, with controls. It fetches nothing until it is in view. -->

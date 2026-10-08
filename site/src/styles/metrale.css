@@ -358,37 +358,16 @@
 .av-head-split .av-lede {
   margin-top: 0;
 }
-.av-sx-violet {
-  --sx: var(--ch-violet);
-  --sx-text: var(--ch-violet-text);
-}
-.av-sx-cyan {
-  --sx: var(--ch-cyan);
-  --sx-text: var(--ch-cyan-text);
-}
-.av-sx-green {
-  --sx: var(--ch-green);
-  --sx-text: var(--ch-green-text);
-}
-.av-sx-gold {
-  --sx: var(--ch-gold);
-  --sx-text: var(--ch-gold-text);
-}
 .av-num {
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 3.2rem;
   letter-spacing: -0.04em;
   line-height: 1;
-  background: linear-gradient(120deg, var(--ch-violet), var(--ch-cyan) 60%, var(--ch-green));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--accent);
 }
 .av-num-plain {
-  background: none;
   color: var(--t1);
-  -webkit-text-fill-color: initial;
 }
 .av-pillars {
   display: flex;
@@ -577,25 +556,24 @@ a.av-card:hover,
   background: var(--bg2);
   color: var(--t2);
 }
-.av-chip-violet {
-  color: var(--ch-violet-text);
-  border-color: color-mix(in srgb, var(--ch-violet) 40%, transparent);
-  background: color-mix(in srgb, var(--ch-violet) 12%, transparent);
+/* Three chips: the brand's copper for a label, green for a verified result,
+   amber for a warning or a result still pending. The tint is 12% of the hue
+   over whatever the chip sits on; .contrast-check.mjs measures the text on
+   that tint over every surface, in both themes. */
+.av-chip-accent {
+  color: var(--accent-deep);
+  border-color: color-mix(in srgb, var(--sx) 40%, transparent);
+  background: color-mix(in srgb, var(--sx) 12%, transparent);
 }
-.av-chip-cyan {
-  color: var(--ch-cyan-text);
-  border-color: color-mix(in srgb, var(--ch-cyan) 40%, transparent);
-  background: color-mix(in srgb, var(--ch-cyan) 12%, transparent);
+.av-chip-ok {
+  color: var(--green);
+  border-color: color-mix(in srgb, var(--green) 40%, transparent);
+  background: color-mix(in srgb, var(--green) 12%, transparent);
 }
-.av-chip-green {
-  color: var(--ch-green-text);
-  border-color: color-mix(in srgb, var(--ch-green) 40%, transparent);
-  background: color-mix(in srgb, var(--ch-green) 12%, transparent);
-}
-.av-chip-gold {
-  color: var(--ch-gold-text);
-  border-color: color-mix(in srgb, var(--ch-gold) 40%, transparent);
-  background: color-mix(in srgb, var(--ch-gold) 12%, transparent);
+.av-chip-warn {
+  color: var(--amber);
+  border-color: color-mix(in srgb, var(--amber) 40%, transparent);
+  background: color-mix(in srgb, var(--amber) 12%, transparent);
 }
 .av-table {
   width: 100%;
@@ -693,7 +671,7 @@ a.av-card:hover,
    Now the gradient is painted once, on a square behind the screen, and the
    square is turned with `transform`, which the compositor does without the main
    thread or a repaint. The frame clips it to the ring. The glow is a static
-   shadow in the four brand colours, because a shadow is not clipped by its own
+   copper shadow, because a shadow is not clipped by its own
    box's overflow and costs nothing once drawn. Same picture, about 4% of a core.
 
    `is-live` is set by reveal.js while the frame is on screen, so a ring nobody
@@ -705,10 +683,8 @@ a.av-card:hover,
   isolation: isolate;
   overflow: hidden;
   box-shadow:
-    -22px -16px 54px -22px color-mix(in srgb, var(--ch-violet) 60%, transparent),
-    22px -16px 54px -22px color-mix(in srgb, var(--ch-cyan) 55%, transparent),
-    22px 20px 54px -22px color-mix(in srgb, var(--ch-green) 45%, transparent),
-    -22px 20px 54px -22px color-mix(in srgb, var(--ch-gold) 50%, transparent),
+    -22px -16px 54px -22px color-mix(in srgb, var(--sx) 55%, transparent),
+    22px 20px 54px -22px color-mix(in srgb, var(--sx) 35%, transparent),
     0 30px 80px -34px rgba(0, 0, 0, 0.55);
 }
 .av-frame::before {
@@ -721,11 +697,9 @@ a.av-card:hover,
   aspect-ratio: 1;
   background: conic-gradient(
     from 20deg at 50% 50%,
-    color-mix(in srgb, var(--ch-violet) 85%, var(--bg)) 0deg,
-    color-mix(in srgb, var(--ch-cyan) 85%, var(--bg)) 90deg,
-    color-mix(in srgb, var(--ch-green) 70%, var(--bg)) 180deg,
-    color-mix(in srgb, var(--ch-gold) 80%, var(--bg)) 260deg,
-    color-mix(in srgb, var(--ch-violet) 85%, var(--bg)) 360deg
+    color-mix(in srgb, var(--sx) 85%, var(--bg)) 0deg,
+    color-mix(in srgb, var(--sx) 20%, var(--bg)) 180deg,
+    color-mix(in srgb, var(--sx) 85%, var(--bg)) 360deg
   );
   transform: translate(-50%, -50%);
 }
@@ -829,13 +803,13 @@ a.av-card:hover,
 .av-glow-a {
   top: -20%;
   right: -10%;
-  background: var(--ch-violet);
+  background: var(--sx);
 }
 .av-glow-b {
   bottom: -30%;
   left: -15%;
-  background: var(--ch-cyan);
-  opacity: 0.14;
+  background: var(--sx);
+  opacity: 0.08;
 }
 .av-hero > .av-container {
   position: relative;
@@ -846,12 +820,7 @@ a.av-card:hover,
   overflow: hidden;
   border-radius: calc(var(--av-radius) + 8px);
   padding: 3.5rem 3rem;
-  background: linear-gradient(
-    120deg,
-    color-mix(in srgb, var(--ch-violet) 22%, var(--card)),
-    color-mix(in srgb, var(--ch-cyan) 16%, var(--card)) 60%,
-    color-mix(in srgb, var(--ch-gold) 12%, var(--card))
-  );
+  background: linear-gradient(120deg, color-mix(in srgb, var(--sx) 18%, var(--card)), var(--card) 70%);
   border: 1px solid var(--border);
 }
 .av-band-grid {
@@ -1025,10 +994,7 @@ a.av-card:hover,
   font-size: 1.6rem;
   letter-spacing: -0.04em;
   line-height: 1;
-  background: linear-gradient(120deg, var(--ch-violet), var(--ch-cyan));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--accent);
 }
 .av-step-when {
   font-family: var(--font-mono);
@@ -1059,7 +1025,7 @@ a.av-card:hover,
   top: 8px;
   bottom: 8px;
   width: 2px;
-  background: linear-gradient(180deg, var(--ch-violet), var(--ch-cyan), var(--ch-green), var(--ch-gold));
+  background: var(--sx);
   border-radius: 2px;
 }
 .av-beat {
@@ -1216,12 +1182,12 @@ a.av-card:hover,
   vertical-align: middle;
 }
 .av-evidence.is-measured {
-  color: var(--ch-green-text);
-  border-color: color-mix(in srgb, var(--ch-green) 45%, transparent);
+  color: var(--green);
+  border-color: color-mix(in srgb, var(--green) 45%, transparent);
 }
 .av-evidence.is-proposed {
-  color: var(--ch-gold-text);
-  border-color: color-mix(in srgb, var(--ch-gold) 45%, transparent);
+  color: var(--amber);
+  border-color: color-mix(in srgb, var(--amber) 45%, transparent);
 }
 .av-logo-wall {
   display: flex;
@@ -1305,7 +1271,7 @@ html:not([data-theme='light']) .av img.is-dark-invert {
   border-top: 0;
 }
 .av-col-right li {
-  color: var(--ch-green-text);
+  color: var(--sx-text);
   font-weight: 500;
 }
 .av-cols-mid {
@@ -1345,18 +1311,6 @@ html:not([data-theme='light']) .av img.is-dark-invert {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
 }
-.av-layer {
-  --sx: var(--ch-violet);
-  --sx-text: var(--ch-violet-text);
-}
-.av-layer.is-cyan {
-  --sx: var(--ch-cyan);
-  --sx-text: var(--ch-cyan-text);
-}
-.av-layer.is-green {
-  --sx: var(--ch-green);
-  --sx-text: var(--ch-green-text);
-}
 .av-diagram {
   margin-top: 2.5rem;
   background: var(--card);
@@ -1390,17 +1344,8 @@ html:not([data-theme='light']) .av img.is-dark-invert {
   stroke: var(--border-strong);
   rx: 10;
 }
-.av-diagram .box.violet {
-  stroke: var(--ch-violet);
-}
-.av-diagram .box.cyan {
-  stroke: var(--ch-cyan);
-}
-.av-diagram .box.green {
-  stroke: var(--ch-green);
-}
-.av-diagram .box.gold {
-  stroke: var(--ch-gold);
+.av-diagram .box.is-accent {
+  stroke: var(--sx);
 }
 .av-diagram .wire {
   stroke: var(--border-strong);
@@ -1492,8 +1437,8 @@ html:not([data-theme='light']) .av img.is-dark-invert {
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 1.1rem;
-  color: var(--bg);
-  background: linear-gradient(135deg, var(--ch-violet), var(--ch-cyan));
+  color: var(--on-accent);
+  background: var(--accent-fill);
   margin-bottom: 0.4rem;
 }
 .av-role {
@@ -1833,7 +1778,7 @@ html:not([data-theme='light']) .av img.is-dark-invert {
 
 /* ---- the sector bar on /solutions ---------------------------------------------
    A jump bar that stays under the header, the way the developer pages keep
-   their own bar. One link per sector, each with its hue. On a phone it
+   their own bar. One link per sector. On a phone it
    scrolls sideways rather than wrapping into a stack. */
 .av-sectorbar {
   position: sticky;

@@ -33,7 +33,7 @@
     <text class="sub" x="138" y="92" text-anchor="middle">OpenAI · Anthropic · Responses APIs</text>
 
     <path class="wire hot" d="M270 75 H338" />
-    <rect class="box violet" x="338" y="40" width="244" height="70" />
+    <rect class="box is-accent" x="338" y="40" width="244" height="70" />
     <text class="lbl" x="460" y="70" text-anchor="middle">GPU aware router</text>
     <text class="sub" x="460" y="92" text-anchor="middle">KV reuse · queue · VRAM pressure</text>
 
@@ -44,7 +44,7 @@
     <!-- the fleet: what the control plane manages as one thing -->
     <rect class="fleet" x="6" y="163" width="908" height="108" />
     {#each nodes as n, i}
-      <rect class="box violet" x={n.x - 144} y="175" width="288" height="84" />
+      <rect class="box is-accent" x={n.x - 144} y="175" width="288" height="84" />
       <text class="lbl" x={n.x} y="203" text-anchor="middle">{company.engine} · node {i + 1}</text>
       <text class="sub" x={n.x} y="224" text-anchor="middle">signed recipe · kernels for this silicon</text>
       <text class="sub" x={n.x} y="243" text-anchor="middle">{n.hw}</text>
@@ -52,7 +52,7 @@
     {/each}
 
     <!-- control plane, out of band: it reaches the fleet, never the request path -->
-    <rect class="box cyan" x="954" y="40" width="140" height="231" />
+    <rect class="box is-accent" x="954" y="40" width="140" height="231" />
     <text class="lbl" x="1024" y="70" text-anchor="middle">{company.control}</text>
     <text class="sub" x="1024" y="92" text-anchor="middle">out of band</text>
     {#each duties as w, i}
@@ -61,7 +61,7 @@
     <path class="wire oob" d="M954 217 H914" />
 
     <!-- economics ledger -->
-    <rect class="box green" x="6" y="300" width="1088" height="80" />
+    <rect class="box is-accent" x="6" y="300" width="1088" height="80" />
     <text class="lbl" x="28" y="330">{company.economics}</text>
     <text class="sub" x="28" y="352">workload × model × runtime × configuration × GPU × cluster</text>
     <text class="sub" x="1072" y="330" text-anchor="end">$ per million tokens · $ per workload at SLO · productive GPU hours</text>

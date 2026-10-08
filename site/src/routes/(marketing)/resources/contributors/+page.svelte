@@ -22,7 +22,6 @@
     lede={c.lede}
     primary={c.cta}
     secondary={{ text: c.cta2.text, href: c.cta2.href, external: true }}
-    color="gold"
   />
   <section class="av-section av-section-alt">
     <div class="av-container">

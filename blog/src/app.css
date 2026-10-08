@@ -74,9 +74,8 @@
   --line: var(--border);
   --line-hard: var(--border-strong);
 
-  /* Semantic accents. Same four meanings the marketing site fixes in its token
-     file: violet = engine, cyan = silicon, green = verified, gold = community. */
-  --accent-tech: var(--ch-cyan);
+  /* Status, as the marketing site's token file fixes it: green a verified
+     result, amber a warning. Every other accent is the brand's copper. */
   --accent-ok: var(--green);
   --accent-warn: var(--amber);
 
@@ -92,7 +91,7 @@
   --prose: 672px;             /* ~70ch at 17.5px */
   --shell: 1080px;            /* the marketing site's container width */
   /* 68px, not the marketing bar's 62: the horizontal lockup is sized by width
-     (>= 120px per the guidelines) and carries one chevron gap of clear space as
+     (>= 160px per the kit) and carries the kit's clear space, one stem, as
      margin, which no shorter bar can hold without cropping into it. */
   --header-h: 68px;
 
@@ -239,12 +238,14 @@ a { color: var(--accent); }
 }
 .chip:hover { color: var(--text-1); border-color: var(--line-hard); background: var(--bg-1); }
 .chip[aria-current='page'] { color: var(--bg-0); background: var(--text-1); border-color: var(--text-1); }
-.chip .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; background: var(--tag-c, var(--text-4)); }
+/* A category is named in copper, the brand's one accent. */
+.post-tag, .breadcrumb a.post-tag { color: var(--accent); }
+.chip .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; background: var(--sx); }
 
 .featured { display: block; text-decoration: none; padding: 44px 0 46px; border-bottom: 1px solid var(--line-soft); position: relative; }
 .featured::before {
   content: ''; position: absolute; left: -32px; top: 44px; bottom: 46px; width: 2px; border-radius: 2px;
-  background: linear-gradient(180deg, var(--ch-violet), var(--ch-cyan) 50%, var(--ch-gold));
+  background: var(--sx);
   opacity: 0; transition: opacity 220ms var(--ease);
 }
 .featured:hover::before { opacity: .85; }
@@ -277,7 +278,7 @@ a { color: var(--accent); }
   font-family: var(--mono); font-size: 12.5px; letter-spacing: .03em; color: var(--text-3);
   font-variant-numeric: tabular-nums; position: relative; padding-left: 16px;
 }
-.entry-date::before { content: ''; position: absolute; left: 0; top: .52em; width: 7px; height: 7px; border-radius: 50%; background: var(--tag-c, var(--text-4)); }
+.entry-date::before { content: ''; position: absolute; left: 0; top: .52em; width: 7px; height: 7px; border-radius: 50%; background: var(--sx); }
 .entry-body h2 { font-size: 19.5px; line-height: 1.35; font-weight: 520; letter-spacing: -.018em; transition: color var(--dur) var(--ease); }
 .entry:hover h2 { color: #fff; }
 .entry-body p { margin-top: 7px; font-size: 15px; line-height: 1.55; color: var(--text-3); max-width: 62ch; }
@@ -340,14 +341,10 @@ a { color: var(--accent); }
 .prose hr { border: 0; height: 1px; background: var(--line-soft); margin: 44px 0; }
 .prose :not(pre) > code {
   font-family: var(--mono); font-size: .875em; padding: 2px 5px; margin: 0 -1px; border-radius: 5px;
-  background: color-mix(in srgb, var(--accent-tech) 12%, transparent);
-  color: color-mix(in srgb, var(--accent-tech) 78%, white);
+  background: var(--bg-2);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--text-1);
 }
-/* Mixing the cyan toward white lifts it off a dark ground; on paper it does the
-   opposite and leaves #71D0E3 at 1.5:1 over its own tint. Inline code is small
-   text, so the light theme reads the darkened chevron twin instead. The chip
-   behind it keeps the 12% fill either way. */
-[data-theme="light"] .prose :not(pre) > code { color: var(--ch-cyan-text); }
 .prose blockquote {
   margin: 34px 0; padding: 2px 0 2px 22px;
   border-left: 2px solid color-mix(in srgb, var(--accent) 55%, transparent);
@@ -362,8 +359,8 @@ a { color: var(--accent); }
   border-radius: 9px; font-size: 16px; line-height: 1.58;
 }
 .callout p { margin: 0; }
-.callout .ci { width: 18px; height: 18px; margin-top: 3px; color: var(--co-text, var(--ch-gold-text)); flex: none; }
-.callout .ct { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .11em; text-transform: uppercase; color: var(--co-text, var(--ch-gold-text)); margin-bottom: 5px; }
+.callout .ci { width: 18px; height: 18px; margin-top: 3px; color: var(--co-text, var(--accent-warn)); flex: none; }
+.callout .ct { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .11em; text-transform: uppercase; color: var(--co-text, var(--accent-warn)); margin-bottom: 5px; }
 
 .codeblock { margin: 32px 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-1); }
 .cb-bar { display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: var(--bg-sunk); border-bottom: 1px solid var(--line-soft); }

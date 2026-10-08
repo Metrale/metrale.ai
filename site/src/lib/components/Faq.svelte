@@ -10,7 +10,7 @@
   import Head from './engine/lower/Head.svelte';
 </script>
 
-<section id="faq" class="av av-section av-sx-violet">
+<section id="faq" class="av av-section">
   <div class="av-container av-narrow">
     <Head eyebrow={faq.label} title={faq.title} lede={faq.sub} maxCh={22} />
 

@@ -62,10 +62,10 @@
     }
   }
   .au-row[data-state='clear'] .au-g {
-    color: var(--ch-green-text);
+    color: var(--green);
   }
   .au-row[data-state='open'] .au-g {
-    color: var(--ch-gold-text);
+    color: var(--amber);
   }
   .au-row[data-state='note'] .au-g {
     color: var(--t3);

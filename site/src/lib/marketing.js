@@ -1,25 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import palette from '../../../assets/brand/tokens/brand.json';
 import { ENGINE } from './data.js';
 
 export { ENGINE };
-// The kit's palette (assets/brand/tokens/brand.json): the M's three hues, its
-// ground and its inks. Green is a UI signal the kit does not draw; it is the
-// same value as --ch-green in web-shared/metrale-tokens.css.
-const { ground, violet, cyan, gold, ink, product } = palette.color;
-export const brandStyle = Object.entries({
-  purple: violet[1],
-  cyan: cyan[0],
-  green: '#12B981',
-  gold: gold[0],
-  ink: ground.dark,
-  paper: 'var(--bg)',
-  'gray-text': 'var(--t3)',
-  'wordmark-dark': ink.onDark[0],
-  'tagline-dark': product.onDark,
-})
-  .map(([name, value]) => `--mk-${name}:${value}`)
-  .join(';');
 
 // A section that left /engine names where its readers go now: the news band
 // became the product updates page, the hardware cards the platform's hardware

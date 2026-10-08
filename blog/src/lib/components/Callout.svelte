@@ -1,21 +1,21 @@
-<!-- An aside that must not be skimmed past. `tone` picks the chevron colour
-     that already means this: gold = community/notice, green = verified,
-     cyan = technical, violet = engine. -->
+<!-- An aside that must not be skimmed past. `tone` picks what the aside is:
+     notice is a warning (amber), verified a checked result (green), technical
+     and engine are copper, the brand's accent. Amber and green are the UI's
+     status colours and are used for nothing else. -->
 <script>
   const TONES = {
-    notice: 'var(--ch-gold)',
-    verified: 'var(--ch-green)',
-    technical: 'var(--ch-cyan)',
-    engine: 'var(--ch-violet)'
+    notice: 'var(--amber)',
+    verified: 'var(--green)',
+    technical: 'var(--sx)',
+    engine: 'var(--sx)'
   };
-  // The same four tones for the label and the icon. In the light theme the
-  // fill hue is too pale to carry an 11px uppercase label, so text reads from
-  // the darkened twin while the rule down the left keeps the mark's own hue.
+  // The label and the icon are small text: copper reads from its text token,
+  // the status colours are text-safe as they are.
   const TONES_TEXT = {
-    notice: 'var(--ch-gold-text)',
-    verified: 'var(--ch-green-text)',
-    technical: 'var(--ch-cyan-text)',
-    engine: 'var(--ch-violet-text)'
+    notice: 'var(--amber)',
+    verified: 'var(--green)',
+    technical: 'var(--accent)',
+    engine: 'var(--accent)'
   };
   let { label, tone = 'notice', children } = $props();
   const color = $derived(TONES[tone] ?? TONES.notice);

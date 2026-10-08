@@ -128,7 +128,6 @@ export const solution = {
       title: 'Runs your models faster on the same silicon.',
       body: 'A compiled inference stack in Rust and CUDA. Hand tuned kernels per hardware, model and quantization, speculative decoding, prefix caching and expert parallelism across nodes. OpenAI and Anthropic compatible APIs from one 75 MB binary.',
       href: routes.engine,
-      color: 'violet',
     },
     {
       key: 'control',
@@ -137,7 +136,6 @@ export const solution = {
       title: 'Deploys, governs and repairs the fleet.',
       body: 'Signed recipes, release channels, canary rollouts that roll back on telemetry, GPU aware routing, autoscaling and node repair. Runs in your cloud account, on your metal, or air gapped. Never on the inference path.',
       href: routes.control,
-      color: 'cyan',
     },
     {
       key: 'economics',
@@ -146,7 +144,6 @@ export const solution = {
       title: 'Turns telemetry into accountability.',
       body: 'Cost per million tokens, cost per successful workload, productive GPU hours and stranded capacity, by model, cluster and business unit, measured against the baseline you ran before.',
       href: routes.economics,
-      color: 'green',
     },
   ],
   foot: {
@@ -243,14 +240,11 @@ export const recognition = {
   eyebrow: 'Recognition',
   title: 'Receipts, not adjectives.',
   lede: 'Every card links to the primary source.',
-  // `mark` is the issuer's own logo (see BrandMark.svelte and static/logos). `hue`
-  // is one of the four brand colours, by what the receipt is for: green for a
-  // verified result, gold for community, cyan for silicon, violet for the engine.
+  // `mark` is the issuer's own logo (see BrandMark.svelte and static/logos).
   cards: [
     {
       org: 'AMD',
       mark: { name: 'AMD', file: 'amd', fileDark: 'amd-dark', height: 22 },
-      hue: 'cyan',
       date: 'July 2026',
       title: 'Strix Halo hardware provided for the gfx1151 bring up',
       cta: 'See the gfx1151 kernels',
@@ -259,7 +253,6 @@ export const recognition = {
     {
       org: 'NVIDIA Inception',
       mark: { name: 'NVIDIA Inception', src: '/nvidia-inception.webp', srcDark: '/nvidia-inception-dark.webp', height: 34 },
-      hue: 'violet',
       date: 'Member',
       title: 'Program member. DGX Spark hardware provided for the GB10 bring up',
       cta: 'About the program',
@@ -280,7 +273,6 @@ export const differences = {
       body: 'Metrale compiles a kernel set per hardware, model and quantization instead of shipping one generic path. On the published GB10 ladder it wins every rung against the matched vLLM configuration and keeps scaling from C=64 to C=128 while the baseline flattens.',
       question: 'Ask for the throughput curve at C=128 on your workload, not a single stream number on theirs.',
       href: routes.engine,
-      color: 'violet',
     },
     {
       n: '02',
@@ -289,7 +281,6 @@ export const differences = {
       body: 'One signed Rust binary with no Python or PyTorch in the request path. Prompts, weights and telemetry stay on hardware you own, in your cloud account, or on an air gapped network. The control plane never sits on the inference path.',
       question: 'Ask what is in the request path, and who audits the two hundred dependencies behind it.',
       href: routes.security,
-      color: 'cyan',
     },
     {
       n: '03',
@@ -298,7 +289,6 @@ export const differences = {
       body: 'Every response traces to a signed recipe, a kernel build and a gate record. Every GPU hour is attributed to a model, a cluster and a business unit. Governance is a ledger finance can sign, not a dashboard operators tolerate.',
       question: 'Ask what a workload cost last Tuesday, by business unit. A tokens per second chart is not an answer.',
       href: routes.economics,
-      color: 'green',
     },
   ],
 };

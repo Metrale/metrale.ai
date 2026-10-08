@@ -11,8 +11,8 @@
     <div class="av-container">
       <h2 class="av-sr">Ways to reach us</h2>
       <div class="av-grid av-grid-3 av-reveal">
-        {#each c.paths as p, i}
-          <div class="av-card av-card-accent av-sx-{['violet', 'cyan', 'green', 'gold'][i % 4]}">
+        {#each c.paths as p}
+          <div class="av-card av-card-accent">
             <h3>{p.title}</h3>
             <p>{p.body}</p>
             <div class="av-stack" style="margin-top:1rem;gap:0.4rem">

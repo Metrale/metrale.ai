@@ -64,7 +64,7 @@
 <nav>
   <div class="nav-inner">
     <a class="nav-logo" href="/" aria-label="Metrale home" data-sveltekit-reload>
-      <MetraleLockup kind="wordmark" width={122} />
+      <MetraleLockup width={160} />
     </a>
     <div class="nav-links">
       {#each nav.links as l}

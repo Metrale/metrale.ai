@@ -14,7 +14,7 @@
   <div class="hdr-in">
     <div class="brand">
       <a class="brand-mark" href={landing} aria-label="Metrale home">
-        <MetraleLockup kind="wordmark" />
+        <MetraleLockup />
       </a>
       <span class="brand-div" aria-hidden="true"></span>
       <a class="brand-sub" href="/" aria-current={current('/') ? 'page' : undefined}>Blog</a>

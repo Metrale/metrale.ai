@@ -150,7 +150,7 @@ writeFileSync(
 `
 );
 const STATIC = join(repo, 'site', 'static');
-for (const icon of ['favicon.svg', 'favicon.ico', 'favicon-32.png', 'favicon-16.png', 'apple-touch-icon.png', 'og-image.png']) {
+for (const icon of ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png', 'og-image.png']) {
   if (existsSync(join(STATIC, icon))) copyFileSync(join(STATIC, icon), join(OUT, icon));
 }
 // The book's own cache rules, then this repository's security headers after

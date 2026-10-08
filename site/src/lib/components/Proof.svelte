@@ -18,7 +18,7 @@
   ];
 </script>
 
-<section id="proof" class="av av-section av-section-tight av-sx-green eg-proof" aria-label={proof.label}>
+<section id="proof" class="av av-section av-section-tight eg-proof" aria-label={proof.label}>
   <div class="av-container">
     <ul class="eg-proof-strip">
       {#each items as item (item.kind)}

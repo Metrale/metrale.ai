@@ -14,7 +14,7 @@
   <PageHero eyebrow={whyHero.eyebrow} title={whyHero.title} lede={whyHero.lede} primary={whyHero.primary} secondary={whyHero.secondary}>
     <div class="av-grid av-grid-3 av-why-pillars">
       {#each whyHero.pillars as p}
-        <div class="av-card av-card-accent av-sx-{p.color}">
+        <div class="av-card av-card-accent">
           <p class="av-card-tag">{p.name}</p>
           <p>{p.body}</p>
         </div>
@@ -23,7 +23,7 @@
   </PageHero>
 
   {#each pillars as p, i}
-    <section class="av-section av-sx-{p.color}" class:av-section-alt={i % 2 === 0} id={p.name.toLowerCase()}>
+    <section class="av-section" class:av-section-alt={i % 2 === 0} id={p.name.toLowerCase()}>
       <div class="av-container">
         <div class="av-head av-reveal">
           <p class="av-eyebrow">{p.n} · {p.name}</p>

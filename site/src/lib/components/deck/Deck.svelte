@@ -23,21 +23,18 @@
 
   let index = $state(0);
   let total = $state(0);
-  let acts = $state([]);
 
   // Registration happens during child init, which Svelte runs in DOM order.
   let seq = 0;
   setContext('deck', {
-    register(act) {
+    register() {
       const n = seq++;
       total = seq;
-      acts[n] = act;
       return n;
     },
     current: () => index,
   });
 
-  const act = $derived(acts[index] ?? 'violet');
   const pad = (n) => String(n).padStart(2, '0');
 
   // The hash, not a query param: this route is prerendered, and touching
@@ -98,7 +95,7 @@
 <svelte:window {onkeydown} onhashchange={readHash} />
 <svelte:head><title>{title} · Metrale</title></svelte:head>
 
-<div class="dk" style="--sx: var(--ch-{act}); --sx-text: var(--ch-{act}-text)" data-slide={index + 1} data-total={total}>
+<div class="dk" data-slide={index + 1} data-total={total}>
   <p class="dk-live" aria-live="polite">Slide {index + 1} of {total}</p>
 
   <div class="dk-stage">
@@ -120,11 +117,10 @@
       <span class="dk-count mono" aria-hidden="true">{pad(index + 1)} / {pad(total)}</span>
       <button type="button" class="dk-btn" onclick={() => go(index + 1)} disabled={index === total - 1}>Next</button>
     </div>
-    <!-- One segment per slide, coloured by act, so the reader can see the
-         movements of the deck and where they are inside the current one. -->
+    <!-- One segment per slide, so the reader can see where they are in the deck. -->
     <div class="dk-rail" aria-hidden="true">
-      {#each acts as a, n}
-        <i class="dk-seg" class:on={n <= index} style="--c: var(--ch-{a ?? 'violet'})"></i>
+      {#each { length: total }, n}
+        <i class="dk-seg" class:on={n <= index}></i>
       {/each}
     </div>
   </footer>
@@ -152,8 +148,7 @@
     --dk-chrome-h: 56px;
   }
 
-  /* A wash of the current act's colour, low enough to read as depth rather
-     than decoration. */
+  /* A wash of copper, low enough to read as depth rather than decoration. */
   .dk::before {
     content: '';
     position: absolute;
@@ -315,7 +310,7 @@
     transition: background 320ms ease;
   }
   .dk-seg.on {
-    background: var(--c);
+    background: var(--sx);
   }
 
   .dk-live {

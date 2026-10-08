@@ -25,7 +25,6 @@
   // main. Not the ladder's build sha: that is the campaign's historical
   // provenance, not a commit a reader can check out today.
   const stamp = `${counts.gates.signed} ${hero.art.records} · ${counts.gates.newest}`;
-  const hues = ['av-sx-violet', 'av-sx-cyan', 'av-sx-green'];
 
   // The frame's ring turns only while the frame is on screen, the way reveal.js
   // gates it on the marketing pages. reveal.js lives in the marketing chunk,
@@ -76,7 +75,7 @@
   }}
 />
 
-<section id="top" class="av av-hero av-sx-violet eg-hero">
+<section id="top" class="av av-hero eg-hero">
   <div class="av-glow av-glow-a" aria-hidden="true"></div>
   <div class="av-glow av-glow-b" aria-hidden="true"></div>
   <div class="av-container">
@@ -84,8 +83,8 @@
       <div class="av-hero-copy">
         <p class="av-eyebrow av-hero-kicker">{hero.kicker}</p>
         <ul class="av-pillars" aria-label="What Metrale Engine is">
-          {#each hero.pillars as p, i}
-            <li class="av-pill {hues[i]}"><i aria-hidden="true"></i>{p}</li>
+          {#each hero.pillars as p}
+            <li class="av-pill"><i aria-hidden="true"></i>{p}</li>
           {/each}
         </ul>
         <h1 class="av-h1">{hero.headline[0]}<br /><span class="av-soft">{hero.headline[1]}</span></h1>
@@ -109,7 +108,7 @@
           <div class="eg-proof">
             <div class="eg-proof-head">
               <span class="av-kicker"><span class="av-dot"></span> {hero.art.kicker}</span>
-              <a class="av-chip av-chip-green" href={ladder.results_doc_url} target="_blank" rel="noopener">{stamp} ↗</a>
+              <a class="av-chip av-chip-ok" href={ladder.results_doc_url} target="_blank" rel="noopener">{stamp} ↗</a>
             </div>
             <dl class="eg-proof-stats">
               <div>

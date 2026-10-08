@@ -4,12 +4,13 @@
 
    Same design system as the rest of the site — ledger rails, --sx section
    accent, the card and chip grammar — because this is the same product, not a
-   dashboard bolted onto it. The page-level accent is cyan: the chevron colours
-   carry fixed meanings and this page is about silicon.
+   dashboard bolted onto it. The accent is the brand's copper, as everywhere;
+   green says a machine is paired or running, and a machine known only second
+   hand is drawn in the neutral grey, dashed.
 
-   Contrast rule, restated because it is easy to break here: the brand colours
-   clear 4.5:1 as TEXT on --bg and --card, but as FILLS they must carry --bg
-   ink, never white. White on gold is 1.88:1.
+   Contrast rule, restated because it is easy to break here: copper as TEXT is
+   --accent (or --accent-deep on a copper tint), never --sx, which is the mark's
+   own copper and under 4.5:1. A filled control reads --on-accent.
 
    Every viewport rule lives in mobile.css, which loads after this file.
    ========================================================================== */
@@ -178,12 +179,12 @@
   background: currentColor;
 }
 .trust-paired {
-  color: var(--ch-green-text);
-  background: color-mix(in srgb, var(--ch-green) 14%, transparent);
+  color: var(--green);
+  background: color-mix(in srgb, var(--green) 14%, transparent);
 }
 .trust-this {
-  color: var(--ch-cyan-text);
-  background: color-mix(in srgb, var(--ch-cyan) 14%, transparent);
+  color: var(--accent-deep);
+  background: color-mix(in srgb, var(--sx) 14%, transparent);
 }
 .trust-pairing,
 .trust-unreachable {
@@ -240,9 +241,9 @@
   font-weight: 700;
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
-  color: var(--ch-cyan-text);
-  background: color-mix(in srgb, var(--ch-cyan) 14%, transparent);
-  border: 1px solid color-mix(in srgb, var(--ch-cyan) 30%, transparent);
+  color: var(--accent-deep);
+  background: color-mix(in srgb, var(--sx) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sx) 30%, transparent);
 }
 .chip-link-warn {
   color: var(--amber);
@@ -391,7 +392,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  color: var(--ch-green-text);
+  color: var(--green);
   font-weight: 650;
 }
 .fl-running .dot {
@@ -490,7 +491,7 @@
   display: block;
 }
 .topo-edge {
-  stroke: var(--ch-cyan);
+  stroke: var(--sx);
   stroke-width: 2.5;
 }
 .topo-edge-warn {
@@ -514,7 +515,7 @@
 }
 /* The head badge is a fill, so it carries --bg ink rather than white. */
 .topo-head-tag {
-  fill: var(--bg);
+  fill: var(--on-accent);
   font-family: var(--font-mono);
   font-size: 9px;
   font-weight: 800;
@@ -721,7 +722,7 @@
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: 0.06em;
-  color: var(--ch-cyan-text);
+  color: var(--accent);
   text-align: center;
 }
 .pair-fp-note {
@@ -1565,7 +1566,7 @@
   border-color: var(--sx);
 }
 .ld-place-btn:focus-visible {
-  outline: 2px solid var(--sx);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 .ld-place-name {
@@ -1713,7 +1714,7 @@
   padding: 0.05rem 0.4rem;
   border-radius: 4px;
   background: var(--bg2);
-  color: var(--ch-cyan-text);
+  color: var(--t2);
   font-size: 0.72rem;
 }
 .fs-meta {
@@ -1766,7 +1767,7 @@
   border-radius: 6px;
 }
 .fs-field input:focus-visible {
-  outline: 2px solid var(--ch-cyan);
+  outline: 2px solid var(--focus);
   outline-offset: 1px;
 }
 
@@ -1809,7 +1810,7 @@
    check against their own. */
 .fl-subnet {
   background: var(--bg2);
-  color: var(--ch-cyan-text);
+  color: var(--t2);
   border: 1px solid var(--border);
   font-size: 0.68rem;
   letter-spacing: 0.01em;
@@ -1842,10 +1843,10 @@
 .hd-btn:hover,
 .hd-btn[aria-expanded='true'] {
   color: var(--t1);
-  border-color: var(--ch-cyan);
+  border-color: var(--sx);
 }
 .hd-btn:focus-visible {
-  outline: 2px solid var(--ch-cyan);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 .hd-panel {
@@ -1907,7 +1908,7 @@
 /* A vouched hop is drawn differently because it IS different: that machine is
    reached through another one and goes away with it. */
 .rm-edge-vouched {
-  stroke: var(--ch-cyan);
+  stroke: var(--t3);
   stroke-opacity: 0.55;
   stroke-dasharray: 5 4;
 }
@@ -1930,7 +1931,7 @@
   stroke: var(--t2);
 }
 .rm-dot-vouched {
-  stroke: var(--ch-cyan);
+  stroke: var(--t3);
   stroke-opacity: 0.7;
 }
 .rm-label {
@@ -1939,16 +1940,16 @@
 }
 
 /* A vouched machine: known only because a peer said so. Deliberately shares no
-   treatment with a paired card — dashed and cyan-tinted rather than solid — 
+   treatment with a paired card — dashed and grey rather than solid — 
    because presenting second-hand knowledge as verified is the one thing this
    provenance work exists to prevent. */
 .fl-card-vouched {
   border-style: dashed;
-  border-color: color-mix(in srgb, var(--ch-cyan) 45%, var(--border));
+  border-color: color-mix(in srgb, var(--t3) 45%, var(--border));
 }
 .trust-vouched {
-  color: var(--ch-cyan-text);
-  border-color: color-mix(in srgb, var(--ch-cyan) 45%, var(--border));
+  color: var(--t3);
+  border-color: color-mix(in srgb, var(--t3) 45%, var(--border));
 }
 .fl-prov {
   font-size: 0.72rem;
@@ -1985,7 +1986,7 @@
   margin: 0 0 0.5rem;
 }
 .jg-h:focus-visible {
-  outline: 2px solid var(--ch-cyan);
+  outline: 2px solid var(--focus);
   outline-offset: 3px;
 }
 .jg-lead {
@@ -2026,7 +2027,7 @@
   color: var(--t1);
 }
 .jg-link:focus-visible {
-  outline: 2px solid var(--ch-cyan);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 /* Amber, not red: the code is about to lapse, which costs one click to redo. */
@@ -2055,7 +2056,7 @@
   color: var(--t2);
 }
 .jg-tshoot summary:focus-visible {
-  outline: 2px solid var(--ch-cyan);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 .jg-tshoot ul {
@@ -2086,10 +2087,10 @@
 .jg-grant input {
   margin-top: 0.2rem;
   flex-shrink: 0;
-  accent-color: var(--ch-cyan);
+  accent-color: var(--accent-fill);
 }
 .jg-grant input:focus-visible {
-  outline: 2px solid var(--ch-cyan);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 .jg-grant-why {

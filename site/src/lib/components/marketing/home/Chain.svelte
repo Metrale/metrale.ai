@@ -5,7 +5,7 @@
 <section class="av-section" id="chain">
   <div class="av-container">
     <div class="av-head av-center av-reveal">
-      <p class="av-eyebrow av-sx-cyan" style="justify-content:center">{chain.eyebrow}</p>
+      <p class="av-eyebrow" style="justify-content:center">{chain.eyebrow}</p>
       <h2 class="av-h2">{chain.title}</h2>
     </div>
     <div class="av-chain av-reveal">

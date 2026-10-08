@@ -125,7 +125,7 @@
           </text>
           {#if head === p.node.id}
             <g transform="translate({p.x - 10}, {p.y + R + 6})">
-              <rect width="20" height="14" rx="3" fill="var(--ch-cyan)" />
+              <rect width="20" height="14" rx="3" fill="var(--accent-fill)" />
               <text class="topo-head-tag" x="10" y="10.5" text-anchor="middle">H</text>
             </g>
           {/if}

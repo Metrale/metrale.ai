@@ -10,17 +10,17 @@
   const current = $derived(modelData.find((v) => v.vendor === vendor));
 </script>
 
-<PlatformPage path={routes.hardware} page={p} color="cyan">
+<PlatformPage path={routes.hardware} page={p}>
   {#snippet before()}
     <section class="av-section av-section-alt">
       <div class="av-container">
         <h2 class="av-sr">Verified hardware</h2>
         <div class="av-grid av-grid-2 av-reveal">
           {#each p.verified as h}
-            <div class="av-card av-card-accent av-sx-green">
+            <div class="av-card av-card-accent">
               <div class="av-row" style="justify-content:space-between;margin-bottom:0.6rem">
                 <p class="av-card-tag" style="margin:0">{h.chip}</p>
-                <span class="av-chip av-chip-green">{h.status}</span>
+                <span class="av-chip av-chip-ok">{h.status}</span>
               </div>
               <h3>{h.name}</h3>
               <p>{h.body}</p>
@@ -30,10 +30,10 @@
         </div>
         <div class="av-grid av-grid-4 av-reveal" style="margin-top:1.25rem">
           {#each p.bringup as h}
-            <div class="av-card av-sx-gold">
+            <div class="av-card">
               <div class="av-row" style="justify-content:space-between;margin-bottom:0.6rem">
                 <p class="av-card-tag" style="margin:0">{h.chip}</p>
-                <span class="av-chip av-chip-gold">{h.status}</span>
+                <span class="av-chip av-chip-warn">{h.status}</span>
               </div>
               <h3 style="font-size:1rem">{h.name}</h3>
               <p style="font-size:0.88rem">{h.body}</p>
@@ -65,7 +65,7 @@
                   <div class="av-model">
                     <b>{r.displayName}</b>
                     <div class="av-row" style="gap:0.35rem">
-                      <span class="av-chip av-chip-violet">{r.quant}</span>
+                      <span class="av-chip av-chip-accent">{r.quant}</span>
                       <span class="av-chip">{r.topology}</span>
                       {#if r.params}<span class="av-chip">{r.params}</span>{/if}
                     </div>

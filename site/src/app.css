@@ -1,6 +1,6 @@
 /* =============================================================================
    The developer pages' design system.
-   One accent (violet), one verify (green), a near-black canvas, monospace
+   One accent (copper), one verify (green), a near-black canvas, monospace
    instruments. The signature element is the gate receipt (.receipt). Boldness
    is spent there; the rest stays disciplined. Theme is committed dark.
    ========================================================================== */
@@ -177,17 +177,18 @@ nav:not(.av-nav) {
   align-items: center;
   justify-content: space-between;
 }
-/* Gap is 0 and the left margin is negative: the lockup carries one chevron gap
-   of clear space as its own margin, nothing may enter that space, and cancelling
-   it against the bar's padding is what keeps the mark optically aligned with the
-   content below rather than indented by it. */
+/* Gap is 0 and the left margin is negative: the logo carries the kit's clear
+   space (one stem, 53 of its 973 units: 8.7 px at 160 px) as its own margin,
+   nothing may enter that space, and cancelling it against the bar's padding is
+   what keeps the mark optically aligned with the content below rather than
+   indented by it. */
 .nav-logo {
   display: flex;
   align-items: center;
   gap: 0;
   text-decoration: none;
   color: var(--t1);
-  margin-left: -14px;
+  margin-left: -9px;
 }
 .nav-star {
   color: var(--accent);
@@ -301,9 +302,9 @@ nav:not(.av-nav) {
   flex-shrink: 0;
   padding: 0.08rem 0.42rem;
   border-radius: 4px;
-  background: color-mix(in srgb, var(--ch-cyan) 16%, transparent);
-  color: var(--ch-cyan-text);
-  border: 1px solid color-mix(in srgb, var(--ch-cyan) 35%, transparent);
+  background: color-mix(in srgb, var(--sx) 16%, transparent);
+  color: var(--accent-deep);
+  border: 1px solid color-mix(in srgb, var(--sx) 35%, transparent);
   font-size: 0.64rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -628,8 +629,8 @@ nav:not(.av-nav) {
   font-size: 0.76rem;
   color: var(--t3);
 }
-/* Underlined, not just tinted. --accent #BE9DF8 against the --t3 #82868F it
-   sits inside is 1.62:1 — nowhere near the 3:1 that lets colour alone carry
+/* Underlined, not just tinted. --accent (copper-light) against the --t3 it
+   sits inside is 1.04:1 — nowhere near the 3:1 that lets colour alone carry
    the distinction — so without this the attribution link is invisible to a
    reader who cannot separate the two hues, and Lighthouse's link-in-text-block
    audit fails the whole page. */
@@ -946,7 +947,7 @@ nav:not(.av-nav) {
 .ms-accent {
   height: 4px;
   width: 100%;
-  background: var(--bar);
+  background: var(--sx);
 }
 .ms-famhead {
   display: flex;
@@ -1016,9 +1017,9 @@ nav:not(.av-nav) {
   border-color: color-mix(in srgb, var(--accent) 30%, transparent);
 }
 .chip-fp8 {
-  background: color-mix(in srgb, var(--ch-cyan) 14%, transparent);
-  color: var(--ch-cyan-text);
-  border-color: color-mix(in srgb, var(--ch-cyan) 30%, transparent);
+  background: var(--bg2);
+  color: var(--t2);
+  border-color: var(--border-strong);
 }
 .chip-bf16 {
   background: rgba(0, 0, 0, 0.08);
@@ -2173,26 +2174,9 @@ section {
 
    The engine's numbers come from gate output, so the page is a chain of
    custody rather than a landing page. Every section is an entry: an index, a
-   chevron in that section's colour, the entry name, then the provenance stamp
-   that says where the numbers under it came from. The three-chevron mark stops
-   being a logo in the corner and becomes the structure of the page.
+   copper chevron, the entry name, then the provenance stamp that says where
+   the numbers under it came from.
    ========================================================================== */
-.sx-violet {
-  --sx: var(--ch-violet);
-  --sx-text: var(--ch-violet-text);
-}
-.sx-cyan {
-  --sx: var(--ch-cyan);
-  --sx-text: var(--ch-cyan-text);
-}
-.sx-green {
-  --sx: var(--ch-green);
-  --sx-text: var(--ch-green-text);
-}
-.sx-gold {
-  --sx: var(--ch-gold);
-  --sx-text: var(--ch-gold-text);
-}
 
 .ledger-rail {
   display: flex;
@@ -2255,8 +2239,7 @@ a.prov:hover {
   border-color: var(--border-strong);
 }
 
-/* Section accent, applied through --sx so a section changes colour in one
-   place. These four selectors are why the chevron system is not just paint. */
+/* The section accent, copper, applied through --sx. */
 .ms-accent,
 .news-accent {
   background: var(--sx);
@@ -2396,8 +2379,7 @@ a.prov:hover {
 .faq-item summary:hover .faq-q {
   color: var(--sx-text);
 }
-/* A chevron built from the mark's geometry: same round caps, same 41° arm,
-   rotated down when open. */
+/* A disclosure chevron with round caps, rotated down when open. */
 .faq-mark {
   flex-shrink: 0;
   width: 11px;

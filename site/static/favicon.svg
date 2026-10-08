@@ -1,5 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12 -12 1024 791" width="1024" height="791" role="img" aria-label="Metrale">
-  <title>Metrale</title>
-  <path d="M0 0L0 767L258 625.1L258 390.9L500 524L726.36 399.5Z" fill="#C65A2E"/>
-  <path d="M1000 0L558.18 243L742 344.1L742 625.1L1000 767Z" fill="#C65A2E"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Metrale"><rect width="64" height="64" rx="11.5" fill="#0E1318"/><g transform="translate(2.56 9.18) scale(0.28172)"><path d="M0 0L138 75.9L89.82 102.4L53 82.15L53 132.85L0 162Z" fill="#C65A2E"/><path d="M209 0L122.17 47.76L156 66.36L156 132.85L209 162Z" fill="#C65A2E"/></g></svg>

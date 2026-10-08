@@ -11,8 +11,8 @@
       <p class="av-lede">{value.lede}</p>
     </div>
     <div class="av-grid av-grid-3 av-reveal">
-      {#each value.tiles as t, i}
-        <div class="av-tile {['av-sx-violet', 'av-sx-cyan', 'av-sx-green'][i]}">
+      {#each value.tiles as t}
+        <div class="av-tile">
           <span class="av-tile-label">{t.label}</span>
           <div class="av-num">{fill(t.value)}</div>
           <p>{fill(t.body)}</p>

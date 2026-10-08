@@ -91,8 +91,8 @@ export const mission = {
 };
 
 // The team, from the company's own team slide: names, titles and one line each,
-// cut to the highest signal. `photo` is a square WebP under static/team, `hue`
-// one of the four brand colours, `linkedin` the profile each person gave.
+// cut to the highest signal. `photo` is a square WebP under static/team,
+// `linkedin` the profile each person gave.
 // Every entry is a real person's public face: each of them should confirm their
 // own line before this merges, and a line changes only on their word.
 // `cite` is optional: a public record that backs a claim in the line, shown as a
@@ -117,7 +117,6 @@ export const team = {
       focus: 'Strategy and finance',
       bio: 'Fortune 30 security leadership. Eight years in cyber intelligence, incident response and M&A diligence. Navy veteran. MBA, Texas McCombs.',
       photo: 'kyle-croll',
-      hue: 'violet',
       linkedin: 'https://www.linkedin.com/in/kylecroll/',
     },
     {
@@ -126,7 +125,6 @@ export const team = {
       focus: 'Engineering',
       bio: 'Started the engine and owns its architecture. Patented the Recursive Cryptography Protocol. Post-quantum cryptography, networking, decentralization, parallel compute, Rust.',
       photo: 'thomas-braun',
-      hue: 'cyan',
       linkedin: 'https://www.linkedin.com/in/tpbraun/',
       cite: {
         text: 'US 12,224,993',
@@ -140,7 +138,6 @@ export const team = {
       focus: 'Revenue',
       bio: 'Ran Americas and APAC for Anaconda from $50M to $156M ARR. Early Oracle NetSuite. Two exits, twice a founder. MBA, Texas McCombs.',
       photo: 'eric-gonzalez',
-      hue: 'gold',
       linkedin: 'https://www.linkedin.com/in/ericgonzalez/',
     },
     {
@@ -149,7 +146,6 @@ export const team = {
       focus: 'Operations and product',
       bio: 'Ten years leading cyber intelligence, security operations and security engineering in the Fortune 30. M.S. in Intelligence Analysis, Johns Hopkins.',
       photo: 'peter-drybrough',
-      hue: 'green',
       linkedin: 'https://www.linkedin.com/in/c1ph3rp13rr3/',
     },
     {
@@ -158,7 +154,6 @@ export const team = {
       focus: 'Kernels and compression',
       bio: 'Staff TLM, Google (9.5 years). Founder & CEO, PsyGuard.ai. Created TurboQuant+, open-source KV cache compression. Core contributor to the engine.',
       photo: 'tom-turney',
-      hue: 'violet',
       linkedin: 'https://www.linkedin.com/in/tturney/',
     },
   ],

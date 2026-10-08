@@ -7,7 +7,7 @@
 <ul class="list">
   {#each items as p (p.slug)}
     <li>
-      <a class="entry" href={p.href} style="--tag-c: {tags[p.tag].color}">
+      <a class="entry" href={p.href}>
         <span class="entry-date">{formatDate(p.date)}</span>
         <span class="entry-body">
           <h2>{p.title}</h2>

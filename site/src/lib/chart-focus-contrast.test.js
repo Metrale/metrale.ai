@@ -22,6 +22,7 @@ import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { contrast, readTokens } from '../../scripts/brand/tokens.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const dashboardCss = readFileSync(resolve(HERE, '..', 'styles', 'dashboard.css'), 'utf8');
@@ -85,35 +86,17 @@ describe('NEGATIVE CONTROL: the parser can fail', () => {
 });
 
 // --- --accent vs --card contrast, both themes -------------------------------
-// Same inline WCAG-contrast helper as series-contrast.test.js and
-// light-text-contrast.test.js (house style: each contrast test measures its
-// own specific pair against its own source block, not a shared abstraction).
+// The token file names the brand kit's colours rather than restating them, so
+// the values are read resolved, per theme, through scripts/brand/tokens.mjs.
 
-const block = (selector) => {
-  const m = tokens.match(new RegExp(`${selector}\\s*\\{([\\s\\S]*?)\\n\\}`));
-  if (!m) throw new Error(`${selector} is not in web-shared/metrale-tokens.css`);
-  return m[1];
-};
-const DARK = block(':root');
-const LIGHT = block('\\[data-theme="light"\\]');
+const T = readTokens(tokens);
+const DARK = T.dark;
+const LIGHT = T.light;
 
-const hexIn = (src, where, name) => {
-  const m = src.match(new RegExp(`--${name}:\\s*([^;]+);`));
-  if (!m) throw new Error(`--${name} is not in the ${where} block of web-shared/metrale-tokens.css`);
-  const v = m[1].trim();
-  if (!/^#[0-9a-fA-F]{6}$/.test(v)) throw new Error(`--${name} is "${v}" in the ${where} block, not a hex literal`);
+const hexIn = (map, where, name) => {
+  const v = map[name];
+  if (!/^#[0-9a-fA-F]{6}$/.test(v ?? '')) throw new Error(`--${name} resolves to "${v}" in the ${where} theme, not a hex colour`);
   return v;
-};
-
-const srgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
-const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-const relLum = (hex) => {
-  const v = srgb(hex);
-  return 0.2126 * lin(v[0]) + 0.7152 * lin(v[1]) + 0.0722 * lin(v[2]);
-};
-const contrast = (a, b) => {
-  const [hi, lo] = [relLum(a), relLum(b)].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
 };
 
 // WCAG's non-text floor: a focus indicator is a UI component outline, not

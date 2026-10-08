@@ -1,10 +1,11 @@
 <script>
   // The root layout: what every route shares. Design tokens and the brand
-  // typeface, the two lockup definition blocks, the canonical URL, and the
+  // typeface's fallbacks, the logo definitions, the canonical URL, and the
   // structured data. Stylesheets that belong to one route group live in that
   // group's layout: app.css in (engine), metrale.css in (marketing), so the
   // developer pages and the marketing pages never load each other's rules.
   import '../../../web-shared/metrale-tokens.css';
+  import '../styles/manrope-fallback.css';
   import '../styles/fonts.css';
   import MetraleLockup from '$shared/components/MetraleLockup.svelte';
   import { page } from '$app/state';
