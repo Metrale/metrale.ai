@@ -44,7 +44,7 @@ export function pairings(css) {
       for (const ink of ['accent', 'accent-deep', 'sx-text', 'green', 'amber', 'red']) add('text', ink, hex(ink), s, hex(s));
       for (const share of TINTS) {
         const tint = over(hex('sx'), hex(s), share);
-        add('text', 'accent-deep', hex('accent-deep'), `${share * 100}% --sx over --${s}`, tint);
+        add('text', 'accent-deep', hex('accent-deep'), `${Math.round(share * 100)}% --sx over --${s}`, tint);
       }
       add('text', 'green', hex('green'), `12% --green over --${s}`, over(hex('green'), hex(s), 0.12));
       add('text', 'amber', hex('amber'), `12% --amber over --${s}`, over(hex('amber'), hex(s), 0.12));
