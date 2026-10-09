@@ -1,7 +1,7 @@
 /* =============================================================================
    The fallback faces Manrope and IBM Plex Mono swap in over.
 
-   The faces themselves are in static/fonts/type.css, a sheet src/app.html
+   The faces themselves are in static/fonts/type-v2.css, a sheet src/app.html
    attaches after first paint (that file says why: the Lighthouse gate demands
    100 and web fonts in the bundle cost every page a point). So the first paint
    is always in a fallback, and the fallback has to occupy exactly the space

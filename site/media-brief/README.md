@@ -22,7 +22,7 @@ can pick up the media work without asking anyone what was meant.
 | `broll-desk-box` | Reel, SMB | Generated V05 from S03, 2026-09-18 |
 | `broll-hall` | Reel open | Generated V06 from S08, 2026-09-18 |
 | `broll-power` | Reel, economics | Generated V07 from S10, 2026-09-18 |
-| `og-image.png` | Link previews | The brand kit's own card, copied by `scripts/brand/kit.mjs` |
+| `og-image-v2.png` | Link previews | The brand kit's own card, copied by `scripts/brand/kit.mjs` |
 | `art-*` stills | Page heroes | Installed 2026-09-18 from S01–S11. Ledger in `takes/TAKES.md` |
 
 The slots are declared in `src/lib/content/media.js`. Every slot is three files

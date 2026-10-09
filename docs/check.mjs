@@ -14,6 +14,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { unmoved } from './hosts.mjs';
+import { DOCS_ICONS } from './icons.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT = join(here, 'build');
@@ -42,7 +43,7 @@ const index = readFileSync(join(OUT, 'index.html'), 'utf8');
 if (!index.includes('The Metrale Engine Book')) bad("the front page does not carry the book's title");
 if (!index.includes('metrale.js')) bad('the front page does not load the wordmark script');
 if (!index.includes('metrale.css')) bad('the front page does not load the Metrale skin');
-const ICONS = ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png', 'og-image.png'];
+const ICONS = Object.keys(DOCS_ICONS);
 for (const needed of ['llms.txt', '_headers', ...ICONS, 'version.txt', 'fonts/fonts.css', 'theme/css/metrale-tokens.css']) {
   if (!existsSync(join(OUT, needed))) bad(`${needed} is missing beside the pages`);
 }
@@ -51,7 +52,7 @@ for (const needed of ['llms.txt', '_headers', ...ICONS, 'version.txt', 'fonts/fo
 // favicons the book links, from the vendored kit itself.
 const KIT_PNG = { 'favicon-16.png': 'favicon-16.png', 'favicon-32.png': 'favicon-32.png' };
 for (const icon of [...ICONS, ...Object.keys(KIT_PNG)]) {
-  const ours = KIT_PNG[icon] ? join(here, '..', 'assets', 'brand', 'dark', KIT_PNG[icon]) : join(here, '..', 'site', 'static', icon);
+  const ours = KIT_PNG[icon] ? join(here, '..', 'assets', 'brand', 'dark', KIT_PNG[icon]) : join(here, '..', 'site', 'static', DOCS_ICONS[icon]);
   if (existsSync(join(OUT, icon)) && !readFileSync(join(OUT, icon)).equals(readFileSync(ours))) bad(`${icon} is not the brand kit's`);
 }
 // Every icon the book's head (theme/head.hbs) links is a file the build ships.

@@ -8,6 +8,7 @@
   import '../styles/manrope-fallback.css';
   import '../styles/fonts.css';
   import MetraleLockup from '$shared/components/MetraleLockup.svelte';
+  import { brandFiles } from '$shared/brand-files.mjs';
   import { page } from '$app/state';
   import { onMount } from 'svelte';
   import { crossesGroup } from '$lib/route-groups.js';
@@ -67,7 +68,7 @@
         name: company.name,
         legalName: company.legal,
         url: `${SITE}/`,
-        logo: `${SITE}/icon-512.png`,
+        logo: `${SITE}${brandFiles.icon512}`,
         description: company.short,
         sameAs: [githubUrl, launcherUrl, discordUrl, links.blog],
       },

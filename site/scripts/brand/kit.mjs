@@ -29,6 +29,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ICON_QUERY, brandFiles } from '../../../web-shared/brand-files.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 export const REPO = resolve(here, '..', '..', '..');
@@ -43,15 +44,16 @@ const COMPACT_MAX_PX = 48;
 // role in the v2 kit (it was an ink of the previous mark).
 const OMIT = new Set(['cyan', 'lavender']);
 
-// Files served exactly as the kit ships them.
+// Files served exactly as the kit ships them. The ones a page or the manifest
+// links carry the brand version in their name (web-shared/brand-files.mjs).
 const COPIES = {
   'site/static/favicon.ico': 'favicon.ico',
   'site/static/favicon.svg': 'favicon.svg',
   'site/static/apple-touch-icon.png': 'dark/apple-touch-icon-180.png',
-  'site/static/icon-192.png': 'dark/icon-192.png',
-  'site/static/icon-512.png': 'dark/icon-512.png',
-  'site/static/icon-maskable-512.png': 'dark/icon-maskable-512.png',
-  'site/static/og-image.png': 'dark/og-image-1200x630.png',
+  [`site/static${brandFiles.icon192}`]: 'dark/icon-192.png',
+  [`site/static${brandFiles.icon512}`]: 'dark/icon-512.png',
+  [`site/static${brandFiles.iconMaskable512}`]: 'dark/icon-maskable-512.png',
+  [`site/static${brandFiles.ogImage}`]: 'dark/og-image-1200x630.png',
   'site/static/logo.svg': 'svg/logo-horizontal-ondark.svg',
   'site/static/fonts/manrope-latin-wght-normal.woff2': 'fonts/manrope-latin-wght-normal.woff2',
   'site/static/fonts/MANROPE-LICENSE.txt': 'fonts/MANROPE-LICENSE.txt',
@@ -59,7 +61,16 @@ const COPIES = {
   'blog/static/favicon.ico': 'favicon.ico',
   'blog/static/favicon.svg': 'favicon.svg',
   'blog/static/apple-touch-icon.png': 'dark/apple-touch-icon-180.png',
-  'blog/static/og-image.png': 'dark/og-image-1200x630.png',
+  [`blog/static${brandFiles.ogImage}`]: 'dark/og-image-1200x630.png',
+};
+
+// The kit's manifest names its icons by their plain names; the site serves
+// them under the versioned ones, and the SVG under the query the pages use.
+const MANIFEST_ICONS = {
+  '/icon-192.png': brandFiles.icon192,
+  '/icon-512.png': brandFiles.icon512,
+  '/icon-maskable-512.png': brandFiles.iconMaskable512,
+  '/favicon.svg': `/favicon.svg${ICON_QUERY}`,
 };
 
 // The site's manifest: the kit's (name, icons, colours, display) with what only
@@ -129,6 +140,11 @@ export function derive() {
   const manifest = JSON.parse(kit('site.webmanifest'));
   for (const k of Object.keys(SITE_MANIFEST))
     if (k in manifest) throw new Error(`the kit's manifest now sets ${k}; drop it from SITE_MANIFEST`);
+  manifest.icons = manifest.icons.map((icon) => {
+    if (!(icon.src in MANIFEST_ICONS))
+      throw new Error(`the kit's manifest names ${icon.src}, which the site does not serve under a versioned name`);
+    return { ...icon, src: MANIFEST_ICONS[icon.src] };
+  });
   out['site/static/site.webmanifest'] = JSON.stringify({ ...SITE_MANIFEST, ...manifest }, null, 2) + '\n';
 
   const art = {

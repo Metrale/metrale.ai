@@ -157,8 +157,11 @@
   Cache-Control: public, max-age=2592000
 /*.svg
   Cache-Control: public, max-age=2592000
+# favicon.ico is the one .ico, and browsers ask for it by that name whatever a
+# page links, so it cannot take a versioned name like the other brand files
+# (web-shared/brand-files.mjs). A day, so a new one reaches them within a day.
 /*.ico
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=86400
 
 # Product clips, the film and the self hosted fonts. Matched by extension, not
 # as /media/* or /fonts/*: a poster is /media/<name>.webp, which /*.webp above
@@ -170,7 +173,7 @@
   Cache-Control: public, max-age=2592000
 /*.woff2
   Cache-Control: public, max-age=2592000
-/fonts/type.css
+/fonts/type-v2.css
   Cache-Control: public, max-age=2592000
 
 # Keyed to the build version, and the mechanism by which a deploy is noticed.

@@ -5,13 +5,14 @@
 -->
 <script>
   import { pages, SITE } from '$lib/content/index.js';
+  import { brandFiles } from '$shared/brand-files.mjs';
   import SiteNav from './SiteNav.svelte';
   import SiteFooter from './SiteFooter.svelte';
   import MailToast from './MailToast.svelte';
   import PrimeLauncher from './PrimeLauncher.svelte';
   import { reveal } from '$lib/reveal.js';
 
-  let { path, ogImage = '/og-image.png', children } = $props();
+  let { path, ogImage = brandFiles.ogImage, children } = $props();
   // Derived, so the head follows `path` if a parent ever changes it. A page
   // that is not in the registry fails the build here instead of shipping
   // without a title.
