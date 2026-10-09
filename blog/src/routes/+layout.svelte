@@ -5,8 +5,13 @@
   import Header from '$lib/components/Header.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import { SITE, blog, cleanSlug } from '$lib/content.js';
+  import { attachBrandFace } from '$lib/brand-face.js';
+  import { onMount } from 'svelte';
 
   let { children } = $props();
+
+  // The brand face arrives after the page has loaded (src/lib/brand-face.js).
+  onMount(() => attachBrandFace(window, document));
 
   /* adapter-static writes a sub-page to `<name>.html` and nginx resolves the
      extensionless URL onto it, so the canonical is the extensionless form —

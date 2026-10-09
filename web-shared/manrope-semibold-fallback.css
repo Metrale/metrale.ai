@@ -1,0 +1,22 @@
+/* =============================================================================
+   'Manrope Fallback' for the SemiBold to ExtraBold weights, which the site's
+   and the blog's headings use. The kit's own 'Manrope Fallback'
+   (manrope-fallback.css, copied into each property by
+   site/scripts/brand/kit.mjs) is drawn for the regular weight, and Arial
+   bolded by the browser runs narrower than Manrope SemiBold, so a heading
+   rewrapped when the web font arrived and moved the page under it. This face
+   maps the family to local Arial Bold at 99.2%: Manrope at 600 over Arial Bold,
+   both averaged over English letter frequencies in a browser, calibrated so the
+   same measure gives the kit's 103.19% at 400. The kit's ascent and descent
+   (1.066 and 0.300 em) are restated in the adjusted em. Measured over the
+   headings of eight pages, it runs 0.4% narrower than Manrope at the median.
+   ========================================================================== */
+@font-face {
+  font-family: 'Manrope Fallback';
+  font-weight: 600 800;
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold'), local('Helvetica-Bold'), local('Liberation Sans Bold');
+  size-adjust: 99.2%;
+  ascent-override: 107.46%;
+  descent-override: 30.24%;
+  line-gap-override: 0%;
+}

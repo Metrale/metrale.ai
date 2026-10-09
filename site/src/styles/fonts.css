@@ -9,33 +9,17 @@
 
    'Manrope Fallback' is the brand kit's own (manrope-fallback.css beside this
    file, copied from the kit by scripts/brand/kit.mjs): local Arial scaled to
-   Manrope's average advance and given its ascent and descent. The kit draws it
-   for the regular weight. Headings here are set at 600, and Arial bolded by the
-   browser runs narrower than Manrope SemiBold, so a heading rewrapped when the
-   web font landed and moved the page under it (0.03 CLS on a phone). The first
-   face below is the kit's face for 600 and up: local Arial Bold, scaled by
-   Manrope at 600 over Arial Bold (both averaged over English letter
-   frequencies in a browser, calibrated so the same measure gives the kit's
-   103.19% at 400), with the kit's ascent and descent (1.066 and 0.300 em)
-   restated in the adjusted em. The other is the mono one, which the kit does
-   not cover: Plex Mono and Courier New
-   share a 0.6 em advance, so that pair needs no scaling, only Plex's ascent
-   and descent. Courier New and Liberation Mono share their metrics, so one
-   set of numbers covers Windows, macOS and Linux. If none is installed the
-   family is skipped and the system stack in the tokens takes over.
+   Manrope's average advance and given its ascent and descent, for the regular
+   weight. Its SemiBold complement, for the headings, is shared with the blog:
+   web-shared/manrope-semibold-fallback.css. The face below is the mono one,
+   which the kit does not cover: Plex Mono and Courier New share a 0.6 em
+   advance, so that pair needs no scaling, only Plex's ascent and descent.
+   Courier New and Liberation Mono share their metrics, so one set of numbers
+   covers Windows, macOS and Linux. If none is installed the family is skipped
+   and the system stack in the tokens takes over.
 
-   The token file names the families (web-shared/metrale-tokens.css). The blog
-   ships neither this file nor the fonts and keeps working on its system stack.
+   The token file names the families (web-shared/metrale-tokens.css).
    ========================================================================== */
-@font-face {
-  font-family: 'Manrope Fallback';
-  font-weight: 600 800;
-  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold'), local('Helvetica-Bold'), local('Liberation Sans Bold');
-  size-adjust: 99.2%;
-  ascent-override: 107.46%;
-  descent-override: 30.24%;
-  line-gap-override: 0%;
-}
 @font-face {
   font-family: 'Plex Mono Fallback';
   src: local('Courier New'), local('Liberation Mono'), local('Courier');

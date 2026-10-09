@@ -200,7 +200,11 @@ code stay in IBM Plex Mono.
 4. Manrope sets wider than the previous face: the marketing header's links move
    to the drawer below 1180 px (measured, `SiteNav.svelte`).
 5. The blog's reading face is Charter, which is not the brand's; its headings
-   and interface take `--font-sans`. The engine's book under docs.metrale.ai
+   and interface take `--font-sans`, and the blog ships Manrope for them: the
+   kit's file under a versioned name (the blog caches `/fonts/*` immutably),
+   added after load by `blog/src/lib/brand-face.js`, behind the kit's fallback
+   (copied by `kit.mjs`) and the SemiBold one in
+   `web-shared/manrope-semibold-fallback.css`. The engine's book under docs.metrale.ai
    carries its own theme and fonts (in the engine's repository), so its
    typeface moves with that theme; `docs/check.mjs` checks that whatever faces
    the book names ship, and that its icons and card are the kit's.

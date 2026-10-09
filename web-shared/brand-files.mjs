@@ -18,12 +18,15 @@
 
 export const BRAND_VERSION = 'v2';
 const versioned = (name, ext) => `/${name}-${BRAND_VERSION}.${ext}`;
+// The blog serves its fonts as immutable for a year (blog/static/_headers), so
+// the brand face it ships carries the version too.
 
 export const brandFiles = {
   ogImage: versioned('og-image', 'png'),
   icon192: versioned('icon-192', 'png'),
   icon512: versioned('icon-512', 'png'),
   iconMaskable512: versioned('icon-maskable-512', 'png'),
+  blogManrope: versioned('fonts/manrope-latin-wght-normal', 'woff2'),
 };
 
 export const ICON_QUERY = '?v=3';

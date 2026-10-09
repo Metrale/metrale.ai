@@ -62,6 +62,9 @@ const COPIES = {
   'blog/static/favicon.svg': 'favicon.svg',
   'blog/static/apple-touch-icon.png': 'dark/apple-touch-icon-180.png',
   [`blog/static${brandFiles.ogImage}`]: 'dark/og-image-1200x630.png',
+  [`blog/static${brandFiles.blogManrope}`]: 'fonts/manrope-latin-wght-normal.woff2',
+  'blog/static/fonts/MANROPE-LICENSE.txt': 'fonts/MANROPE-LICENSE.txt',
+  'blog/src/manrope-fallback.css': 'fonts/manrope-fallback.css',
 };
 
 // The kit's manifest names its icons by their plain names; the site serves

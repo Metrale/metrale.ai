@@ -13,6 +13,18 @@
    at the repository root, and the light theme's by the site's unit suite.
    ========================================================================== */
 @import '../../web-shared/metrale-tokens.css';
+@import './manrope-fallback.css';
+@import '../../web-shared/manrope-semibold-fallback.css';
+
+/* ---- the brand face ---------------------------------------------------- */
+/* Manrope, the brand kit's typeface, for headings and the interface
+   (--font-sans in the tokens); the articles keep Charter, below. It is not
+   declared here: a face in the stylesheet is fetched with the page, and on a
+   phone that put the font on the largest paint's path (1.5 s to 1.8 s, a
+   Lighthouse point). src/lib/brand-face.js adds it after load, at idle, as
+   the site does with its late font sheet. Until then the text is set in the
+   kit's metric-matched 'Manrope Fallback' (manrope-fallback.css beside this
+   file) and the shared SemiBold one, so the swap does not move the page. */
 
 /* ---- the reading face -------------------------------------------------- */
 /* Self-hosted rather than fetched from a font CDN: a third-party origin costs
@@ -209,9 +221,15 @@ a { color: var(--accent); }
 @media (max-width: 900px) {
   .hdr { height: auto; }
   .hdr-in { flex-wrap: wrap; height: auto; min-height: var(--header-h); row-gap: 0; }
+  /* Full bleed: the row runs past the bar's 2rem padding on both sides, so it
+     is 4rem wider than the bar's content box. At width 100% it stopped 64 px
+     short and cut off the last category on a phone. */
   .nav {
-    order: 3; width: 100%; margin: 0 -2rem; padding: 0 2rem;
+    order: 3; width: calc(100% + 4rem); margin: 0 -2rem; padding: 0 2rem;
     overflow-x: auto; scrollbar-width: none;
+    /* A link given focus is scrolled clear of the row's edge padding, ring
+       included, not left half under the screen's edge. */
+    scroll-padding-inline: 2rem;
   }
   .nav::-webkit-scrollbar { display: none; }
   .nav a { padding: 9px 12px; white-space: nowrap; }
