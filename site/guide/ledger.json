@@ -233,6 +233,13 @@
         "type.css",
         "og-image.png"
       ]
+    },
+    {
+      "rev": 16,
+      "date": "2026-10-09",
+      "base": "ce49af61d",
+      "note": "Programs card: the NVIDIA Inception line now reads hardware and silicon optimization partner.",
+      "touched": []
     }
   ],
   "facts": {
