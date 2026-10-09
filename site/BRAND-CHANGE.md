@@ -82,6 +82,15 @@ repository consumes it and never originates it.
   logo cuts and marks as data; and the palette block of
   `web-shared/metrale-tokens.css`. `src/lib/brand-kit.test.js` runs the same
   derivation and fails naming every derived file that is behind the kit.
+- Static files are cached by name, in browsers and at the edge, for up to a
+  month. The brand files a page or the manifest links therefore carry the brand
+  version in their names (`og-image-v2.png`, `icon-192-v2.png`, ...), set once in
+  `web-shared/brand-files.mjs`, which `kit.mjs` and the pages read; the icons a
+  browser asks for by a fixed name are linked with a version query
+  (`ICON_QUERY`). A release that changes one of these files moves the version
+  there. `site/scripts/check-static-names.mjs`, run by the PR workflow against
+  the pull request's base, fails when a long-cached file under `static/`
+  changes content and keeps its name.
 
 To take a new release of the kit:
 
@@ -118,7 +127,7 @@ logo everywhere public, a product lockup only on a page about that product
 (none today). The kit's guidelines are `assets/brand/BRAND-GUIDELINES.md`.
 
 The social card is the kit's `og-image-1200x630.png`, served as
-`static/og-image.png` on the site and the blog. The GitHub social preview is the
+`static/og-image-v2.png` on the site and the blog. The GitHub social preview is the
 kit's `github-social-preview-1280x640.png` (vendored in `assets/brand/dark/`),
 uploaded by hand in the repository settings. The film's title cards are set by
 `bun run reel` from the kit's dark-ground logo and colours.
@@ -178,7 +187,7 @@ It says nothing about a monospace, and the site's numbers, labels, receipts and
 code stay in IBM Plex Mono.
 
 1. The files: `static/fonts/manrope-latin-wght-normal.woff2` and
-   `MANROPE-LICENSE.txt`, copied from the kit by `kit.mjs`. `static/fonts/type.css`
+   `MANROPE-LICENSE.txt`, copied from the kit by `kit.mjs`. `static/fonts/type-v2.css`
    declares Manrope and Plex Mono; `src/app.html` attaches that sheet after first
    paint.
 2. The fallback: `src/styles/manrope-fallback.css` is the kit's 'Manrope

@@ -47,6 +47,7 @@ import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rehost } from './hosts.mjs';
 import { ENGINE_SLUG } from '../web-shared/sources.mjs';
+import { DOCS_ICONS } from './icons.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, '..');
@@ -150,8 +151,10 @@ writeFileSync(
 `
 );
 const STATIC = join(repo, 'site', 'static');
-for (const icon of ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png', 'og-image.png']) {
-  if (existsSync(join(STATIC, icon))) copyFileSync(join(STATIC, icon), join(OUT, icon));
+// The book's head links these by their plain names; the site serves the card
+// under its versioned name (web-shared/brand-files.mjs).
+for (const [icon, from] of Object.entries(DOCS_ICONS)) {
+  if (existsSync(join(STATIC, from))) copyFileSync(join(STATIC, from), join(OUT, icon));
 }
 // The book's head also links PNG favicons at 16 and 32 px, which the site does
 // not serve: they come straight from the vendored brand kit.

@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { tags, authors, SITE, MAIN_SITE, blog } from '$lib/content.js';
+  import { brandFiles } from '$shared/brand-files.mjs';
   import { formatDate } from '$lib/posts.js';
 
   let { data } = $props();
@@ -42,7 +43,7 @@
   /* A post may ship its own social card; an empty `og-image` means "use the
      site's". Resolved here rather than in each meta tag so the two cannot
      disagree about which image this page advertises. */
-  const cardUrl = $derived(`${SITE}${post.ogImage || '/og-image.png'}`);
+  const cardUrl = $derived(`${SITE}${post.ogImage || brandFiles.ogImage}`);
   const ldjson = $derived(
     JSON.stringify({
       '@context': 'https://schema.org',
@@ -57,7 +58,7 @@
       dateModified: post.updated ?? post.date,
       articleSection: tag.name,
       keywords: post.keywords,
-      image: `${SITE}${post.ogImage || '/og-image.png'}`,
+      image: `${SITE}${post.ogImage || brandFiles.ogImage}`,
       timeRequired: `PT${post.readingMinutes}M`,
       isAccessibleForFree: true
       // JSON.stringify does not escape "<", so a closing script tag anywhere in

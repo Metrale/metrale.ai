@@ -52,7 +52,7 @@
         // Absolute, not the assets placeholder: that renders as a path relative
         // to each page, which would give this script different bytes at every
         // depth and so a different hash in the page's CSP (svelte.config.js).
-        var href = '/fonts/type.css';
+        var href = '/fonts/type-v2.css';
         var done = false;
         function attach() {
           if (done) return;
@@ -98,7 +98,7 @@
         setTimeout(attach, 5000);
       })();
     </script>
-    <noscript><link rel="stylesheet" href="%sveltekit.assets%/fonts/type.css" /></noscript>
+    <noscript><link rel="stylesheet" href="%sveltekit.assets%/fonts/type-v2.css" /></noscript>
     <!-- Must equal --bg in web-shared/metrale-tokens.css. A meta tag cannot read a
          custom property, so this is the one unavoidable copy of the ground colour;
          theme-color.test.js fails the build if the two drift. -->
@@ -128,7 +128,7 @@
     <meta property="og:description" content="Faster inference, stronger governance, a fraction of what you pay today. Runs your models faster on the GPUs you own, keeps every prompt inside your perimeter, and shows your CFO what each workload costs." />
     <meta property="og:site_name" content="Metrale" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:image" content="https://metrale.ai/og-image.png" />
+    <meta property="og:image" content="https://metrale.ai/og-image-v2.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Metrale, the inference economics platform" />
@@ -137,7 +137,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Metrale, the inference economics platform" />
     <meta name="twitter:description" content="Faster inference, stronger governance, a fraction of what you pay today. Every number is a receipt." />
-    <meta name="twitter:image" content="https://metrale.ai/og-image.png" />
+    <meta name="twitter:image" content="https://metrale.ai/og-image-v2.png" />
     <meta name="twitter:image:alt" content="Metrale, the inference economics platform" />
 
     <!-- The plain-text brief answer engines read. Generated from the same

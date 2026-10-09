@@ -1,5 +1,5 @@
 {
- "revision": 14,
+ "revision": 15,
  "date": "2026-10-08",
  "changes": [
   {
@@ -221,6 +221,18 @@
     "ancient-seal.svg",
     "ancient-stele.svg",
     "github-social-preview-ai-dark.svg"
+   ]
+  },
+  {
+   "rev": 15,
+   "date": "2026-10-08",
+   "pr": 80,
+   "base": "3612ef23a",
+   "note": "Brand v2: the brand files a page links carry the brand version in their names (og-image-v2.png, the manifest icons, fonts/type-v2.css), so no cached copy of the first kit's files is served under them.",
+   "touched": [
+    "type-v2.css",
+    "type.css",
+    "og-image.png"
    ]
   }
  ],
@@ -1518,17 +1530,11 @@
    "used": []
   },
   {
-   "path": "site/static/fonts/type.css",
+   "path": "site/static/fonts/type-v2.css",
    "sha": "2ce71bf5b459",
    "bytes": 1621,
-   "rev": 2,
+   "rev": 1,
    "date": "2026-10-08",
-   "was": [
-    {
-     "sha": "6020a2f0e5af",
-     "until": "2026-10-08"
-    }
-   ],
    "used": [
     "/benchmarks",
     "/company",
@@ -2323,49 +2329,6 @@
    "bytes": 21352,
    "rev": 1,
    "date": "2026-09-24",
-   "used": [
-    "/benchmarks",
-    "/company",
-    "/company/careers",
-    "/contact",
-    "/control",
-    "/demo",
-    "/diligence",
-    "/engine",
-    "/",
-    "/labs",
-    "/platform",
-    "/platform/control",
-    "/platform/deployment",
-    "/platform/economics",
-    "/platform/engine",
-    "/platform/hardware",
-    "/platform/security",
-    "/pricing",
-    "/resources",
-    "/resources/contributors",
-    "/resources/events",
-    "/resources/updates",
-    "/solutions",
-    "/solutions/neoclouds",
-    "/solutions/smb-edge",
-    "/trust",
-    "/waitlist",
-    "/why-metrale"
-   ]
-  },
-  {
-   "path": "site/static/og-image.png",
-   "sha": "40fa8949a4eb",
-   "bytes": 14628,
-   "rev": 2,
-   "date": "2026-10-08",
-   "was": [
-    {
-     "sha": "d6af820721ed",
-     "until": "2026-10-08"
-    }
-   ],
    "used": [
     "/benchmarks",
     "/company",

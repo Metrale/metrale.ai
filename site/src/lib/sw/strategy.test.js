@@ -90,7 +90,7 @@ describe('shouldPrecache', () => {
   });
 
   it('leaves out what only a scraper or a feature needs', () => {
-    expect(shouldPrecache('/og-image.png')).toBe(false);
+    expect(shouldPrecache('/og-image-v2.png')).toBe(false);
     expect(shouldPrecache('/lattice/lattice_server_bg.wasm')).toBe(false);
   });
 

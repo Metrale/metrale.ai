@@ -10,10 +10,11 @@
 // a redrawn logo or a retyped colour is a failing test rather than a quiet drift.
 import { expect, test } from 'bun:test';
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { REPO, behind, derive, parseSvg } from '../../scripts/brand/kit.mjs';
 import { ART } from '../../../web-shared/brand-art.js';
+import { ICON_QUERY, brandFiles } from '../../../web-shared/brand-files.mjs';
 
 const read = (rel) => readFileSync(join(REPO, rel), 'utf8');
 const brand = JSON.parse(read('assets/brand/tokens/brand.json'));
@@ -34,7 +35,7 @@ test('the derivation reads the kit, so the check above is not vacuous', () => {
   // The manifest's colours and icons are the kit's.
   const manifest = JSON.parse(outputs['site/static/site.webmanifest']);
   expect(manifest.theme_color).toBe(brand.color.ground);
-  expect(manifest.icons.map((i) => i.src)).toContain('/icon-maskable-512.png');
+  expect(manifest.icons.map((i) => i.src)).toContain(brandFiles.iconMaskable512);
   // A derived file that differs is reported: one byte changed is enough.
   const changed = { ...outputs, 'site/static/favicon.svg': outputs['site/static/favicon.svg'].toString().replace('#C65A2E', '#C65A2F') };
   expect(behind(changed)).toEqual(['site/static/favicon.svg']);
@@ -108,4 +109,23 @@ test('no stylesheet, component or page names a colour of the previous brand or a
     if (/--CH-(VIOLET|CYAN|GOLD)|--M-(INK|LAVENDER|VIOLET|CYAN|GOLD)/.test(text)) hits.push(`${f}: a retired brand token`);
   }
   expect(hits).toEqual([]);
+});
+
+test('pages link the brand files by their versioned names, and the fixed-name icons with the version query', () => {
+  // A long-cached file that changes keeps being served in its old form under its old name
+  // (web-shared/brand-files.mjs). Each linked file exists under its versioned name, and nothing
+  // still links a plain name the kit's files used to be served under.
+  for (const name of Object.values(brandFiles)) expect(existsSync(join(REPO, 'site/static' + name)), name).toBe(true);
+  expect(existsSync(join(REPO, 'blog/static' + brandFiles.ogImage))).toBe(true);
+  for (const app of ['site/src/app.html', 'blog/src/app.html']) {
+    const html = read(app);
+    for (const icon of ['favicon.ico', 'favicon.svg', 'apple-touch-icon.png'])
+      expect(html, `${app} ${icon}`).toContain(`/${icon}${ICON_QUERY}"`);
+  }
+  expect(read('site/src/app.html')).toContain(`https://metrale.ai${brandFiles.ogImage}"`);
+  const files = execFileSync('git', ['ls-files', 'site/src', 'blog/src', 'site/static/site.webmanifest'], { cwd: REPO, encoding: 'utf8' })
+    .split('\n')
+    .filter((f) => /\.(svelte|js|mjs|html|webmanifest)$/.test(f) && !f.endsWith('.test.js'));
+  const plain = /\/(og-image|icon-192|icon-512|icon-maskable-512)\.png/;
+  expect(files.filter((f) => plain.test(read(f)))).toEqual([]);
 });

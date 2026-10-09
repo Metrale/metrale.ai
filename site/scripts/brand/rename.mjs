@@ -136,7 +136,7 @@ const DOCS = [
 ];
 const ARTWORK = [
   /^assets\/brand\/.+\.(svg|png|json)$/,
-  /^site\/static\/(favicon.*|icon-.*|apple-touch-icon\.png|og-image\.png|logo\.svg)$/,
+  /^site\/static\/(favicon.*|icon-.*|apple-touch-icon\.png|og-image(-v\d+)?\.png|logo\.svg)$/,
   /^blog\/static\/(favicon.*|icon-.*|og.*\.png|logo.*)$/,
 ];
 const kindOf = (r) => {

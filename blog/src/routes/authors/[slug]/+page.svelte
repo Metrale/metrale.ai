@@ -1,6 +1,7 @@
 <script>
   import PostList from '$lib/components/PostList.svelte';
   import { blog, SITE } from '$lib/content.js';
+  import { brandFiles } from '$shared/brand-files.mjs';
   let { data } = $props();
   const title = $derived(`${data.author.name} — ${blog.name}`);
 </script>
@@ -10,7 +11,7 @@
   <meta name="description" content={data.author.bio} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={data.author.bio} />
-  <meta property="og:image" content="{SITE}/og-image.png" />
+  <meta property="og:image" content="{SITE}{brandFiles.ogImage}" />
 </svelte:head>
 
 <div class="shell">

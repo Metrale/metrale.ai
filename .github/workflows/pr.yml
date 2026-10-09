@@ -111,6 +111,16 @@ jobs:
       # edited here; the unit suite then holds every file derived from it.
       - name: The vendored brand kit is the pinned release
         run: bash assets/take-assets.sh --check
+      # Static files are cached by name for up to a month, in browsers and at
+      # the edge: one that changes content and keeps its name is served old.
+      # Compared against the pull request's base, fetched alone (the checkout
+      # above is a single commit).
+      - name: No long-cached static file changed under the same name
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git fetch --no-tags --depth=1 origin "$BASE"
+          node site/scripts/check-static-names.mjs "$BASE"
       - name: Unit tests
         working-directory: site
         run: bun run test:unit

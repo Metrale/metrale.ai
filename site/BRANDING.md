@@ -28,13 +28,16 @@ or the component draws or colours anything of its own. Nothing is redrawn.
   (`src/lib/prime/PrimeMark.svelte`). The kit draws no mark of its own for it.
 - **Favicons and icons**: the kit's own, copied into `static/` by `kit.mjs`:
   `favicon.svg`, `favicon.ico` (the compact mark at 16, 32 and 48),
-  `apple-touch-icon.png` (180, opaque on the ground), `icon-192.png`,
-  `icon-512.png`, `icon-maskable-512.png`, and `logo.svg`, the dark-ground cut.
-  `app.html` links the tab and touch icons with `?v=3`, so a browser holding an
-  older cached icon fetches the kit's.
+  `apple-touch-icon.png` (180, opaque on the ground), `icon-192-v2.png`,
+  `icon-512-v2.png`, `icon-maskable-512-v2.png`, and `logo.svg`, the dark-ground
+  cut. The files a page or the manifest links carry the brand version in their
+  names (`web-shared/brand-files.mjs`), because static files are cached by name:
+  a changed file under an old name is served old for weeks. The tab and touch
+  icons, which browsers also request by their fixed names, are linked with
+  `?v=3` instead.
   The manifest is the kit's with the site's own fields added. The blog carries
   the favicons, the touch icon and the card.
-- **Social card**: `static/og-image.png` is the kit's `og-image-1200x630.png`,
+- **Social card**: `static/og-image-v2.png` is the kit's `og-image-1200x630.png`,
   on the site and the blog. The GitHub social preview is the kit's
   `github-social-preview-1280x640.png`, vendored in `assets/brand/dark/`.
 - **Clear space** is one stem, 53 of the kit's units, on every side, which the

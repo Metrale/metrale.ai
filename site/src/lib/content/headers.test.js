@@ -77,7 +77,7 @@ test('the media and the fonts are cached', () => {
     '/media/console-ask.webp',
     '/media/art/art-finance.webp',
     '/fonts/ibm-plex-sans-latin-400-normal.woff2',
-    '/fonts/type.css',
+    '/fonts/type-v2.css',
   ]) {
     expect(matching(f).length, f).toBe(1);
   }

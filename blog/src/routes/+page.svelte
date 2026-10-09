@@ -1,6 +1,7 @@
 <script>
   import { posts, formatDate } from '$lib/posts.js';
   import { tags, authors, blog, SITE } from '$lib/content.js';
+  import { brandFiles } from '$shared/brand-files.mjs';
   import PostList from '$lib/components/PostList.svelte';
 
   const [featured, ...rest] = posts;
@@ -12,10 +13,10 @@
   <meta name="description" content={blog.description} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={blog.description} />
-  <meta property="og:image" content="{SITE}/og-image.png" />
+  <meta property="og:image" content="{SITE}{brandFiles.ogImage}" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={blog.description} />
-  <meta name="twitter:image" content="{SITE}/og-image.png" />
+  <meta name="twitter:image" content="{SITE}{brandFiles.ogImage}" />
 </svelte:head>
 
 <div class="shell">
