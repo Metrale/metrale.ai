@@ -221,6 +221,18 @@
         "ancient-stele.svg",
         "github-social-preview-ai-dark.svg"
       ]
+    },
+    {
+      "rev": 15,
+      "date": "2026-10-08",
+      "pr": 80,
+      "base": "3612ef23a",
+      "note": "Brand v2: the brand files a page links carry the brand version in their names (og-image-v2.png, the manifest icons, fonts/type-v2.css), so no cached copy of the first kit's files is served under them.",
+      "touched": [
+        "type-v2.css",
+        "type.css",
+        "og-image.png"
+      ]
     }
   ],
   "facts": {
@@ -1183,6 +1195,12 @@
       "rev": 1,
       "date": "2026-10-08"
     },
+    "site/static/fonts/type-v2.css": {
+      "sha": "2ce71bf5b459",
+      "bytes": 1621,
+      "rev": 1,
+      "date": "2026-10-08"
+    },
     "site/static/fonts/type.css": {
       "sha": "2ce71bf5b459",
       "bytes": 1621,
@@ -1193,7 +1211,8 @@
           "sha": "6020a2f0e5af",
           "until": "2026-10-08"
         }
-      ]
+      ],
+      "removed": "2026-10-08"
     },
     "site/static/fonts/urbanist-latin-wght-italic.woff2": {
       "sha": "163e60078a8a",
@@ -1741,7 +1760,8 @@
           "sha": "d6af820721ed",
           "until": "2026-10-08"
         }
-      ]
+      ],
+      "removed": "2026-10-08"
     },
     "site/static/team/eric-gonzalez.webp": {
       "sha": "0b38045abdf1",
