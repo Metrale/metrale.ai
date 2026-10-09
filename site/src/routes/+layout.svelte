@@ -6,6 +6,7 @@
   // developer pages and the marketing pages never load each other's rules.
   import '../../../web-shared/metrale-tokens.css';
   import '../styles/manrope-fallback.css';
+  import '../../../web-shared/manrope-semibold-fallback.css';
   import '../styles/fonts.css';
   import MetraleLockup from '$shared/components/MetraleLockup.svelte';
   import { brandFiles } from '$shared/brand-files.mjs';

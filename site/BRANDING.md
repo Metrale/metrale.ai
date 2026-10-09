@@ -92,7 +92,9 @@ site makes no third party request: Manrope as the kit's one variable file
 the kit's metric-matched 'Manrope Fallback' (`src/styles/manrope-fallback.css`),
 so nothing moves when it lands. The kit's fallback stack, Helvetica Neue,
 Helvetica, Arial, follows. The blog sets its articles in Charter and its
-interface in the same stack.
+headings and interface in Manrope, the kit's file under a versioned name
+(`fonts/manrope-latin-wght-normal-v2.woff2`), which `src/lib/brand-face.js`
+adds after the page has loaded, behind the same metric-matched fallbacks.
 
 ## Imagery
 

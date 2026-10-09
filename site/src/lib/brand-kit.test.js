@@ -115,7 +115,13 @@ test('pages link the brand files by their versioned names, and the fixed-name ic
   // A long-cached file that changes keeps being served in its old form under its old name
   // (web-shared/brand-files.mjs). Each linked file exists under its versioned name, and nothing
   // still links a plain name the kit's files used to be served under.
-  for (const name of Object.values(brandFiles)) expect(existsSync(join(REPO, 'site/static' + name)), name).toBe(true);
+  // Each versioned name is a file the kit derivation writes, on the site or the blog, and it is there.
+  const written = Object.keys(outputs);
+  for (const name of Object.values(brandFiles)) {
+    const homes = written.filter((p) => p.endsWith('/static' + name));
+    expect(homes.length, name).toBeGreaterThan(0);
+    for (const p of homes) expect(existsSync(join(REPO, p)), p).toBe(true);
+  }
   expect(existsSync(join(REPO, 'blog/static' + brandFiles.ogImage))).toBe(true);
   for (const app of ['site/src/app.html', 'blog/src/app.html']) {
     const html = read(app);

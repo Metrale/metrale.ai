@@ -13,6 +13,18 @@
    at the repository root, and the light theme's by the site's unit suite.
    ========================================================================== */
 @import '../../web-shared/metrale-tokens.css';
+@import './manrope-fallback.css';
+@import '../../web-shared/manrope-semibold-fallback.css';
+
+/* ---- the brand face ---------------------------------------------------- */
+/* Manrope, the brand kit's typeface, for headings and the interface
+   (--font-sans in the tokens); the articles keep Charter, below. It is not
+   declared here: a face in the stylesheet is fetched with the page, and on a
+   phone that put the font on the largest paint's path (1.5 s to 1.8 s, a
+   Lighthouse point). src/lib/brand-face.js adds it after load, at idle, as
+   the site does with its late font sheet. Until then the text is set in the
+   kit's metric-matched 'Manrope Fallback' (manrope-fallback.css beside this
+   file) and the shared SemiBold one, so the swap does not move the page. */
 
 /* ---- the reading face -------------------------------------------------- */
 /* Self-hosted rather than fetched from a font CDN: a third-party origin costs
