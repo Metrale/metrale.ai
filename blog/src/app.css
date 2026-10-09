@@ -221,9 +221,15 @@ a { color: var(--accent); }
 @media (max-width: 900px) {
   .hdr { height: auto; }
   .hdr-in { flex-wrap: wrap; height: auto; min-height: var(--header-h); row-gap: 0; }
+  /* Full bleed: the row runs past the bar's 2rem padding on both sides, so it
+     is 4rem wider than the bar's content box. At width 100% it stopped 64 px
+     short and cut off the last category on a phone. */
   .nav {
-    order: 3; width: 100%; margin: 0 -2rem; padding: 0 2rem;
+    order: 3; width: calc(100% + 4rem); margin: 0 -2rem; padding: 0 2rem;
     overflow-x: auto; scrollbar-width: none;
+    /* A link given focus is scrolled clear of the row's edge padding, ring
+       included, not left half under the screen's edge. */
+    scroll-padding-inline: 2rem;
   }
   .nav::-webkit-scrollbar { display: none; }
   .nav a { padding: 9px 12px; white-space: nowrap; }

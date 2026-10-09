@@ -8,6 +8,11 @@
   const current = (href) => navCurrent(page.url.pathname, href);
   // Local review runs the marketing site on :5173. Production always uses MAIN_SITE.
   const landing = import.meta.env.DEV ? 'http://127.0.0.1:5173/' : MAIN_SITE;
+  // On a phone the categories are a row that scrolls sideways. A browser
+  // scrolls a focused link into that row only when it is out of sight, so a
+  // link a few pixels past the edge kept its focus ring under the screen's
+  // edge. Bring the focused link fully in, clear of the row's scroll padding.
+  const reveal = (e) => e.target.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
 </script>
 
 <header class="hdr">
@@ -20,7 +25,7 @@
       <a class="brand-sub" href="/" aria-current={current('/') ? 'page' : undefined}>Blog</a>
     </div>
 
-    <nav class="nav" aria-label="Categories">
+    <nav class="nav" aria-label="Categories" onfocusin={reveal}>
       {#each nav as l}
         <a href={l.href} aria-current={current(l.href) ? 'page' : undefined}>{l.label}</a>
       {/each}
