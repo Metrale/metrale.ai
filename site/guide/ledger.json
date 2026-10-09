@@ -249,6 +249,13 @@
       "touched": [
         "links.gb10Kernels"
       ]
+    },
+    {
+      "rev": 18,
+      "date": "2026-10-09",
+      "base": "2334f70aa",
+      "note": "Programs card: the AMD line now reads hardware and silicon optimization partner.",
+      "touched": []
     }
   ],
   "facts": {

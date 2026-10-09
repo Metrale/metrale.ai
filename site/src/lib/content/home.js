@@ -80,7 +80,7 @@ export const logoWall = {
       href: links.inception,
       blurb: 'Hardware and silicon optimization partner.',
     },
-    { name: 'AMD', file: 'amd', fileDark: 'amd-dark', blurb: 'Strix Halo hardware provided.' },
+    { name: 'AMD', file: 'amd', fileDark: 'amd-dark', blurb: 'Hardware and silicon optimization partner.' },
     {
       name: 'SCALE by Spectral Compute',
       file: 'scale',
