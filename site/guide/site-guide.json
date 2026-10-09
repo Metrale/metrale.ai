@@ -1,6 +1,6 @@
 {
- "revision": 15,
- "date": "2026-10-08",
+ "revision": 16,
+ "date": "2026-10-09",
  "changes": [
   {
    "rev": 1,
@@ -234,6 +234,13 @@
     "type.css",
     "og-image.png"
    ]
+  },
+  {
+   "rev": 16,
+   "date": "2026-10-09",
+   "base": "ce49af61d",
+   "note": "Programs card: the NVIDIA Inception line now reads hardware and silicon optimization partner.",
+   "touched": []
   }
  ],
  "facts": [
@@ -2817,7 +2824,7 @@
      "button": false
     },
     {
-     "text": "Program member. DGX Spark hardware provided.",
+     "text": "Hardware and silicon optimization partner.",
      "href": "https://www.nvidia.com/en-us/startups/",
      "kind": "out",
      "button": false
@@ -3302,7 +3309,7 @@
      "button": false
     },
     {
-     "text": "Program member. DGX Spark hardware provided.",
+     "text": "Hardware and silicon optimization partner.",
      "href": "https://www.nvidia.com/en-us/startups/",
      "kind": "out",
      "button": false

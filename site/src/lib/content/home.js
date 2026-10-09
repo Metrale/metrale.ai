@@ -78,7 +78,7 @@ export const logoWall = {
       src: '/nvidia-inception.webp',
       srcDark: '/nvidia-inception-dark.webp',
       href: links.inception,
-      blurb: 'Program member. DGX Spark hardware provided.',
+      blurb: 'Hardware and silicon optimization partner.',
     },
     { name: 'AMD', file: 'amd', fileDark: 'amd-dark', blurb: 'Strix Halo hardware provided.' },
     {
