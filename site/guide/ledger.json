@@ -240,6 +240,15 @@
       "base": "ce49af61d",
       "note": "Programs card: the NVIDIA Inception line now reads hardware and silicon optimization partner.",
       "touched": []
+    },
+    {
+      "rev": 17,
+      "date": "2026-10-09",
+      "base": "b79d219ae",
+      "note": "Recognition: the NVIDIA Inception receipt names the GB10 bring up and links to the GB10 kernels, as the AMD receipt does.",
+      "touched": [
+        "links.gb10Kernels"
+      ]
     }
   ],
   "facts": {
@@ -390,6 +399,11 @@
       "value": "https://docs.metrale.ai",
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "links.gb10Kernels": {
+      "value": "https://github.com/Metrale/metrale-inference/tree/main/kernels/gb10",
+      "rev": 1,
+      "date": "2026-10-09"
     },
     "links.github": {
       "value": "https://github.com/Metrale/metrale-inference",
