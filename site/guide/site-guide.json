@@ -1,5 +1,5 @@
 {
- "revision": 16,
+ "revision": 17,
  "date": "2026-10-09",
  "changes": [
   {
@@ -241,6 +241,15 @@
    "base": "ce49af61d",
    "note": "Programs card: the NVIDIA Inception line now reads hardware and silicon optimization partner.",
    "touched": []
+  },
+  {
+   "rev": 17,
+   "date": "2026-10-09",
+   "base": "b79d219ae",
+   "note": "Recognition: the NVIDIA Inception receipt names the GB10 bring up and links to the GB10 kernels, as the AMD receipt does.",
+   "touched": [
+    "links.gb10Kernels"
+   ]
   }
  ],
  "facts": [
@@ -851,6 +860,15 @@
     "/trust",
     "/waitlist",
     "/why-metrale"
+   ]
+  },
+  {
+   "key": "links.gb10Kernels",
+   "value": "https://github.com/Metrale/metrale-inference/tree/main/kernels/gb10",
+   "rev": 1,
+   "date": "2026-10-09",
+   "used": [
+    "/"
    ]
   },
   {
@@ -3387,8 +3405,8 @@
      "button": false
     },
     {
-     "text": "Member Program member. DGX Spark hardware provided for the GB10 bring up About the program",
-     "href": "https://www.nvidia.com/en-us/startups/",
+     "text": "Member DGX Spark hardware provided for the GB10 bring up See the GB10 kernels github.com",
+     "href": "https://github.com/Metrale/metrale-inference/tree/main/kernels/gb10",
      "kind": "out",
      "button": false
     },
@@ -4970,6 +4988,9 @@
   ],
   "https://github.com/Metrale/metrale-inference/pulls": [
    "/labs"
+  ],
+  "https://github.com/Metrale/metrale-inference/tree/main/kernels/gb10": [
+   "/"
   ],
   "https://github.com/Metrale/metrale-inference/tree/main/kernels/strix": [
    "/"

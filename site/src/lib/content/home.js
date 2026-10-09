@@ -254,9 +254,9 @@ export const recognition = {
       org: 'NVIDIA Inception',
       mark: { name: 'NVIDIA Inception', src: '/nvidia-inception.webp', srcDark: '/nvidia-inception-dark.webp', height: 34 },
       date: 'Member',
-      title: 'Program member. DGX Spark hardware provided for the GB10 bring up',
-      cta: 'About the program',
-      href: links.inception,
+      title: 'DGX Spark hardware provided for the GB10 bring up',
+      cta: 'See the GB10 kernels',
+      href: links.gb10Kernels,
     },
   ],
 };

@@ -52,6 +52,7 @@ export const links = {
   guide: `${ENGINE_REPO}/blob/main/docs/GB10_DEPLOYMENT_GUIDE.md`,
   ladderLog: `${ENGINE_REPO}/blob/main/bench/ladder38/RESULTS.md`,
   strixKernels: `${ENGINE_REPO}/tree/main/kernels/strix`,
+  gb10Kernels: `${ENGINE_REPO}/tree/main/kernels/gb10`,
   inception: 'https://www.nvidia.com/en-us/startups/',
   scale: 'https://docs.scale-lang.com/stable/',
   llamaCppPr: 'https://github.com/ggml-org/llama.cpp/pull/18680',
