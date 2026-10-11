@@ -24,9 +24,16 @@ import { REPO_CHAT_VERSION } from './pin.js';
 // cannot be fetched, and all of them must share one embedding model and
 // dimension (each meta.json names its own). `id` is what the chat prints for a
 // corpus and keys its browser cache; never reuse one for different content.
+// `name` is the published basename. This list is the only place a corpus is
+// named: adding, removing or splitting one (the code index is to become
+// metrale-code-crates and metrale-code-kernels) is an edit here alone.
 const [ENGINE_ORG, ENGINE_NAME] = ENGINE_SLUG.split('/');
 export const CORPUS_BASE = `https://${ENGINE_ORG.toLowerCase()}.github.io/${ENGINE_NAME}/coderag`;
-export const CORPORA = Object.freeze([{ id: 'code', name: 'metrale-coderag' }]);
+export const CORPORA = Object.freeze([
+  { id: 'code', name: 'metrale-coderag' },
+  { id: 'docs', name: 'metrale-docs' },
+  { id: 'rust-book', name: 'books-rust' },
+]);
 
 /** A corpus as the library takes it. */
 export const corpusUrls = ({ id, name }) => ({

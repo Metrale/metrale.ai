@@ -111,6 +111,10 @@ test.describe('the chat', () => {
     await expect(askButton(page)).toHaveAttribute('aria-expanded', 'true');
     await expect(dialog.getByRole('heading', { name: codeChat.copy.title })).toBeVisible();
     await waitReady(page);
+    // Every configured corpus loaded (each is answered by the fixture here).
+    const n = CORPUS_URLS.length;
+    const which = n === 1 ? COMMIT.slice(0, 7) : `${n} corpora`;
+    await expect(dialog.locator('.cc-status-text')).toHaveText(`ready · ${which} · ${META.points * n} chunks · dim ${META.dim}`);
     // The visitor's key, saved under the site's old storage name, is still the one in use.
     await expect(dialog.locator('.cc-connected')).toBeVisible();
 
@@ -167,7 +171,8 @@ test.describe('the chat', () => {
     await openChat(page);
     await waitReady(page);
     await expect.poll(() => opfsFiles(page)).not.toContain('lattice-db-0123abcd.jsonl');
-    expect(await opfsFiles(page)).toContain(`metrale-~${CORPUS_URLS[0].id}@${COMMIT}.jsonl`);
+    const files = await opfsFiles(page);
+    for (const { id } of CORPUS_URLS) expect(files).toContain(`metrale-~${id}@${COMMIT}.jsonl`);
     expect(
       await page.evaluate(
         async ([cacheName, url]) => !!(await (await caches.open(cacheName)).match(url)),

@@ -65,10 +65,11 @@ describe('the configuration /engine opens the chat with', () => {
   test('every corpus is a gz and a meta beside it on the engine Pages site', () => {
     const corpora = config().corpora;
     expect(corpora).toEqual(CORPORA.map(corpusUrls));
-    expect(corpora[0]).toEqual({
-      id: 'code',
-      gzUrl: `${CORPUS_BASE}/metrale-coderag.jsonl.gz`,
-      metaUrl: `${CORPUS_BASE}/metrale-coderag.jsonl.meta.json`,
+    expect(corpora.map((c) => c.id)).toEqual(['code', 'docs', 'rust-book']);
+    expect(corpora[2]).toEqual({
+      id: 'rust-book',
+      gzUrl: `${CORPUS_BASE}/books-rust.jsonl.gz`,
+      metaUrl: `${CORPUS_BASE}/books-rust.jsonl.meta.json`,
     });
     expect(CORPUS_BASE).toBe('https://metrale.github.io/metrale-inference/coderag');
   });
