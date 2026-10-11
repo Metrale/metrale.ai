@@ -565,8 +565,6 @@ export const codeChat = {
   // The button on /engine. CHAT_ON in e2e/fixtures/chat-helpers.js follows this
   // switch, and a unit test holds the two equal.
   enabled: true,
-  // Beside the button's icon where the header has room.
-  buttonText: 'Ask the code',
   // Said under the button when the library itself could not be fetched.
   loadFail: 'The codebase chat did not load. The network may have blinked.',
   retry: 'Try again',

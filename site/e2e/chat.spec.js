@@ -54,20 +54,6 @@ test.describe('the button', () => {
     expect(box.y).toBeLessThan(80);
   });
 
-  // 1360 px is where the words appear, and the tightest the bar gets with them.
-  for (const width of [1360, 1600]) {
-    test(`names itself in words at ${width} px without crowding the menu`, async ({ page }) => {
-      await page.setViewportSize({ width, height: 900 });
-      await page.goto('/engine');
-      await expect(askButton(page).locator('.arb-label')).toHaveText(codeChat.buttonText);
-      await expect(askButton(page).locator('.arb-label')).toBeVisible();
-      const nav = await page.locator('.av-nav').boundingBox();
-      const actions = await page.locator('.av-header-actions').boundingBox();
-      expect(nav.x + nav.width).toBeLessThanOrEqual(actions.x);
-      expect(actions.x + actions.width).toBeLessThanOrEqual(width);
-    });
-  }
-
   test.describe('without script', () => {
     test.use({ javaScriptEnabled: false });
     test('the engine page shows no button it cannot honour', async ({ page }) => {
@@ -98,10 +84,14 @@ test.describe('the button', () => {
     let release;
     const held = new Promise((resolve) => (release = resolve));
     let failNext = true;
+    let aborted = 0;
     await page.route(
       (url) => url.pathname === REPO_CHAT_MODULE_URL,
       async (route) => {
-        if (failNext) return route.abort('internetdisconnected');
+        if (failNext) {
+          aborted += 1;
+          return route.abort('internetdisconnected');
+        }
         await held;
         await route.continue();
       }
@@ -128,6 +118,13 @@ test.describe('the button', () => {
     // Its own "Try again" retries.
     await button.click();
     await expect(alert).toHaveText(codeChat.loadFail);
+    // A keyboard retry that fails again leaves focus on the new "Try again", not on the page.
+    await page.getByRole('button', { name: codeChat.retry }).focus();
+    const before = aborted;
+    await page.keyboard.press('Enter');
+    await expect.poll(() => aborted).toBe(before + 1);
+    await expect(alert).toHaveText(codeChat.loadFail);
+    await expect(page.getByRole('button', { name: codeChat.retry })).toBeFocused();
     failNext = false;
     await page.getByRole('button', { name: codeChat.retry }).click();
     await expect(button).toHaveAttribute('aria-busy', 'true');

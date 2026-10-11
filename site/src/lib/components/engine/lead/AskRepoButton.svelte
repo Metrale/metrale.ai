@@ -12,6 +12,7 @@
   // When the dialog closes, focus comes back here: the library returns it to
   // whatever held focus when it mounted, and in WebKit a clicked button never
   // takes focus, so this does it itself.
+  import { tick } from 'svelte';
   import ChatLatticeIcon from '$lib/components/ChatLatticeIcon.svelte';
   import { codeChat } from '$lib/data.js';
   import { REPO_CHAT_MODULE_URL, repoChatConfig } from '$lib/chat/config.js';
@@ -22,6 +23,8 @@
   let phase = $state('idle');
   /** @type {HTMLButtonElement | undefined} */
   let button = $state();
+  /** @type {HTMLButtonElement | undefined} */
+  let retryButton = $state();
 
   let library = null;
   let failures = 0;
@@ -91,6 +94,12 @@
     } catch (err) {
       console.error(err);
       phase = 'error';
+      // A retry from the note removed the button that held focus while it
+      // loaded; put focus on the note's "Try again" rather than leave it on <body>.
+      if (document.activeElement === document.body) {
+        await tick();
+        retryButton?.focus();
+      }
     }
   }
 </script>
@@ -115,7 +124,6 @@
     onclick={open}
   >
     <ChatLatticeIcon size={20} />
-    <span class="arb-label" aria-hidden="true">{codeChat.buttonText}</span>
   </button>
   <!-- The alert region is always in the page, empty until there is something
        to say, so a screen reader announces the message when it is written. -->
@@ -123,7 +131,7 @@
     <p id="arb-error" class="arb-pop-text" role="alert">{phase === 'error' ? codeChat.loadFail : ''}</p>
     {#if phase === 'error'}
       <div class="arb-pop-actions">
-        <button type="button" class="arb-pop-retry" onclick={open}>{codeChat.retry}</button>
+        <button bind:this={retryButton} type="button" class="arb-pop-retry" onclick={open}>{codeChat.retry}</button>
         <button type="button" class="arb-pop-dismiss" onclick={dismiss}>{codeChat.dismiss}</button>
       </div>
     {/if}
@@ -141,35 +149,17 @@
     }
   }
   .arb-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.45rem;
-    min-width: 42px;
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
     height: 42px;
-    padding: 0 10px;
     flex-shrink: 0;
     cursor: pointer;
     border-radius: 10px;
     border: 1px solid var(--border-strong);
     background: var(--card);
     color: var(--accent);
-    font: inherit;
-    font-weight: 600;
-    font-size: 0.88rem;
-    white-space: nowrap;
     transition: border-color 0.15s;
-  }
-  /* The words beside the icon where the bar has room for them; the button's
-     accessible name is the same words either way. */
-  .arb-label {
-    display: none;
-    color: var(--t1);
-  }
-  @media (min-width: 1360px) {
-    .arb-label {
-      display: inline;
-    }
   }
   .arb-btn:hover {
     border-color: var(--accent);
