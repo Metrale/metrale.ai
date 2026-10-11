@@ -44,7 +44,7 @@ if (!index.includes('The Metrale Engine Book')) bad("the front page does not car
 if (!index.includes('metrale.js')) bad('the front page does not load the wordmark script');
 if (!index.includes('metrale.css')) bad('the front page does not load the Metrale skin');
 const ICONS = Object.keys(DOCS_ICONS);
-for (const needed of ['llms.txt', '_headers', ...ICONS, 'version.txt', 'fonts/fonts.css', 'theme/css/metrale-tokens.css']) {
+for (const needed of ['llms.txt', '_headers', ...ICONS, 'version.txt', 'theme/css/metrale-tokens.css']) {
   if (!existsSync(join(OUT, needed))) bad(`${needed} is missing beside the pages`);
 }
 // The icons and the social card are the brand kit's: the same bytes the site
@@ -62,11 +62,15 @@ for (const [, rel, href] of index.matchAll(/<link\b[^>]*\brel="([^"]*icon[^"]*)"
   const file = join(OUT, href.replace(/^(\.\/)+/, '').split(/[?#]/)[0]);
   if (!existsSync(file)) bad(`the book's head links ${href} (rel="${rel}"), which the build does not ship`);
 }
-// The faces the book's own fonts.css declares, each a real file beside it. The
-// book's theme names its typeface; this checks that whatever it names ships.
-const fontsCss = existsSync(join(OUT, 'fonts', 'fonts.css')) ? readFileSync(join(OUT, 'fonts', 'fonts.css'), 'utf8') : '';
+// The faces the book's own fonts stylesheet declares, each a real file beside it.
+// The book's head names that stylesheet (its file name carries a version, since
+// it is served immutable), so it is read from the rendered front page.
+const fontsHref = /href="(?:\.\/)*(fonts\/[^"]+\.css)"/.exec(index)?.[1];
+if (!fontsHref) bad("the front page links no fonts stylesheet under fonts/");
+const fontsCss = fontsHref && existsSync(join(OUT, fontsHref)) ? readFileSync(join(OUT, fontsHref), 'utf8') : '';
+if (fontsHref && !fontsCss) bad(`${fontsHref} is missing beside the pages`);
 const faces = [...fontsCss.matchAll(/url\(['"]?(?:\.\/)?([^'")]+\.woff2)['"]?\)/g)].map((m) => `fonts/${m[1]}`);
-if (fontsCss && !faces.length) bad('fonts/fonts.css declares no web font');
+if (fontsCss && !faces.length) bad(`${fontsHref} declares no web font`);
 // A link the build did not resolve is shipped as the text of its path.
 for (const f of ['theme/css/metrale-tokens.css', ...faces]) {
   if (!existsSync(join(OUT, f))) bad(`${f} is missing beside the pages`);
