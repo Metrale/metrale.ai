@@ -151,9 +151,14 @@ jobs:
       - name: Install browsers
         working-directory: site
         run: bun x playwright install --with-deps chromium
-      # The suite builds the site itself, then serves it with vite preview.
+      # The suite builds the site itself, then serves it with vite preview. The
+      # chat's model ids reach that build here; chat.spec.js checks the page
+      # asks OpenRouter for exactly these.
       - name: Browser suite
         working-directory: site
+        env:
+          METRALE_CHAT_MODEL: ${{ vars.OPENROUTER_DEFAULT_FREE_MODEL }}
+          METRALE_RERANK_MODEL: ${{ vars.OPENROUTER_RERANK_MODEL }}
         run: bun run test:e2e
       - name: Upload the report
         if: ${{ failure() }}
@@ -174,6 +179,8 @@ jobs:
         with:
           commit: ${{ github.event.pull_request.head.sha }}
           github-token: ${{ github.token }}
+          chat-model: ${{ vars.OPENROUTER_DEFAULT_FREE_MODEL }}
+          rerank-model: ${{ vars.OPENROUTER_RERANK_MODEL }}
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: site-build

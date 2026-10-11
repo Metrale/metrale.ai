@@ -12,6 +12,8 @@ import { expect, test } from 'bun:test';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { pages } from './index.js';
+import { REPO_CHAT_BASE } from '../chat/config.js';
+import { REPO_CHAT_VERSION } from '../chat/pin.js';
 
 const SITE_DIR = join(import.meta.dir, '..', '..', '..');
 const STATIC_DIR = join(SITE_DIR, 'static');
@@ -56,9 +58,7 @@ test('every page has exactly one cache rule, in both spellings', () => {
 });
 
 test('no shipped file is matched by two Cache-Control rules, which Pages would concatenate', () => {
-  const files = walk(STATIC_DIR)
-    .map((f) => '/' + relative(STATIC_DIR, f).split(/[\\/]/).join('/'))
-    .filter((f) => !f.startsWith('/lattice/') || f.endsWith('.wasm'));
+  const files = walk(STATIC_DIR).map((f) => '/' + relative(STATIC_DIR, f).split(/[\\/]/).join('/'));
   const doubled = files
     .filter((f) => matching(f).length > 1)
     .map(
@@ -81,6 +81,20 @@ test('the media and the fonts are cached', () => {
   ]) {
     expect(matching(f).length, f).toBe(1);
   }
+});
+
+// The chat library's directory carries its version, so a new release is a new
+// URL and the old bytes can be held for a year. That holds only while the page
+// loads it from the versioned path chat/config.js names and nowhere else.
+test('the vendored chat library is cached immutably, under the versioned path the page loads', () => {
+  for (const f of ['repo-chat.js', 'repo-chat.css', 'lattice_server.js', 'lattice_server_bg.wasm']) {
+    const path = REPO_CHAT_BASE + f;
+    expect(
+      matching(path).map((r) => r.headers['cache-control']),
+      path
+    ).toEqual(['public, max-age=31536000, immutable']);
+  }
+  expect(REPO_CHAT_BASE).toBe(`/repo-chat/${REPO_CHAT_VERSION}/`);
 });
 
 test('the file stays inside the 100 rule limit Cloudflare Pages enforces', () => {

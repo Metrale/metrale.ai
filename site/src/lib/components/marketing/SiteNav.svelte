@@ -15,12 +15,18 @@
   Scoped styles on purpose: this component mounts on the marketing routes and
   on the developer routes (/engine, /control), which load different global
   stylesheets. Nothing here depends on either.
+
+  `actions` is an optional snippet a page's layout renders first in the bar's
+  right-hand group, at every width (the engine page's "Ask the codebase").
 -->
 <script>
   import { page } from '$app/state';
   import { nav, routes } from '$lib/content/brand.js';
   import MetraleLockup from '$shared/components/MetraleLockup.svelte';
   import ThemeToggle from '$shared/components/ThemeToggle.svelte';
+
+  /** @type {{ actions?: import('svelte').Snippet }} */
+  let { actions } = $props();
 
   let open = $state(null); // label of the open mega menu
   let drawer = $state(false);
@@ -146,6 +152,7 @@
     </nav>
 
     <div class="av-header-actions">
+      {@render actions?.()}
       <ThemeToggle />
       <a class="av-cta" href={nav.cta.href}>{nav.cta.text}</a>
       <button

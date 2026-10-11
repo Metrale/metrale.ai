@@ -1,8 +1,7 @@
 <script>
-  // Hand-drawn neural lattice glyph (2-3-2 layers, fully connected). svgo on
-  // deep-learning.svg bottoms out near 5 KB at precision 1, too heavy for the
-  // nav bar, so the full artwork ships only inside the lazy chat chunk as the
-  // modal's background motif. House icon convention (see GithubIcon.svelte).
+  // Hand-drawn neural lattice glyph (2-3-2 layers, fully connected): the
+  // "Ask the codebase" button on /engine. House icon convention (see
+  // GithubIcon.svelte).
   let { size = 20 } = $props();
 </script>
 

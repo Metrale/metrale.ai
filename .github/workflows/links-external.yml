@@ -25,6 +25,8 @@ jobs:
         with:
           commit: ${{ github.sha }}
           github-token: ${{ github.token }}
+          chat-model: ${{ vars.OPENROUTER_DEFAULT_FREE_MODEL }}
+          rerank-model: ${{ vars.OPENROUTER_RERANK_MODEL }}
       - name: Install lychee
         run: |
           v=0.24.2

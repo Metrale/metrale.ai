@@ -1,60 +1,114 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 // =============================================================================
-// config.js — every constant for the "Ask the codebase" feature (SSOT).
-// No other chat module hardcodes a URL, model id, batch size, or storage key.
+// config.js — the site's configuration of the codebase chat library (SSOT).
+// -----------------------------------------------------------------------------
+// The chat is AutoRepoRAG's website-chat library, vendored at the release in
+// chat/pin.js into static/repo-chat/<version>/ by scripts/gen-repo-chat.mjs.
+// Its one call takes a complete configuration with no defaults; this builds it.
+// Pure: what only the page knows (the mount point, the library's own English
+// copy, the two model ids from the build, the close callback) is passed in.
+// Nothing else in the site names a corpus, the chat's storage prefix or the
+// library's address.
 // =============================================================================
 
 import { ENGINE_SLUG } from '../../../../web-shared/sources.mjs';
+import { SITE, company } from '../content/brand.js';
+import { codeChat } from '../data.js';
+import { REPO_CHAT_VERSION } from './pin.js';
 
-// --- corpus (published by the engine's coderag workflow to GitHub Pages) -----
-// The addresses that workflow names. Nothing is served there until Pages is on
-// in the engine's repository, which is why `codeChat.enabled` is false. The
-// Pages host is the organisation's, and the path is the repository's name.
+// --- the corpora --------------------------------------------------------------
+// Published by the engine's CodeRAG workflow to its GitHub Pages site, one
+// lattice-jsonl file per corpus: <name>.jsonl.gz beside <name>.jsonl.meta.json.
+// The Pages host is the organisation's and the path is the repository's name.
+// Every corpus listed here must be live: the library refuses to open when one
+// cannot be fetched, and all of them must share one embedding model and
+// dimension (each meta.json names its own). `id` is what the chat prints for a
+// corpus and keys its browser cache; never reuse one for different content.
 const [ENGINE_ORG, ENGINE_NAME] = ENGINE_SLUG.split('/');
-const CORPUS_BASE = `https://${ENGINE_ORG.toLowerCase()}.github.io/${ENGINE_NAME}/coderag`;
-export const CORPUS_GZ_URL = `${CORPUS_BASE}/metrale-coderag.jsonl.gz`;
-export const CORPUS_META_URL = `${CORPUS_BASE}/metrale-coderag.jsonl.meta.json`;
+export const CORPUS_BASE = `https://${ENGINE_ORG.toLowerCase()}.github.io/${ENGINE_NAME}/coderag`;
+export const CORPORA = Object.freeze([{ id: 'code', name: 'metrale-coderag' }]);
 
-// --- OpenRouter --------------------------------------------------------------
+/** A corpus as the library takes it. */
+export const corpusUrls = ({ id, name }) => ({
+  id,
+  gzUrl: `${CORPUS_BASE}/${name}.jsonl.gz`,
+  metaUrl: `${CORPUS_BASE}/${name}.jsonl.meta.json`,
+});
+
+// --- the library, served from this origin ---------------------------------------
+export const REPO_CHAT_BASE = `/repo-chat/${REPO_CHAT_VERSION}/`;
+export const REPO_CHAT_MODULE_URL = `${REPO_CHAT_BASE}repo-chat.js`;
+export const WASM_BIN_URL = `${REPO_CHAT_BASE}lattice_server_bg.wasm`;
+
+// --- OpenRouter -----------------------------------------------------------------
 export const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1';
-// Free-tier models (mirrors the LatticeDB rag-example) — zero cost to visitors.
-export const EMBEDDING_MODEL = 'nvidia/llama-nemotron-embed-vl-1b-v2:free';
-export const RERANK_MODEL = 'nvidia/llama-nemotron-rerank-vl-1b-v2:free';
-export const CHAT_MODEL = 'nvidia/nemotron-3-ultra-550b-a55b:free';
-// Attribution headers OpenRouter asks apps to send.
-export const APP_TITLE = 'Metrale Ask the Codebase';
-export const SITE_ORIGIN = 'https://metrale.ai';
-// Retry policy for the shared free-tier capacity (ResourceExhausted bursts).
-export const OR_MAX_ATTEMPTS = 3;
-export const OR_RETRY_BASE_MS = 700;
 
-// --- retrieval ---------------------------------------------------------------
-export const TOP_K = 3;
-// Vector-search candidates fetched per requested result; the cross-encoder
-// reranker then picks the final TOP_K out of TOP_K * RERANK_MULTIPLIER.
-export const RERANK_MULTIPLIER = 4;
+// --- browser storage --------------------------------------------------------------
+// The library names its localStorage keys `<prefix>openrouter-key` and
+// `<prefix>openrouter-chat-model`. These are the names the site's own chat used,
+// so a visitor's saved key and answer model carry over.
+export const STORAGE_KEY_PREFIX = 'metrale-';
 
-// --- indexing ----------------------------------------------------------------
-// Points upserted into the wasm collection per batch, with an idle yield
-// between batches so the main thread stays responsive while indexing.
-export const UPSERT_BATCH = 256;
-// Name of the (single) LatticeDB collection holding the corpus.
-export const COLLECTION = 'metrale-code';
+// The site's design tokens, by the library's theme keys. Live var() references,
+// so the chat follows the light and dark switch while it is open.
+export const THEME = Object.freeze({
+  bg: 'var(--bg)',
+  bg2: 'var(--bg2)',
+  card: 'var(--card)',
+  border: 'var(--border)',
+  borderStrong: 'var(--border-strong)',
+  text: 'var(--t1)',
+  text2: 'var(--t2)',
+  text3: 'var(--t3)',
+  accent: 'var(--accent)',
+  accentSoft: 'var(--accent-soft)',
+  onAccent: 'var(--on-accent)',
+  green: 'var(--green)',
+  amber: 'var(--amber)',
+  fontMono: 'var(--font-mono)',
+  fontSans: 'var(--font-sans)',
+  shadowLg: 'var(--shadow-lg)',
+});
 
-// --- vendored LatticeDB wasm (emitted by scripts/gen-lattice.mjs) ------------
-export const WASM_JS_URL = '/lattice/lattice_server.js';
-export const WASM_BIN_URL = '/lattice/lattice_server_bg.wasm';
-// Cache API bucket used only for the optional idle wasm prefetch.
-export const WASM_PREFETCH_CACHE = 'metrale-lattice-wasm';
+const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
-// --- storage -----------------------------------------------------------------
-// localStorage key holding the visitor's OpenRouter API key.
-export const LS_OPENROUTER_KEY = 'metrale-openrouter-key';
-// The visitor may point the answer model somewhere else, e.g. at the paid twin
-// of the default when their free daily allowance is spent. Retrieval models are
-// deliberately NOT overridable: the embedder has no paid endpoint at all, and a
-// different embedder would not match the vectors the corpus was built with.
-export const LS_CHAT_MODEL = 'metrale-openrouter-chat-model';
-// OPFS file name for the decompressed corpus, keyed by corpus commit SHA.
-export const latticeFileName = (sha) => 'lattice-db-' + sha + '.jsonl';
-// Matches files produced by latticeFileName(); capture group 1 is the SHA.
-export const LATTICE_FILE_RE = /^lattice-db-(.+)\.jsonl$/;
+/** `base` with `overrides` laid over it, object by object; a string or a list is replaced whole. */
+export function mergeCopy(base, overrides) {
+  const out = { ...base };
+  for (const [key, value] of Object.entries(overrides)) {
+    out[key] = isPlainObject(value) && isPlainObject(base[key]) ? mergeCopy(base[key], value) : value;
+  }
+  return out;
+}
+
+/**
+ * The configuration `openRepoChat` and `warmRepoChat` take.
+ * @param {{ mount: Element, copyEn: object, models: { chatModel: string, rerankModel: string }, onClose: () => void }} page
+ */
+export function repoChatConfig({ mount, copyEn, models, onClose }) {
+  return {
+    mount,
+    assets: { cssHref: `${REPO_CHAT_BASE}repo-chat.css` },
+    wasm: { jsUrl: `${REPO_CHAT_BASE}lattice_server.js`, binUrl: WASM_BIN_URL },
+    corpora: CORPORA.map(corpusUrls),
+    provider: {
+      apiUrl: OPENROUTER_API_URL,
+      rerankModel: models.rerankModel,
+      chatModel: models.chatModel,
+      appTitle: `${company.engine}: Ask the Codebase`,
+      referer: SITE,
+      // The free models share capacity and answer bursts with ResourceExhausted.
+      maxAttempts: 3,
+      retryBaseMs: 700,
+    },
+    // Three sources per answer, chosen by the reranker from twelve candidates;
+    // 256 points indexed between yields keeps the page responsive while loading.
+    retrieval: { topK: 3, rerankMultiplier: 4, upsertBatch: 256 },
+    storage: { keyPrefix: STORAGE_KEY_PREFIX },
+    copy: mergeCopy(copyEn, codeChat.copy),
+    // The engine's name in the system prompt. No watermark behind the log.
+    brand: { productName: company.engine, motifSvg: null },
+    theme: { ...THEME },
+    onClose,
+  };
+}

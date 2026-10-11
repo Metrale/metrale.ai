@@ -243,6 +243,7 @@ unthrottled
 unwindowed
 upserted
 uscybercom
+ustar
 varlen
 venv
 vienot

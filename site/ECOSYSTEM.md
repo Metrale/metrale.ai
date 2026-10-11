@@ -29,13 +29,16 @@ chunks, embeds them, and publishes a corpus to GitHub Pages: on the last run,
 5,831 points over 1,942 files at 2,048 dimensions, 286 MB as JSONL and 98 MB
 gzipped, with a manifest that names the commit, the model and the checksum.
 The run is already incremental; that manifest records 14 chunks embedded and
-5,817 reused. In the browser, a vendored LatticeDB wasm build (763 KB, loaded
-only when the chat opens) indexes the corpus, the decompressed file is cached
-in the origin's private file system keyed by commit, and retrieval is embed,
-vector search, rerank, then chat, all through OpenRouter with the visitor's
-own key and the free Nemotron models (`site/src/lib/chat/config.js`). The
-answer model can be swapped; the retrieval models cannot, because the corpus
-vectors were made with one embedder. Answers cite the chunks they used.
+5,817 reused. In the browser, AutoRepoRAG's website-chat library (vendored at
+the release pinned in `site/src/lib/chat/pin.js`, loaded only when the button
+on /engine is wanted) indexes the corpus in its LatticeDB wasm build, caches
+the decompressed file in the origin's private file system keyed by corpus and
+commit, and retrieves by embed, vector search, rerank, then chat, all through
+OpenRouter with the visitor's own key and the free Nemotron models
+(`site/src/lib/chat/config.js`; the answer and rerank ids are organisation
+variables passed to the build, the embedder is named by each corpus's meta).
+The answer model can be swapped; the retrieval models cannot, because the
+corpus vectors were made with one embedder. Answers cite the chunks they used.
 
 **Metrale Prime.** The site's guide. A Cloudflare Worker with a BM25 index
 over the built pages and, for partners, over documents that never enter the

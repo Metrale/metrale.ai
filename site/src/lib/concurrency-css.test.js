@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 //
 // The concurrency tab's comparison card once rendered inside `<div class="cc">`
-// with `<span class="cc-chip">` pills — and chat.css owns both names for the
-// chat modal: `.cc` is a fixed-width flex column with `max-height` and
+// with `<span class="cc-chip">` pills — and the chat's stylesheet owns both
+// names for the chat modal (then the site's chat.css, now the vendored
+// repo-chat.css of the codebase chat library, linked on /engine on demand): `.cc` is a fixed-width flex column with `max-height` and
 // `overflow: hidden` (the table stopped at C=2 with no scrollbar), a mono
 // face and a receipt-tear `::before` over the heading; `.cc-chip` is an
 // accent pill with `cursor: pointer` (three spans that looked pressable and
-// did nothing). chat.css loads after dashboard.css, so it won.
+// did nothing). The chat's sheet loads after dashboard.css, so it won.
 //
 // Two guards, both over the real stylesheets and the real components:
-//   1. no class a Concurrency* component emits is selected by chat.css;
+//   1. no class a Concurrency* component emits is selected by repo-chat.css;
 //   2. no rule in any stylesheet that selects one of those classes may clip
 //      it (`overflow: hidden`, `max-height`) or pin its width.
 // The test renders nothing — it reads the class attributes the components
@@ -19,10 +20,13 @@ import { describe, expect, test } from 'bun:test';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { REPO_CHAT_VERSION } from './chat/pin.js';
 
 const LIB = fileURLToPath(new URL('./', import.meta.url));
 const STYLES = resolve(LIB, '..', 'styles');
 const COMPONENTS = resolve(LIB, 'components');
+// Written by scripts/gen-repo-chat.mjs (`bun run test:unit` runs it first).
+const CHAT_SHEET = resolve(LIB, '..', '..', 'static', 'repo-chat', REPO_CHAT_VERSION, 'repo-chat.css');
 
 /** Every static class name a component's markup carries (`class="a b"` and `class:x`). */
 const classesOf = (src) => {
@@ -57,18 +61,25 @@ const sheets = Object.fromEntries(
       .filter((f) => f.endsWith('.css'))
       .map((f) => join(STYLES, f)),
     resolve(LIB, '..', 'app.css'),
+    CHAT_SHEET,
   ].map((p) => [p.slice(p.lastIndexOf('/') + 1), readFileSync(p, 'utf8')])
 );
 
-describe('the concurrency components and chat.css', () => {
-  test('the scan found the components and their classes', () => {
+describe('the concurrency components and the chat stylesheet', () => {
+  test('the scan found the components, their classes and the chat sheet', () => {
     expect(concurrencyClasses.has('cl-table')).toBe(true);
     expect(concurrencyClasses.has('gate-panel')).toBe(true);
-    expect(Object.keys(sheets)).toContain('chat.css');
+    expect(
+      classesIn(
+        rulesOf(sheets['repo-chat.css'])
+          .map(([sel]) => sel)
+          .join(',')
+      )
+    ).toContain('cc-chip');
   });
 
-  test('no class a Concurrency* component emits is selected by chat.css', () => {
-    const chat = new Set(rulesOf(sheets['chat.css']).flatMap(([sel]) => [...classesIn(sel)]));
+  test('no class a Concurrency* component emits is selected by repo-chat.css', () => {
+    const chat = new Set(rulesOf(sheets['repo-chat.css']).flatMap(([sel]) => [...classesIn(sel)]));
     expect([...concurrencyClasses].filter((c) => chat.has(c))).toEqual([]);
   });
 
@@ -82,7 +93,7 @@ describe('the concurrency components and chat.css', () => {
 });
 
 describe('the check can fail', () => {
-  test('NEGATIVE CONTROL: the exact chat.css rule that clipped the table is detected', () => {
+  test('NEGATIVE CONTROL: the exact chat stylesheet rule that clipped the table is detected', () => {
     const shipped = `.cc {
       position: relative; width: min(860px, 100%);
       max-height: calc(100dvh - 5.5rem);

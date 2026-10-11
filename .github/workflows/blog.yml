@@ -65,6 +65,8 @@ jobs:
         with:
           commit: ${{ github.sha }}
           github-token: ${{ github.token }}
+          chat-model: ${{ vars.OPENROUTER_DEFAULT_FREE_MODEL }}
+          rerank-model: ${{ vars.OPENROUTER_RERANK_MODEL }}
       - name: Every link into the site lands on its section
         run: bun blog/e2e/check-crosslinks.mjs site/build blog/build
 

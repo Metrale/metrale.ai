@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import { execFileSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CHAT_MODELS_MODULE, chatModelsModule, readChatModels } from './src/lib/chat/models-env.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -43,9 +44,10 @@ function metraleGenerators() {
       // Depends on the four above: llms.txt restates their numbers for answer
       // engines, so it must be written after they are.
       run('gen-llms.mjs');
-      // Vendors the sha256-pinned LatticeDB wasm into static/lattice/; a pin
-      // mismatch or no-cache-and-offline is a hard failure by design.
-      run('gen-lattice.mjs');
+      // Vendors the sha256-pinned codebase chat library (and the LatticeDB
+      // wasm it runs on) into static/repo-chat/<version>/; a pin mismatch or
+      // no-cache-and-offline is a hard failure by design.
+      run('gen-repo-chat.mjs');
       // Best-effort: gh/network flakiness must never fail the build.
       try {
         run('gen-stars.mjs');
@@ -56,8 +58,25 @@ function metraleGenerators() {
   };
 }
 
+// The codebase chat's answer and rerank model ids, from the build's environment
+// (src/lib/chat/models-env.js says where CI gets them). Read when the build or
+// the dev server starts, so a missing id stops it there and never ships a chat
+// that names no model.
+function chatModels() {
+  const resolved = '\0' + CHAT_MODELS_MODULE;
+  let models;
+  return {
+    name: 'metrale-chat-models',
+    buildStart() {
+      models = readChatModels(process.env);
+    },
+    resolveId: (id) => (id === CHAT_MODELS_MODULE ? resolved : undefined),
+    load: (id) => (id === resolved ? chatModelsModule((models ??= readChatModels(process.env))) : undefined),
+  };
+}
+
 export default defineConfig({
-  plugins: [metraleGenerators(), sveltekit()],
+  plugins: [chatModels(), metraleGenerators(), sveltekit()],
   build: {
     rolldownOptions: {
       output: {

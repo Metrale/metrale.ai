@@ -30,6 +30,11 @@ bun install
 export METRALE_ENGINE_ROOT="$(cd ../../metrale-inference && pwd)"
 export METRALE_LAUNCHER_ROOT="$(cd ../../metralectl && pwd)"
 export METRALE_BASELINES_ROOT="$METRALE_ENGINE_ROOT/tests/baselines"
+# The codebase chat's answer and rerank models, as OpenRouter model ids. CI uses
+# the organisation variables OPENROUTER_DEFAULT_FREE_MODEL and OPENROUTER_RERANK_MODEL.
+# The build stops without them.
+export METRALE_CHAT_MODEL=vendor/answer-model:free
+export METRALE_RERANK_MODEL=vendor/rerank-model:free
 bun x --bun vite build        # writes site/build
 bun x --bun vite preview      # serves it on http://localhost:4173
 ```

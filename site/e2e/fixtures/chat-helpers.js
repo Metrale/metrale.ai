@@ -1,72 +1,69 @@
 // =============================================================================
-// chat-helpers.js — shared plumbing for the chat E2E specs (chat.spec.js and
-// chat-streaming.spec.js): fixture corpus constants, corpus routing, and the
-// open-modal / wait-ready / ask UI drivers. Extracted so both specs code to
-// one copy (SSOT) and neither spec file balloons.
+// chat-helpers.js — shared plumbing for the chat E2E specs: the fixture corpus,
+// corpus routing, and the button / dialog / ask drivers. The chat is the
+// AutoRepoRAG website-chat library; its own suite covers its internals, so
+// these drive it only as a visitor to /engine would.
 // =============================================================================
 
 import { expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CORPUS_GZ_URL, CORPUS_META_URL, LS_OPENROUTER_KEY } from '../../src/lib/chat/config.js';
+import { CORPORA, STORAGE_KEY_PREFIX, corpusUrls } from '../../src/lib/chat/config.js';
+import { codeChat } from '../../src/lib/data.js';
 import { CORS_HEADERS } from './openrouter.js';
 
-// The chat is off on the site until the engine publishes its own code index
-// (`codeChat.enabled` in src/lib/data.js; a unit test holds the two equal).
-// Every chat suite skips while it is off, and chat-off.spec.js runs instead.
-export const CHAT_ON = false;
+// The chat's switch (`codeChat.enabled` in src/lib/data.js; a unit test holds the
+// two equal). While it is off the chat suites skip and chat-off.spec.js runs.
+export const CHAT_ON = true;
 
 const FIX = dirname(fileURLToPath(import.meta.url));
 export const META = JSON.parse(readFileSync(join(FIX, 'corpus-small.meta.json'), 'utf8'));
 export const GZ = readFileSync(join(FIX, 'corpus-small.jsonl.gz'));
 export const COMMIT = META.commit_sha;
-export const SHORT = COMMIT.slice(0, 7);
-export const READY_LINE = `ready · ${SHORT} · ${META.points} chunks · dim ${META.dim}`;
+export const LS_OPENROUTER_KEY = `${STORAGE_KEY_PREFIX}openrouter-key`;
 export const TEST_KEY = 'e2e-fixture-not-a-key';
+export const LABEL = codeChat.copy.navLabel;
+export const CLOSE_LABEL = codeChat.copy.closeLabel;
 
-export const JSON_HEADERS = { ...CORS_HEADERS, 'content-type': 'application/json' };
-export const GZ_HEADERS = { ...CORS_HEADERS, 'content-type': 'application/gzip' };
+/** Every corpus the site configures, as the library fetches it. */
+export const CORPUS_URLS = CORPORA.map(corpusUrls);
 
-/** Serve meta + corpus from fixtures, counting hits per URL. */
-export async function routeCorpus(context) {
+const JSON_HEADERS = { ...CORS_HEADERS, 'content-type': 'application/json' };
+const GZ_HEADERS = { ...CORS_HEADERS, 'content-type': 'application/gzip' };
+
+/** Answer every configured corpus with the fixture, counting the requests. */
+export async function routeCorpora(context) {
   const hits = { meta: 0, gz: 0 };
-  await context.route(CORPUS_META_URL, async (route) => {
-    hits.meta++;
-    await route.fulfill({ status: 200, headers: JSON_HEADERS, body: JSON.stringify(META) });
-  });
-  await context.route(CORPUS_GZ_URL, async (route) => {
-    hits.gz++;
-    await route.fulfill({ status: 200, headers: GZ_HEADERS, body: GZ });
-  });
+  for (const { gzUrl, metaUrl } of CORPUS_URLS) {
+    await context.route(metaUrl, async (route) => {
+      hits.meta++;
+      await route.fulfill({ status: 200, headers: JSON_HEADERS, body: JSON.stringify(META) });
+    });
+    await context.route(gzUrl, async (route) => {
+      hits.gz++;
+      await route.fulfill({ status: 200, headers: GZ_HEADERS, body: GZ });
+    });
+  }
   return hits;
 }
 
-// --- UI drivers --------------------------------------------------------------
+// --- drivers -------------------------------------------------------------------
 
-export const isMobile = (page) => page.viewportSize().width <= 860;
+/** The button in the header's right-hand group. */
+export const askButton = (page) => page.locator('.av-header-actions').getByRole('button', { name: LABEL, exact: true });
 
-export async function clickChatTrigger(page) {
-  if (isMobile(page)) {
-    await page.locator('.nav-toggle').click();
-    await page.locator('#nav-drawer .nav-chat-btn').click();
-  } else {
-    await page.locator('.nav-links .nav-chat-btn').click();
-  }
-}
+export const dialogOf = (page) => page.getByRole('dialog', { name: LABEL, exact: true });
 
-/** Open the modal and wait for the real dialog (past the lazy-load skeleton). */
 export async function openChat(page) {
-  await clickChatTrigger(page);
-  const dialog = page.locator('.cc[role="dialog"]:not(.cc-skeleton)');
+  await askButton(page).click();
+  const dialog = dialogOf(page);
   await expect(dialog).toBeVisible();
   return dialog;
 }
 
-export const statusText = (page) => page.locator('.cc-status-text');
-
 export async function waitReady(page) {
-  await expect(statusText(page)).toContainText('ready ·', { timeout: 30_000 });
+  await expect(page.locator('.cc-status-text')).toContainText('ready ·', { timeout: 30_000 });
 }
 
 export function withKey(page) {
@@ -77,3 +74,11 @@ export async function askQuestion(page, question) {
   await page.locator('.cc-input').fill(question);
   await page.locator('.cc-ask').click();
 }
+
+export const opfsFiles = (page) =>
+  page.evaluate(async () => {
+    const dir = await navigator.storage.getDirectory();
+    const names = [];
+    for await (const [name] of dir) names.push(name);
+    return names.sort();
+  });

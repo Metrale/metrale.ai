@@ -17,8 +17,12 @@ and installers the pages restate and serve. The root
 [README](../README.md) has the commands; `engine.ref` names the engine commit CI
 builds against.
 
-The three `METRALE_*` variables there are the only settings. Everything the pages show is in the
-repository: the fonts, the logos, the product clips, the film and the generated
+The `METRALE_*` variables there are the only settings. Two of them name the
+models of the codebase chat on /engine, and a build without them stops: CI takes
+them from the Metrale organisation variables (`METRALE_CHAT_MODEL` from
+`OPENROUTER_DEFAULT_FREE_MODEL`, `METRALE_RERANK_MODEL` from
+`OPENROUTER_RERANK_MODEL`), so export the same values locally. Everything the
+pages show is in the repository: the fonts, the logos, the product clips, the film and the generated
 stills are ordinary files under `static/`, not Git LFS pointers, so a plain
 clone has them. This was checked from a clean clone with no GitHub login.
 
@@ -46,7 +50,7 @@ dashboard's tests check the published manifests, the gate limits and the energy
 producer at `METRALE_ENGINE_ROOT`.
 
 ```sh
-bun test --preload ./test-runes.js src/lib          # unit, about a second
+bun run test:unit                                   # unit, about a second once the chat library is vendored
 bun x --bun playwright test e2e/marketing.spec.js   # browser, builds first
 (cd .. && bun .contrast-check.mjs)                  # contrast, run from the repository root
 ```

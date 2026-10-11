@@ -1,0 +1,86 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+//
+// The old chat's corpus files and wasm cache entry are removed, and nothing
+// else is. The file system and the cache are in-memory stand-ins with the
+// handful of methods the browser's own have (OPFS and the Cache API do not
+// exist outside a browser); e2e/chat.spec.js runs the same code on the real ones.
+
+import { describe, expect, test } from 'bun:test';
+import { LEGACY_WASM_CACHE, LEGACY_WASM_URL, removeLegacyCache } from './legacy-cache.js';
+
+function fakeDir(entries, { failOn = [] } = {}) {
+  const map = new Map(entries.map(([name, kind]) => [name, { kind }]));
+  return {
+    map,
+    async *entries() {
+      for (const [name, handle] of [...map]) yield [name, handle];
+    },
+    async removeEntry(name) {
+      if (failOn.includes(name)) throw new Error('locked');
+      map.delete(name);
+    },
+  };
+}
+
+function fakeCaches(buckets) {
+  const store = new Map(Object.entries(buckets).map(([name, urls]) => [name, new Set(urls)]));
+  return {
+    store,
+    has: async (name) => store.has(name),
+    open: async (name) => {
+      if (!store.has(name)) store.set(name, new Set());
+      const set = store.get(name);
+      return { delete: async (url) => set.delete(url) };
+    },
+  };
+}
+
+const LIBRARY_FILES = [
+  ['metrale-~code@246f71bf5da3a0a984d2ab9273ab22c0abdd371e.jsonl', 'file'],
+  ['metrale-~code@246f71bf5da3a0a984d2ab9273ab22c0abdd371e.meta.json', 'file'],
+];
+
+describe('removeLegacyCache', () => {
+  test("removes every old corpus file and only those, keeping the library's", async () => {
+    const dir = fakeDir([
+      ['lattice-db-246f71bf5da3a0a984d2ab9273ab22c0abdd371e.jsonl', 'file'],
+      ['lattice-db-00stale00.jsonl', 'file'],
+      ['lattice-db-notes.txt', 'file'],
+      ['lattice-db-dir.jsonl', 'directory'],
+      ...LIBRARY_FILES,
+    ]);
+    const removed = await removeLegacyCache({ dir, caches: null });
+    expect(removed.sort()).toEqual(['lattice-db-00stale00.jsonl', 'lattice-db-246f71bf5da3a0a984d2ab9273ab22c0abdd371e.jsonl']);
+    expect([...dir.map.keys()].sort()).toEqual(['lattice-db-dir.jsonl', 'lattice-db-notes.txt', ...LIBRARY_FILES.map(([n]) => n)].sort());
+  });
+
+  test("removes the old wasm entry and keeps the library's in the same bucket", async () => {
+    const caches = fakeCaches({ [LEGACY_WASM_CACHE]: [LEGACY_WASM_URL, '/repo-chat/2.1.0/lattice_server_bg.wasm'] });
+    expect(await removeLegacyCache({ dir: null, caches })).toEqual([`${LEGACY_WASM_CACHE} ${LEGACY_WASM_URL}`]);
+    expect([...caches.store.get(LEGACY_WASM_CACHE)]).toEqual(['/repo-chat/2.1.0/lattice_server_bg.wasm']);
+  });
+
+  test('never creates the bucket it is looking in', async () => {
+    const caches = fakeCaches({});
+    expect(await removeLegacyCache({ dir: fakeDir([]), caches })).toEqual([]);
+    expect(caches.store.size).toBe(0);
+  });
+
+  test('a file it cannot remove is reported, after the others are removed', async () => {
+    const dir = fakeDir(
+      [
+        ['lattice-db-a.jsonl', 'file'],
+        ['lattice-db-b.jsonl', 'file'],
+      ],
+      { failOn: ['lattice-db-a.jsonl'] }
+    );
+    await expect(removeLegacyCache({ dir, caches: null })).rejects.toThrow('lattice-db-a.jsonl: locked');
+    expect([...dir.map.keys()]).toEqual(['lattice-db-a.jsonl']);
+  });
+
+  test('a second run finds nothing', async () => {
+    const dir = fakeDir([['lattice-db-a.jsonl', 'file']]);
+    await removeLegacyCache({ dir, caches: null });
+    expect(await removeLegacyCache({ dir, caches: null })).toEqual([]);
+  });
+});

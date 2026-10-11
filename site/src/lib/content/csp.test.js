@@ -11,7 +11,7 @@ import { expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { formEndpoint, primeEndpoint } from './brand.js';
-import { CORPUS_GZ_URL, CORPUS_META_URL, OPENROUTER_API_URL, WASM_BIN_URL } from '../chat/config.js';
+import { CORPORA, OPENROUTER_API_URL, REPO_CHAT_BASE, WASM_BIN_URL, corpusUrls } from '../chat/config.js';
 import { AGENT_URL } from '../agent/protocol.js';
 
 const HEADERS = readFileSync(join(import.meta.dir, '..', '..', '..', 'static', '_headers'), 'utf8');
@@ -51,9 +51,24 @@ export function allows(sources, url, self = 'https://metrale.ai') {
 const headers = catchAll(HEADERS);
 const csp = parsePolicy(headers['content-security-policy'] ?? '');
 
+// Every corpus the codebase chat fetches, both files of each.
+const corpusFiles = CORPORA.map(corpusUrls).flatMap((c) => [c.gzUrl, c.metaUrl]);
+
 test('every address the site calls is in connect-src', () => {
-  const calls = [primeEndpoint, OPENROUTER_API_URL, CORPUS_GZ_URL, CORPUS_META_URL, AGENT_URL, WASM_BIN_URL, formEndpoint].filter(Boolean);
+  const calls = [primeEndpoint, OPENROUTER_API_URL, ...corpusFiles, AGENT_URL, WASM_BIN_URL, formEndpoint].filter(Boolean);
+  expect(corpusFiles.length).toBeGreaterThan(0);
   expect(calls.filter((url) => !allows(csp['connect-src'] ?? [], url))).toEqual([]);
+});
+
+// The chat library is imported as a module, links its stylesheet and compiles
+// its wasm: all from this origin, which script-src and style-src must allow,
+// and the wasm needs 'wasm-unsafe-eval'. Its theme is set through the DOM's
+// style API, which a policy does not govern.
+test('the codebase chat library loads from this origin under the policy', () => {
+  expect(new URL(REPO_CHAT_BASE, 'https://metrale.ai').origin).toBe('https://metrale.ai');
+  expect(allows(csp['script-src'] ?? [], `${REPO_CHAT_BASE}repo-chat.js`)).toBe(true);
+  expect(allows(csp['style-src'] ?? [], `${REPO_CHAT_BASE}repo-chat.css`)).toBe(true);
+  expect(csp['script-src']).toContain("'wasm-unsafe-eval'");
 });
 
 // The control: an address nobody listed is refused by the same reader.

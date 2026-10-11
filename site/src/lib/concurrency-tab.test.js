@@ -739,7 +739,7 @@ describe('the dashboard wires the hash to the subject', () => {
 // nothing, a table cut off after C=2, and a top card narrower than the gate
 // sweep under it. The pills are now buttons that drive the ladder through
 // series-visibility.js; the two cards share .gate-panel. The clipping and the
-// width were CSS (chat.css's `.cc`), which concurrency-css.test.js guards —
+// width were CSS (the chat stylesheet's `.cc`), which concurrency-css.test.js guards —
 // SSR cannot see a stylesheet, so the table check here proves only that every
 // rung is in the markup, never that it is on screen.
 describe('the published pair: series pills and the ladder they drive', () => {

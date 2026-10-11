@@ -256,6 +256,13 @@
       "base": "2334f70aa",
       "note": "Programs card: the AMD line now reads hardware and silicon optimization partner.",
       "touched": []
+    },
+    {
+      "rev": 19,
+      "date": "2026-10-11",
+      "base": "d9da6d204",
+      "note": "engine: Ask the codebase button, the chat is the AutoRepoRAG website-chat library",
+      "touched": []
     }
   ],
   "facts": {

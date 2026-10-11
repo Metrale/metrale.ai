@@ -39,6 +39,8 @@ jobs:
         with:
           commit: ${{ github.sha }}
           github-token: ${{ github.token }}
+          chat-model: ${{ vars.OPENROUTER_DEFAULT_FREE_MODEL }}
+          rerank-model: ${{ vars.OPENROUTER_RERANK_MODEL }}
 
       - name: Deploy
         env:
