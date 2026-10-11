@@ -66,6 +66,20 @@
     dir.then((d) => removeLegacyCache({ dir: d, caches: globalThis.caches ?? null })).catch((err) => console.warn(err));
   }
 
+  // The load-failure note stays until the visitor retries, dismisses it, presses
+  // Escape or clicks elsewhere.
+  function dismiss() {
+    if (phase !== 'error') return;
+    phase = 'idle';
+    button?.focus();
+  }
+  function onWindowKey(e) {
+    if (e.key === 'Escape') dismiss();
+  }
+  function onDocClick(e) {
+    if (phase === 'error' && !e.target.closest?.('.arb')) phase = 'idle';
+  }
+
   async function open() {
     if (phase === 'loading' || phase === 'open') return;
     phase = 'loading';
@@ -80,6 +94,9 @@
     }
   }
 </script>
+
+<svelte:window onkeydown={onWindowKey} />
+<svelte:document onclick={onDocClick} />
 
 <div class="arb">
   <button
@@ -98,29 +115,61 @@
     onclick={open}
   >
     <ChatLatticeIcon size={20} />
+    <span class="arb-label" aria-hidden="true">{codeChat.buttonText}</span>
   </button>
-  {#if phase === 'error'}
-    <p id="arb-error" class="arb-error" role="alert">{codeChat.loadFail}</p>
-  {/if}
+  <!-- The alert region is always in the page, empty until there is something
+       to say, so a screen reader announces the message when it is written. -->
+  <div class="arb-pop" class:is-open={phase === 'error'}>
+    <p id="arb-error" class="arb-pop-text" role="alert">{phase === 'error' ? codeChat.loadFail : ''}</p>
+    {#if phase === 'error'}
+      <div class="arb-pop-actions">
+        <button type="button" class="arb-pop-retry" onclick={open}>{codeChat.retry}</button>
+        <button type="button" class="arb-pop-dismiss" onclick={dismiss}>{codeChat.dismiss}</button>
+      </div>
+    {/if}
+  </div>
 </div>
 
 <style>
   .arb {
-    position: relative;
     display: inline-flex;
   }
+  /* Nothing to open without script, so no button either. */
+  @media (scripting: none) {
+    .arb {
+      display: none;
+    }
+  }
   .arb-btn {
-    display: inline-grid;
-    place-items: center;
-    width: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-width: 42px;
     height: 42px;
+    padding: 0 10px;
     flex-shrink: 0;
     cursor: pointer;
     border-radius: 10px;
     border: 1px solid var(--border-strong);
     background: var(--card);
     color: var(--accent);
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.88rem;
+    white-space: nowrap;
     transition: border-color 0.15s;
+  }
+  /* The words beside the icon where the bar has room for them; the button's
+     accessible name is the same words either way. */
+  .arb-label {
+    display: none;
+    color: var(--t1);
+  }
+  @media (min-width: 1360px) {
+    .arb-label {
+      display: inline;
+    }
   }
   .arb-btn:hover {
     border-color: var(--accent);
@@ -146,20 +195,60 @@
       opacity: 0.55;
     }
   }
-  .arb-error {
+  /* Closed: out of sight but still in the accessibility tree, empty. */
+  .arb-pop:not(.is-open) {
     position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    width: max-content;
-    max-width: min(18rem, calc(100vw - 32px));
-    margin: 0;
-    padding: 0.6rem 0.8rem;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  /* Open: pinned under the sticky header at the right gutter, so it is inside
+     the viewport at every width whatever sits right of the button. */
+  .arb-pop.is-open {
+    position: fixed;
+    z-index: 105;
+    top: calc(var(--nav-h, 68px) + 8px);
+    right: 16px;
+    width: min(20rem, calc(100vw - 32px));
+    padding: 0.75rem 0.85rem;
     border-radius: 10px;
     border: 1px solid var(--border-strong);
     background: var(--card);
     color: var(--t1);
     box-shadow: var(--shadow);
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     line-height: 1.45;
+  }
+  .arb-pop-text {
+    margin: 0;
+  }
+  .arb-pop-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+  }
+  .arb-pop-actions button {
+    min-height: 36px;
+    padding: 0 0.85rem;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .arb-pop-retry {
+    border: 1px solid var(--accent-fill);
+    background: var(--accent-fill);
+    color: var(--on-accent);
+  }
+  .arb-pop-dismiss {
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--t1);
+  }
+  .arb-pop-actions button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
   }
 </style>

@@ -54,6 +54,29 @@ test.describe('the button', () => {
     expect(box.y).toBeLessThan(80);
   });
 
+  // 1360 px is where the words appear, and the tightest the bar gets with them.
+  for (const width of [1360, 1600]) {
+    test(`names itself in words at ${width} px without crowding the menu`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/engine');
+      await expect(askButton(page).locator('.arb-label')).toHaveText(codeChat.buttonText);
+      await expect(askButton(page).locator('.arb-label')).toBeVisible();
+      const nav = await page.locator('.av-nav').boundingBox();
+      const actions = await page.locator('.av-header-actions').boundingBox();
+      expect(nav.x + nav.width).toBeLessThanOrEqual(actions.x);
+      expect(actions.x + actions.width).toBeLessThanOrEqual(width);
+    });
+  }
+
+  test.describe('without script', () => {
+    test.use({ javaScriptEnabled: false });
+    test('the engine page shows no button it cannot honour', async ({ page }) => {
+      await page.goto('/engine');
+      await expect(page.locator('.av-header-actions')).toBeVisible();
+      await expect(page.locator('.arb-btn')).toBeHidden();
+    });
+  });
+
   for (const path of ['/', '/platform/engine', '/control', '/diligence']) {
     test(`is not on ${path}`, async ({ page }) => {
       await page.goto(path);
@@ -85,15 +108,30 @@ test.describe('the button', () => {
     );
     await page.goto('/engine');
     const button = askButton(page);
+    // The alert region is in the page before anything goes wrong, and empty.
+    const alert = page.locator('#arb-error[role="alert"]');
+    await expect(alert).toHaveText('');
 
     await button.click();
-    await expect(page.getByRole('alert')).toHaveText(codeChat.loadFail);
+    await expect(alert).toHaveText(codeChat.loadFail);
     await expect(button).toHaveAttribute('aria-describedby', 'arb-error');
+    // The note sits inside the viewport, at every width.
+    const box = await alert.boundingBox();
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(page.viewportSize().width);
 
-    failNext = false;
+    // Escape dismisses it and hands focus back to the button.
+    await page.keyboard.press('Escape');
+    await expect(alert).toHaveText('');
+    await expect(button).toBeFocused();
+
+    // Its own "Try again" retries.
     await button.click();
+    await expect(alert).toHaveText(codeChat.loadFail);
+    failNext = false;
+    await page.getByRole('button', { name: codeChat.retry }).click();
     await expect(button).toHaveAttribute('aria-busy', 'true');
-    await expect(page.getByRole('alert')).toHaveCount(0);
+    await expect(alert).toHaveText('');
     release();
     await expect(dialogOf(page)).toBeVisible();
     await expect(button).toHaveAttribute('aria-busy', 'false');

@@ -565,19 +565,21 @@ export const codeChat = {
   // The button on /engine. CHAT_ON in e2e/fixtures/chat-helpers.js follows this
   // switch, and a unit test holds the two equal.
   enabled: true,
-  // Said by the button when the library itself could not be fetched.
-  loadFail: 'The codebase chat did not load, maybe the network blinked. Try again.',
+  // Beside the button's icon where the header has room.
+  buttonText: 'Ask the code',
+  // Said under the button when the library itself could not be fetched.
+  loadFail: 'The codebase chat did not load. The network may have blinked.',
+  retry: 'Try again',
+  dismiss: 'Dismiss',
   copy: {
     navLabel: 'Ask the codebase',
     closeLabel: 'Close ask the codebase',
     label: '// metrale engine \u00b7 ask the codebase',
     title: 'Ask the codebase.',
     sub: 'The Metrale Engine code, its docs and The Rust Programming Language are embedded into a vector lattice that runs right here in your browser. Ask a question, get an answer with file and line receipts.',
-    boot: [
-      'metrale code lattice online',
-      'retrieval runs locally in wasm, only the model call leaves this page',
-      'pick a question or type your own',
-    ],
+    // One line: the chat prints a line per corpus under it, and on a phone more
+    // than that pushes the starter questions out of sight.
+    boot: ['retrieval runs locally in wasm, only the model call leaves this page'],
     starters: [
       'How does MTP speculative decoding pick which draft tokens to keep?',
       'Where does the scheduler decide which requests join a decode batch?',
