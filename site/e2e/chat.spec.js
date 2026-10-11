@@ -75,11 +75,14 @@ test.describe('the button', () => {
     let release;
     const held = new Promise((resolve) => (release = resolve));
     let failNext = true;
-    await page.route((url) => url.pathname === REPO_CHAT_MODULE_URL, async (route) => {
-      if (failNext) return route.abort('internetdisconnected');
-      await held;
-      await route.continue();
-    });
+    await page.route(
+      (url) => url.pathname === REPO_CHAT_MODULE_URL,
+      async (route) => {
+        if (failNext) return route.abort('internetdisconnected');
+        await held;
+        await route.continue();
+      }
+    );
     await page.goto('/engine');
     const button = askButton(page);
 
