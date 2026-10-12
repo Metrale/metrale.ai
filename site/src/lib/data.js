@@ -574,10 +574,10 @@ export const codeChat = {
     closeLabel: 'Close ask the codebase',
     label: '// metrale engine \u00b7 ask the codebase',
     title: 'Ask the codebase.',
-    sub: 'The Metrale Engine code, its docs and The Rust Programming Language are embedded into a vector lattice that runs right here in your browser. Ask a question, get an answer with file and line receipts.',
-    // One line: the chat prints a line per corpus under it, and on a phone more
-    // than that pushes the starter questions out of sight.
-    boot: ['retrieval runs locally in wasm, only the model call leaves this page'],
+    sub: 'The engine code, its docs and the Rust book, searched right here in your browser. Answers come with file and line receipts.',
+    // None: the chat prints a line per corpus here, and on a phone anything
+    // more pushes the starter questions out of sight.
+    boot: [],
     starters: [
       'How does MTP speculative decoding pick which draft tokens to keep?',
       'Where does the scheduler decide which requests join a decode batch?',
@@ -588,7 +588,7 @@ export const codeChat = {
     },
     consent: {
       title: 'download the code lattice?',
-      lead: 'The first visit downloads the engine code, its docs and the Rust book into this browser, once. Later visits read them from there and start instantly.',
+      lead: 'The first visit downloads the engine code, its docs and the Rust book into this browser. Where the browser keeps it, later visits start from that copy.',
     },
   },
 };
