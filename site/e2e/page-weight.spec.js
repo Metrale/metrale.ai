@@ -12,7 +12,7 @@
 // vite.config.js explains the two named chunks these budgets depend on.
 // =============================================================================
 import { test, expect } from './fixtures/app.js';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const BUILD = 'build';
@@ -29,6 +29,20 @@ test.describe('page weight', () => {
       expect(preloads(page).filter(isMarketingChunk), `${page} loads the marketing chunk`).toEqual([]);
       expect(readFileSync(join(BUILD, page), 'utf8').includes('.av-receipt'), `${page} inlines marketing CSS`).toBe(false);
     }
+  });
+
+  // The gate record set is 1.4 MB of JSON. Only /benchmarks charts the records;
+  // /engine printed one commit and date from them and /diligence a few floors,
+  // and parsing the whole set cost each a long main-thread task on a phone.
+  // Both now read the small files gen-live.mjs cuts from it. A string only the
+  // records carry tells whether a page's scripts include them.
+  test('only the benchmark dashboard loads the gate records', () => {
+    const pages = readdirSync(BUILD, { recursive: true }).filter((f) => f.endsWith('.html'));
+    expect(pages.length).toBeGreaterThan(20);
+    const carrying = pages.filter((page) =>
+      preloads(page).some((file) => readFileSync(join(BUILD, file), 'utf8').includes('"verdict_reason"'))
+    );
+    expect(carrying).toEqual(['benchmarks.html']);
   });
 
   // Measured when this was written: marketing 8 or 9, /engine 13, /control and

@@ -9,7 +9,7 @@
 
 import ladder from '$lib/ladder.generated.json';
 import bench from '$lib/benchmarks.generated.json';
-import gates from '$lib/gates.generated.json';
+import { gate_limits, registered } from '$lib/gate-meta.generated.json';
 import live from '$lib/live.generated.json';
 import { declaredLimit } from '$lib/gate-limits.js';
 import { githubUrl } from '$lib/data.js';
@@ -25,8 +25,9 @@ const top = rows[rows.length - 1];
 const bestOf = (r) => r.baselines.find((b) => b.id === r.best_baseline_id)?.tok_s ?? 0;
 
 // The engine commit the site is pinned to (site/engine.ref), not the commit that last changed a
-// data file: gates.generated.json is regenerated from the pinned checkout on every build.
-export const stamp = `engine ${gates.generated_sha} · ${gates.generated_date}`;
+// data file: gates.generated.json is regenerated from the pinned checkout on every build, and
+// live.generated.json carries its commit and date.
+export const stamp = `engine ${live.gates.sha} · ${live.gates.date}`;
 
 export const claim = {
   engine: subject.engine,
@@ -274,7 +275,7 @@ const SWEEP = 'concurrency-sweep';
 const RUNG_MIN = /^c(\d+)_aggregate_tok_s$/;
 const RUNG_JOULES = (c) => `c${c}_gpu_rail_joules_per_token`;
 const now = Math.floor(Date.now() / 1000);
-const limitTable = gates.gate_limits ?? {};
+const limitTable = gate_limits;
 const declared = (key) => declaredLimit(limitTable, SWEEP, claim.checkpoint, key, now);
 const sweepRow = limitTable[SWEEP]?.[claim.checkpoint] ?? {};
 const floorRungs = Object.keys(sweepRow)
@@ -299,4 +300,4 @@ export const floors = {
 // what else the certify command runs without claiming a score it does not
 // carry. Only ids the engine actually registers are listed.
 const QUALITY_GATES = ['bfcl-subset', 'agentic-webserver', 'ttft-warm-gate', 'ttft-cold-gate', 'serve-matrix'];
-export const qualityGates = QUALITY_GATES.filter((id) => gates.registered.includes(id));
+export const qualityGates = QUALITY_GATES.filter((id) => registered.includes(id));

@@ -1,0 +1,1304 @@
+{
+  "registered": [
+    "agentic-webserver",
+    "backend-parity",
+    "bfcl-full",
+    "bfcl-subset",
+    "bfcl-subset-echolp",
+    "bfcl-subset-mini",
+    "bfcl-subset-mini-nemotron-nano",
+    "bfcl-subset-mini-nemotron-super",
+    "concurrency",
+    "concurrency-sweep",
+    "concurrency-sweep-dflash2",
+    "concurrency-sweep-moe",
+    "control-no-image",
+    "cross-contamination",
+    "decode-floor",
+    "default-tier-boot",
+    "exif-orientation",
+    "group-proportionality",
+    "high-isl-ttft-cold",
+    "high-isl-ttft-cold-moe",
+    "high-isl-ttft-warm",
+    "high-isl-ttft-warm-moe",
+    "kat-equality-gate",
+    "kat-equality-gate-nemotron-nano",
+    "kat-equality-gate-nemotron-super",
+    "mixed-media",
+    "mixed-media-pads",
+    "mlperf-agentic-subset",
+    "multi-image-order",
+    "quick-speed-bench",
+    "reads-the-size-label",
+    "scheduler-equivalence",
+    "sees-an-image",
+    "serve-matrix",
+    "spec-cost",
+    "ssm-state-poisoning-gate",
+    "ttft-cold-gate",
+    "ttft-warm-gate",
+    "two-videos",
+    "video-before-image",
+    "video-fidelity",
+    "vision-fidelity"
+  ],
+  "gate_limits": {
+    "ttft-cold-gate": {
+      "bg-digitalservices/Gemma-4-26B-A4B-it-NVFP4A16": {
+        "median_ms": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 554.46
+            }
+          ]
+        },
+        "p90_ms": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 1992.52
+            }
+          ]
+        }
+      },
+      "Qwen/Qwen3.6-35B-A3B-FP8": {
+        "median_ms": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 950
+            },
+            {
+              "since": 1790645191,
+              "value": 390
+            }
+          ]
+        },
+        "p90_ms": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 2150
+            },
+            {
+              "since": 1790645191,
+              "value": 900
+            }
+          ]
+        }
+      },
+      "nvidia/Qwen3.6-35B-A3B-NVFP4": {
+        "median_ms": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 455.57
+            }
+          ]
+        },
+        "p90_ms": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 1380.02
+            }
+          ]
+        }
+      }
+    },
+    "bfcl-subset": {
+      "unsloth/Qwen3.6-27B-NVFP4": {
+        "normalized_single_turn_score": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 88.59
+            }
+          ]
+        },
+        "overall_accuracy": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 87.44
+            }
+          ]
+        },
+        "samples": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 995
+            }
+          ],
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 995
+            }
+          ]
+        }
+      },
+      "unsloth/Qwen3.8-27B-NVFP4": {
+        "samples": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 995
+            }
+          ],
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 995
+            }
+          ]
+        },
+        "overall_accuracy": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 83
+            }
+          ]
+        },
+        "normalized_single_turn_score": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 82.96
+            }
+          ]
+        }
+      }
+    },
+    "vision-fidelity": {
+      "unsloth/Qwen3.6-27B-NVFP4": {
+        "geometry_matched": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 14
+            }
+          ]
+        },
+        "geometry_asserted": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 14
+            }
+          ]
+        },
+        "integrity_passed": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        },
+        "integrity_measured": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        },
+        "probes_passed": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 3
+            }
+          ]
+        },
+        "control_held": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 1
+            }
+          ]
+        }
+      },
+      "Qwen/Qwen3.6-35B-A3B-FP8": {
+        "geometry_matched": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 14
+            }
+          ]
+        },
+        "geometry_asserted": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 14
+            }
+          ]
+        },
+        "integrity_passed": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        },
+        "integrity_measured": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        },
+        "probes_passed": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 3
+            }
+          ]
+        },
+        "control_held": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 1
+            }
+          ]
+        }
+      },
+      "unsloth/Qwen3.8-27B-NVFP4": {
+        "geometry_matched": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 14
+            }
+          ]
+        },
+        "geometry_asserted": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 14
+            }
+          ]
+        },
+        "integrity_passed": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        },
+        "integrity_measured": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        },
+        "probes_passed": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 3
+            }
+          ]
+        },
+        "control_held": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 1
+            }
+          ]
+        }
+      }
+    },
+    "video-fidelity": {
+      "unsloth/Qwen3.6-27B-NVFP4": {
+        "legs_passed": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 13
+            }
+          ]
+        },
+        "legs_skipped": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "control_held": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 1
+            }
+          ]
+        }
+      },
+      "Qwen/Qwen3.6-35B-A3B-FP8": {
+        "legs_passed": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 13
+            }
+          ]
+        },
+        "legs_skipped": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "control_held": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 1
+            }
+          ]
+        }
+      },
+      "unsloth/Qwen3.8-27B-NVFP4": {
+        "legs_passed": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 14
+            }
+          ]
+        },
+        "legs_skipped": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "control_held": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 1
+            }
+          ]
+        }
+      }
+    },
+    "agentic-webserver": {
+      "Qwen/Qwen3.6-35B-A3B-FP8": {
+        "followed_directions": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        },
+        "iterations": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ],
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        },
+        "sum_wall_s": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 700
+            }
+          ]
+        },
+        "sum_turns": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 250
+            }
+          ]
+        },
+        "s_per_turn": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 8.5
+            }
+          ]
+        },
+        "webserver_ok": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        }
+      },
+      "unsloth/Qwen3.8-27B-NVFP4": {
+        "followed_directions": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        },
+        "iterations": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ],
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        },
+        "sum_wall_s": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 5000
+            }
+          ]
+        },
+        "webserver_ok": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 10
+            }
+          ]
+        }
+      }
+    },
+    "bfcl-subset-echolp": {
+      "Qwen/Qwen3.6-35B-A3B-FP8": {
+        "normalized_single_turn_score": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 85.77
+            }
+          ]
+        },
+        "overall_accuracy": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 84.56
+            },
+            {
+              "since": 1790723740,
+              "value": 83.8
+            }
+          ]
+        },
+        "samples": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 1004
+            }
+          ],
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 1004
+            }
+          ]
+        }
+      }
+    },
+    "ttft-warm-gate": {
+      "Qwen/Qwen3.6-35B-A3B-FP8": {
+        "median_ms": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 210
+            },
+            {
+              "since": 1790645191,
+              "value": 92.5
+            }
+          ]
+        },
+        "p90_ms": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 230
+            },
+            {
+              "since": 1790645191,
+              "value": 110
+            }
+          ]
+        }
+      },
+      "nvidia/Qwen3.6-35B-A3B-NVFP4": {
+        "median_ms": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 452.79
+            }
+          ]
+        },
+        "p90_ms": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 1355.65
+            }
+          ]
+        }
+      }
+    },
+    "concurrency-sweep-moe": {
+      "Qwen/Qwen3.6-35B-A3B-FP8": {
+        "c1_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 69.47
+            },
+            {
+              "since": 1790645191,
+              "value": 78
+            }
+          ]
+        },
+        "c2_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 80.88
+            },
+            {
+              "since": 1790645191,
+              "value": 110
+            }
+          ]
+        },
+        "c4_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 92.72
+            },
+            {
+              "since": 1790645191,
+              "value": 170
+            }
+          ]
+        },
+        "c8_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 101.71
+            },
+            {
+              "since": 1790645191,
+              "value": 240
+            }
+          ]
+        },
+        "c16_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 102.63
+            },
+            {
+              "since": 1790645191,
+              "value": 330
+            }
+          ]
+        },
+        "peak_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 102.63
+            },
+            {
+              "since": 1790645191,
+              "value": 330
+            }
+          ]
+        },
+        "min_completion_tokens": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 820
+            }
+          ]
+        },
+        "vacuous_cells": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "c1_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1791098881,
+              "value": 0.472
+            }
+          ]
+        },
+        "c2_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1791098881,
+              "value": 0.308
+            }
+          ]
+        },
+        "c4_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1791098881,
+              "value": 0.218
+            }
+          ]
+        },
+        "c8_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1791098881,
+              "value": 0.165
+            }
+          ]
+        },
+        "c16_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1791098881,
+              "value": 0.126
+            }
+          ]
+        }
+      }
+    },
+    "ssm-state-poisoning-gate": {
+      "Qwen/Qwen3.6-35B-A3B-FP8": {
+        "rounds": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 12
+            }
+          ],
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 12
+            }
+          ]
+        },
+        "collapsed": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "unmeasured": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "min_cached_prompt_tokens": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 900
+            }
+          ]
+        },
+        "sum_wall_s": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 200
+            }
+          ]
+        }
+      }
+    },
+    "high-isl-ttft-cold-moe": {
+      "Qwen/Qwen3.6-35B-A3B-FP8": {
+        "median_ms": {
+          "max": [
+            {
+              "since": 1790581161,
+              "value": 9231.9
+            },
+            {
+              "since": 1791098881,
+              "value": 6600
+            }
+          ]
+        },
+        "p90_ms": {
+          "max": [
+            {
+              "since": 1790581161,
+              "value": 9231.9
+            },
+            {
+              "since": 1791098881,
+              "value": 6600
+            }
+          ]
+        },
+        "prompt_tokens": {
+          "min": [
+            {
+              "since": 1790581161,
+              "value": 32768
+            }
+          ]
+        }
+      }
+    },
+    "high-isl-ttft-warm-moe": {
+      "Qwen/Qwen3.6-35B-A3B-FP8": {
+        "median_ms": {
+          "max": [
+            {
+              "since": 1790581161,
+              "value": 579.4
+            },
+            {
+              "since": 1791098881,
+              "value": 180
+            }
+          ]
+        },
+        "p90_ms": {
+          "max": [
+            {
+              "since": 1790581161,
+              "value": 579.4
+            },
+            {
+              "since": 1791098881,
+              "value": 180
+            }
+          ]
+        },
+        "prompt_tokens": {
+          "min": [
+            {
+              "since": 1790581161,
+              "value": 32768
+            }
+          ]
+        }
+      }
+    },
+    "decode-floor": {
+      "unsloth/Qwen3.8-27B-NVFP4": {
+        "server_decode_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 25.5
+            },
+            {
+              "since": 1790645191,
+              "value": 26.5
+            }
+          ]
+        },
+        "output_tokens": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 750
+            }
+          ]
+        },
+        "runs": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 3
+            }
+          ],
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 3
+            }
+          ]
+        }
+      }
+    },
+    "concurrency-sweep": {
+      "unsloth/Qwen3.8-27B-NVFP4": {
+        "c1_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 22
+            }
+          ]
+        },
+        "c2_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 38
+            }
+          ]
+        },
+        "c4_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 67
+            }
+          ]
+        },
+        "c8_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 110
+            }
+          ]
+        },
+        "c16_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 180
+            }
+          ]
+        },
+        "c32_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 260
+            }
+          ]
+        },
+        "c64_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 360
+            }
+          ]
+        },
+        "c128_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 440
+            }
+          ]
+        },
+        "peak_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 440
+            }
+          ]
+        },
+        "min_completion_tokens": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 650
+            }
+          ]
+        },
+        "vacuous_cells": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "c1_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 1.7
+            }
+          ]
+        },
+        "c2_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 1
+            }
+          ]
+        },
+        "c4_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0.62
+            }
+          ]
+        },
+        "c8_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0.44
+            }
+          ]
+        },
+        "c16_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0.3
+            }
+          ]
+        },
+        "c32_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0.23
+            }
+          ]
+        },
+        "c64_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0.19
+            }
+          ]
+        },
+        "c128_gpu_rail_joules_per_token": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0.16
+            }
+          ]
+        }
+      }
+    },
+    "concurrency-sweep-dflash2": {
+      "unsloth/Qwen3.8-27B-NVFP4": {
+        "c1_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 24
+            },
+            {
+              "since": 1790894574,
+              "value": 26.5
+            }
+          ]
+        },
+        "c2_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 40.5
+            },
+            {
+              "since": 1790894574,
+              "value": 47
+            }
+          ]
+        },
+        "c4_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 42.5
+            },
+            {
+              "since": 1790894574,
+              "value": 53.5
+            }
+          ]
+        },
+        "c8_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 54
+            },
+            {
+              "since": 1790894574,
+              "value": 72.5
+            }
+          ]
+        },
+        "c16_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 59
+            },
+            {
+              "since": 1790894574,
+              "value": 75
+            }
+          ]
+        },
+        "peak_aggregate_tok_s": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 59
+            },
+            {
+              "since": 1790894574,
+              "value": 75.5
+            }
+          ]
+        },
+        "min_completion_tokens": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 164
+            }
+          ]
+        },
+        "vacuous_cells": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        }
+      }
+    },
+    "kat-equality-gate": {
+      "unsloth/Qwen3.8-27B-NVFP4": {
+        "orders": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 2
+            }
+          ],
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 2
+            }
+          ]
+        },
+        "samples": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 257
+            }
+          ],
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 257
+            }
+          ]
+        },
+        "diverged": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "unmeasured": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "empty_replies": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        }
+      }
+    },
+    "scheduler-equivalence": {
+      "unsloth/Qwen3.8-27B-NVFP4": {
+        "cells": {
+          "min": [
+            {
+              "since": 1790435243,
+              "value": 6
+            }
+          ]
+        },
+        "diverged": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "control_diverged": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "unmeasured": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        },
+        "empty_replies": {
+          "max": [
+            {
+              "since": 1790435243,
+              "value": 0
+            }
+          ]
+        }
+      }
+    },
+    "high-isl-ttft-cold": {
+      "unsloth/Qwen3.8-27B-NVFP4": {
+        "median_ms": {
+          "max": [
+            {
+              "since": 1790581161,
+              "value": 24115.2
+            },
+            {
+              "since": 1791098881,
+              "value": 17700
+            }
+          ]
+        },
+        "p90_ms": {
+          "max": [
+            {
+              "since": 1790581161,
+              "value": 24115.2
+            },
+            {
+              "since": 1791098881,
+              "value": 17700
+            }
+          ]
+        },
+        "prompt_tokens": {
+          "min": [
+            {
+              "since": 1790581161,
+              "value": 32768
+            }
+          ]
+        }
+      }
+    },
+    "high-isl-ttft-warm": {
+      "unsloth/Qwen3.8-27B-NVFP4": {
+        "median_ms": {
+          "max": [
+            {
+              "since": 1790581161,
+              "value": 2132.3
+            },
+            {
+              "since": 1791098881,
+              "value": 300
+            }
+          ]
+        },
+        "p90_ms": {
+          "max": [
+            {
+              "since": 1790581161,
+              "value": 2132.3
+            },
+            {
+              "since": 1791098881,
+              "value": 300
+            }
+          ]
+        },
+        "prompt_tokens": {
+          "min": [
+            {
+              "since": 1790581161,
+              "value": 32768
+            }
+          ]
+        }
+      }
+    }
+  }
+}
