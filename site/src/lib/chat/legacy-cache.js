@@ -6,13 +6,29 @@
 // private file system as `lattice-db-<commit>.jsonl` (hundreds of MB for the
 // engine's corpus) and warmed the wasm into the Cache API bucket
 // `metrale-lattice-wasm` under `/lattice/lattice_server_bg.wasm`. The library
-// names its files `<prefix>~<id>@<commit>.jsonl` and never prunes a name it did
-// not write, so these would stay on disk for good. The button runs this once
-// per page the first time the chat opens; once a browser has run it there is
-// nothing left to find. The file system and the cache are passed in.
+// names its files `<prefix>~<id>@<commit>.jsonl` (plus a `.meta.json`) and never
+// prunes a name it did not write, so these would stay on disk for good.
+//
+// The library also leaves alone the files of a corpus id that is no longer
+// configured. The engine's code index was one corpus, `code`, until it outgrew
+// the publish cap and was split (chat/config.js), so its files are retired here
+// too; a corpus id dropped from CORPORA later belongs in RETIRED_CORPUS_IDS.
+//
+// The button runs this once per page the first time the chat opens; once a
+// browser has run it there is nothing left to find. The file system and the
+// cache are passed in.
 // =============================================================================
 
-export const LEGACY_CORPUS_FILE = /^lattice-db-[^/]+\.jsonl$/;
+import { STORAGE_KEY_PREFIX } from './config.js';
+
+export const RETIRED_CORPUS_IDS = Object.freeze(['code']);
+
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const retired = RETIRED_CORPUS_IDS.map(escapeRe).join('|');
+export const LEGACY_CORPUS_FILE = new RegExp(
+  `^(?:lattice-db-[^/]+\\.jsonl|${escapeRe(STORAGE_KEY_PREFIX)}~(?:${retired})@[0-9a-f]{7,64}\\.(?:jsonl|meta\\.json))$`
+);
+
 export const LEGACY_WASM_CACHE = 'metrale-lattice-wasm';
 export const LEGACY_WASM_URL = '/lattice/lattice_server_bg.wasm';
 

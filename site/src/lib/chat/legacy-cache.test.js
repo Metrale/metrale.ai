@@ -6,7 +6,8 @@
 // exist outside a browser); e2e/chat.spec.js runs the same code on the real ones.
 
 import { describe, expect, test } from 'bun:test';
-import { LEGACY_WASM_CACHE, LEGACY_WASM_URL, removeLegacyCache } from './legacy-cache.js';
+import { CORPORA } from './config.js';
+import { LEGACY_WASM_CACHE, LEGACY_WASM_URL, RETIRED_CORPUS_IDS, removeLegacyCache } from './legacy-cache.js';
 
 function fakeDir(entries, { failOn = [] } = {}) {
   const map = new Map(entries.map(([name, kind]) => [name, { kind }]));
@@ -35,9 +36,11 @@ function fakeCaches(buckets) {
   };
 }
 
+const SHA = 'a012b44c0de5a012b44c0de5a012b44c0de5a012';
 const LIBRARY_FILES = [
-  ['metrale-~code@246f71bf5da3a0a984d2ab9273ab22c0abdd371e.jsonl', 'file'],
-  ['metrale-~code@246f71bf5da3a0a984d2ab9273ab22c0abdd371e.meta.json', 'file'],
+  [`metrale-~crates@${SHA}.jsonl`, 'file'],
+  [`metrale-~crates@${SHA}.meta.json`, 'file'],
+  [`metrale-~kernels@${SHA}.jsonl`, 'file'],
 ];
 
 describe('removeLegacyCache', () => {
@@ -76,6 +79,35 @@ describe('removeLegacyCache', () => {
     );
     await expect(removeLegacyCache({ dir, caches: null })).rejects.toThrow('lattice-db-a.jsonl: locked');
     expect([...dir.map.keys()]).toEqual(['lattice-db-a.jsonl']);
+  });
+
+  test('removes the retired code corpus, data and meta, and nothing that only looks like it', async () => {
+    const dir = fakeDir([
+      ['metrale-~code@246f71bf5da3a0a984d2ab9273ab22c0abdd371e.jsonl', 'file'],
+      ['metrale-~code@246f71bf5da3a0a984d2ab9273ab22c0abdd371e.meta.json', 'file'],
+      [`metrale-~codex@${SHA}.jsonl`, 'file'],
+      [`other-site-~code@${SHA}.jsonl`, 'file'],
+      [`metrale-~code@${SHA}.jsonl.crswap`, 'file'],
+      ...LIBRARY_FILES,
+    ]);
+    const removed = await removeLegacyCache({ dir, caches: null });
+    expect(removed.sort()).toEqual([
+      'metrale-~code@246f71bf5da3a0a984d2ab9273ab22c0abdd371e.jsonl',
+      'metrale-~code@246f71bf5da3a0a984d2ab9273ab22c0abdd371e.meta.json',
+    ]);
+    expect([...dir.map.keys()].sort()).toEqual(
+      [
+        `metrale-~codex@${SHA}.jsonl`,
+        `other-site-~code@${SHA}.jsonl`,
+        `metrale-~code@${SHA}.jsonl.crswap`,
+        ...LIBRARY_FILES.map(([n]) => n),
+      ].sort()
+    );
+  });
+
+  // Retiring an id that is still configured would delete its live cache on every open.
+  test('no retired corpus id is configured', () => {
+    expect(RETIRED_CORPUS_IDS.filter((id) => CORPORA.some((c) => c.id === id))).toEqual([]);
   });
 
   test('a second run finds nothing', async () => {

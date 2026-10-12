@@ -14,11 +14,11 @@
 // and the size, then run `node scripts/gen-repo-chat.mjs`.
 // =============================================================================
 
-export const REPO_CHAT_VERSION = '2.1.0';
+export const REPO_CHAT_VERSION = '2.2.0';
 export const REPO_CHAT_TAG = `v${REPO_CHAT_VERSION}`;
 export const REPO_CHAT_TARBALL = `repo-chat-${REPO_CHAT_TAG}.tar.gz`;
-export const REPO_CHAT_TARBALL_SHA256 = '9414f4c2bddd6d32409c0b660d5f961ffd1c6ab497cdb8966d51f63a5fc40f39';
-export const REPO_CHAT_TARBALL_BYTES = 327023;
+export const REPO_CHAT_TARBALL_SHA256 = '88f51e991869446307dcff11a6d4701297c77172ced3b42ac6fb2b7037298f0f';
+export const REPO_CHAT_TARBALL_BYTES = 330937;
 
 /** Every file the tarball must carry, in its one top-level directory. Nothing more, nothing less. */
 export const REPO_CHAT_FILES = Object.freeze([

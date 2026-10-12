@@ -25,12 +25,16 @@ import { REPO_CHAT_VERSION } from './pin.js';
 // dimension (each meta.json names its own). `id` is what the chat prints for a
 // corpus and keys its browser cache; never reuse one for different content.
 // `name` is the published basename. This list is the only place a corpus is
-// named: adding, removing or splitting one (the code index is to become
-// metrale-code-crates and metrale-code-kernels) is an edit here alone.
+// named: adding, removing or splitting one is an edit here alone. An id that
+// is removed goes to RETIRED_CORPUS_IDS in chat/legacy-cache.js, so visitors'
+// browsers drop its cached files. The engine's code index outgrew the publish
+// cap as one corpus (`code`, now retired) and is published in three parts.
 const [ENGINE_ORG, ENGINE_NAME] = ENGINE_SLUG.split('/');
 export const CORPUS_BASE = `https://${ENGINE_ORG.toLowerCase()}.github.io/${ENGINE_NAME}/coderag`;
 export const CORPORA = Object.freeze([
-  { id: 'code', name: 'metrale-coderag' },
+  { id: 'crates', name: 'metrale-code-crates' },
+  { id: 'crates-model', name: 'metrale-code-crates-model' },
+  { id: 'kernels', name: 'metrale-code-kernels' },
   { id: 'docs', name: 'metrale-docs' },
   { id: 'rust-book', name: 'books-rust' },
 ]);

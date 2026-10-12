@@ -540,8 +540,10 @@ gate green.
     website-chat library, vendored at the release pinned in `src/lib/chat/pin.js`; the site's
     own copy of the chat is gone. It searches the corpora listed in `CORPORA` in
     `src/lib/chat/config.js`, which the engine's CodeRAG workflow publishes to its GitHub Pages
-    site: the code index, the engine's docs and The Rust Programming Language. Every corpus
-    listed must be live and share one embedding model, or the chat refuses to open.
+    site: the engine's code (in three parts, `metrale-code-crates`, `metrale-code-crates-model`
+    and `metrale-code-kernels`, since one file outgrew the publish cap), its docs and The Rust
+    Programming Language. Every corpus listed must be live and share one embedding model, or
+    the chat refuses to open. The first open asks before it downloads, naming the size.
 34. **Solutions held back.** Solutions shows neoclouds and GPU providers, and small teams and
     the edge. The other nine industry pages are kept as data (`parkedIndustries` in
     `brand.js`), not built and not linked, with their stills installed. Moving an entry back
@@ -574,4 +576,4 @@ words a visitor reads, and each has one place to change.
 | where | what it is | what retires it |
 | --- | --- | --- |
 | `REPO_CHAT_RELEASES` in `web-shared/sources.mjs` | where the codebase chat library, and the in-browser database it bundles, is downloaded from, by the release and checksum in `src/lib/chat/pin.js` | a release of it published under the Metrale organisation |
-| `CORPORA` in `src/lib/chat/config.js` | the corpora the codebase chat searches: code, docs, the Rust book | the code index splitting into `metrale-code-crates` and `metrale-code-kernels` (item 33) |
+| `CORPORA` in `src/lib/chat/config.js` | the corpora the codebase chat searches: the engine code in three parts, its docs, the Rust book | nothing; a removed id goes to `RETIRED_CORPUS_IDS` in `src/lib/chat/legacy-cache.js` (item 33) |

@@ -18,6 +18,7 @@ import {
   COMMIT,
   CORPUS_URLS,
   META,
+  acceptDownload,
   askButton,
   askQuestion,
   dialogOf,
@@ -136,8 +137,11 @@ test.describe('the button', () => {
 });
 
 test.describe('the chat', () => {
-  test('answers from the fixture corpus with the build-time models and real receipts', async ({ page, context }) => {
-    await routeCorpora(context);
+  test('asks before downloading, then answers from the fixture corpora with the build-time models and real receipts', async ({
+    page,
+    context,
+  }) => {
+    const hits = await routeCorpora(context);
     const log = { embed: [], rerank: [], chat: [] };
     await routeOpenRouter(context, log);
     await withKey(page);
@@ -145,7 +149,14 @@ test.describe('the chat', () => {
     const dialog = await openChat(page);
     await expect(askButton(page)).toHaveAttribute('aria-expanded', 'true');
     await expect(dialog.getByRole('heading', { name: codeChat.copy.title })).toBeVisible();
+    // Nothing large moves until the visitor agrees: the manifests are read for the size, no corpus is fetched.
+    const accept = dialog.locator('.cc-consent-accept');
+    await expect(accept).toHaveText(/^download \d+(\.\d+)? (KB|MB)$/);
+    await expect(dialog).toContainText(codeChat.copy.consent.title);
+    expect(hits.gz).toBe(0);
+    await acceptDownload(page);
     await waitReady(page);
+    expect(hits.gz).toBe(CORPUS_URLS.length);
     // Every configured corpus loaded (each is answered by the fixture here).
     const n = CORPUS_URLS.length;
     const which = n === 1 ? COMMIT.slice(0, 7) : `${n} corpora`;
@@ -189,23 +200,29 @@ test.describe('the chat', () => {
     await openChat(page);
   });
 
+  // The site's own chat's corpus, and the single code corpus the split retired (data and meta).
+  const RETIRED_FILES = ['lattice-db-0123abcd.jsonl', `metrale-~code@${COMMIT}.jsonl`, `metrale-~code@${COMMIT}.meta.json`];
+
   test("clears what the site's own chat left on disk, and caches the corpus under the library's name", async ({ page, context }) => {
     await routeCorpora(context);
     await page.goto('/engine');
     await page.evaluate(
-      async ([cacheName, url]) => {
+      async ([cacheName, url, retired]) => {
         const dir = await navigator.storage.getDirectory();
-        const file = await dir.getFileHandle('lattice-db-0123abcd.jsonl', { create: true });
-        const w = await file.createWritable();
-        await w.write('{}');
-        await w.close();
+        for (const name of retired) {
+          const file = await dir.getFileHandle(name, { create: true });
+          const w = await file.createWritable();
+          await w.write('{}');
+          await w.close();
+        }
         await (await caches.open(cacheName)).put(url, new Response('old wasm'));
       },
-      [LEGACY_WASM_CACHE, LEGACY_WASM_URL]
+      [LEGACY_WASM_CACHE, LEGACY_WASM_URL, RETIRED_FILES]
     );
     await openChat(page);
+    await acceptDownload(page);
     await waitReady(page);
-    await expect.poll(() => opfsFiles(page)).not.toContain('lattice-db-0123abcd.jsonl');
+    await expect.poll(async () => (await opfsFiles(page)).filter((f) => RETIRED_FILES.includes(f))).toEqual([]);
     const files = await opfsFiles(page);
     for (const { id } of CORPUS_URLS) expect(files).toContain(`metrale-~${id}@${COMMIT}.jsonl`);
     expect(

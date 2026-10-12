@@ -65,8 +65,8 @@ describe('the configuration /engine opens the chat with', () => {
   test('every corpus is a gz and a meta beside it on the engine Pages site', () => {
     const corpora = config().corpora;
     expect(corpora).toEqual(CORPORA.map(corpusUrls));
-    expect(corpora.map((c) => c.id)).toEqual(['code', 'docs', 'rust-book']);
-    expect(corpora[2]).toEqual({
+    expect(corpora.map((c) => c.id)).toEqual(['crates', 'crates-model', 'kernels', 'docs', 'rust-book']);
+    expect(corpora[4]).toEqual({
       id: 'rust-book',
       gzUrl: `${CORPUS_BASE}/books-rust.jsonl.gz`,
       metaUrl: `${CORPUS_BASE}/books-rust.jsonl.meta.json`,

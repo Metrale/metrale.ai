@@ -586,6 +586,10 @@ export const codeChat = {
     input: {
       placeholder: 'ask about kernels, scheduling, quantization, anything in the repo',
     },
+    consent: {
+      title: 'download the code lattice?',
+      lead: 'The first visit downloads the engine code, its docs and the Rust book into this browser, once. Later visits read them from there and start instantly.',
+    },
   },
 };
 

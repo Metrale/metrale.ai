@@ -3,11 +3,11 @@
 // OpenRouter. Excluded by default (grepInvert in the config); run with
 // `bun run test:e2e:live`. The OpenRouter leg needs OPENROUTER_API_KEY in the
 // environment and skips cleanly without it; the key is never printed or kept.
-// The engine's code corpus is about 100 MB compressed, so allow minutes.
+// The corpora are about 134 MB compressed, so allow minutes.
 // =============================================================================
 
 import { test, expect } from '@playwright/test';
-import { CHAT_ON, LS_OPENROUTER_KEY, openChat } from './fixtures/chat-helpers.js';
+import { CHAT_ON, LS_OPENROUTER_KEY, acceptDownload, openChat } from './fixtures/chat-helpers.js';
 import { ENGINE_REPO } from '../../web-shared/sources.mjs';
 
 test.skip(!CHAT_ON, 'The codebase chat is off.');
@@ -20,6 +20,7 @@ test.describe('@live real corpus', () => {
     test.setTimeout(600_000);
     await page.goto('/engine');
     await openChat(page);
+    await acceptDownload(page);
     await expect(status(page)).toContainText('ready ·', { timeout: 580_000 });
   });
 
@@ -29,6 +30,7 @@ test.describe('@live real corpus', () => {
     await page.addInitScript(([k, v]) => localStorage.setItem(k, v), [LS_OPENROUTER_KEY, LIVE_KEY]);
     await page.goto('/engine');
     await openChat(page);
+    await acceptDownload(page);
     await expect(status(page)).toContainText('ready ·', { timeout: 420_000 });
 
     await page.locator('.cc-input').fill('Where does the engine decide which requests join a decode batch?');

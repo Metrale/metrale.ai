@@ -62,6 +62,16 @@ export async function openChat(page) {
   return dialog;
 }
 
+/**
+ * The first open with nothing cached asks before it downloads: it names the
+ * total size and waits for "download <size>". Press it.
+ */
+export async function acceptDownload(page) {
+  const accept = page.locator('.cc-consent-accept');
+  await expect(accept).toBeVisible({ timeout: 30_000 });
+  await accept.click();
+}
+
 export async function waitReady(page) {
   await expect(page.locator('.cc-status-text')).toContainText('ready ·', { timeout: 30_000 });
 }
