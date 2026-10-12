@@ -7,7 +7,7 @@
 // label is pointer-transparent now, so a click or a tap reaches the point.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 
 test('at every width, a click on any point of a chart, the labelled newest ones included, opens its card', async ({ page }) => {
   await page.goto('/engine#bench=bfcl&model=all');

@@ -12,12 +12,27 @@
 // it is for.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 import { pages, routes } from '../src/lib/content/index.js';
 import { showTeam } from '../src/lib/content/company.js';
 import { logoWall } from '../src/lib/content/home.js';
 import { filterPositions } from '../src/lib/content/positions.js';
 import generated from '../src/lib/positions.generated.json';
+
+// A poster or still is a real picture, and sharp where it is drawn: the file the
+// browser chose from its srcset (the full size or the 640 wide copy) holds at
+// least as many pixels as the box it fills on this screen. Read from a second,
+// plain Image of the chosen file, because an <img> with width descriptors reports
+// its natural width already divided by the density it was chosen at.
+async function sharpness(img) {
+  return img.evaluate(async (el) => {
+    if (!el.complete || !el.currentSrc) throw new Error('the picture has not loaded');
+    const file = new Image();
+    file.src = el.currentSrc;
+    await file.decode();
+    return { pixels: file.naturalWidth, needed: Math.floor(el.getBoundingClientRect().width * devicePixelRatio) };
+  });
+}
 
 const isMobile = (testInfo) => testInfo.project.name === 'mobile';
 
@@ -37,7 +52,8 @@ test.describe('front page', () => {
     await page.goto('/');
     const poster = page.locator('.av-hero .av-video img');
     await expect(poster).toBeVisible();
-    expect(await poster.evaluate((img) => img.complete && img.naturalWidth)).toBeGreaterThan(600);
+    const { pixels, needed } = await sharpness(poster);
+    expect(pixels).toBeGreaterThanOrEqual(needed);
     await expect(page.locator('.av-hero .av-video video source[type="video/mp4"]')).toHaveAttribute('src', '/media/console-ask.mp4');
   });
 
@@ -189,6 +205,30 @@ test.describe('navigation', () => {
     for (const label of ['Platform', 'Solutions', 'Resources', 'Company']) {
       await expect(page.locator('.av-footer h2', { hasText: label }).first()).toBeVisible();
     }
+  });
+});
+
+// /benchmarks loads one gate family's records with the page and each other
+// family's when its tab is reached for (gates.js, loadRecords). Every tab must
+// still draw its records, and nothing may read records before they arrive.
+test.describe('benchmarks', () => {
+  test('every gate family draws its records when its tab is chosen', async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    await page.goto('/benchmarks');
+    const tabs = page.locator('[role="tablist"][aria-label="Benchmark families"] [role="tab"]');
+    expect(await tabs.count()).toBeGreaterThan(2);
+    await expect(page.locator('#gates article.gbs').first()).toBeVisible();
+    for (let i = 0; i < (await tabs.count()); i++) {
+      const tab = tabs.nth(i);
+      await tab.click();
+      await expect(tab).toHaveAttribute('aria-selected', 'true');
+      await expect(page.locator('#gates article.gbs').first()).toBeVisible();
+    }
+    // Only the loading is asserted here. The TTFT tabs on this page also throw
+    // "unknown statistic null", which main does too: the page passes no Median
+    // or p90 choice to a TTFT section.
+    expect(errors.filter((m) => /read before they were loaded/.test(m))).toEqual([]);
   });
 });
 
@@ -663,9 +703,27 @@ test.describe('installed art', () => {
       await expect(page.locator('.av-page-hero.has-art')).toBeVisible();
       await expect(img).toBeVisible();
       await expect(img).toHaveAttribute('src', src);
-      expect(await img.evaluate((el) => el.complete && el.naturalWidth)).toBeGreaterThan(400);
+      const { pixels, needed } = await sharpness(img);
+      expect(pixels).toBeGreaterThanOrEqual(needed);
     });
   }
+
+  // A hero that turns through several stills fetches only the first with the
+  // page, so the others never compete with its largest paint. They are in the
+  // HTML, lazy and not displayed, and load once the page has gone idle.
+  test('a turning hero fetches its later stills only after the page has loaded', async ({ page }) => {
+    await page.goto('/solutions/smb-edge');
+    const stills = page.locator('.av-page-hero-art.is-turning img');
+    await expect(stills).toHaveCount(3);
+    await expect(stills.nth(2)).toHaveJSProperty('complete', true);
+    const timing = await page.evaluate(() => {
+      const load = performance.getEntriesByType('navigation')[0].loadEventEnd;
+      const start = (name) => performance.getEntriesByType('resource').find((e) => e.name.includes(name))?.startTime;
+      return { load, first: start('art-smb-autoshop'), later: [start('art-smb-library'), start('art-smb-office')] };
+    });
+    expect(timing.first).toBeLessThan(timing.load);
+    for (const t of timing.later) expect(t).toBeGreaterThan(timing.load);
+  });
 });
 
 test.describe('every page', () => {

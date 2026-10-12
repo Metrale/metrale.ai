@@ -1,9 +1,11 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CHAT_MODELS_MODULE, chatModelsModule, readChatModels } from './src/lib/chat/models-env.js';
+import { gateBenchRecordsModule, gateRecordsModule } from './src/lib/gate-records-module.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -75,8 +77,34 @@ function chatModels() {
   };
 }
 
+// The browser build reads the gate record set one benchmark at a time, each in
+// a script of its own that a page loads when it draws that benchmark
+// ($lib/gate-records-module.js says why). The server build renders every page
+// from the JSON itself, and the dev server is left alone.
+function gateRecords() {
+  const file = resolve(here, 'src', 'lib', 'gates.generated.json');
+  const MAIN = '\0metrale-gate-records';
+  const ONE = 'virtual:metrale-gate-records/';
+  return {
+    name: 'metrale-gate-records',
+    apply: 'build',
+    enforce: 'pre',
+    resolveId(source, importer, options) {
+      if (options?.ssr) return undefined;
+      if (source.endsWith('/gates.generated.json')) return MAIN;
+      if (source.startsWith(ONE)) return '\0' + source;
+      return undefined;
+    },
+    load(id) {
+      if (id === MAIN) return gateRecordsModule(readFileSync(file, 'utf8'), (benchId) => ONE + benchId);
+      if (id.startsWith('\0' + ONE)) return gateBenchRecordsModule(readFileSync(file, 'utf8'), id.slice(1 + ONE.length));
+      return undefined;
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [chatModels(), metraleGenerators(), sveltekit()],
+  plugins: [chatModels(), gateRecords(), metraleGenerators(), sveltekit()],
   build: {
     rolldownOptions: {
       output: {

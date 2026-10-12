@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- First: the charset must sit in the first 1024 bytes, and the viewport
+         must be known before the theme script below preloads the hero poster,
+         whose imagesizes are read against it. Without it a phone sizes the
+         preload for a 980 px desktop viewport and fetches the full size file. -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       (function () {
         // apply also queues the hero poster fetch on the front page. The hero
         // is a product clip behind a poster, and the poster is the largest
         // paint on the page, so it is requested from the head rather than
         // when the parser reaches it. One file serves both themes: the console
-        // it shows is dark chrome in either.
+        // it shows is dark chrome in either. The srcset and sizes are the ones
+        // Hero.svelte draws it with (media.js srcsetOf and heroSizes), so a phone
+        // preloads the 640 wide copy it then paints; theme.test.js holds them.
         function apply(t) {
           document.documentElement.setAttribute('data-theme', t);
           if (location.pathname !== '/' && location.pathname !== '/index.html') return;
@@ -16,6 +24,8 @@
           l.as = 'image';
           l.setAttribute('fetchpriority', 'high');
           l.href = '/media/console-ask.webp';
+          l.setAttribute('imagesrcset', '/media/console-ask-640.webp 640w, /media/console-ask.webp 1280w');
+          l.setAttribute('imagesizes', '(max-width: 1000px) calc(100vw - 64px), 560px');
           document.head.appendChild(l);
         }
         try {
@@ -29,8 +39,6 @@
         }
       })();
     </script>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Metrale is the inference economics platform for GPUs you already own. Faster inference, stronger governance, a fraction of what you pay today." />
     <!-- IBM Plex, attached late on purpose. In the bundle, preloaded or not, the
          font downloads sat on the critical path of the first paint and cost every
@@ -99,6 +107,78 @@
       })();
     </script>
     <noscript><link rel="stylesheet" href="%sveltekit.assets%/fonts/type-v2.css" /></noscript>
+    <!-- The app starts after the first paint. Every page is prerendered, so it
+         paints from the HTML alone, and the app's scripts only make it
+         interactive. Started at once, as SvelteKit does, they download beside
+         the HTML and held every page at 91 to 99 on Lighthouse's mobile run;
+         the same pages without them scored 100. src/lib/boot/defer-boot.js
+         writes each page with its boot script and its modulepreloads inert,
+         and this opens both: the preloads go back into the head, then a copy
+         of the boot script runs. The copy has the same bytes, so its hash in
+         the page's CSP still matches.
+
+         "After the first paint" means the frame after load, so a large image
+         is on screen first. Not later than one second after the paint if load
+         is slow, at once if the visitor reaches for the page (a tap, a key,
+         focus), and never later than five seconds whatever happens.
+
+         The service worker is registered here, after the start, for the same
+         reason: SvelteKit's own registration waits for a load event that has
+         already passed by then. -->
+    <script>
+      (function () {
+        var started = false;
+        var cues = ['pointerdown', 'keydown', 'touchstart', 'focusin'];
+        function start() {
+          if (started) return;
+          var boot = document.querySelector('script[type="metrale/boot"]');
+          if (!boot) return;
+          started = true;
+          for (var i = 0; i < cues.length; i++) removeEventListener(cues[i], start, true);
+          var preloads = document.getElementById('metrale-preloads');
+          if (preloads) document.head.appendChild(preloads.content);
+          var run = document.createElement('script');
+          run.textContent = boot.textContent;
+          boot.parentNode.replaceChild(run, boot);
+          if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js');
+        }
+        for (var i = 0; i < cues.length; i++) addEventListener(cues[i], start, { capture: true, passive: true });
+
+        var painted = false;
+        var loaded = document.readyState === 'complete';
+        var late = false;
+        function go() {
+          if (painted && (loaded || late))
+            requestAnimationFrame(function () {
+              setTimeout(start, 0);
+            });
+        }
+        function paint() {
+          painted = true;
+          setTimeout(function () {
+            late = true;
+            go();
+          }, 1000);
+          go();
+        }
+        try {
+          new PerformanceObserver(function (list, observer) {
+            if (list.getEntriesByName('first-contentful-paint').length) {
+              observer.disconnect();
+              paint();
+            }
+          }).observe({ type: 'paint', buffered: true });
+        } catch (e) {
+          paint();
+        }
+        if (!loaded)
+          addEventListener('load', function () {
+            loaded = true;
+            go();
+          });
+        setTimeout(start, 5000);
+      })();
+    </script>
     <!-- Must equal --bg in web-shared/metrale-tokens.css. A meta tag cannot read a
          custom property, so this is the one unavoidable copy of the ground colour;
          theme-color.test.js fails the build if the two drift. -->

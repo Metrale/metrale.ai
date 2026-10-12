@@ -17,7 +17,7 @@
 // dropped at the top of the page.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 
 test('Escape on a point card returns focus to the point that opened it', async ({ page }) => {
   await page.goto('/engine#bench=bfcl&model=all');

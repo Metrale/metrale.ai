@@ -1,6 +1,6 @@
 {
- "revision": 19,
- "date": "2026-10-11",
+ "revision": 20,
+ "date": "2026-10-12",
  "changes": [
   {
    "rev": 1,
@@ -264,6 +264,45 @@
    "base": "d9da6d204",
    "note": "engine: Ask the codebase button, the chat is the AutoRepoRAG website-chat library",
    "touched": []
+  },
+  {
+   "rev": 20,
+   "date": "2026-10-12",
+   "base": "330814acb",
+   "note": "posters and stills ship a 640 wide copy that phones take, beside the full size file",
+   "touched": [
+    "art-aisle-640.webp",
+    "art-desk-box-640.webp",
+    "art-enclave-640.webp",
+    "art-finance-640.webp",
+    "art-gov-640.webp",
+    "art-grid-640.webp",
+    "art-health-640.webp",
+    "art-hyperscale-640.webp",
+    "art-legal-640.webp",
+    "art-local-government-640.webp",
+    "art-power-640.webp",
+    "art-prisms-640.webp",
+    "art-public-safety-640.webp",
+    "art-research-640.webp",
+    "art-smb-autoshop-640.webp",
+    "art-smb-library-640.webp",
+    "art-smb-office-640.webp",
+    "broll-desk-box-640.webp",
+    "broll-enclave-640.webp",
+    "broll-field-640.webp",
+    "broll-hall-640.webp",
+    "broll-power-640.webp",
+    "broll-rack-640.webp",
+    "broll-tokens-640.webp",
+    "console-ask-640.webp",
+    "console-deploy-640.webp",
+    "console-economics-640.webp",
+    "console-fleet-640.webp",
+    "console-governance-640.webp",
+    "console-queue-640.webp",
+    "reel-640.webp"
+   ]
   }
  ],
  "facts": [
@@ -1754,6 +1793,16 @@
    "used": []
   },
   {
+   "path": "site/static/media/art/art-aisle-640.webp",
+   "sha": "b6e8bb96f6e7",
+   "bytes": 19308,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/platform/deployment"
+   ]
+  },
+  {
    "path": "site/static/media/art/art-aisle.webp",
    "sha": "6242a3613d7f",
    "bytes": 49498,
@@ -1761,6 +1810,16 @@
    "date": "2026-09-24",
    "used": [
     "/platform/deployment"
+   ]
+  },
+  {
+   "path": "site/static/media/art/art-desk-box-640.webp",
+   "sha": "857efd55c37a",
+   "bytes": 8224,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/pricing"
    ]
   },
   {
@@ -1774,6 +1833,16 @@
    ]
   },
   {
+   "path": "site/static/media/art/art-enclave-640.webp",
+   "sha": "22b49b44b5ea",
+   "bytes": 11438,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/platform/security"
+   ]
+  },
+  {
    "path": "site/static/media/art/art-enclave.webp",
    "sha": "8f29ab16b607",
    "bytes": 34962,
@@ -1784,11 +1853,27 @@
    ]
   },
   {
+   "path": "site/static/media/art/art-finance-640.webp",
+   "sha": "32d1193dbccd",
+   "bytes": 34070,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": []
+  },
+  {
    "path": "site/static/media/art/art-finance.webp",
    "sha": "1d9acadd099e",
    "bytes": 82850,
    "rev": 1,
    "date": "2026-09-24",
+   "used": []
+  },
+  {
+   "path": "site/static/media/art/art-gov-640.webp",
+   "sha": "b3abd5439006",
+   "bytes": 24738,
+   "rev": 1,
+   "date": "2026-10-12",
    "used": []
   },
   {
@@ -1800,11 +1885,27 @@
    "used": []
   },
   {
+   "path": "site/static/media/art/art-grid-640.webp",
+   "sha": "0dc3ea2b6198",
+   "bytes": 7572,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": []
+  },
+  {
    "path": "site/static/media/art/art-grid.webp",
    "sha": "8c0c955dbc83",
    "bytes": 18740,
    "rev": 1,
    "date": "2026-09-24",
+   "used": []
+  },
+  {
+   "path": "site/static/media/art/art-health-640.webp",
+   "sha": "3d9b6967de66",
+   "bytes": 23634,
+   "rev": 1,
+   "date": "2026-10-12",
    "used": []
   },
   {
@@ -1814,6 +1915,16 @@
    "rev": 1,
    "date": "2026-09-24",
    "used": []
+  },
+  {
+   "path": "site/static/media/art/art-hyperscale-640.webp",
+   "sha": "f80fd40790b7",
+   "bytes": 17528,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/solutions/neoclouds"
+   ]
   },
   {
    "path": "site/static/media/art/art-hyperscale.webp",
@@ -1826,11 +1937,27 @@
    ]
   },
   {
+   "path": "site/static/media/art/art-legal-640.webp",
+   "sha": "d2bf2e0caaf0",
+   "bytes": 24044,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": []
+  },
+  {
    "path": "site/static/media/art/art-legal.webp",
    "sha": "5b8dc32754c5",
    "bytes": 54536,
    "rev": 1,
    "date": "2026-09-24",
+   "used": []
+  },
+  {
+   "path": "site/static/media/art/art-local-government-640.webp",
+   "sha": "9f79b93ba632",
+   "bytes": 6870,
+   "rev": 1,
+   "date": "2026-10-12",
    "used": []
   },
   {
@@ -1842,6 +1969,16 @@
    "used": []
   },
   {
+   "path": "site/static/media/art/art-power-640.webp",
+   "sha": "adc2feb84637",
+   "bytes": 20088,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/platform/economics"
+   ]
+  },
+  {
    "path": "site/static/media/art/art-power.webp",
    "sha": "90effc2dcbcc",
    "bytes": 53910,
@@ -1849,6 +1986,16 @@
    "date": "2026-09-24",
    "used": [
     "/platform/economics"
+   ]
+  },
+  {
+   "path": "site/static/media/art/art-prisms-640.webp",
+   "sha": "dc9433bd7342",
+   "bytes": 18348,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/why-metrale"
    ]
   },
   {
@@ -1862,12 +2009,30 @@
    ]
   },
   {
+   "path": "site/static/media/art/art-public-safety-640.webp",
+   "sha": "585326c96c02",
+   "bytes": 13622,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": []
+  },
+  {
    "path": "site/static/media/art/art-public-safety.webp",
    "sha": "c3baca0648ce",
    "bytes": 49780,
    "rev": 1,
    "date": "2026-09-24",
    "used": []
+  },
+  {
+   "path": "site/static/media/art/art-research-640.webp",
+   "sha": "7d12cf019676",
+   "bytes": 22338,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/labs"
+   ]
   },
   {
    "path": "site/static/media/art/art-research.webp",
@@ -1877,6 +2042,16 @@
    "date": "2026-09-24",
    "used": [
     "/labs"
+   ]
+  },
+  {
+   "path": "site/static/media/art/art-smb-autoshop-640.webp",
+   "sha": "20a073bb7e24",
+   "bytes": 39168,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/solutions/smb-edge"
    ]
   },
   {
@@ -1890,11 +2065,31 @@
    ]
   },
   {
+   "path": "site/static/media/art/art-smb-library-640.webp",
+   "sha": "8a09ca5c31b3",
+   "bytes": 34916,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/solutions/smb-edge"
+   ]
+  },
+  {
    "path": "site/static/media/art/art-smb-library.webp",
    "sha": "ee032ff7c403",
    "bytes": 88452,
    "rev": 1,
    "date": "2026-09-24",
+   "used": [
+    "/solutions/smb-edge"
+   ]
+  },
+  {
+   "path": "site/static/media/art/art-smb-office-640.webp",
+   "sha": "c4b2302a0c4b",
+   "bytes": 23026,
+   "rev": 1,
+   "date": "2026-10-12",
    "used": [
     "/solutions/smb-edge"
    ]
@@ -1934,6 +2129,14 @@
    "used": []
   },
   {
+   "path": "site/static/media/broll-desk-box-640.webp",
+   "sha": "68e951536670",
+   "bytes": 7872,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": []
+  },
+  {
    "path": "site/static/media/broll-desk-box.mp4",
    "sha": "f2de0145c76d",
    "bytes": 268522,
@@ -1955,6 +2158,14 @@
    "bytes": 22412,
    "rev": 1,
    "date": "2026-09-24",
+   "used": []
+  },
+  {
+   "path": "site/static/media/broll-enclave-640.webp",
+   "sha": "0452ea293b7f",
+   "bytes": 14848,
+   "rev": 1,
+   "date": "2026-10-12",
    "used": []
   },
   {
@@ -1982,6 +2193,14 @@
    "used": []
   },
   {
+   "path": "site/static/media/broll-field-640.webp",
+   "sha": "2e13043ef2cb",
+   "bytes": 18064,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": []
+  },
+  {
    "path": "site/static/media/broll-field.mp4",
    "sha": "ab1340e7d0e8",
    "bytes": 1272239,
@@ -2004,6 +2223,16 @@
    "rev": 1,
    "date": "2026-09-24",
    "used": []
+  },
+  {
+   "path": "site/static/media/broll-hall-640.webp",
+   "sha": "2ef7109c45e6",
+   "bytes": 26798,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/solutions"
+   ]
   },
   {
    "path": "site/static/media/broll-hall.mp4",
@@ -2032,6 +2261,14 @@
    ]
   },
   {
+   "path": "site/static/media/broll-power-640.webp",
+   "sha": "2b1d99fed599",
+   "bytes": 19358,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": []
+  },
+  {
    "path": "site/static/media/broll-power.mp4",
    "sha": "f849026b8c81",
    "bytes": 570290,
@@ -2053,6 +2290,14 @@
    "bytes": 48736,
    "rev": 1,
    "date": "2026-09-24",
+   "used": []
+  },
+  {
+   "path": "site/static/media/broll-rack-640.webp",
+   "sha": "9bd541fd7f4f",
+   "bytes": 21718,
+   "rev": 1,
+   "date": "2026-10-12",
    "used": []
   },
   {
@@ -2080,6 +2325,16 @@
    "used": []
   },
   {
+   "path": "site/static/media/broll-tokens-640.webp",
+   "sha": "0de462d17dcd",
+   "bytes": 7574,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/platform/engine"
+   ]
+  },
+  {
    "path": "site/static/media/broll-tokens.mp4",
    "sha": "534b5ec59826",
    "bytes": 331844,
@@ -2103,6 +2358,43 @@
    "date": "2026-09-24",
    "used": [
     "/platform/engine"
+   ]
+  },
+  {
+   "path": "site/static/media/console-ask-640.webp",
+   "sha": "83d330bf54e3",
+   "bytes": 23436,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/benchmarks",
+    "/company",
+    "/company/careers",
+    "/contact",
+    "/control",
+    "/demo",
+    "/diligence",
+    "/engine",
+    "/",
+    "/labs",
+    "/platform",
+    "/platform/control",
+    "/platform/deployment",
+    "/platform/economics",
+    "/platform/engine",
+    "/platform/hardware",
+    "/platform/security",
+    "/pricing",
+    "/resources",
+    "/resources/contributors",
+    "/resources/events",
+    "/resources/updates",
+    "/solutions",
+    "/solutions/neoclouds",
+    "/solutions/smb-edge",
+    "/trust",
+    "/waitlist",
+    "/why-metrale"
    ]
   },
   {
@@ -2159,6 +2451,14 @@
    ]
   },
   {
+   "path": "site/static/media/console-deploy-640.webp",
+   "sha": "9c64c57c86c9",
+   "bytes": 20378,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": []
+  },
+  {
    "path": "site/static/media/console-deploy.mp4",
    "sha": "3c9c4acf94fd",
    "bytes": 411039,
@@ -2203,6 +2503,14 @@
    ]
   },
   {
+   "path": "site/static/media/console-economics-640.webp",
+   "sha": "b87b9153ed0a",
+   "bytes": 17008,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": []
+  },
+  {
    "path": "site/static/media/console-economics.mp4",
    "sha": "77bf6cc36d22",
    "bytes": 324741,
@@ -2226,6 +2534,16 @@
    "date": "2026-09-24",
    "used": [
     "/platform/economics"
+   ]
+  },
+  {
+   "path": "site/static/media/console-fleet-640.webp",
+   "sha": "6e1bd77df4ee",
+   "bytes": 21928,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/platform/control"
    ]
   },
   {
@@ -2273,6 +2591,14 @@
    ]
   },
   {
+   "path": "site/static/media/console-governance-640.webp",
+   "sha": "9a095d61eb78",
+   "bytes": 21368,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": []
+  },
+  {
    "path": "site/static/media/console-governance.mp4",
    "sha": "9cfa6b8f3ce3",
    "bytes": 394371,
@@ -2296,6 +2622,16 @@
    "date": "2026-09-24",
    "used": [
     "/platform/security"
+   ]
+  },
+  {
+   "path": "site/static/media/console-queue-640.webp",
+   "sha": "eb07c9ba3ed0",
+   "bytes": 20268,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": [
+    "/platform"
    ]
   },
   {
@@ -2323,6 +2659,14 @@
    "used": [
     "/platform"
    ]
+  },
+  {
+   "path": "site/static/media/reel-640.webp",
+   "sha": "3cc99d40b1bc",
+   "bytes": 7348,
+   "rev": 1,
+   "date": "2026-10-12",
+   "used": []
   },
   {
    "path": "site/static/media/reel.mp4",
@@ -2735,7 +3079,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -2795,7 +3141,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     }
    ],
@@ -2918,7 +3266,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -3031,7 +3381,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     }
    ],
@@ -3158,7 +3510,9 @@
      "exports": [
       "artsFor",
       "heroClipFor",
-      "media"
+      "heroSizes",
+      "media",
+      "srcsetOf"
      ]
     }
    ],
@@ -3303,7 +3657,9 @@
     {
      "file": "src/lib/content/media.js",
      "exports": [
-      "media"
+      "heroSizes",
+      "media",
+      "srcsetOf"
      ]
     }
    ],
@@ -3495,7 +3851,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -3556,7 +3914,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -3666,7 +4026,9 @@
      "exports": [
       "artFor",
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -3752,7 +4114,9 @@
      "exports": [
       "artFor",
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -3832,7 +4196,9 @@
      "exports": [
       "artFor",
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -3912,7 +4278,9 @@
      "exports": [
       "artFor",
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -3998,7 +4366,9 @@
      "exports": [
       "artFor",
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -4053,7 +4423,9 @@
      "exports": [
       "artFor",
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -4139,7 +4511,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -4237,7 +4611,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -4346,7 +4722,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -4387,7 +4765,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -4447,7 +4827,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -4491,7 +4873,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -4561,7 +4945,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -4623,7 +5009,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {
@@ -4696,7 +5084,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     }
    ],
@@ -4777,7 +5167,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     }
    ],
@@ -4862,7 +5254,9 @@
      "file": "src/lib/content/media.js",
      "exports": [
       "artsFor",
-      "heroClipFor"
+      "heroClipFor",
+      "heroSizes",
+      "srcsetOf"
      ]
     },
     {

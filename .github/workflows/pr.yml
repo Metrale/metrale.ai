@@ -232,20 +232,25 @@ jobs:
       - name: Internal links resolve
         run: lychee --config lychee.toml --offline 'site/build/**/*.html'
 
-  # Every page, 5 runs each, split across parallel shards so the gate takes minutes
-  # rather than most of an hour. The page list stays in lighthouserc.json: shard i
-  # takes every SHARDS-th URL from it, starting at i.
+  # Every page, 5 runs each, on both of Lighthouse's form factors, split across
+  # parallel shards so the gate takes minutes rather than most of an hour. The page
+  # list stays in lighthouserc.json: shard i takes every SHARDS-th URL from it,
+  # starting at i. The file's settings are Lighthouse's default, the mobile run (a
+  # mid-range phone on a slow 4G link, CPU slowed 4x); the desktop leg adds the
+  # desktop preset on the command line.
   lighthouse-shard:
-    name: lighthouse shard ${{ matrix.shard }}
+    name: lighthouse ${{ matrix.form }} shard ${{ matrix.shard }}
     needs: build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        form: [mobile, desktop]
         shard: [0, 1, 2, 3, 4, 5]
     env:
       SHARDS: 6
       SHARD: ${{ matrix.shard }}
+      FORM: ${{ matrix.form }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -268,8 +273,23 @@ jobs:
           ')
           args=()
           for u in "${urls[@]}"; do args+=("--collect.url=$u"); done
-          echo "shard $SHARD of $SHARDS: ${#urls[@]} pages"
+          case "$FORM" in
+            mobile) ;;
+            desktop) args+=("--collect.settings.preset=desktop") ;;
+            *) echo "::error::unknown form factor '$FORM'"; exit 1 ;;
+          esac
+          echo "$FORM shard $SHARD of $SHARDS: ${#urls[@]} pages"
           npx --yes @lhci/cli@0.15.1 autorun --config=site/lighthouse/lighthouserc.json "${args[@]}"
+      # Every run's report, so a failure or a near miss can be read without
+      # running it again.
+      - name: Upload the reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lighthouse-${{ matrix.form }}-${{ matrix.shard }}
+          path: .lighthouseci
+          retention-days: 7
+          include-hidden-files: true
 
   # The required check. It passes only when every shard passed.
   lighthouse:

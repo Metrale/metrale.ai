@@ -136,9 +136,21 @@
 .av-narrow {
   max-width: 820px;
 }
+/* Every section below the hero is laid out and painted only when it nears the
+   screen. The brand face arriving after the first paint re-lays out every line
+   of text, and on /engine that re-layout ran 23 ms on a fast machine, a long
+   task of its own on a phone. With the sections skipped until needed it covers
+   only what is on screen. `auto` remembers a section's real height once drawn,
+   and 900px is the guess before then, so the scrollbar is close from the start.
+   The containment this brings makes a section the containing block for a
+   `position: fixed` descendant, so dialogs and toasts are rendered outside any
+   section (PageShell.svelte, engine/+page.svelte, benchmarks/+page.svelte), and
+   e2e/containment.spec.js checks that none is inside one. */
 .av-section {
   padding: 6.5rem 0;
   position: relative;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }
 .av-section-tight {
   padding: 4rem 0;

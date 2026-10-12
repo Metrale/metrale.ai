@@ -6,7 +6,7 @@
 // check can run against the real thing. No browser is needed: it runs the
 // generator in --check mode and fails with what the generator says.
 // =============================================================================
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 import { execFileSync } from 'node:child_process';
 
 test('the site guide is current: pages, buttons, links, facts and assets', async ({}, testInfo) => {

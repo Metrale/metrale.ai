@@ -18,7 +18,7 @@
 // page can only say "no agent connected", and every assertion below times out
 // waiting for a socket that was refused for a reason nothing on screen names.
 
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures/app.js';
 
 const TOKEN = process.env.METRALE_AGENT_TOKEN ?? '';
 

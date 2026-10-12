@@ -7,7 +7,7 @@
 // what the server render says; this proves the clicks and the hash round-trip.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 
 const openDashboard = async (page, path = '/engine') => {
   await page.goto(path);

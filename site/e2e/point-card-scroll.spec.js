@@ -8,7 +8,7 @@
 // this is measured where the dashboard modal mounts, at both widths.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 
 // The dashboard modal (and its point cards) mounts on /engine; /benchmarks renders its charts inline.
 const ROUTES = ['/engine'];

@@ -10,7 +10,7 @@
 // spec (dashboard-width.spec.js). Runs in the mobile project.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 import { pages, routes } from '../src/lib/content/index.js';
 import { industries } from '../src/lib/content/brand.js';
 

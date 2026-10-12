@@ -7,7 +7,7 @@
 // proves the render; this proves a reader reaches it from the deep link.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 
 const openAt = async (page, hash) => {
   await page.goto(`/engine#${hash}`);

@@ -17,6 +17,7 @@ import { GET as sitemap } from '../routes/sitemap.xml/+server.js';
 
 const ROUTES = fileURLToPath(new URL('../routes/', import.meta.url));
 const RC = fileURLToPath(new URL('../../lighthouse/lighthouserc.json', import.meta.url));
+const PR_YML = fileURLToPath(new URL('../../../.github/workflows/pr.yml', import.meta.url));
 
 const htmlFile = (path) => (path === '/' ? '/index.html' : `${path}.html`);
 const gated = new Set(JSON.parse(readFileSync(RC, 'utf8')).ci.collect.url.map((u) => new URL(u).pathname));
@@ -61,4 +62,24 @@ test('the Lighthouse gate names no page that does not exist', async () => {
 test('the pages left out of the gate are only the render page and the 404', () => {
   expect([...excluded].sort()).toEqual(['/404', '/broll']);
   for (const p of excluded) expect(gated.has(htmlFile(p))).toBe(false);
+});
+
+// The gate holds every page to 100 on a phone and on a desktop. The file's own
+// settings are Lighthouse's default, the mobile run; pr.yml runs the list once
+// as that and once more with the desktop preset. Either leg can be lost without
+// a page failing: a preset written into the file turns the mobile leg into a
+// second desktop run, and a matrix without `mobile` never runs it.
+test('the Lighthouse gate runs every page on both form factors', () => {
+  const { settings } = JSON.parse(readFileSync(RC, 'utf8')).ci.collect;
+  expect(settings.preset).toBeUndefined();
+  expect(settings.formFactor).toBeUndefined();
+  expect(settings.screenEmulation).toBeUndefined();
+  expect(settings.throttling).toBeUndefined();
+
+  const yml = readFileSync(PR_YML, 'utf8');
+  const job = yml.slice(yml.indexOf('\n  lighthouse-shard:'), yml.indexOf('\n  lighthouse:'));
+  expect(job.match(/^ {8}form: \[(.*)\]$/m)?.[1]).toBe('mobile, desktop');
+  expect(job).toContain('mobile) ;;');
+  expect(job).toContain('desktop) args+=("--collect.settings.preset=desktop") ;;');
+  expect(job).toContain('npx --yes @lhci/cli@0.15.1 autorun --config=site/lighthouse/lighthouserc.json "${args[@]}"');
 });

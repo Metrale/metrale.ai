@@ -18,7 +18,7 @@
 // load of its hash, the way a reader arrives from a link.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 import { routes } from '../src/lib/content/index.js';
 
 // The deck's length is a design decision: twelve slides, four movements. A

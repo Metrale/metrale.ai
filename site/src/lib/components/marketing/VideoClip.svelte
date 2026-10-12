@@ -27,6 +27,10 @@
     instant  the poster is fetched right away and decoded in the same frame it
              is first painted in, so a tab change never shows an empty screen.
 
+  `sizes` is how wide the caller draws the clip, as an <img sizes> value. Given
+  one, the poster also offers its 640 wide copy (media.js, srcsetOf) and a phone
+  takes that. Without one the poster is the full size file alone.
+
   History, because it cost a day: the first version set preload="none" and
   started playback from the canplay event. With preload="none" nothing loads,
   so canplay never fires, so no clip on the site ever played. The poster also
@@ -35,7 +39,18 @@
 -->
 <script>
   import { onMount } from 'svelte';
-  let { clip, eager = false, controls = false, active = true, warm = false, hold = false, instant = false, class: klass = '' } = $props();
+  import { srcsetOf } from '$lib/content/media.js';
+  let {
+    clip,
+    eager = false,
+    controls = false,
+    active = true,
+    warm = false,
+    hold = false,
+    instant = false,
+    sizes = undefined,
+    class: klass = '',
+  } = $props();
   let el = $state(null);
   let video = $state(null);
   let allowed = $state(false); // motion and data are fine with this visitor
@@ -111,6 +126,8 @@
   {#if !hold && !(ready && controls)}
     <img
       src={clip.poster}
+      srcset={sizes ? srcsetOf({ src: clip.poster, width: clip.width }) : undefined}
+      {sizes}
       alt={clip.alt}
       width={clip.width}
       height={clip.height}

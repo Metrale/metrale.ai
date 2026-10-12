@@ -13,6 +13,14 @@
 // src/lib/content/live.js reads that. The numbers are still generated, never
 // typed, and still come from the same sources as the developer pages.
 //
+// It also writes src/lib/gate-meta.generated.json: the gate record set's
+// registered ids and declared limits without the records themselves, about
+// 12 KB, with the ids of the benchmarks that have records and the models they
+// measured. /diligence prints floors and gate names from those, and importing
+// the whole record set to read them cost the page 1.4 MB of script to parse
+// before it could respond. gates.js takes its tabs and model list from it, so
+// the dashboard can draw its tabs before any family's records are parsed.
+//
 // Runs after gen-gates.mjs and gen-models.mjs (vite.config.js, package.json).
 // Hard-fails on a missing or empty source, because a silently zero count on
 // the front page looks like a fact.
@@ -63,15 +71,27 @@ const out = {
   recipes,
 };
 
-const target = resolve(lib, 'live.generated.json');
-const text = JSON.stringify(out, null, 2) + '\n';
-if (existsSync(target) && readFileSync(target, 'utf8').replace(/\r\n/g, '\n') === text) {
-  console.log(
-    `gen-live: ${target} unchanged (${out.gates.concurrencyPass}/${out.gates.concurrencyRecords} concurrency gates, ${recipes} recipes)`
-  );
-} else {
-  writeFileSync(target, text);
-  console.log(
-    `gen-live: wrote ${target} (${out.gates.concurrencyPass}/${out.gates.concurrencyRecords} concurrency gates, ${recipes} recipes)`
-  );
+if (!Array.isArray(gates.registered) || gates.registered.length === 0) throw new Error('gen-live: gates.generated.json registers no gate');
+if (!gates.gate_limits) throw new Error('gen-live: gates.generated.json has no gate_limits, run gen-gates.mjs');
+const benchmarks = Object.entries(gates.benchmarks ?? {});
+const meta = {
+  registered: gates.registered,
+  gate_limits: gates.gate_limits,
+  recorded: benchmarks.filter(([, b]) => (b.records ?? []).length > 0).map(([id]) => id),
+  models: [...new Set(benchmarks.flatMap(([, b]) => (b.records ?? []).map((r) => r.target_model)))].sort(),
+};
+
+/** Write `value` to src/lib/<name> unless it already holds exactly that. */
+function write(name, value, summary) {
+  const target = resolve(lib, name);
+  const text = JSON.stringify(value, null, 2) + '\n';
+  if (existsSync(target) && readFileSync(target, 'utf8').replace(/\r\n/g, '\n') === text) {
+    console.log(`gen-live: ${target} unchanged (${summary})`);
+  } else {
+    writeFileSync(target, text);
+    console.log(`gen-live: wrote ${target} (${summary})`);
+  }
 }
+
+write('live.generated.json', out, `${out.gates.concurrencyPass}/${out.gates.concurrencyRecords} concurrency gates, ${recipes} recipes`);
+write('gate-meta.generated.json', meta, `${meta.registered.length} gates registered, ${Object.keys(meta.gate_limits).length} with limits`);

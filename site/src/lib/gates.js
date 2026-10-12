@@ -6,6 +6,7 @@
 // =============================================================================
 import { ENGINE_REPO } from '../../../web-shared/sources.mjs';
 import gates from '$lib/gates.generated.json';
+import { models as recordedModels, recorded } from '$lib/gate-meta.generated.json';
 import { recordFileUrl } from './receipt.js';
 import { splitByVariant } from './gate-variants.js';
 import { foldPartitions } from './bfcl-partition.js';
@@ -13,6 +14,15 @@ import { latestDeclaredSince, limitFor as limitForRecord, rungFloors as rungFloo
 import { TTFT_STATS, modeOf } from './ttft-baselines.js';
 
 export const gateData = gates;
+
+// In the browser build each benchmark's records are a script of their own
+// (gate-records-module.js), and a page awaits the ones it draws before drawing
+// them. Everywhere else the JSON holds every record and there is nothing to load.
+/** @param {string[]} benchIds */
+export const loadRecords = async (benchIds) => {
+  await gates.loadRecords?.(benchIds);
+};
+export const loadAllRecords = () => loadRecords(Object.keys(gates.benchmarks));
 // A record links to its own file in the engine repository, on the branch it was
 // found on: the record is the evidence, and it outlives the commit it names.
 export const recordUrl = (r) => recordFileUrl(r) ?? ENGINE_REPO;
@@ -104,9 +114,15 @@ const TTFT_TABS = Object.freeze(['ttft', 'ttft-long']);
 const TTFT_BENCHES = new Set(TAB_DEFS.filter((t) => TTFT_TABS.includes(t.id)).flatMap((t) => t.benches));
 export const isTtftTab = (tabId) => TTFT_TABS.includes(tabId);
 export const isTtftBench = (benchId) => TTFT_BENCHES.has(benchId);
-export const tabs = TAB_DEFS.filter((t) => t.benches.some((b) => (gates.benchmarks[b]?.records ?? []).length > 0));
+// Both read from gate-meta.generated.json (gen-live.mjs), cut from the same
+// record set: in the browser a benchmark's records are parsed only when first
+// read (gate-records-module.js), and deciding the tabs must not read them all.
+export const tabs = TAB_DEFS.filter((t) => t.benches.some((b) => recorded.includes(b)));
+// The families /benchmarks shows. Cost is the dashboard's per-subject view of the
+// concurrency records; it has no gate sections of its own.
+export const gateFamilies = tabs.filter((t) => t.id !== 'cost');
 
-export const models = [...new Set(Object.values(gates.benchmarks).flatMap((b) => b.records.map((r) => r.target_model)))].sort();
+export const models = recordedModels;
 
 // ---- panel specs ------------------------------------------------------------
 // Floor/ceiling lines are NOT part of a panel spec: GateChart reads them per

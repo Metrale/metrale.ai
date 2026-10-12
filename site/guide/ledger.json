@@ -263,6 +263,45 @@
       "base": "d9da6d204",
       "note": "engine: Ask the codebase button, the chat is the AutoRepoRAG website-chat library",
       "touched": []
+    },
+    {
+      "rev": 20,
+      "date": "2026-10-12",
+      "base": "330814acb",
+      "note": "posters and stills ship a 640 wide copy that phones take, beside the full size file",
+      "touched": [
+        "art-aisle-640.webp",
+        "art-desk-box-640.webp",
+        "art-enclave-640.webp",
+        "art-finance-640.webp",
+        "art-gov-640.webp",
+        "art-grid-640.webp",
+        "art-health-640.webp",
+        "art-hyperscale-640.webp",
+        "art-legal-640.webp",
+        "art-local-government-640.webp",
+        "art-power-640.webp",
+        "art-prisms-640.webp",
+        "art-public-safety-640.webp",
+        "art-research-640.webp",
+        "art-smb-autoshop-640.webp",
+        "art-smb-library-640.webp",
+        "art-smb-office-640.webp",
+        "broll-desk-box-640.webp",
+        "broll-enclave-640.webp",
+        "broll-field-640.webp",
+        "broll-hall-640.webp",
+        "broll-power-640.webp",
+        "broll-rack-640.webp",
+        "broll-tokens-640.webp",
+        "console-ask-640.webp",
+        "console-deploy-640.webp",
+        "console-economics-640.webp",
+        "console-fleet-640.webp",
+        "console-governance-640.webp",
+        "console-queue-640.webp",
+        "reel-640.webp"
+      ]
     }
   ],
   "facts": {
@@ -1359,11 +1398,23 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/art/art-aisle-640.webp": {
+      "sha": "b6e8bb96f6e7",
+      "bytes": 19308,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/art/art-aisle.webp": {
       "sha": "6242a3613d7f",
       "bytes": 49498,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/art/art-desk-box-640.webp": {
+      "sha": "857efd55c37a",
+      "bytes": 8224,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/art/art-desk-box.webp": {
       "sha": "d9dabf05f679",
@@ -1371,11 +1422,23 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/art/art-enclave-640.webp": {
+      "sha": "22b49b44b5ea",
+      "bytes": 11438,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/art/art-enclave.webp": {
       "sha": "8f29ab16b607",
       "bytes": 34962,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/art/art-finance-640.webp": {
+      "sha": "32d1193dbccd",
+      "bytes": 34070,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/art/art-finance.webp": {
       "sha": "1d9acadd099e",
@@ -1383,11 +1446,23 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/art/art-gov-640.webp": {
+      "sha": "b3abd5439006",
+      "bytes": 24738,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/art/art-gov.webp": {
       "sha": "3a7db8430b8b",
       "bytes": 74690,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/art/art-grid-640.webp": {
+      "sha": "0dc3ea2b6198",
+      "bytes": 7572,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/art/art-grid.webp": {
       "sha": "8c0c955dbc83",
@@ -1395,11 +1470,23 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/art/art-health-640.webp": {
+      "sha": "3d9b6967de66",
+      "bytes": 23634,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/art/art-health.webp": {
       "sha": "6d3c422df667",
       "bytes": 59834,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/art/art-hyperscale-640.webp": {
+      "sha": "f80fd40790b7",
+      "bytes": 17528,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/art/art-hyperscale.webp": {
       "sha": "d426b1647073",
@@ -1407,11 +1494,23 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/art/art-legal-640.webp": {
+      "sha": "d2bf2e0caaf0",
+      "bytes": 24044,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/art/art-legal.webp": {
       "sha": "5b8dc32754c5",
       "bytes": 54536,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/art/art-local-government-640.webp": {
+      "sha": "9f79b93ba632",
+      "bytes": 6870,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/art/art-local-government.webp": {
       "sha": "f3379db386ab",
@@ -1419,11 +1518,23 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/art/art-power-640.webp": {
+      "sha": "adc2feb84637",
+      "bytes": 20088,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/art/art-power.webp": {
       "sha": "90effc2dcbcc",
       "bytes": 53910,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/art/art-prisms-640.webp": {
+      "sha": "dc9433bd7342",
+      "bytes": 18348,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/art/art-prisms.webp": {
       "sha": "d080ffd4348b",
@@ -1431,11 +1542,23 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/art/art-public-safety-640.webp": {
+      "sha": "585326c96c02",
+      "bytes": 13622,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/art/art-public-safety.webp": {
       "sha": "c3baca0648ce",
       "bytes": 49780,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/art/art-research-640.webp": {
+      "sha": "7d12cf019676",
+      "bytes": 22338,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/art/art-research.webp": {
       "sha": "67489380f2a5",
@@ -1443,17 +1566,35 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/art/art-smb-autoshop-640.webp": {
+      "sha": "20a073bb7e24",
+      "bytes": 39168,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/art/art-smb-autoshop.webp": {
       "sha": "f03691bb1a31",
       "bytes": 103750,
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/art/art-smb-library-640.webp": {
+      "sha": "8a09ca5c31b3",
+      "bytes": 34916,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/art/art-smb-library.webp": {
       "sha": "ee032ff7c403",
       "bytes": 88452,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/art/art-smb-office-640.webp": {
+      "sha": "c4b2302a0c4b",
+      "bytes": 23026,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/art/art-smb-office.webp": {
       "sha": "a6aaacce3d2e",
@@ -1479,6 +1620,12 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/broll-desk-box-640.webp": {
+      "sha": "68e951536670",
+      "bytes": 7872,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/broll-desk-box.mp4": {
       "sha": "f2de0145c76d",
       "bytes": 268522,
@@ -1496,6 +1643,12 @@
       "bytes": 22412,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/broll-enclave-640.webp": {
+      "sha": "0452ea293b7f",
+      "bytes": 14848,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/broll-enclave.mp4": {
       "sha": "350aa8002cc7",
@@ -1515,6 +1668,12 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/broll-field-640.webp": {
+      "sha": "2e13043ef2cb",
+      "bytes": 18064,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/broll-field.mp4": {
       "sha": "ab1340e7d0e8",
       "bytes": 1272239,
@@ -1532,6 +1691,12 @@
       "bytes": 44726,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/broll-hall-640.webp": {
+      "sha": "2ef7109c45e6",
+      "bytes": 26798,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/broll-hall.mp4": {
       "sha": "172ad2d3049b",
@@ -1551,6 +1716,12 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/broll-power-640.webp": {
+      "sha": "2b1d99fed599",
+      "bytes": 19358,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/broll-power.mp4": {
       "sha": "f849026b8c81",
       "bytes": 570290,
@@ -1568,6 +1739,12 @@
       "bytes": 48736,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/broll-rack-640.webp": {
+      "sha": "9bd541fd7f4f",
+      "bytes": 21718,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/broll-rack.mp4": {
       "sha": "e11feee3b5fd",
@@ -1587,6 +1764,12 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/broll-tokens-640.webp": {
+      "sha": "0de462d17dcd",
+      "bytes": 7574,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/broll-tokens.mp4": {
       "sha": "534b5ec59826",
       "bytes": 331844,
@@ -1605,6 +1788,12 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/console-ask-640.webp": {
+      "sha": "83d330bf54e3",
+      "bytes": 23436,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/console-ask.mp4": {
       "sha": "5f09b7dff926",
       "bytes": 374510,
@@ -1622,6 +1811,12 @@
       "bytes": 79594,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/console-deploy-640.webp": {
+      "sha": "9c64c57c86c9",
+      "bytes": 20378,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/console-deploy.mp4": {
       "sha": "3c9c4acf94fd",
@@ -1659,6 +1854,12 @@
         }
       ]
     },
+    "site/static/media/console-economics-640.webp": {
+      "sha": "b87b9153ed0a",
+      "bytes": 17008,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/console-economics.mp4": {
       "sha": "77bf6cc36d22",
       "bytes": 324741,
@@ -1676,6 +1877,12 @@
       "bytes": 55542,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/console-fleet-640.webp": {
+      "sha": "6e1bd77df4ee",
+      "bytes": 21928,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/console-fleet.mp4": {
       "sha": "1fc4d96dec5c",
@@ -1713,6 +1920,12 @@
         }
       ]
     },
+    "site/static/media/console-governance-640.webp": {
+      "sha": "9a095d61eb78",
+      "bytes": 21368,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/console-governance.mp4": {
       "sha": "9cfa6b8f3ce3",
       "bytes": 394371,
@@ -1731,6 +1944,12 @@
       "rev": 1,
       "date": "2026-09-24"
     },
+    "site/static/media/console-queue-640.webp": {
+      "sha": "eb07c9ba3ed0",
+      "bytes": 20268,
+      "rev": 1,
+      "date": "2026-10-12"
+    },
     "site/static/media/console-queue.mp4": {
       "sha": "4ef84684ce92",
       "bytes": 431535,
@@ -1748,6 +1967,12 @@
       "bytes": 65752,
       "rev": 1,
       "date": "2026-09-24"
+    },
+    "site/static/media/reel-640.webp": {
+      "sha": "3cc99d40b1bc",
+      "bytes": 7348,
+      "rev": 1,
+      "date": "2026-10-12"
     },
     "site/static/media/reel.mp4": {
       "sha": "8a75a99b0cfd",

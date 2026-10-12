@@ -42,15 +42,19 @@
 
   let dashboardOpen = $state(false);
 
-  // PRPL "lazy-load": the dashboard is on-click only, so its component (and the
-  // gate-records JSON it pulls in) stays out of the initial bundle. Hovering or
-  // focusing the trigger starts the fetch early, so by click time the module is
-  // usually already here; the skeleton in dashboard.css covers the rest.
+  // PRPL "lazy-load": the dashboard is on-click only, so its component and the
+  // gate records it draws (every benchmark's, gates.js loadAllRecords) stay out
+  // of the initial bundle. Hovering or focusing the trigger starts the fetch
+  // early, so by click time both are usually already here; the skeleton in
+  // dashboard.css covers the rest.
   let Dashboard = $state(null);
   let dashboardError = $state(false);
   let dashboardModule = null;
   function preloadDashboard() {
-    dashboardModule ??= import('./BenchmarkDashboard.svelte');
+    dashboardModule ??= Promise.all([
+      import('./BenchmarkDashboard.svelte'),
+      import('$lib/gates.js').then((gates) => gates.loadAllRecords()),
+    ]).then(([module]) => module);
     return dashboardModule;
   }
   async function openDashboard() {

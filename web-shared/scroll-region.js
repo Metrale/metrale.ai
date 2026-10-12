@@ -16,6 +16,15 @@
 // has settled, and without the second look a box stayed unreachable for seconds
 // after the window narrowed.
 //
+// The first measurement is not taken when the action starts. It starts during
+// hydration, while the page is still being rebuilt, so reading a width there
+// forced a layout of the whole document inside the app's start: on /engine,
+// with a dozen boxes, that was 14 ms of a 46 ms task on a fast machine, and a
+// long task on a phone. The ResizeObserver reports every box once after the
+// next layout, which is the same answer without the forced layout. A box in a
+// section the browser has not drawn yet (content-visibility) is measured when
+// it is drawn; until then it keeps the focusable form it was rendered with.
+//
 //   <code tabindex="0" role="region" aria-label={name} use:scrollRegion={{ label: name }}>
 //   <figure tabindex="0" aria-label={name} use:scrollRegion>   (keeps its own role and name)
 
@@ -55,8 +64,16 @@ export function scrollRegion(node, options = {}) {
   win?.addEventListener?.('resize', settle);
   const fonts = typeof document !== 'undefined' ? document.fonts : undefined;
   fonts?.addEventListener?.('loadingdone', sync);
-  fonts?.ready?.then(sync);
-  sync();
+  // Without a ResizeObserver nothing reports the first size, so look on the next
+  // frame. document.fonts.ready is often already settled, and its callback would
+  // run inside the start this action is part of, so it waits for a frame too.
+  const later = () => {
+    if (typeof requestAnimationFrame !== 'function') return sync();
+    if (typeof cancelAnimationFrame === 'function') cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(sync);
+  };
+  fonts?.ready?.then(later);
+  if (!resize) later();
   return {
     update(next = {}) {
       label = next.label ?? null;

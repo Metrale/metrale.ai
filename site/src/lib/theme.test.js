@@ -2,6 +2,7 @@
 import { expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { THEME_DARK_BG, THEME_KEY, THEME_LIGHT_BG, readTheme } from '../../../web-shared/theme.js';
+import { heroSizes, media, srcsetOf } from './content/media.js';
 
 test('ground colours are the brand pair, not a third canvas', () => {
   expect(THEME_DARK_BG).toBe('#0E1318');
@@ -72,6 +73,15 @@ test('the home page preloads the hero poster when the theme is dark', () => {
   expect(preloads[0].as).toBe('image');
   expect(preloads[0].fetchpriority).toBe('high');
   expect(preloads[0].href).toBe('/media/console-ask.webp');
+});
+
+// The preload must name exactly the files and widths the hero's <img> offers,
+// or a phone fetches one poster from the preload and paints another.
+test('the poster preload offers the same files at the same drawn width as the hero', () => {
+  const { preloads } = runBootScript({ stored: 'dark' });
+  expect(preloads[0].href).toBe(media.hero.poster);
+  expect(preloads[0].imagesrcset).toBe(srcsetOf({ src: media.hero.poster, width: media.hero.width }));
+  expect(preloads[0].imagesizes).toBe(heroSizes);
 });
 
 test('the home page preloads the same poster when the theme is light', () => {

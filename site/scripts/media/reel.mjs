@@ -32,6 +32,7 @@ import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'no
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { serve } from './serve.mjs';
+import { writeSmall } from './small.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const site = resolve(here, '..', '..');
@@ -257,6 +258,7 @@ run(['-i', master, '-an', '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', '35', '-row
 // The poster is the lockup card: it says whose film this is before it plays.
 const lockupAt = lengths.slice(0, 2).reduce((a, b) => a + b, 0) - XF * 2 + lengths[2] * 0.6;
 run(['-ss', lockupAt.toFixed(3), '-i', master, '-frames:v', '1', '-c:v', 'libwebp', '-quality', '84', '-compression_level', '6', webp]);
+writeSmall(webp);
 
 const provPath = resolve(OUT, 'provenance.json');
 const prov = existsSync(provPath) ? JSON.parse(readFileSync(provPath, 'utf8')) : {};

@@ -12,7 +12,7 @@
   import ConcurrencyLadder from '$lib/components/ConcurrencyLadder.svelte';
   import GateBenchSection from '$lib/components/GateBenchSection.svelte';
   import GatePointCard from '$lib/components/GatePointCard.svelte';
-  import { gateData, tabs, recordsFor, benchName } from '$lib/gates.js';
+  import { gateData, gateFamilies as families, loadRecords, recordsFor, benchName } from '$lib/gates.js';
   import { groupFor, groupRecords } from '$lib/gate-variants.js';
   import { faqFor } from '$lib/content/faq.js';
   import { routes, links } from '$lib/content/brand.js';
@@ -20,10 +20,16 @@
   import bench from '$lib/benchmarks.generated.json';
   import { hardwarePage } from '$lib/content/platform.js';
 
-  // Cost is the dashboard's per-subject view of the concurrency records; it has
-  // no gate sections of its own, so this page keeps to the gate families.
-  const families = tabs.filter((t) => t.id !== 'cost');
+  // +page.js loaded the first family's records before the page started.
   let activeTab = $state(families[0]?.id);
+  // A family's records are a script of their own (gates.js, loadRecords). A tab
+  // starts loading them when the pointer or focus reaches it, so they are
+  // usually here by the click, and the panel changes once they are.
+  const warm = (t) => void loadRecords(t.benches);
+  async function show(t) {
+    await loadRecords(t.benches);
+    activeTab = t.id;
+  }
   let selected = $state(null);
   const tab = $derived(families.find((t) => t.id === activeTab) ?? families[0]);
   const sections = $derived.by(() => {
@@ -102,8 +108,14 @@
       </div>
       <div class="av-tabs av-reveal" role="tablist" aria-label="Benchmark families">
         {#each families as t}
-          <button type="button" role="tab" class="av-tab" aria-selected={activeTab === t.id} onclick={() => (activeTab = t.id)}
-            >{t.label}</button
+          <button
+            type="button"
+            role="tab"
+            class="av-tab"
+            aria-selected={activeTab === t.id}
+            onpointerenter={() => warm(t)}
+            onfocus={() => warm(t)}
+            onclick={() => show(t)}>{t.label}</button
           >
         {/each}
       </div>

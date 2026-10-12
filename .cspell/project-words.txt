@@ -3,6 +3,7 @@ aggregatable
 aiohttp
 alexi
 artemissecurity
+autorun
 autoshop
 baselining
 basenames
@@ -89,6 +90,7 @@ launchrow
 ldjson
 lede
 letterboxing
+lhci
 libclang
 licenserc
 lighthouserc
@@ -120,6 +122,7 @@ midchunk
 mlcommons
 mlperf
 mnav
+modulepreloads
 mtok
 mult
 nemotron
@@ -162,6 +165,7 @@ precaching
 precheck
 prerendered
 prerenderer
+prerenders
 pressable
 pric
 printin
