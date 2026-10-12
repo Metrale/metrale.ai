@@ -666,6 +666,23 @@ test.describe('installed art', () => {
       expect(await img.evaluate((el) => el.complete && el.naturalWidth)).toBeGreaterThan(400);
     });
   }
+
+  // A hero that turns through several stills fetches only the first with the
+  // page, so the others never compete with its largest paint. They are in the
+  // HTML, lazy and not displayed, and load once the page has gone idle.
+  test('a turning hero fetches its later stills only after the page has loaded', async ({ page }) => {
+    await page.goto('/solutions/smb-edge');
+    const stills = page.locator('.av-page-hero-art.is-turning img');
+    await expect(stills).toHaveCount(3);
+    await expect(stills.nth(2)).toHaveJSProperty('complete', true);
+    const timing = await page.evaluate(() => {
+      const load = performance.getEntriesByType('navigation')[0].loadEventEnd;
+      const start = (name) => performance.getEntriesByType('resource').find((e) => e.name.includes(name))?.startTime;
+      return { load, first: start('art-smb-autoshop'), later: [start('art-smb-library'), start('art-smb-office')] };
+    });
+    expect(timing.first).toBeLessThan(timing.load);
+    for (const t of timing.later) expect(t).toBeGreaterThan(timing.load);
+  });
 });
 
 test.describe('every page', () => {

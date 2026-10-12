@@ -29,15 +29,29 @@
   // the page's picture should be until someone thinks to refresh.
   // A page with several stills turns through them, slowly, by opacity alone, and
   // only while the frame is on screen and the visitor has not asked for less motion.
+  //
+  // Only the first still is fetched with the page. The others wait, lazy and not
+  // displayed, until the page has loaded and gone idle, seconds before the first
+  // turn. Displayed from the start they were fetched at once beside the first,
+  // because a lazy image inside the viewport is not lazy: on /solutions/smb-edge
+  // that was three stills, 250 KB, ahead of the page's largest paint on a phone.
   let shown = $state(0);
   let frame = $state(null);
+  let rest = $state(false);
   onMount(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const release = () => (rest = true);
+    const idle = () => (window.requestIdleCallback ? requestIdleCallback(release) : setTimeout(release, 200));
+    if (document.readyState === 'complete') idle();
+    else addEventListener('load', idle, { once: true });
     const timer = setInterval(() => {
-      if (arts.length < 2 || document.hidden || !frame?.classList.contains('is-live')) return;
+      if (!rest || arts.length < 2 || document.hidden || !frame?.classList.contains('is-live')) return;
       shown = (shown + 1) % arts.length;
     }, 6000);
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      removeEventListener('load', idle);
+    };
   });
   $effect(() => {
     here;
@@ -94,6 +108,7 @@
           {#each arts as a, i (a.slot)}
             <img
               class:is-on={i === shown}
+              class:is-later={i > 0 && !rest}
               src={a.src}
               alt={i === shown ? a.alt : ''}
               aria-hidden={i === shown ? undefined : 'true'}
@@ -142,6 +157,9 @@
   }
   .is-turning img.is-on {
     opacity: 1;
+  }
+  .is-turning img.is-later {
+    display: none;
   }
   .is-turning img:not(:first-child) {
     position: absolute;
