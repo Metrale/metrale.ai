@@ -8,7 +8,7 @@
 // the subject strip, and that the URL hash is the deep link both ways.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 
 const FLAGSHIP = 'Qwen/Qwen3.6-35B-A3B-FP8';
 const DENSE = 'unsloth/Qwen3.8-27B-NVFP4';

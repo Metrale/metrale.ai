@@ -11,7 +11,7 @@
 // has just made and holds the line, in numbers, with no browser needed.
 // vite.config.js explains the two named chunks these budgets depend on.
 // =============================================================================
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 

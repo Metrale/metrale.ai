@@ -5,7 +5,7 @@
 // real browser: the page arrives with nothing started, then the gate starts it,
 // the copied boot script passes the page's CSP, and SvelteKit runs.
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 
 const PAGES = ['/', '/pricing', '/engine', '/control', '/diligence'];
 
@@ -27,15 +27,19 @@ for (const path of PAGES) {
     expect(html).toContain('<script type="metrale/boot">');
     const head = html.slice(0, html.indexOf('</head>'));
     expect(head.replace(/<template id="metrale-preloads">[\s\S]*?<\/template>/, '')).not.toContain('rel="modulepreload"');
-    const preloads = [...head.matchAll(/rel="modulepreload"/g)].length;
-    expect(preloads).toBeGreaterThan(0);
+    const preloads = [...head.matchAll(/<link href="([^"]+)" rel="modulepreload">/g)].map((m) => m[1]);
+    expect(preloads.length).toBeGreaterThan(0);
 
     // SvelteKit's start writes its history index into history.state; nothing
     // else on the page does, so it is there only if the copied boot script ran.
     await page.waitForFunction(() => Object.keys(history.state ?? {}).some((k) => k.startsWith('sveltekit:')));
     expect(await page.evaluate(() => window.__startedAtPaint)).toBe(false);
     expect(await page.locator('script[type="metrale/boot"]').count()).toBe(0);
-    expect(await page.locator('head link[rel="modulepreload"]').count()).toBe(preloads);
+    const live = await page.evaluate(() =>
+      [...document.head.querySelectorAll('link[rel="modulepreload"]')].map((l) => l.getAttribute('href'))
+    );
+    expect(live).toEqual(expect.arrayContaining(preloads));
+    expect(await page.evaluate(() => document.getElementById('metrale-preloads').content.childElementCount)).toBe(0);
     expect(await page.evaluate(() => window.__violations)).toEqual([]);
     expect(errors).toEqual([]);
   });

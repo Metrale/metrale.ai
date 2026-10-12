@@ -9,7 +9,7 @@
 // share every rule that decides a width and a regression shows in either.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 
 const THEMES = ['dark', 'light'];
 // The inner strips: TabStrip prefixes `cs` (Concurrency) and `co` (Cost) pick a

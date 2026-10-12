@@ -12,7 +12,7 @@
 // it is for.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 import { pages, routes } from '../src/lib/content/index.js';
 import { showTeam } from '../src/lib/content/company.js';
 import { logoWall } from '../src/lib/content/home.js';

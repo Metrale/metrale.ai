@@ -7,7 +7,7 @@
 // it up right. Runs in both projects (desktop and the 390x844 phone).
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 import { REPO_CHAT_MODULE_URL } from '../src/lib/chat/config.js';
 import { LEGACY_WASM_CACHE, LEGACY_WASM_URL } from '../src/lib/chat/legacy-cache.js';
 import { CHAT_MODEL_ENV, RERANK_MODEL_ENV } from '../src/lib/chat/models-env.js';

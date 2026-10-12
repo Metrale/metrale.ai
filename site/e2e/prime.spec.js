@@ -7,7 +7,7 @@
 // phone and the dock on a desk. Runs in both projects.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 import { frame } from '../deploy/cloudflare/prime-worker/src/sse.js';
 
 const ENDPOINT = 'https://prime.test'; // playwright.config.js builds the site with this address

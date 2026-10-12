@@ -6,7 +6,7 @@
 // The corpora are about 134 MB compressed, so allow minutes.
 // =============================================================================
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/app.js';
 import { CHAT_ON, LS_OPENROUTER_KEY, acceptDownload, openChat } from './fixtures/chat-helpers.js';
 import { ENGINE_REPO } from '../../web-shared/sources.mjs';
 
