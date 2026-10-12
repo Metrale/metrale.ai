@@ -590,6 +590,12 @@ export const codeChat = {
       title: 'download the code lattice?',
       lead: 'The first visit downloads the engine code, its docs and the Rust book into this browser. Where the browser keeps it, later visits start from that copy.',
     },
+    errors: {
+      // The library's sentence, in the house voice: two sentences, no semicolon.
+      service: {
+        body: 'OpenRouter or the model provider hit a server error on its side. Ask again in a moment. If it keeps happening, the provider is down for now.',
+      },
+    },
   },
 };
 

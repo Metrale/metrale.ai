@@ -6,7 +6,7 @@
 // exist outside a browser); e2e/chat.spec.js runs the same code on the real ones.
 
 import { describe, expect, test } from 'bun:test';
-import { CORPORA } from './config.js';
+import { CORPORA, WASM_BIN_URL } from './config.js';
 import { LEGACY_WASM_CACHE, LEGACY_WASM_URL, RETIRED_CORPUS_IDS, removeLegacyCache } from './legacy-cache.js';
 
 function fakeDir(entries, { failOn = [] } = {}) {
@@ -31,7 +31,11 @@ function fakeCaches(buckets) {
     open: async (name) => {
       if (!store.has(name)) store.set(name, new Set());
       const set = store.get(name);
-      return { delete: async (url) => set.delete(url) };
+      // The Cache API keys entries by absolute Request URLs.
+      return {
+        keys: async () => [...set].map((u) => ({ url: `https://metrale.ai${u}` })),
+        delete: async (req) => set.delete(new URL(req.url).pathname),
+      };
     },
   };
 }
@@ -57,10 +61,14 @@ describe('removeLegacyCache', () => {
     expect([...dir.map.keys()].sort()).toEqual(['lattice-db-dir.jsonl', 'lattice-db-notes.txt', ...LIBRARY_FILES.map(([n]) => n)].sort());
   });
 
-  test("removes the old wasm entry and keeps the library's in the same bucket", async () => {
-    const caches = fakeCaches({ [LEGACY_WASM_CACHE]: [LEGACY_WASM_URL, '/repo-chat/2.1.0/lattice_server_bg.wasm'] });
-    expect(await removeLegacyCache({ dir: null, caches })).toEqual([`${LEGACY_WASM_CACHE} ${LEGACY_WASM_URL}`]);
-    expect([...caches.store.get(LEGACY_WASM_CACHE)]).toEqual(['/repo-chat/2.1.0/lattice_server_bg.wasm']);
+  test("removes the old site's wasm and earlier releases', keeping the current release's", async () => {
+    const older = ['/repo-chat/2.1.0/lattice_server_bg.wasm', '/repo-chat/2.2.0/lattice_server_bg.wasm'];
+    const caches = fakeCaches({ [LEGACY_WASM_CACHE]: [LEGACY_WASM_URL, ...older, WASM_BIN_URL] });
+    expect((await removeLegacyCache({ dir: null, caches })).sort()).toEqual(
+      [LEGACY_WASM_URL, ...older].map((u) => `${LEGACY_WASM_CACHE} ${u}`).sort()
+    );
+    expect([...caches.store.get(LEGACY_WASM_CACHE)]).toEqual([WASM_BIN_URL]);
+    expect(WASM_BIN_URL).not.toBe(older[1]);
   });
 
   test('never creates the bucket it is looking in', async () => {

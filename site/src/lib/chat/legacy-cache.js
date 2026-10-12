@@ -14,12 +14,17 @@
 // the publish cap and was split (chat/config.js), so its files are retired here
 // too; a corpus id dropped from CORPORA later belongs in RETIRED_CORPUS_IDS.
 //
+// The library prefetches its wasm at idle into the Cache API bucket
+// `<prefix>lattice-wasm`, the bucket the site's own chat used, keyed by the
+// wasm's URL. That URL carries the library's version, so each upgrade would
+// leave the previous 763 KB copy behind. Every entry but the current one goes.
+//
 // The button runs this once per page the first time the chat opens; once a
 // browser has run it there is nothing left to find. The file system and the
 // cache are passed in.
 // =============================================================================
 
-import { STORAGE_KEY_PREFIX } from './config.js';
+import { STORAGE_KEY_PREFIX, WASM_BIN_URL } from './config.js';
 
 export const RETIRED_CORPUS_IDS = Object.freeze(['code']);
 
@@ -29,12 +34,12 @@ export const LEGACY_CORPUS_FILE = new RegExp(
   `^(?:lattice-db-[^/]+\\.jsonl|${escapeRe(STORAGE_KEY_PREFIX)}~(?:${retired})@[0-9a-f]{7,64}\\.(?:jsonl|meta\\.json))$`
 );
 
-export const LEGACY_WASM_CACHE = 'metrale-lattice-wasm';
+export const LEGACY_WASM_CACHE = `${STORAGE_KEY_PREFIX}lattice-wasm`;
 export const LEGACY_WASM_URL = '/lattice/lattice_server_bg.wasm';
 
 /**
- * Delete every legacy corpus file in `dir` (an OPFS directory handle) and the
- * legacy wasm entry in `caches` (the Cache API). Returns what was removed;
+ * Delete every legacy corpus file in `dir` (an OPFS directory handle) and every
+ * wasm entry in `caches` (the Cache API) but the current release's. Returns what was removed;
  * throws one error naming every removal that failed.
  * @param {{ dir: FileSystemDirectoryHandle | null, caches: CacheStorage | null }} stores
  */
@@ -58,7 +63,11 @@ export async function removeLegacyCache({ dir, caches }) {
   // `has` first: `open` would create the bucket just to look inside it.
   if (caches && (await caches.has(LEGACY_WASM_CACHE))) {
     const cache = await caches.open(LEGACY_WASM_CACHE);
-    if (await cache.delete(LEGACY_WASM_URL)) removed.push(`${LEGACY_WASM_CACHE} ${LEGACY_WASM_URL}`);
+    for (const request of await cache.keys()) {
+      const path = new URL(request.url, 'https://metrale.ai').pathname;
+      if (path === WASM_BIN_URL) continue;
+      if (await cache.delete(request)) removed.push(`${LEGACY_WASM_CACHE} ${path}`);
+    }
   }
   if (failed.length) throw new Error(`could not remove the old chat's cache: ${failed.join('; ')}`);
   return removed;
