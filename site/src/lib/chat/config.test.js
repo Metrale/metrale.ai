@@ -74,6 +74,17 @@ describe('the configuration /engine opens the chat with', () => {
     expect(CORPUS_BASE).toBe('https://metrale.github.io/metrale-inference/coderag');
   });
 
+  // The house voice (content/site.test.js) holds for the chat too: the library's
+  // English copy changes with each release, and whatever it adds reaches visitors
+  // unless data.js overrides it.
+  test('every sentence a visitor reads in the chat keeps the house voice', () => {
+    const strings = (v, at) => (typeof v === 'string' ? [[at, v]] : Object.entries(v).flatMap(([k, c]) => strings(c, `${at}.${k}`)));
+    const offenders = strings(config().copy, 'copy')
+      .filter(([, s]) => s.includes(' ') && !/^https?:/.test(s) && /[—;!]/.test(s))
+      .map(([at, s]) => `${at}: ${s}`);
+    expect(offenders).toEqual([]);
+  });
+
   test('the theme names site tokens only, never a colour', () => {
     for (const value of Object.values(THEME)) expect(value).toMatch(/^var\(--[a-z0-9-]+\)$/);
   });

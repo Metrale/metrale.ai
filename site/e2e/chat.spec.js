@@ -153,6 +153,7 @@ test.describe('the chat', () => {
     const accept = dialog.locator('.cc-consent-accept');
     await expect(accept).toHaveText(/^download \d+(\.\d+)? (KB|MB)$/);
     await expect(dialog).toContainText(codeChat.copy.consent.title);
+    await expect(dialog).toContainText(codeChat.copy.consent.lead);
     expect(hits.gz).toBe(0);
     await acceptDownload(page);
     await waitReady(page);
@@ -202,12 +203,14 @@ test.describe('the chat', () => {
 
   // The site's own chat's corpus, and the single code corpus the split retired (data and meta).
   const RETIRED_FILES = ['lattice-db-0123abcd.jsonl', `metrale-~code@${COMMIT}.jsonl`, `metrale-~code@${COMMIT}.meta.json`];
+  // The old site's wasm, and an earlier library release's, in the bucket the library prefetches into.
+  const STALE_WASM = [LEGACY_WASM_URL, '/repo-chat/2.2.0/lattice_server_bg.wasm'];
 
   test("clears what the site's own chat left on disk, and caches the corpus under the library's name", async ({ page, context }) => {
     await routeCorpora(context);
     await page.goto('/engine');
     await page.evaluate(
-      async ([cacheName, url, retired]) => {
+      async ([cacheName, stale, retired]) => {
         const dir = await navigator.storage.getDirectory();
         for (const name of retired) {
           const file = await dir.getFileHandle(name, { create: true });
@@ -215,9 +218,10 @@ test.describe('the chat', () => {
           await w.write('{}');
           await w.close();
         }
-        await (await caches.open(cacheName)).put(url, new Response('old wasm'));
+        const cache = await caches.open(cacheName);
+        for (const url of stale) await cache.put(url, new Response('old wasm'));
       },
-      [LEGACY_WASM_CACHE, LEGACY_WASM_URL, RETIRED_FILES]
+      [LEGACY_WASM_CACHE, STALE_WASM, RETIRED_FILES]
     );
     await openChat(page);
     await acceptDownload(page);
@@ -225,11 +229,10 @@ test.describe('the chat', () => {
     await expect.poll(async () => (await opfsFiles(page)).filter((f) => RETIRED_FILES.includes(f))).toEqual([]);
     const files = await opfsFiles(page);
     for (const { id } of CORPUS_URLS) expect(files).toContain(`metrale-~${id}@${COMMIT}.jsonl`);
-    expect(
-      await page.evaluate(
-        async ([cacheName, url]) => !!(await (await caches.open(cacheName)).match(url)),
-        [LEGACY_WASM_CACHE, LEGACY_WASM_URL]
-      )
-    ).toBe(false);
+    const kept = await page.evaluate(
+      async (cacheName) => (await (await caches.open(cacheName)).keys()).map((r) => new URL(r.url).pathname),
+      LEGACY_WASM_CACHE
+    );
+    for (const url of STALE_WASM) expect(kept).not.toContain(url);
   });
 });
