@@ -34,7 +34,6 @@
       ],
       "numberOfRuns": 5,
       "settings": {
-        "preset": "desktop",
         "chromeFlags": "--no-sandbox --headless=new"
       }
     },
