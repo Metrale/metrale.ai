@@ -53,19 +53,29 @@
     opacity: 0;
     visibility: hidden;
     translate: 1.5rem 0;
+    /* A slide that is not showing is not laid out either. All of them share one
+       grid cell, so each was laid out on every pass: on a phone the first
+       layout, and the re-layout when the brand face arrives, covered all
+       fourteen and were the longest tasks on the page. Hidden content is
+       skipped, and the change waits for the fade out like visibility does. */
+    content-visibility: hidden;
     transition:
       opacity 260ms ease,
       translate 320ms cubic-bezier(0.2, 0.7, 0.2, 1),
-      visibility 0s linear 320ms;
+      visibility 0s linear 320ms,
+      content-visibility 0s linear 320ms;
+    transition-behavior: allow-discrete;
   }
   .sl-active {
     opacity: 1;
     visibility: visible;
     translate: 0 0;
+    content-visibility: visible;
     transition:
       opacity 260ms ease 60ms,
       translate 320ms cubic-bezier(0.2, 0.7, 0.2, 1) 60ms,
-      visibility 0s;
+      visibility 0s,
+      content-visibility 0s;
   }
 
   /* The same container the front page uses: 1180 wide, 24px gutters, 16px on
@@ -136,6 +146,7 @@
     .sl {
       opacity: 1 !important;
       visibility: visible !important;
+      content-visibility: visible !important;
       translate: 0 0 !important;
       overflow: visible;
       break-after: page;

@@ -69,7 +69,11 @@
 </footer>
 
 <style>
+  /* Skipped until it nears the screen, like every section above it (.av-section
+     in metrale.css says why). */
   .av-footer {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 480px;
     border-top: 1px solid var(--border);
     background: var(--bg2);
     font-family: var(--font-sans);
