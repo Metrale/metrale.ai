@@ -39,6 +39,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { LOOP } from '../../src/lib/broll/scenes.js';
 import { allClips } from '../../src/lib/content/media.js';
+import { writeSmall } from './small.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const site = resolve(here, '..', '..');
@@ -172,6 +173,7 @@ for (const clip of clips) {
     '6',
     webp,
   ]);
+  writeSmall(webp);
 
   prov[clip.name] = { kind: 'recorded', from: m.path, at: new Date().toISOString().slice(0, 10) };
   encoded++;

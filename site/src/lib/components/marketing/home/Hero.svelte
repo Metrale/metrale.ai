@@ -1,6 +1,6 @@
 <script>
   import { hero } from '$lib/content/home.js';
-  import { media } from '$lib/content/media.js';
+  import { heroSizes, media } from '$lib/content/media.js';
   import VideoClip from '../VideoClip.svelte';
 </script>
 
@@ -28,7 +28,7 @@
       </div>
       <div class="av-hero-art">
         <div class="av-frame">
-          <div><VideoClip clip={media.hero} eager /></div>
+          <div><VideoClip clip={media.hero} eager sizes={heroSizes} /></div>
         </div>
         <p class="av-video-caption">
           {hero.videoCaption} <a class="av-link" href={hero.film.href}>{hero.film.text} <span class="av-arrow">→</span></a>

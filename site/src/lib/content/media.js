@@ -21,6 +21,25 @@
 
 import installed from './art.json' with { type: 'json' };
 
+// Every poster and still also ships 640 pixels wide, beside the full size file,
+// as <name>-640.webp. A phone draws a hero picture about 350 CSS pixels wide, so
+// at its 1.75 to 2x density the 640 file is enough, at a third of the bytes, and
+// the hero picture is the largest paint on most pages. scripts/media/small.mjs
+// writes the file whenever a poster or still is written, and fails a build that
+// is missing one. Width descriptors let the browser pick: `srcsetOf` says what
+// each file is, and the component that draws it says how wide it is drawn.
+export const SMALL_WIDTH = 640;
+/** The 640 wide sibling of a poster or a still, keeping any query string. */
+export const smallOf = (src) => src.replace(/\.webp(?=$|\?)/, `-${SMALL_WIDTH}.webp`);
+/** @param {{ src: string, width: number }} picture */
+export const srcsetOf = ({ src, width }) => `${smallOf(src)} ${SMALL_WIDTH}w, ${src} ${width}w`;
+// How wide a page hero draws its picture: the full column, less the gutters and
+// the frame, up to the 1000 px breakpoint where the hero becomes two columns
+// (PageHero.svelte, metrale.css .av-hero-grid), and never more than 560 px
+// beside the copy. app.html preloads the front page's poster with the same
+// value, and theme.test.js holds the two together.
+export const heroSizes = '(max-width: 1000px) calc(100vw - 64px), 560px';
+
 const clip = (name, alt, { loop = true, w = 1280, h = 720, posterAt, maxBytes } = {}) => ({
   name,
   mp4: `/media/${name}.mp4`,

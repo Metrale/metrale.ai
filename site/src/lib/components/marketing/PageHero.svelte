@@ -16,7 +16,7 @@
 <script>
   import { page } from '$app/state';
   import { onMount } from 'svelte';
-  import { artsFor, heroClipFor } from '$lib/content/media.js';
+  import { artsFor, heroClipFor, heroSizes, srcsetOf } from '$lib/content/media.js';
   import VideoClip from './VideoClip.svelte';
   let { eyebrow, title, lede = '', primary = null, secondary = null, who = '', children } = $props();
   const here = $derived(page.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/');
@@ -64,6 +64,7 @@
     if (tries >= 2 || !art) return;
     tries += 1;
     setTimeout(() => {
+      img.srcset = srcsetOf({ src: `${art.src}?retry=${tries}`, width: art.width });
       img.src = `${art.src}?retry=${tries}`;
     }, 600 * tries);
   }
@@ -97,7 +98,7 @@
     </div>
     {#if clip}
       <div class="av-page-hero-art">
-        <div class="av-frame"><div><VideoClip {clip} eager /></div></div>
+        <div class="av-frame"><div><VideoClip {clip} eager sizes={heroSizes} /></div></div>
         {#if clip.name.startsWith('console-')}<p class="av-video-caption">
             Metrale Console. Demo data, recorded from the product mockup.
           </p>{/if}
@@ -110,6 +111,8 @@
               class:is-on={i === shown}
               class:is-later={i > 0 && !rest}
               src={a.src}
+              srcset={srcsetOf(a)}
+              sizes={heroSizes}
               alt={i === shown ? a.alt : ''}
               aria-hidden={i === shown ? undefined : 'true'}
               width={a.width}

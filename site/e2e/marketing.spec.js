@@ -19,6 +19,21 @@ import { logoWall } from '../src/lib/content/home.js';
 import { filterPositions } from '../src/lib/content/positions.js';
 import generated from '../src/lib/positions.generated.json';
 
+// A poster or still is a real picture, and sharp where it is drawn: the file the
+// browser chose from its srcset (the full size or the 640 wide copy) holds at
+// least as many pixels as the box it fills on this screen. Read from a second,
+// plain Image of the chosen file, because an <img> with width descriptors reports
+// its natural width already divided by the density it was chosen at.
+async function sharpness(img) {
+  return img.evaluate(async (el) => {
+    if (!el.complete || !el.currentSrc) throw new Error('the picture has not loaded');
+    const file = new Image();
+    file.src = el.currentSrc;
+    await file.decode();
+    return { pixels: file.naturalWidth, needed: Math.floor(el.getBoundingClientRect().width * devicePixelRatio) };
+  });
+}
+
 const isMobile = (testInfo) => testInfo.project.name === 'mobile';
 
 test.describe('front page', () => {
@@ -37,7 +52,8 @@ test.describe('front page', () => {
     await page.goto('/');
     const poster = page.locator('.av-hero .av-video img');
     await expect(poster).toBeVisible();
-    expect(await poster.evaluate((img) => img.complete && img.naturalWidth)).toBeGreaterThan(600);
+    const { pixels, needed } = await sharpness(poster);
+    expect(pixels).toBeGreaterThanOrEqual(needed);
     await expect(page.locator('.av-hero .av-video video source[type="video/mp4"]')).toHaveAttribute('src', '/media/console-ask.mp4');
   });
 
@@ -663,7 +679,8 @@ test.describe('installed art', () => {
       await expect(page.locator('.av-page-hero.has-art')).toBeVisible();
       await expect(img).toBeVisible();
       await expect(img).toHaveAttribute('src', src);
-      expect(await img.evaluate((el) => el.complete && el.naturalWidth)).toBeGreaterThan(400);
+      const { pixels, needed } = await sharpness(img);
+      expect(pixels).toBeGreaterThanOrEqual(needed);
     });
   }
 

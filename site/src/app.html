@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- First: the charset must sit in the first 1024 bytes, and the viewport
+         must be known before the theme script below preloads the hero poster,
+         whose imagesizes are read against it. Without it a phone sizes the
+         preload for a 980 px desktop viewport and fetches the full size file. -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       (function () {
         // apply also queues the hero poster fetch on the front page. The hero
         // is a product clip behind a poster, and the poster is the largest
         // paint on the page, so it is requested from the head rather than
         // when the parser reaches it. One file serves both themes: the console
-        // it shows is dark chrome in either.
+        // it shows is dark chrome in either. The srcset and sizes are the ones
+        // Hero.svelte draws it with (media.js srcsetOf and heroSizes), so a phone
+        // preloads the 640 wide copy it then paints; theme.test.js holds them.
         function apply(t) {
           document.documentElement.setAttribute('data-theme', t);
           if (location.pathname !== '/' && location.pathname !== '/index.html') return;
@@ -16,6 +24,8 @@
           l.as = 'image';
           l.setAttribute('fetchpriority', 'high');
           l.href = '/media/console-ask.webp';
+          l.setAttribute('imagesrcset', '/media/console-ask-640.webp 640w, /media/console-ask.webp 1280w');
+          l.setAttribute('imagesizes', '(max-width: 1000px) calc(100vw - 64px), 560px');
           document.head.appendChild(l);
         }
         try {
@@ -29,8 +39,6 @@
         }
       })();
     </script>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Metrale is the inference economics platform for GPUs you already own. Faster inference, stronger governance, a fraction of what you pay today." />
     <!-- IBM Plex, attached late on purpose. In the bundle, preloaded or not, the
          font downloads sat on the critical path of the first paint and cost every

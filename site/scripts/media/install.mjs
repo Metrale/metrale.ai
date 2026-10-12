@@ -30,7 +30,8 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { allClips } from '../../src/lib/content/media.js';
+import { allClips, smallOf } from '../../src/lib/content/media.js';
+import { writeSmall } from './small.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const site = resolve(here, '..', '..');
@@ -85,6 +86,7 @@ if (isImage) {
     '6',
     out,
   ]);
+  writeSmall(out);
   const [width, height] = probe(['-select_streams', 'v:0', '-show_entries', 'stream=width,height', '-of', 'csv=p=0:s=x', out])
     .split('x')
     .map(Number);
@@ -111,7 +113,7 @@ if (isImage) {
     manifestPath,
     JSON.stringify(Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b))), null, 2) + '\n'
   );
-  console.log(`install: ${slot} -> static/media/art/${slot}.webp (${width}x${height}, ${mb(out)} MB)`);
+  console.log(`install: ${slot} -> static/media/art/${slot}.webp (${width}x${height}, ${mb(out)} MB, small ${mb(smallOf(out))} MB)`);
   console.log(`         registered in src/lib/content/art.json for ${pages.length ? pages.join(', ') : 'no page yet (pass --pages)'}`);
 } else {
   // --- a clip ----------------------------------------------------------------
@@ -201,6 +203,7 @@ if (isImage) {
     '6',
     webp,
   ]);
+  writeSmall(webp);
   // Remember that this slot was filled by hand. encode.mjs reads this and will
   // not overwrite an installed clip with a procedural recording unless forced.
   const provPath = resolve(outDir, 'provenance.json');
