@@ -29,6 +29,7 @@ controlonly
 croll
 cros
 crosslinks
+crswap
 cuda
 cudarc
 datacentre
