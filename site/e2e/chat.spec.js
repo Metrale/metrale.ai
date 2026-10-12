@@ -1,555 +1,235 @@
 // =============================================================================
-// chat.spec.js — the "Ask the codebase" E2E suite (no network beyond
-// localhost: corpus + OpenRouter are served from checked-in fixtures via
-// Playwright routes; the wasm engine is the real vendored build).
-// Runs in both projects: chromium (desktop) and mobile (390x844 sheet).
+// chat.spec.js — "Ask the codebase" on /engine, at the level a visitor meets it:
+// the button in the header, the library it opens, a fixture corpus behind it, a
+// mocked OpenRouter answering one question, and focus coming home on close.
+// The chat itself is AutoRepoRAG's website-chat library, whose own suite covers
+// its loader, cache, streaming, retries and errors; this proves the site wires
+// it up right. Runs in both projects (desktop and the 390x844 phone).
 // =============================================================================
 
 import { test, expect } from '@playwright/test';
-import { CORPUS_GZ_URL, CORPUS_META_URL, LS_OPENROUTER_KEY } from '../src/lib/chat/config.js';
-import { ENGINE_REPO } from '../../web-shared/sources.mjs';
-import {
-  OR_EMBEDDINGS,
-  OR_RERANK,
-  OR_CHAT,
-  CORS_HEADERS,
-  embeddingsHandler,
-  rerankHandler,
-  chatHandler,
-  http429Handler,
-  ok200ErrorBodyHandler,
-} from './fixtures/openrouter.js';
+import { REPO_CHAT_MODULE_URL } from '../src/lib/chat/config.js';
+import { LEGACY_WASM_CACHE, LEGACY_WASM_URL } from '../src/lib/chat/legacy-cache.js';
+import { CHAT_MODEL_ENV, RERANK_MODEL_ENV } from '../src/lib/chat/models-env.js';
+import { codeChat } from '../src/lib/data.js';
 import {
   CHAT_ON,
-  META,
-  GZ,
+  CLOSE_LABEL,
   COMMIT,
-  READY_LINE,
-  TEST_KEY,
-  JSON_HEADERS,
-  GZ_HEADERS,
-  routeCorpus,
-  isMobile,
+  CORPUS_URLS,
+  META,
+  acceptDownload,
+  askButton,
+  askQuestion,
+  dialogOf,
   openChat,
-  statusText,
+  opfsFiles,
+  routeCorpora,
   waitReady,
   withKey,
-  askQuestion,
 } from './fixtures/chat-helpers.js';
-import { startSlowServer } from './fixtures/slow-server.mjs';
+import { OR_CHAT, OR_EMBEDDINGS, OR_RERANK, chatHandler, embeddingsHandler, rerankHandler } from './fixtures/openrouter.js';
 
-// Off with the chat itself; see CHAT_ON in fixtures/chat-helpers.js.
-test.skip(!CHAT_ON, 'The codebase chat is off until the engine publishes its code index.');
+test.skip(!CHAT_ON, 'The codebase chat is off; chat-off.spec.js covers that.');
 
-// --- route helpers -----------------------------------------------------------
+const ANSWER = 'The scheduler admits waiting requests into the running decode batch [1].';
 
-/** Redirect the corpus URL to a local server that streams the gz slowly. */
-async function routeSlowCorpus(context, hits, opts) {
-  const slow = await startSlowServer(GZ, opts);
-  await context.unroute(CORPUS_GZ_URL);
-  await context.route(CORPUS_GZ_URL, async (route) => {
-    hits.gz++;
-    await route.fulfill({ status: 302, headers: { ...CORS_HEADERS, location: slow.url } });
-  });
-  return slow;
+async function routeOpenRouter(context, log) {
+  await context.route(OR_EMBEDDINGS, embeddingsHandler({ dim: META.dim, log: log.embed }));
+  await context.route(OR_RERANK, rerankHandler({ log: log.rerank }));
+  await context.route(OR_CHAT, chatHandler(ANSWER, { log: log.chat }));
 }
 
-async function restoreFastCorpus(context, hits) {
-  await context.unroute(CORPUS_GZ_URL);
-  await context.route(CORPUS_GZ_URL, async (route) => {
-    hits.gz++;
-    await route.fulfill({ status: 200, headers: GZ_HEADERS, body: GZ });
-  });
-}
-
-/** Mock the full OpenRouter pipeline for a happy-path answer. */
-async function routeOpenRouter(context, answer, { embedDim = META.dim } = {}) {
-  await context.route(OR_EMBEDDINGS, embeddingsHandler({ dim: embedDim }));
-  await context.route(OR_RERANK, rerankHandler());
-  await context.route(OR_CHAT, chatHandler(answer));
-}
-
-// --- UI helpers --------------------------------------------------------------
-// (shared drivers live in fixtures/chat-helpers.js)
-
-const opfsFiles = (page) =>
-  page.evaluate(async () => {
-    const dir = await navigator.storage.getDirectory();
-    const names = [];
-    for await (const [name] of dir) names.push(name);
-    return names.sort();
-  });
-
-// =============================================================================
-// nav presence / aria
-// =============================================================================
-
-test.describe('nav trigger', () => {
-  test('is present with dialog aria wiring', async ({ page }) => {
+test.describe('the button', () => {
+  test('sits top right in the engine page header, named and big enough to hit', async ({ page }) => {
     await page.goto('/engine');
-    if (isMobile(page)) {
-      await expect(page.locator('.nav-links .nav-chat-btn')).toBeHidden();
-      const toggle = page.locator('.nav-toggle');
-      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
-      await toggle.click();
-      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-      const btn = page.locator('#nav-drawer .nav-chat-btn');
-      await expect(btn).toBeVisible();
-      await expect(btn).toHaveAttribute('aria-label', 'Ask the codebase');
-      await expect(btn).toHaveAttribute('aria-haspopup', 'dialog');
-    } else {
-      const btn = page.locator('.nav-links .nav-chat-btn');
-      await expect(btn).toBeVisible();
-      await expect(btn).toHaveAttribute('aria-label', 'Ask the codebase');
-      await expect(btn).toHaveAttribute('aria-haspopup', 'dialog');
-      await expect(page.locator('.nav-toggle')).toBeHidden();
-    }
+    const button = askButton(page);
+    await expect(button).toBeVisible();
+    await expect(button).toHaveAttribute('aria-haspopup', 'dialog');
+    await expect(button).toHaveAttribute('aria-expanded', 'false');
+    const box = await button.boundingBox();
+    const { width } = page.viewportSize();
+    expect(box.width).toBeGreaterThanOrEqual(42);
+    expect(box.height).toBeGreaterThanOrEqual(42);
+    expect(box.x + box.width / 2).toBeGreaterThan(width / 2);
+    expect(box.y).toBeLessThan(80);
+  });
+
+  test.describe('without script', () => {
+    test.use({ javaScriptEnabled: false });
+    test('the engine page shows no button it cannot honour', async ({ page }) => {
+      await page.goto('/engine');
+      await expect(page.locator('.av-header-actions')).toBeVisible();
+      await expect(page.locator('.arb-btn')).toBeHidden();
+    });
+  });
+
+  for (const path of ['/', '/platform/engine', '/control', '/diligence']) {
+    test(`is not on ${path}`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.locator('.av-header-actions')).toBeVisible();
+      await expect(page.getByRole('button', { name: codeChat.copy.navLabel })).toHaveCount(0);
+    });
+  }
+
+  test('hover warms the library without downloading a corpus', async ({ page, context }) => {
+    const hits = await routeCorpora(context);
+    await page.goto('/engine');
+    await askButton(page).hover();
+    await expect(page.locator('link[rel="stylesheet"][data-repo-chat="loaded"]')).toHaveCount(1);
+    await expect(dialogOf(page)).toHaveCount(0);
+    expect(hits).toEqual({ meta: 0, gz: 0 });
+  });
+
+  test('says it is busy while the library loads, and says so when it cannot', async ({ page }) => {
+    let release;
+    const held = new Promise((resolve) => (release = resolve));
+    let failNext = true;
+    let aborted = 0;
+    await page.route(
+      (url) => url.pathname === REPO_CHAT_MODULE_URL,
+      async (route) => {
+        if (failNext) {
+          aborted += 1;
+          return route.abort('internetdisconnected');
+        }
+        await held;
+        await route.continue();
+      }
+    );
+    await page.goto('/engine');
+    const button = askButton(page);
+    // The alert region is in the page before anything goes wrong, and empty.
+    const alert = page.locator('#arb-error[role="alert"]');
+    await expect(alert).toHaveText('');
+
+    await button.click();
+    await expect(alert).toHaveText(codeChat.loadFail);
+    await expect(button).toHaveAttribute('aria-describedby', 'arb-error');
+    // The note sits inside the viewport, at every width.
+    const box = await alert.boundingBox();
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(page.viewportSize().width);
+
+    // Escape dismisses it and hands focus back to the button.
+    await page.keyboard.press('Escape');
+    await expect(alert).toHaveText('');
+    await expect(button).toBeFocused();
+
+    // Its own "Try again" retries.
+    await button.click();
+    await expect(alert).toHaveText(codeChat.loadFail);
+    // A keyboard retry that fails again leaves focus on the new "Try again", not on the page.
+    await page.getByRole('button', { name: codeChat.retry }).focus();
+    const before = aborted;
+    await page.keyboard.press('Enter');
+    await expect.poll(() => aborted).toBe(before + 1);
+    await expect(alert).toHaveText(codeChat.loadFail);
+    await expect(page.getByRole('button', { name: codeChat.retry })).toBeFocused();
+    failNext = false;
+    await page.getByRole('button', { name: codeChat.retry }).click();
+    await expect(button).toHaveAttribute('aria-busy', 'true');
+    await expect(alert).toHaveText('');
+    release();
+    await expect(dialogOf(page)).toBeVisible();
+    await expect(button).toHaveAttribute('aria-busy', 'false');
   });
 });
 
-// =============================================================================
-// modal shell: open/close/escape/backdrop/focus/scroll lock
-// =============================================================================
-
-test.describe('modal shell', () => {
-  test('opens with dialog aria, locks scroll, Escape closes and returns focus', async ({ page, context }) => {
-    await routeCorpus(context);
+test.describe('the chat', () => {
+  test('asks before downloading, then answers from the fixture corpora with the build-time models and real receipts', async ({
+    page,
+    context,
+  }) => {
+    const hits = await routeCorpora(context);
+    const log = { embed: [], rerank: [], chat: [] };
+    await routeOpenRouter(context, log);
+    await withKey(page);
     await page.goto('/engine');
     const dialog = await openChat(page);
-
-    await expect(dialog).toHaveAttribute('aria-modal', 'true');
-    await expect(dialog).toHaveAttribute('aria-label', 'Ask the codebase');
-    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
-
-    await page.keyboard.press('Escape');
-    await expect(dialog).toBeHidden();
-    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
-    // Focus returns to the opener — except on the phone, where the opener sits
-    // in the (now hidden) drawer, so it lands on the drawer toggle instead.
-    const focusClass = isMobile(page) ? 'nav-toggle' : 'nav-chat-btn';
-    await expect.poll(() => page.evaluate((cls) => document.activeElement?.classList?.contains(cls) ?? false, focusClass)).toBe(true);
-  });
-
-  test('close button and backdrop click both close', async ({ page, context }) => {
-    await routeCorpus(context);
-    await page.goto('/engine');
-    let dialog = await openChat(page);
-    await dialog.locator('.cc-close').click();
-    await expect(dialog).toBeHidden();
-
-    if (!isMobile(page)) {
-      // Backdrop is only exposed around the dialog on desktop (the mobile
-      // sheet is full-bleed).
-      dialog = await openChat(page);
-      await page.locator('.cc-backdrop').click({ position: { x: 8, y: 8 } });
-      await expect(dialog).toBeHidden();
-    }
-  });
-});
-
-// =============================================================================
-// lazy corpus: nothing downloads before the modal opens
-// =============================================================================
-
-test('no corpus or manifest request before the modal opens', async ({ page, context }) => {
-  const hits = await routeCorpus(context);
-  await page.goto('/engine');
-  if (!isMobile(page)) {
-    // Hovering warms the lazy chunk + wasm, which must NOT touch the corpus.
-    await page.locator('.nav-links .nav-chat-btn').hover();
-  }
-  await page.waitForTimeout(3000);
-  expect(hits.meta).toBe(0);
-  expect(hits.gz).toBe(0);
-
-  await openChat(page);
-  await expect.poll(() => hits.meta, { timeout: 15_000 }).toBeGreaterThan(0);
-  await expect.poll(() => hits.gz, { timeout: 15_000 }).toBeGreaterThan(0);
-});
-
-// =============================================================================
-// init walk: manifest -> downloading (MB progress) -> indexing -> ready
-// =============================================================================
-
-test('first open walks download with MB progress to ready with fixture stats', async ({ page, context }) => {
-  const hits = await routeCorpus(context);
-  const slow = await routeSlowCorpus(context, hits, { chunkSize: 512, delayMs: 60 });
-  try {
-    await page.goto('/engine');
-    // Record every status-line change so sub-second phases are still assertable.
-    await page.evaluate(() => {
-      window.__statusLog = [];
-      const observer = new MutationObserver(() => {
-        const el = document.querySelector('.cc-status-text');
-        if (!el) return;
-        const t = el.textContent;
-        const log = window.__statusLog;
-        if (log[log.length - 1] !== t) log.push(t);
-      });
-      observer.observe(document.body, { subtree: true, childList: true, characterData: true });
-    });
-
-    await openChat(page);
-    // The loader panel is up with the determinate bar while downloading.
-    await expect(page.locator('.cc-load')).toBeVisible();
-    await expect(page.locator('.cc-bar[role="progressbar"]')).toBeVisible();
+    await expect(askButton(page)).toHaveAttribute('aria-expanded', 'true');
+    await expect(dialog.getByRole('heading', { name: codeChat.copy.title })).toBeVisible();
+    // Nothing large moves until the visitor agrees: the manifests are read for the size, no corpus is fetched.
+    const accept = dialog.locator('.cc-consent-accept');
+    await expect(accept).toHaveText(/^download \d+(\.\d+)? (KB|MB)$/);
+    await expect(dialog).toContainText(codeChat.copy.consent.title);
+    expect(hits.gz).toBe(0);
+    await acceptDownload(page);
     await waitReady(page);
+    expect(hits.gz).toBe(CORPUS_URLS.length);
+    // Every configured corpus loaded (each is answered by the fixture here).
+    const n = CORPUS_URLS.length;
+    const which = n === 1 ? COMMIT.slice(0, 7) : `${n} corpora`;
+    await expect(dialog.locator('.cc-status-text')).toHaveText(`ready · ${which} · ${META.points * n} chunks · dim ${META.dim}`);
+    // The visitor's key, saved under the site's old storage name, is still the one in use.
+    await expect(dialog.locator('.cc-connected')).toBeVisible();
 
-    const log = await page.evaluate(() => window.__statusLog);
-    expect(log.some((t) => /downloading corpus \d+\.\d of \d+\.\d MB/.test(t))).toBe(true);
-    expect(log.some((t) => /^indexing|^writing local cache/.test(t))).toBe(true);
-    await expect(statusText(page)).toHaveText(READY_LINE);
-  } finally {
-    await slow.close();
-  }
-});
+    await askQuestion(page, 'Where does the scheduler decide which requests join a decode batch?');
+    const card = dialog.locator('.cm-card');
+    await expect(card.locator('.cm-body')).toContainText('admits waiting requests');
+    const sources = card.locator('.cm-src');
+    // Present, not necessarily visible: on a phone the library starts the receipts collapsed.
+    await expect(sources).not.toHaveCount(0);
+    for (const src of await sources.all()) {
+      expect(await src.getAttribute('href')).toMatch(new RegExp(`^https://github\\.com/${META.repo}/blob/${COMMIT}/.+#L\\d+-L\\d+$`));
+    }
 
-// =============================================================================
-// OPFS cache: second open = manifest only; stale corpora are pruned
-// =============================================================================
-
-test('second open serves the corpus from OPFS with only a manifest request', async ({ page, context }) => {
-  const hits = await routeCorpus(context);
-  await page.goto('/engine');
-  await openChat(page);
-  await waitReady(page);
-  expect(hits).toEqual({ meta: 1, gz: 1 });
-  await expect.poll(() => opfsFiles(page)).toContain(`lattice-db-${COMMIT}.jsonl`);
-
-  // Plant a stale corpus; the next load must prune it.
-  await page.evaluate(async () => {
-    const dir = await navigator.storage.getDirectory();
-    const handle = await dir.getFileHandle('lattice-db-00stale00.jsonl', { create: true });
-    const w = await handle.createWritable();
-    await w.write('stale corpus');
-    await w.close();
+    // The answer and rerank models are the build's; the embedding model is the corpus's own.
+    expect(log.chat.at(-1).model).toBe(process.env[CHAT_MODEL_ENV]);
+    expect(log.rerank.at(-1).model).toBe(process.env[RERANK_MODEL_ENV]);
+    expect(log.embed.at(-1).model).toBe(META.model);
   });
 
-  await page.reload();
-  await openChat(page);
-  await waitReady(page);
-  await expect(statusText(page)).toHaveText(READY_LINE);
-  expect(hits).toEqual({ meta: 2, gz: 1 }); // corpus came from OPFS, not the network
-  expect(await opfsFiles(page)).toEqual([`lattice-db-${COMMIT}.jsonl`]);
-});
-
-// =============================================================================
-// offline manifest -> cached fallback badge
-// =============================================================================
-
-test('manifest failure falls back to the cached corpus with the offline badge', async ({ page, context }) => {
-  const hits = await routeCorpus(context);
-  await page.goto('/engine');
-  await openChat(page);
-  await waitReady(page);
-
-  await context.unroute(CORPUS_META_URL);
-  await context.route(CORPUS_META_URL, (route) => route.abort('failed'));
-
-  await page.reload();
-  await openChat(page);
-  await waitReady(page);
-  await expect(statusText(page)).toContainText('cached · offline');
-  await expect(page.locator('.cc-log .cc-offline')).toBeVisible();
-  expect(hits.gz).toBe(1); // never re-downloaded
-});
-
-// A manifest that PARSES but whose commit_sha is not a string used to pass
-// validation on truthiness alone. It is then coerced into a filename
-// (lattice-db-12345.jsonl) and later fails pruneStale's typeof precondition,
-// which returns early — so pruning is silently disabled and cached corpora
-// accumulate in OPFS with nothing reporting it. Treated as a bad manifest now,
-// which takes the same offline path as an unreachable one.
-test('a manifest whose commit_sha is not a string is refused, not coerced', async ({ page, context }) => {
-  const hits = await routeCorpus(context);
-  await page.goto('/engine');
-  await openChat(page);
-  await waitReady(page);
-
-  await context.unroute(CORPUS_META_URL);
-  await context.route(CORPUS_META_URL, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({ ...META, commit_sha: 12345 }),
-    });
+  test('Escape closes it and focus comes back to the button', async ({ page, context }) => {
+    await routeCorpora(context);
+    await page.goto('/engine');
+    await openChat(page);
+    await page.keyboard.press('Escape');
+    await expect(dialogOf(page)).toHaveCount(0);
+    await expect(askButton(page)).toBeFocused();
+    await expect(askButton(page)).toHaveAttribute('aria-expanded', 'false');
   });
 
-  await page.reload();
-  await openChat(page);
-  await waitReady(page);
-  await expect(statusText(page)).toContainText('cached · offline');
-  expect(hits.gz).toBe(1); // and it did not re-download under a coerced name
-});
-
-// =============================================================================
-// abort on close mid-download: no partial cache, clean re-run
-// =============================================================================
-
-test('closing mid-download aborts cleanly and leaves no partial corpus', async ({ page, context }) => {
-  const hits = await routeCorpus(context);
-  const slow = await routeSlowCorpus(context, hits, { chunkSize: 256, delayMs: 100 });
-  try {
+  test('the close button does the same, and the chat opens again', async ({ page, context }) => {
+    await routeCorpora(context);
     await page.goto('/engine');
     const dialog = await openChat(page);
-    await expect(statusText(page)).toContainText('downloading corpus');
-    await page.keyboard.press('Escape');
-    await expect(dialog).toBeHidden();
-
-    // Nothing partial may remain in OPFS after the abort settles.
-    await expect.poll(() => opfsFiles(page)).toEqual([]);
-
-    // Reopening goes back through manifest + full download and succeeds.
-    await restoreFastCorpus(context, hits);
+    await dialog.getByRole('button', { name: CLOSE_LABEL }).click();
+    await expect(dialogOf(page)).toHaveCount(0);
+    await expect(askButton(page)).toBeFocused();
     await openChat(page);
-    await waitReady(page);
-    await expect(statusText(page)).toHaveText(READY_LINE);
-    expect(hits.meta).toBe(2);
-    expect(hits.gz).toBe(2);
-  } finally {
-    await slow.close();
-  }
-});
+  });
 
-// =============================================================================
-// key gate
-// =============================================================================
+  // The site's own chat's corpus, and the single code corpus the split retired (data and meta).
+  const RETIRED_FILES = ['lattice-db-0123abcd.jsonl', `metrale-~code@${COMMIT}.jsonl`, `metrale-~code@${COMMIT}.meta.json`];
 
-test('asking is gated on an OpenRouter key that persists across visits', async ({ page, context }) => {
-  await routeCorpus(context);
-  await page.goto('/engine');
-  await openChat(page);
-  await waitReady(page);
-
-  // Ready but keyless: the question input works, the ask button does not.
-  await expect(page.locator('.cc-input')).toBeEnabled();
-  await page.locator('.cc-input').fill('what schedules decode batches?');
-  await expect(page.locator('.cc-ask')).toBeDisabled();
-  await expect(page.locator('.cc-hint')).toContainText('connect your OpenRouter key');
-
-  const keyInput = page.locator('.cc-key-input');
-  await expect(keyInput).toHaveAttribute('type', 'password');
-  await page.locator('.cc-key-toggle').click();
-  await expect(keyInput).toHaveAttribute('type', 'text');
-  await keyInput.fill(TEST_KEY);
-  await page.locator('.cc-key-save').click();
-
-  await expect(page.locator('.cc-connected')).toBeVisible();
-  await expect(page.locator('.cc-ask')).toBeEnabled();
-  expect(await page.evaluate((k) => localStorage.getItem(k), LS_OPENROUTER_KEY)).toBe(TEST_KEY);
-
-  // The key survives a reload (localStorage persistence).
-  await page.reload();
-  await openChat(page);
-  await waitReady(page);
-  await expect(page.locator('.cc-connected')).toBeVisible();
-  await expect(page.locator('.cc-key-input')).toBeHidden();
-});
-
-// =============================================================================
-// mocked chat round-trip
-// =============================================================================
-
-const ANSWER = [
-  'The verifier keeps the longest accepted prefix of the draft tokens [1][2].',
-  '',
-  '```rust',
-  'let kept = draft.iter().zip(verified).take_while(|(d, v)| v.argmax() == **d).count();',
-  '```',
-  '',
-  'Probe: <img src=x onerror="window.__xss=1"> must print as text, never run.',
-].join('\n');
-
-test('mocked round-trip prints prompt, receipt, markdown, and real source links', async ({ page, context }) => {
-  await routeCorpus(context);
-  await routeOpenRouter(context, ANSWER);
-  await withKey(page);
-  await page.goto('/engine');
-  await openChat(page);
-  await waitReady(page);
-
-  // Ask via the first starter chip (also proves the chips submit).
-  const starter = await page.locator('.cc-chip').first().textContent();
-  await page.locator('.cc-chip').first().click();
-  await expect(page.locator('.cm-user')).toContainText(starter.trim());
-
-  const card = page.locator('.cm-card');
-  await expect(card).toBeVisible({ timeout: 15_000 });
-
-  // Markdown: citations as <sup>, the fence as <pre><code>.
-  await expect(card.locator('sup.cc-cite')).toHaveText(['[1]', '[2]']);
-  await expect(card.locator('pre.cc-fence code.language-rust')).toContainText('take_while');
-
-  // This mock answers with a plain JSON completion (not SSE) — the non-stream
-  // fallback path. It carries no reasoning, so no thinking trace is printed.
-  expect(await card.locator('.cm-think').count()).toBe(0);
-
-  // XSS probe arrived escaped: rendered as text, no element, no execution.
-  await expect(card.locator('.cm-body')).toContainText('<img src=x onerror=');
-  expect(await card.locator('.cm-body img').count()).toBe(0);
-  expect(await page.evaluate(() => window.__xss)).toBeUndefined();
-
-  // Source receipts: path, line range, and a blob link pinned to the corpus commit.
-  const sources = card.locator('.cm-src');
-  await expect(sources).toHaveCount(3);
-  const hrefPattern = new RegExp(`^${ENGINE_REPO.replace(/[.]/g, '\\.')}/blob/${COMMIT}/.+#L\\d+-L\\d+$`);
-  for (const src of await sources.all()) {
-    expect(await src.getAttribute('href')).toMatch(hrefPattern);
-    await expect(src.locator('.cm-src-path')).not.toBeEmpty();
-    await expect(src.locator('.cm-src-lines')).toHaveText(/^L\d+–\d+$/);
-    await expect(src.locator('.cm-src-pct')).toHaveText(/^\d+%$/);
-  }
-  // Retrieval is deterministic (fixture vectors + fixture embedder): the MTP
-  // question must surface the MTP chunks.
-  const paths = await card.locator('.cm-src-path').allTextContents();
-  expect(paths.some((p) => p.includes('mtp.rs'))).toBe(true);
-
-  // Sources ship open on desktop and collapsed on the phone sheet.
-  const details = card.locator('.cm-sources');
-  if (isMobile(page)) {
-    await expect(details).not.toHaveAttribute('open', '');
-  } else {
-    await expect(details).toHaveAttribute('open', '');
-  }
-});
-
-// =============================================================================
-// error states
-// =============================================================================
-
-test.describe('error states', () => {
-  test('corpus 404 shows the download-failed card and retry recovers', async ({ page, context }) => {
-    const hits = { meta: 0, gz: 0 };
-    await context.route(CORPUS_META_URL, (route) => route.fulfill({ status: 200, headers: JSON_HEADERS, body: JSON.stringify(META) }));
-    await context.route(CORPUS_GZ_URL, (route) => route.fulfill({ status: 404, headers: JSON_HEADERS, body: 'not found' }));
+  test("clears what the site's own chat left on disk, and caches the corpus under the library's name", async ({ page, context }) => {
+    await routeCorpora(context);
     await page.goto('/engine');
+    await page.evaluate(
+      async ([cacheName, url, retired]) => {
+        const dir = await navigator.storage.getDirectory();
+        for (const name of retired) {
+          const file = await dir.getFileHandle(name, { create: true });
+          const w = await file.createWritable();
+          await w.write('{}');
+          await w.close();
+        }
+        await (await caches.open(cacheName)).put(url, new Response('old wasm'));
+      },
+      [LEGACY_WASM_CACHE, LEGACY_WASM_URL, RETIRED_FILES]
+    );
     await openChat(page);
-
-    const card = page.locator('.cc-error[role="alert"]');
-    await expect(card).toBeVisible({ timeout: 20_000 });
-    await expect(card.locator('.cc-error-tag')).toHaveText('download failed');
-
-    await restoreFastCorpus(context, hits);
-    await card.locator('.cc-error-retry').click();
+    await acceptDownload(page);
     await waitReady(page);
-    await expect(statusText(page)).toHaveText(READY_LINE);
+    await expect.poll(async () => (await opfsFiles(page)).filter((f) => RETIRED_FILES.includes(f))).toEqual([]);
+    const files = await opfsFiles(page);
+    for (const { id } of CORPUS_URLS) expect(files).toContain(`metrale-~${id}@${COMMIT}.jsonl`);
+    expect(
+      await page.evaluate(
+        async ([cacheName, url]) => !!(await (await caches.open(cacheName)).match(url)),
+        [LEGACY_WASM_CACHE, LEGACY_WASM_URL]
+      )
+    ).toBe(false);
   });
-
-  test('embedding 429s exhaust retries into the rate card', async ({ page, context }) => {
-    await routeCorpus(context);
-    const attempts = [];
-    await context.route(OR_EMBEDDINGS, http429Handler({ log: attempts }));
-    await withKey(page);
-    await page.goto('/engine');
-    await openChat(page);
-    await waitReady(page);
-    await page.evaluate(() => window.__metraleChatSetRetryBaseMs(1));
-
-    await askQuestion(page, 'what schedules decode batches?');
-    const card = page.locator('.cc-error[role="alert"]');
-    await expect(card).toBeVisible({ timeout: 20_000 });
-    await expect(card.locator('.cc-error-tag')).toHaveText('rate limited');
-    expect(attempts.length).toBe(3); // OR_MAX_ATTEMPTS, all POSTs
-  });
-
-  test('chat 200-with-error-body surfaces the rate card', async ({ page, context }) => {
-    await routeCorpus(context);
-    const attempts = [];
-    await context.route(OR_EMBEDDINGS, embeddingsHandler({ dim: META.dim }));
-    await context.route(OR_RERANK, rerankHandler());
-    await context.route(OR_CHAT, ok200ErrorBodyHandler({ log: attempts }));
-    await withKey(page);
-    await page.goto('/engine');
-    await openChat(page);
-    await waitReady(page);
-    await page.evaluate(() => window.__metraleChatSetRetryBaseMs(1));
-
-    await askQuestion(page, 'how do NVFP4 kernels dispatch?');
-    const card = page.locator('.cc-error[role="alert"]');
-    await expect(card).toBeVisible({ timeout: 20_000 });
-    await expect(card.locator('.cc-error-tag')).toHaveText('rate limited');
-    expect(attempts.length).toBe(3); // 200-with-error-body is retried as transient
-  });
-
-  test('embedding dimension mismatch prints a legible sync error', async ({ page, context }) => {
-    await routeCorpus(context);
-    await context.route(OR_EMBEDDINGS, embeddingsHandler({ dim: 16 }));
-    await withKey(page);
-    await page.goto('/engine');
-    await openChat(page);
-    await waitReady(page);
-
-    await askQuestion(page, 'where is the kv pool?');
-    const card = page.locator('.cc-error[role="alert"]');
-    await expect(card).toBeVisible({ timeout: 20_000 });
-    await expect(card.locator('.cc-error-body')).toContainText(`returned 16 dimensions but this corpus was built with ${META.dim}`);
-    // A chat-time fault must not knock the corpus out of ready.
-    await expect(statusText(page)).toContainText('ready ·');
-  });
-
-  // The rerank API returns positions into the documents WE sent. rag.js used
-  // them to index `candidates` directly, so an index the response invented
-  // produced `undefined` in `picked` and the next line read `.payload` off it —
-  // a bare TypeError that took the whole answer down instead of degrading.
-  test('a rerank index that points nowhere does not take the answer down', async ({ page, context }) => {
-    await routeCorpus(context);
-    await context.route(OR_EMBEDDINGS, embeddingsHandler({ dim: META.dim }));
-    await context.route(OR_CHAT, chatHandler('The KV pool lives in `kv_pool.rs` [1].'));
-    await context.route(OR_RERANK, async (route) => {
-      const body = route.request().postDataJSON();
-      // One real position and two that do not exist.
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          // Scores matter: rag.js takes .slice(0, TOP_K) of the RANKED list,
-          // so a bad index only reaches the guard if it scores into the top
-          // few. The first version of this test put them last, and passed
-          // against a guard that did not hold.
-          results: [
-            { index: 'length', relevance_score: 0.99 },
-            { index: 'map', relevance_score: 0.98 },
-            { index: 0, relevance_score: 0.97 },
-            { index: body.documents.length + 5, relevance_score: 0.8 },
-            { index: -1, relevance_score: 0.7 },
-            { index: 1.5, relevance_score: 0.4 },
-            { index: null, relevance_score: 0.3 },
-          ],
-        }),
-      });
-    });
-    await withKey(page);
-    await page.goto('/engine');
-    await openChat(page);
-    await waitReady(page);
-
-    await askQuestion(page, 'where is the kv pool?');
-    // The answer still arrives, built from the position that did resolve.
-    await expect(page.locator('.cm-body').first()).toBeVisible({ timeout: 20_000 });
-    await expect(statusText(page)).toContainText('ready ·');
-  });
-});
-
-// =============================================================================
-// mobile sheet behavior
-// =============================================================================
-
-test('the modal is a full-bleed sheet on a phone', async ({ page, context }) => {
-  test.skip(!isMobile(page), 'mobile project only');
-  await routeCorpus(context);
-  await page.goto('/engine');
-  const dialog = await openChat(page);
-
-  const viewport = page.viewportSize();
-  const box = await dialog.boundingBox();
-  expect(box.width).toBe(viewport.width);
-  expect(box.height).toBe(viewport.height);
-  expect(box.x).toBe(0);
-  expect(box.y).toBe(0);
-  const styles = await dialog.evaluate((el) => {
-    const s = getComputedStyle(el);
-    return { radius: s.borderRadius, inputRow: getComputedStyle(el.querySelector('.cc-input-row')).position };
-  });
-  expect(styles.radius).toBe('0px');
-  expect(styles.inputRow).toBe('sticky'); // input stays pinned while the log scrolls
 });

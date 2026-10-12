@@ -22,8 +22,9 @@
 # code calls (src/lib/content/csp.test.js holds each one to connect-src):
 #   https://metrale-prime.metrale.workers.dev  the guide's Worker (primeEndpoint)
 #   https://openrouter.ai, https://metrale.github.io
-#                                              the codebase chat, off until the
-#                                              engine publishes its index
+#                                              the codebase chat on /engine: its
+#                                              models, and the engine's published
+#                                              code index
 #   ws://127.0.0.1:34333                       the local agent /control drives
 # script-src allows inline here because every page carries a second, stricter
 # script policy of its own: SvelteKit writes a <meta> CSP naming the hash of
@@ -146,10 +147,12 @@
 /_app/immutable/*
   Cache-Control: public, max-age=31536000, immutable
 
-# The 763 KB LatticeDB wasm, sha256-pinned and re-vendored per build, so a
-# change arrives as different bytes at the same URL — a month, not a year.
-/lattice/*
-  Cache-Control: public, max-age=2592000
+# The codebase chat library and the LatticeDB wasm it runs on, vendored per build
+# from a sha256-pinned release into a directory named for its version
+# (scripts/gen-repo-chat.mjs). New bytes only ever arrive under a new version,
+# at a new URL, so these never change in place.
+/repo-chat/*
+  Cache-Control: public, max-age=31536000, immutable
 
 /*.png
   Cache-Control: public, max-age=2592000

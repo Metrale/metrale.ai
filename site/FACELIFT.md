@@ -408,7 +408,7 @@ gate green.
 5. **Author titles on the blog.** The people named should confirm their own.
 6. **Founders section.** Skipped for now on instruction. The company page has
    the story, not the people.
-7. **The codebase chat is off** until the engine publishes its own code index (item 33).
+7. **The codebase chat** is on /engine only, behind the lattice button at the top right (item 33).
 8. **The GitHub social preview** is the kit's `github-social-preview-1280x640.png`,
    vendored in `assets/brand/dark/`, and is uploaded by hand in the repository settings.
 9. **"jev".** The brief names it beside Bend as a Labs topic. Nothing in the
@@ -535,12 +535,15 @@ gate green.
     `/pricing#metering` all carry "Proposed" in their note and date the brief. They are the
     products and features of the brief, not its internals. When the brief is published or
     revised, revisit each note; when a piece ships, move it out of "proposed".
-33. **The codebase chat.** Off (`codeChat.enabled` in `src/lib/data.js`). The engine's
-    repository has the workflow that builds its code index (`.github/workflows/coderag.yml`
-    there), and it runs, but it publishes to GitHub Pages, which is not switched on in that
-    repository, and its embedding key has to be one of that repository's secrets. Once the
-    index is served at the address in `src/lib/chat/config.js`, flip the switch; the browser
-    suites follow it (`CHAT_ON`, held equal by a unit test).
+33. **The codebase chat.** On, on /engine only (`codeChat.enabled` in `src/lib/data.js`; the
+    browser suites follow it through `CHAT_ON`, held equal by a unit test). It is AutoRepoRAG's
+    website-chat library, vendored at the release pinned in `src/lib/chat/pin.js`; the site's
+    own copy of the chat is gone. It searches the corpora listed in `CORPORA` in
+    `src/lib/chat/config.js`, which the engine's CodeRAG workflow publishes to its GitHub Pages
+    site: the engine's code (in three parts, `metrale-code-crates`, `metrale-code-crates-model`
+    and `metrale-code-kernels`, since one file outgrew the publish cap), its docs and The Rust
+    Programming Language. Every corpus listed must be live and share one embedding model, or
+    the chat refuses to open. The first open asks before it downloads, naming the size.
 34. **Solutions held back.** Solutions shows neoclouds and GPU providers, and small teams and
     the edge. The other nine industry pages are kept as data (`parkedIndustries` in
     `brand.js`), not built and not linked, with their stills installed. Moving an entry back
@@ -572,5 +575,5 @@ words a visitor reads, and each has one place to change.
 
 | where | what it is | what retires it |
 | --- | --- | --- |
-| `LATTICE_RELEASES` in `web-shared/sources.mjs` | where the codebase chat's in-browser database is downloaded from, by pinned release and checksum | a release of it published under the Metrale organisation |
-| `codeChat.enabled` in `src/lib/data.js` | the codebase chat, off | the engine's code index being served (item 33) |
+| `REPO_CHAT_RELEASES` in `web-shared/sources.mjs` | where the codebase chat library, and the in-browser database it bundles, is downloaded from, by the release and checksum in `src/lib/chat/pin.js` | a release of it published under the Metrale organisation |
+| `CORPORA` in `src/lib/chat/config.js` | the corpora the codebase chat searches: the engine code in three parts, its docs, the Rust book | nothing; a removed id goes to `RETIRED_CORPUS_IDS` in `src/lib/chat/legacy-cache.js` (item 33) |

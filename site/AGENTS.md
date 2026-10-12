@@ -48,10 +48,12 @@ reading the code first.
 cd site
 export METRALE_ENGINE_ROOT=/path/to/metrale-inference     # at the commit in engine.ref
 export METRALE_LAUNCHER_ROOT=/path/to/metralectl
+export METRALE_CHAT_MODEL=...      # the org variable OPENROUTER_DEFAULT_FREE_MODEL
+export METRALE_RERANK_MODEL=...    # the org variable OPENROUTER_RERANK_MODEL
 
 # 1. find it in SITE-GUIDE.md, edit the source it names
 # 2. prove it
-bun test --preload ./test-runes.js src/lib        # about one second
+bun run test:unit                                 # vendors the chat library, then about one second
 bun x --bun vite build                            # about two minutes
 bun run guide -- --note "what you changed"        # rewrites the guide from the build
 bun x --bun playwright test                       # builds again, then the browser suite

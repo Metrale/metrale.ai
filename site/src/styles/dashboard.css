@@ -1083,10 +1083,11 @@
    tiles and .gate-panel / .gl-swatch for the chart chrome, so the swatch-
    sizing guard in chart-swatch-css.test.js needs no new row.
 
-   Prefix `cmp-`, NOT `cc-`: chat.css owns `.cc` (the chat modal — a fixed
-   width, a max-height with overflow hidden, a mono face and a receipt-tear
-   ::before) and `.cc-chip` (an accent pill with a pointer cursor), and it
-   loads after this file. The comparison card once shared those names, which
+   Prefix `cmp-`, NOT `cc-`: the codebase chat's stylesheet (the vendored
+   repo-chat.css) owns `.cc` (the chat modal — a fixed width, a max-height
+   with overflow hidden, a mono face and a receipt-tear ::before) and
+   `.cc-chip` (an accent pill with a pointer cursor), and it is linked after
+   this file. The comparison card once shared those names, which
    is what clipped its table at C=2, narrowed it against the gate sweep and
    made its legend spans look pressable. concurrency-css.test.js keeps the
    two families apart. */

@@ -4,8 +4,7 @@
   // ★ WHY THIS EXISTS RATHER THAN A PLAIN IMPORT. The glyphs are decoration on
   // a panel most visitors never scroll to, and a static import would fold them
   // into the entry chunk for everyone. `import()` on intersection puts them in
-  // their own chunk, fetched once, shared by every instance — the same trick
-  // ChatLatticeIcon's artwork already uses for the chat modal.
+  // their own chunk, fetched once, shared by every instance.
   //
   // ★ IT RESERVES ITS OWN BOX. The placeholder is the exact final size, so the
   // icon arriving cannot reflow the line it sits in. A lazy image that shifts

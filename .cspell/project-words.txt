@@ -29,6 +29,7 @@ controlonly
 croll
 cros
 crosslinks
+crswap
 cuda
 cudarc
 datacentre
@@ -243,6 +244,7 @@ unthrottled
 unwindowed
 upserted
 uscybercom
+ustar
 varlen
 venv
 vienot

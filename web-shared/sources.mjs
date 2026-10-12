@@ -18,8 +18,11 @@ export const RECIPES_URL = `${ENGINE_REPO}/tree/main/${RECIPES_DIR}`;
 export const LAUNCHER_SLUG = 'Metrale/metralectl';
 export const LAUNCHER_REPO = `https://github.com/${LAUNCHER_SLUG}`;
 
-/** The in-browser vector database the codebase chat loads, by release. */
-export const LATTICE_RELEASES = 'https://github.com/Avarok-Cybersecurity/lattice-db/releases/download';
+/**
+ * The codebase chat, by release: AutoRepoRAG's website-chat library, which
+ * bundles the in-browser vector database (LatticeDB in wasm) it runs on.
+ */
+export const REPO_CHAT_RELEASES = 'https://github.com/Avarok-Cybersecurity/AutoRepoRAG/releases/download';
 
 /** The command the install, run and agent instructions print: the launcher's own. */
 export const CLI = 'metralectl';

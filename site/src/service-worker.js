@@ -16,9 +16,9 @@ import { shouldPrecache, strategyFor } from '$lib/sw/strategy.js';
 const CACHE = `metrale-site-${version}`;
 
 // The og-image is fetched by social scrapers, never by visitors — don't spend
-// visitors' disk/bandwidth pre-caching it. /lattice/ (the 763 KB LatticeDB
-// wasm + loader for the chat modal) is excluded too: it must load only when
-// the feature is used, not at SW install for every visitor.
+// visitors' disk/bandwidth pre-caching it. /repo-chat/ (the codebase chat
+// library and its 763 KB LatticeDB wasm) is excluded too: it must load only
+// when the chat is wanted, not at SW install for every visitor.
 //
 // The install scripts are excluded and stay excluded: someone piping
 // install.sh into a shell must get exactly what the server has at that moment,

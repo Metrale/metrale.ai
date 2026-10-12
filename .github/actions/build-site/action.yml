@@ -13,6 +13,12 @@ inputs:
   github-token:
     description: Token for the star generator (public data only)
     required: true
+  chat-model:
+    description: The codebase chat's answer model, an OpenRouter id (the org variable OPENROUTER_DEFAULT_FREE_MODEL)
+    required: true
+  rerank-model:
+    description: The codebase chat's rerank model, an OpenRouter id (the org variable OPENROUTER_RERANK_MODEL)
+    required: true
 
 runs:
   using: composite
@@ -22,9 +28,14 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
 
+    # The model ids are served to the page as virtual:metrale-chat-models
+    # (site/src/lib/chat/models-env.js); an empty one stops the build.
     - name: Build
       shell: bash
       working-directory: site
+      env:
+        METRALE_CHAT_MODEL: ${{ inputs.chat-model }}
+        METRALE_RERANK_MODEL: ${{ inputs.rerank-model }}
       run: bun x --bun vite build
 
     # A page's <title> can vanish while the rest of its head survives: a layout

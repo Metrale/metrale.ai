@@ -80,11 +80,11 @@ export function strategyFor(pathname) {
  * @returns {boolean}
  */
 export function shouldPrecache(path) {
-  // The og-image is fetched by social scrapers, never by visitors. /lattice/
-  // is the 763 KB LatticeDB wasm for the chat modal and must load when the
-  // feature is used, not at install for everyone.
+  // The og-image is fetched by social scrapers, never by visitors. /repo-chat/
+  // is the codebase chat library and its 763 KB wasm, which load when the chat
+  // is wanted, not at install for everyone.
   if (path.includes('og-image')) return false;
-  if (path.startsWith('/lattice/')) return false;
+  if (path.startsWith('/repo-chat/')) return false;
   if (MEDIA_PREFIXES.some((prefix) => path.startsWith(prefix))) return false;
   if (HOST_CONFIG_FILES.includes(path)) return false;
   return !NEVER_CACHED.includes(path);

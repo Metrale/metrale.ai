@@ -1,8 +1,8 @@
 // =============================================================================
 // make-corpus.mjs — generates the checked-in test corpus for the E2E suite:
 //   corpus-small.jsonl       valid lattice-jsonl v1, dim 8, 20 points
-//   corpus-small.jsonl.gz    the gzip the tests serve for CORPUS_GZ_URL
-//   corpus-small.meta.json   the manifest the tests serve for CORPUS_META_URL
+//   corpus-small.jsonl.gz    the gzip the tests serve for every configured corpus
+//   corpus-small.meta.json   the manifest the tests serve beside it
 //
 // Fully deterministic: fixed commit sha, fixed timestamp, vectors from the
 // shared fake embedder (embed.mjs), every JSON line written with sorted keys

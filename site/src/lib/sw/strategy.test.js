@@ -91,7 +91,8 @@ describe('shouldPrecache', () => {
 
   it('leaves out what only a scraper or a feature needs', () => {
     expect(shouldPrecache('/og-image-v2.png')).toBe(false);
-    expect(shouldPrecache('/lattice/lattice_server_bg.wasm')).toBe(false);
+    expect(shouldPrecache('/repo-chat/2.1.0/lattice_server_bg.wasm')).toBe(false);
+    expect(shouldPrecache('/repo-chat/2.1.0/repo-chat.js')).toBe(false);
   });
 
   it('keeps what a visitor needs on the first paint', () => {
