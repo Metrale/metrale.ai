@@ -588,7 +588,8 @@ export const codeChat = {
     },
     consent: {
       title: 'download the code lattice?',
-      lead: 'The first visit downloads the engine code, its docs and the Rust book into this browser. Where the browser keeps it, later visits start from that copy.',
+      // Beside the library's total line: the download size, and about how much stays in the browser.
+      lead: 'The first visit downloads the engine code, its docs and the Rust book. Your browser keeps a copy, so later visits usually start straight away.',
     },
     errors: {
       // The library's sentence, in the house voice: two sentences, no semicolon.

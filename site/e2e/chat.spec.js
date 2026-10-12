@@ -153,6 +153,7 @@ test.describe('the chat', () => {
     const accept = dialog.locator('.cc-consent-accept');
     await expect(accept).toHaveText(/^download \d+(\.\d+)? (KB|MB)$/);
     await expect(dialog).toContainText(codeChat.copy.consent.title);
+    await expect(dialog).toContainText(codeChat.copy.consent.lead);
     expect(hits.gz).toBe(0);
     await acceptDownload(page);
     await waitReady(page);
