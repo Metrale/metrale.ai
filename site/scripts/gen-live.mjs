@@ -15,9 +15,11 @@
 //
 // It also writes src/lib/gate-meta.generated.json: the gate record set's
 // registered ids and declared limits without the records themselves, about
-// 12 KB. /diligence prints floors and gate names from those, and importing the
-// whole record set to read them cost the page 1.4 MB of script to parse before
-// it could respond.
+// 12 KB, with the ids of the benchmarks that have records and the models they
+// measured. /diligence prints floors and gate names from those, and importing
+// the whole record set to read them cost the page 1.4 MB of script to parse
+// before it could respond. gates.js takes its tabs and model list from it, so
+// the dashboard can draw its tabs before any family's records are parsed.
 //
 // Runs after gen-gates.mjs and gen-models.mjs (vite.config.js, package.json).
 // Hard-fails on a missing or empty source, because a silently zero count on
@@ -71,7 +73,13 @@ const out = {
 
 if (!Array.isArray(gates.registered) || gates.registered.length === 0) throw new Error('gen-live: gates.generated.json registers no gate');
 if (!gates.gate_limits) throw new Error('gen-live: gates.generated.json has no gate_limits, run gen-gates.mjs');
-const meta = { registered: gates.registered, gate_limits: gates.gate_limits };
+const benchmarks = Object.entries(gates.benchmarks ?? {});
+const meta = {
+  registered: gates.registered,
+  gate_limits: gates.gate_limits,
+  recorded: benchmarks.filter(([, b]) => (b.records ?? []).length > 0).map(([id]) => id),
+  models: [...new Set(benchmarks.flatMap(([, b]) => (b.records ?? []).map((r) => r.target_model)))].sort(),
+};
 
 /** Write `value` to src/lib/<name> unless it already holds exactly that. */
 function write(name, value, summary) {

@@ -208,6 +208,30 @@ test.describe('navigation', () => {
   });
 });
 
+// /benchmarks loads one gate family's records with the page and each other
+// family's when its tab is reached for (gates.js, loadRecords). Every tab must
+// still draw its records, and nothing may read records before they arrive.
+test.describe('benchmarks', () => {
+  test('every gate family draws its records when its tab is chosen', async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    await page.goto('/benchmarks');
+    const tabs = page.locator('[role="tablist"][aria-label="Benchmark families"] [role="tab"]');
+    expect(await tabs.count()).toBeGreaterThan(2);
+    await expect(page.locator('#gates article.gbs').first()).toBeVisible();
+    for (let i = 0; i < (await tabs.count()); i++) {
+      const tab = tabs.nth(i);
+      await tab.click();
+      await expect(tab).toHaveAttribute('aria-selected', 'true');
+      await expect(page.locator('#gates article.gbs').first()).toBeVisible();
+    }
+    // Only the loading is asserted here. The TTFT tabs on this page also throw
+    // "unknown statistic null", which main does too: the page passes no Median
+    // or p90 choice to a TTFT section.
+    expect(errors.filter((m) => /read before they were loaded/.test(m))).toEqual([]);
+  });
+});
+
 test.describe('pricing', () => {
   test('the payback model recomputes when an input changes', async ({ page }) => {
     await page.goto(`${routes.pricing}#payback`);

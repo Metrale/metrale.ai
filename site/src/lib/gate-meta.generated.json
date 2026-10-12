@@ -1300,5 +1300,29 @@
         }
       }
     }
-  }
+  },
+  "recorded": [
+    "video-fidelity",
+    "agentic-webserver",
+    "high-isl-ttft-cold",
+    "high-isl-ttft-cold-moe",
+    "vision-fidelity",
+    "concurrency-sweep-moe",
+    "ttft-warm-gate",
+    "decode-floor",
+    "ssm-state-poisoning-gate",
+    "concurrency-sweep-dflash2",
+    "kat-equality-gate",
+    "bfcl-subset",
+    "ttft-cold-gate",
+    "high-isl-ttft-warm",
+    "high-isl-ttft-warm-moe",
+    "concurrency-sweep",
+    "bfcl-subset-echolp"
+  ],
+  "models": [
+    "Qwen/Qwen3.6-35B-A3B-FP8",
+    "unsloth/Qwen3.6-27B-NVFP4",
+    "unsloth/Qwen3.8-27B-NVFP4"
+  ]
 }

@@ -31,18 +31,24 @@ test.describe('page weight', () => {
     }
   });
 
-  // The gate record set is 1.4 MB of JSON. Only /benchmarks charts the records;
-  // /engine printed one commit and date from them and /diligence a few floors,
-  // and parsing the whole set cost each a long main-thread task on a phone.
-  // Both now read the small files gen-live.mjs cuts from it. A string only the
-  // records carry tells whether a page's scripts include them.
-  test('only the benchmark dashboard loads the gate records', () => {
+  // The gate record set is 1.4 MB of JSON, and a script that size was the
+  // longest task on any page that loaded it. /engine printed one commit and date
+  // from it and /diligence a few floors; they now read the small files
+  // gen-live.mjs cuts from it. The pages that chart records (/benchmarks, and the
+  // dashboard /engine opens on a click) load them a benchmark at a time
+  // (gate-records-module.js), after the page has started. So no page preloads
+  // any, and no script carries more than one benchmark's. Only record data names
+  // a record file's path under .benchmarks/, and each record names its gate.
+  const RECORD = '"path":".benchmarks/';
+  test("no page preloads gate records, and each benchmark's records are a script of their own", () => {
     const pages = readdirSync(BUILD, { recursive: true }).filter((f) => f.endsWith('.html'));
     expect(pages.length).toBeGreaterThan(20);
-    const carrying = pages.filter((page) =>
-      preloads(page).some((file) => readFileSync(join(BUILD, file), 'utf8').includes('"verdict_reason"'))
-    );
-    expect(carrying).toEqual(['benchmarks.html']);
+    const carrying = pages.filter((page) => preloads(page).some((file) => readFileSync(join(BUILD, file), 'utf8').includes(RECORD)));
+    expect(carrying).toEqual([]);
+    const scripts = readdirSync(join(BUILD, '_app'), { recursive: true }).filter((f) => f.endsWith('.js'));
+    const withRecords = scripts.map((f) => readFileSync(join(BUILD, '_app', f), 'utf8')).filter((text) => text.includes(RECORD));
+    expect(withRecords.length).toBeGreaterThan(5);
+    for (const text of withRecords) expect(new Set(text.match(/"benchmark_id":"[^"]+"/g)).size).toBe(1);
   });
 
   // Measured when this was written: marketing 8 or 9, /engine 13, /control and

@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 //
-// gates.generated.json is a megabyte. The developer pages chart it and pay for
-// it knowingly. A marketing page must never load it: the first facelift build
+// gates.generated.json is a megabyte. /benchmarks and the dashboard /engine
+// opens on a click chart it, a benchmark at a time (gate-records-module.js). A
+// marketing page must never load it: the first facelift build
 // imported it from content/live.js to print one integer, and that put a 1 MB
 // chunk on the front page and eleven others while every test stayed green.
 //
@@ -28,7 +29,7 @@ const MARKETING = [
 const HEAVY = ['gates.generated.json', '$lib/gates.js', '$lib/deck/content.js'];
 // The one marketing page that exists to chart the gate records, the way
 // /engine does. It pays for the data knowingly and nothing else may.
-const ALLOWED = [join('routes', '(marketing)', 'benchmarks', '+page.svelte')];
+const ALLOWED = [join('routes', '(marketing)', 'benchmarks', '+page.svelte'), join('routes', '(marketing)', 'benchmarks', '+page.js')];
 
 test('nothing a marketing page loads imports the gate record set', () => {
   const offenders = [];
