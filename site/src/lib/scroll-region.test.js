@@ -67,6 +67,11 @@ const nextFrame = () => {
   frames.clear();
   for (const fn of due) fn();
 };
+// A browser reports every observed box once, after the layout that follows
+// observe(). That first report is the action's first measurement.
+const firstLayout = () => {
+  for (const o of observers) if (o.connected) o.cb();
+};
 
 // What the server renders: the focusable form, right with scripts off.
 const box = (scrollWidth, clientWidth, attrs = { tabindex: '0', role: 'region', 'aria-label': 'Command to run X' }) => {
@@ -83,18 +88,52 @@ const box = (scrollWidth, clientWidth, attrs = { tabindex: '0', role: 'region', 
 test('a box that overflows stays a named, focusable region', () => {
   const node = box(900, 300);
   scrollRegion(node, { label: 'Command to run X' });
+  firstLayout();
   expect(node.attrs()).toEqual({ tabindex: '0', role: 'region', 'aria-label': 'Command to run X' });
 });
 
 test('a box that fits is neither a Tab stop nor a landmark', () => {
   const node = box(300, 300);
   scrollRegion(node, { label: 'Command to run X' });
+  firstLayout();
+  expect(node.attrs()).toEqual({});
+});
+
+// The action starts during hydration. Reading a width there forces a layout of
+// the whole document inside the app's start, so it waits for the observer.
+test('starting reads no width: the box keeps its rendered form until the first layout', () => {
+  const node = box(300, 300);
+  let reads = 0;
+  for (const k of ['scrollWidth', 'clientWidth']) {
+    let v = node[k];
+    Object.defineProperty(node, k, {
+      get: () => (reads++, v),
+      set: (x) => {
+        v = x;
+      },
+    });
+  }
+  scrollRegion(node, { label: 'Command to run X' });
+  expect(reads).toBe(0);
+  expect(node.attrs()).toEqual({ tabindex: '0', role: 'region', 'aria-label': 'Command to run X' });
+  firstLayout();
+  expect(reads).toBeGreaterThan(0);
+  expect(node.attrs()).toEqual({});
+});
+
+test('without a ResizeObserver the first measurement is taken on the next frame', () => {
+  globalThis.ResizeObserver = undefined;
+  const node = box(300, 300);
+  scrollRegion(node, { label: 'Command to run X' });
+  expect(node.attrs()).toEqual({ tabindex: '0', role: 'region', 'aria-label': 'Command to run X' });
+  nextFrame();
   expect(node.attrs()).toEqual({});
 });
 
 test('a resize and a late font are measured again, both ways', () => {
   const node = box(300, 300);
   scrollRegion(node, { label: 'Command to run X' });
+  firstLayout();
   expect(node.attrs()).toEqual({});
   node.clientWidth = 200; // the viewport narrowed
   observers[0].cb();
@@ -107,6 +146,8 @@ test('a resize and a late font are measured again, both ways', () => {
 test('a scroll width that settles after the resize is caught on the next frame (WebKit)', () => {
   const node = box(300, 300);
   scrollRegion(node, { label: 'Command to run X' });
+  firstLayout();
+  nextFrame();
   node.clientWidth = 200; // the box narrowed, but its scroll width has not caught up
   node.scrollWidth = 200;
   observers[0].cb();
@@ -127,6 +168,7 @@ test('a window resize is measured even when the box reports no change of its own
 test('without a label only the tabindex follows: a figure keeps its own role and name', () => {
   const node = box(300, 300, { tabindex: '0', 'aria-label': 'diagram' });
   scrollRegion(node);
+  firstLayout();
   expect(node.attrs()).toEqual({ 'aria-label': 'diagram' });
   node.scrollWidth = 760;
   observers[0].cb();
