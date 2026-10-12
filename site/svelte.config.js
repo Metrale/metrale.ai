@@ -2,8 +2,9 @@ import adapter from '@sveltejs/adapter-static';
 import { readFileSync } from 'node:fs';
 import { inlineScriptHashes } from '../web-shared/csp.mjs';
 
-// The two inline scripts in app.html: the theme boot and the late font sheet.
-const appHtmlHashes = inlineScriptHashes(readFileSync(new URL('./src/app.html', import.meta.url), 'utf8'), 2);
+// The three inline scripts in app.html: the theme boot, the late font sheet and
+// the gate that starts the app after the first paint.
+const appHtmlHashes = inlineScriptHashes(readFileSync(new URL('./src/app.html', import.meta.url), 'utf8'), 3);
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -35,6 +36,9 @@ const config = {
       mode: 'hash',
       directives: { 'script-src': ['self', 'wasm-unsafe-eval', ...appHtmlHashes] },
     },
+    // app.html registers it, after it has started the app. SvelteKit's own
+    // registration waits for a load event that has passed by then.
+    serviceWorker: { register: false },
     prerender: {
       entries: ['*'],
       handleHttpError: ({ path, message }) => {

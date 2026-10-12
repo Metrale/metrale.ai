@@ -1,8 +1,10 @@
 // =============================================================================
-// page-weight.spec.js — what each page makes a browser fetch before it paints
+// page-weight.spec.js — the scripts each page fetches when its app starts
 // -----------------------------------------------------------------------------
 // The Lighthouse gate demands 100 and serves over HTTP/1.1, six connections at a
-// time, so every extra small file is a queued round trip ahead of first paint.
+// time, so every extra small file is a queued round trip. The app now starts
+// after the first paint (src/lib/boot/defer-boot.js), and its modulepreloads
+// wait in a <template> until then; the regex below still finds them there.
 // Twice a change that looked free cost every page a request: forty components
 // each becoming a chunk, and one `import` in the root layout leaving a 22 byte
 // facade file behind. Neither failed anything. This reads the build the suite
