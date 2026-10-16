@@ -44,6 +44,8 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { assignTrendPredecessors } from '../src/lib/gate-lineage.js';
 import { declaredLimitsOf, mergeDeclaredLimits, parseToml } from './lib/bench-toml.mjs';
+import { declaredContextOf, mergeDeclaredContext } from './lib/bench-context.mjs';
+import { battlesOf } from './lib/battles.mjs';
 import { foldLedger } from './lib/limit-ledger.mjs';
 import { engineRoot } from './lib/engine-root.mjs';
 import { parseRecordLanding } from './lib/record-landing.mjs';
@@ -279,6 +281,29 @@ function gateLimits() {
 // Walked before leg 2's shallow fetch, which would truncate every history.
 const GATE_LIMITS = gateLimits();
 
+// --- declared context and vLLM targets ----------------------------------------
+// gate_context[gate][checkpoint] = { model, label, max_model_len, targets }, from
+// the current BENCH.toml files only (scripts/lib/bench-context.mjs says why).
+// The model section of the benchmarks page reads its grid from this: the rows
+// are the contexts a model declares, the bars its targets.
+function gateContext() {
+  return mergeDeclaredContext(
+    benchTomlPaths().map(({ abs, rel }) => [rel, declaredContextOf(parseToml(readFileSync(abs, 'utf8')), rel.split('/')[2], rel)])
+  );
+}
+const GATE_CONTEXT = gateContext();
+
+// --- named battles -------------------------------------------------------------
+// The engine's bench/battles.toml (scripts/lib/battles.mjs). An engine ref that
+// predates the file declares no battle, and the page shows none; a file that is
+// present and malformed fails the build.
+function gateBattles() {
+  const p = resolve(REPO, 'bench', 'battles.toml');
+  if (!existsSync(p)) return [];
+  return battlesOf(parseToml(readFileSync(p, 'utf8')), 'bench/battles.toml');
+}
+const BATTLES = gateBattles();
+
 // --- record slimming ---------------------------------------------------------
 // Keep exactly the fields the dashboard shows; `branch` is provenance added
 // here (empty string = committed on the current checkout), `path` is the
@@ -473,6 +498,8 @@ const obj = {
   registered_meta: registered.meta,
   limits: { serve_allowance_s: serveAllowanceSecs() },
   gate_limits: GATE_LIMITS,
+  gate_context: GATE_CONTEXT,
+  battles: BATTLES,
   sources: { committed: committedCount, branches_scanned: branchesScanned, from_branches: fromBranches },
   benchmarks,
 };

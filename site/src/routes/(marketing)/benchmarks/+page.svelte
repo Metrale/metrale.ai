@@ -12,7 +12,9 @@
   import ConcurrencyLadder from '$lib/components/ConcurrencyLadder.svelte';
   import GateBenchSection from '$lib/components/GateBenchSection.svelte';
   import GatePointCard from '$lib/components/GatePointCard.svelte';
-  import { gateData, tabs, recordsFor, benchName } from '$lib/gates.js';
+  import ContextGrid from '$lib/components/ContextGrid.svelte';
+  import BattlePanel from '$lib/components/BattlePanel.svelte';
+  import { gateData, tabs, recordsFor, benchName, modelSections, shortModel } from '$lib/gates.js';
   import { groupFor, groupRecords } from '$lib/gate-variants.js';
   import { faqFor } from '$lib/content/faq.js';
   import { routes, links } from '$lib/content/brand.js';
@@ -119,6 +121,37 @@
     </div>
   </section>
 
+  {#if modelSections.length > 0}
+    <section class="av-section" id="by-context">
+      <div class="av-container">
+        <div class="av-head av-reveal">
+          <p class="av-eyebrow">By context</p>
+          <h2 class="av-h2">Each served context, against vLLM.</h2>
+          <p class="av-lede">
+            A model whose BENCH.toml declares vLLM figures, its gates laid out by the context each one serves, and the battles those figures
+            make. It appears once that model has a gate record, and every cell is that record or says there is none.
+          </p>
+        </div>
+        <div class="av-reveal av-gates">
+          {#each modelSections as m (m.checkpoint)}
+            {#if m.context}
+              <ContextGrid section={m.context} onselect={(r) => (selected = r)} />
+            {:else}
+              <h3 class="av-h3">{shortModel(m.checkpoint)}</h3>
+            {/if}
+            {#if m.battles.length > 0}
+              <div class="bp-pair">
+                {#each m.battles as b (b.id)}
+                  <BattlePanel battle={b} checkpoint={m.checkpoint} onselect={(r) => (selected = r)} />
+                {/each}
+              </div>
+            {/if}
+          {/each}
+        </div>
+      </div>
+    </section>
+  {/if}
+
   <section class="av-section av-section-alt" id="hardware">
     <div class="av-container">
       <div class="av-head av-reveal">
@@ -154,6 +187,13 @@
 {/if}
 
 <style>
+  /* A model's battles side by side only where each fits whole; otherwise one under the other, so a desktop never scrolls a grid sideways. */
+  .bp-pair {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 56rem), 1fr));
+  }
   .av-bench-stats {
     margin-top: 2rem;
     max-width: 1180px;
