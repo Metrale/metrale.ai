@@ -33,26 +33,34 @@ describe('one entry', () => {
           max_model_len: 65536,
           targets: { median_ms_256: 488 },
           target_context: null,
-          note: null,
+          target_note: null,
           caveats: {},
         },
       },
       'ttft-warm-x': {
-        'org/x': { model: 'x', label: null, max_model_len: null, targets: {}, target_context: null, note: null, caveats: {} },
+        'org/x': { model: 'x', label: null, max_model_len: null, targets: {}, target_context: null, target_note: null, caveats: {} },
       },
     });
   });
 
-  test('a caveat is carried beside its target with the note it points to; CONTROL: no caveat, neither carried', () => {
+  test('a caveat is carried beside its target with the target_note it points to', () => {
     const flagged = declaredContextOf(
-      { benchmarks: [entry({ note: 'the account', targets: { c16: 115.73 }, target_caveats: { c16: 'likely vLLM stall' } })] },
+      {
+        benchmarks: [entry({ target_note: 'the account', targets: { c16: 115.73 }, target_caveats: { c16: 'likely vLLM stall' } })],
+      },
       'x'
     )['ttft-cold-x']['org/x'];
-    expect([flagged.note, flagged.caveats]).toEqual(['the account', { c16: 'likely vLLM stall' }]);
-    const plain = declaredContextOf({ benchmarks: [entry({ note: 'the account', targets: { c16: 115.73 } })] }, 'x')['ttft-cold-x'][
-      'org/x'
-    ];
-    expect([plain.note, plain.caveats]).toEqual([null, {}]);
+    expect([flagged.target_note, flagged.caveats]).toEqual(['the account', { c16: 'likely vLLM stall' }]);
+  });
+
+  test('the engineering note is never carried, with or without caveats; CONTROL: no caveat, no target_note, neither carried', () => {
+    const read = (over) => declaredContextOf({ benchmarks: [entry({ targets: { c16: 115.73 }, ...over })] }, 'x')['ttft-cold-x']['org/x'];
+    const both = read({ note: 'for the engine', target_note: 'for the page', target_caveats: { c16: 'stall' } });
+    expect(JSON.stringify(both)).not.toContain('for the engine');
+    expect(both.target_note).toBe('for the page');
+    const plain = read({ note: 'for the engine' });
+    expect([plain.target_note, plain.caveats]).toEqual([null, {}]);
+    expect(JSON.stringify(plain)).not.toContain('for the engine');
   });
 
   test('the reference serve context is carried as a number; CONTROL: absent, it is null', () => {
@@ -75,13 +83,15 @@ describe('one entry', () => {
     ['a target that is not finite', { targets: { median_ms_256: Infinity } }],
     ['a label that is not a string', { label: 3 }],
     ['an entry with no checkpoint', { checkpoint: undefined }],
-    ['a note that is not a string', { note: 3 }],
-    ['caveats that are not a table', { note: 'n', targets: { c16: 1 }, target_caveats: 'stall' }],
-    ['a caveat naming no target', { note: 'n', targets: { c16: 1 }, target_caveats: { c8: 'stall' } }],
-    ['a caveat naming an inherited key', { note: 'n', targets: { c16: 1 }, target_caveats: { toString: 'stall' } }],
-    ['an empty caveat', { note: 'n', targets: { c16: 1 }, target_caveats: { c16: ' ' } }],
-    ['a caveat with no note to point to', { targets: { c16: 1 }, target_caveats: { c16: 'stall' } }],
-    ['a caveat whose note is blank', { note: '  ', targets: { c16: 1 }, target_caveats: { c16: 'stall' } }],
+    ['a target_note that is not a string', { targets: { c16: 1 }, target_note: 3 }],
+    ['a target_note with no targets to describe', { target_note: 'the account' }],
+    ['caveats that are not a table', { target_note: 'n', targets: { c16: 1 }, target_caveats: 'stall' }],
+    ['a caveat naming no target', { target_note: 'n', targets: { c16: 1 }, target_caveats: { c8: 'stall' } }],
+    ['a caveat naming an inherited key', { target_note: 'n', targets: { c16: 1 }, target_caveats: { toString: 'stall' } }],
+    ['an empty caveat', { target_note: 'n', targets: { c16: 1 }, target_caveats: { c16: ' ' } }],
+    ['a caveat with no target_note to point to', { targets: { c16: 1 }, target_caveats: { c16: 'stall' } }],
+    ['a caveat whose target_note is blank', { target_note: '  ', targets: { c16: 1 }, target_caveats: { c16: 'stall' } }],
+    ['a caveat with only the engineering note', { note: 'n', targets: { c16: 1 }, target_caveats: { c16: 'stall' } }],
     ['a reference context with no targets', { target_max_model_len: 262144 }],
     ['a reference context of zero', { targets: { c16: 1 }, target_max_model_len: 0 }],
     ['a negative reference context', { targets: { c16: 1 }, target_max_model_len: -1 }],

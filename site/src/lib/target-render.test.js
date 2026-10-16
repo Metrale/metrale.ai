@@ -5,14 +5,15 @@
 // through the same reader gen-gates.mjs uses (bench-context.mjs).
 //
 //   - a flagged target (`target_caveats`) is never printed bare: its cell
-//     carries a visible "† <caveat>" mark that links to the entry's note, and
-//     the note itself reaches the page, verbatim;
+//     carries a visible "† <caveat>" mark that links to the entry's target_note,
+//     and that note reaches the page verbatim, while the engineering `note`
+//     never does;
 //   - a row served at another context than the vLLM serve behind its targets
 //     (`target_max_model_len`) says so, and the row AT that context says
 //     nothing; the verdict stays on every row.
 //
 // Rendered, not read from the grid's data: these are claims about the page.
-// The two caveat assertions are independent: a note dropped from the TOML is
+// The two caveat assertions are independent: a target_note dropped from the TOML is
 // refused by the reader (both fail), a mark dropped from a component fails
 // only the mark. The plugin is scoped to THIS file's imports, like
 // chart-nested-interactive.test.js.
@@ -47,6 +48,8 @@ const NOTE =
   'The C=16 target, 115.73, is a single sample of that run and most likely a stalled vLLM rep. ' +
   'Those reps come from another instrument, are not comparable with this one and are not a target. ' +
   'Against a non-stalled vLLM C=16 (~159 tok/s), the internal target is >= 164 tok/s (+3%).';
+// The entry's engineering note, written for the engine: it must never reach the page.
+const ENGINEERING = 'UNMEASURED until the first campaign; baseline_for drops it from enforcement.';
 
 // The GLM shape: a decode ladder with a flagged C=16, and one TTFT gate per
 // served context, every target from one vLLM serve at 256k.
@@ -54,7 +57,8 @@ const TOML = `
 [[benchmarks]]
 gate = "concurrency-sweep-glm"
 checkpoint = "${GLM}"
-note = "${NOTE}"
+note = "${ENGINEERING}"
+target_note = "${NOTE}"
 targets = { c1_aggregate_tok_s = 40.11, c16_aggregate_tok_s = 115.73 }
 target_max_model_len = 262144
 target_caveats = { c16_aggregate_tok_s = "likely vLLM stall" }
@@ -66,6 +70,7 @@ ${[65536, 262144, 524288]
 [[benchmarks]]
 gate = "ttft-cold-glm-${ctx / 1024}k"
 checkpoint = "${GLM}"
+note = "${ENGINEERING}"
 targets = { median_ms_256 = 488 }
 target_max_model_len = 262144
 [benchmarks.serve_overrides]
@@ -141,6 +146,9 @@ describe('a flagged target is marked where it is printed, and its account reache
       expect(at).toBeGreaterThan(-1);
       expect(decode(html.slice(at, html.indexOf('</p>', at)))).toContain(NOTE);
     });
+    test(`${where}: the engineering note never reaches the page`, () => {
+      expect(decode(page())).not.toContain(ENGINEERING);
+    });
     test(`CONTROL ${where}: the C=1 cell, not flagged, carries no mark`, () => {
       expect(cellWith(page(), '40.11 tok/s')).not.toMatch(/class="cm/);
     });
@@ -209,5 +217,20 @@ describe('a cell over its own limit', () => {
   });
   test('CONTROL: a cell with no own limit says so instead', () => {
     expect(spoken(cellWith(battlePage('ttft-battle'), '450 ms'))).toContain('no own limit yet');
+  });
+});
+
+describe('the panel explains only what it prints', () => {
+  test('the TTFT battle glosses cold/warm and not C; the decode battle the reverse', () => {
+    const ttft = spoken(battlePage('ttft-battle'));
+    const decodePanel = spoken(battlePage('decode-battle'));
+    expect(ttft).toContain('cold = empty prefix cache');
+    expect(ttft).not.toContain('C = concurrent requests');
+    expect(decodePanel).toContain('C = concurrent requests');
+    expect(decodePanel).not.toContain('cold = empty prefix cache');
+  });
+  test('without script the scroll hint is not sent: nothing would check whether the table scrolls', () => {
+    expect(battlePage('decode-battle')).not.toContain('Scroll sideways');
+    expect(gridPage()).not.toContain('Scroll sideways');
   });
 });

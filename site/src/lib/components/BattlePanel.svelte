@@ -5,7 +5,8 @@
   // the margin over the model's records. Which cells exist and how they are
   // judged is decided in battle-grid.js; this component renders what it is
   // handed and adds nothing.
-  import { battleChip, columnLabel } from '$lib/battle-grid.js';
+  import { onMount } from 'svelte';
+  import { battleChip, columnLabel, perRung } from '$lib/battle-grid.js';
   import { limitText, withUnit } from '$lib/context-grid.js';
   import { contextLabel, vllmLabel } from '$lib/reference-serve.js';
   import { receiptDay, shortModel } from '$lib/gates.js';
@@ -26,6 +27,18 @@
   const title = $derived(`${battle.name}, ${shortModel(checkpoint)}`);
   const chip = $derived(battleChip(battle));
   const scope = $derived(`bp-${battle.id}-${checkpoint}`);
+  // Each gloss only where its term is printed: cold/warm on rows that carry a mode, C on rung columns.
+  const gloss = $derived(
+    [
+      battle.rows.some((r) => r.mode) ? 'cold = empty prefix cache, warm = cached prefix' : null,
+      perRung(battle) ? 'C = concurrent requests' : null,
+    ].filter(Boolean)
+  );
+  // The scroll hint is a script-time affordance: without JS no scroll check runs, so it stays hidden.
+  let mounted = $state(false);
+  onMount(() => {
+    mounted = true;
+  });
 </script>
 
 <article class="bp" aria-labelledby="bp-{battle.id}-{checkpoint}">
@@ -41,13 +54,13 @@
     win against vLLM and still be over its own limit.
   </p>
   <ul class="av-small bp-legend">
-    <li><strong>Served context</strong>: cold = empty prefix cache, warm = cached prefix; C = concurrent requests.</li>
+    {#if gloss.length > 0}<li><strong>Served context</strong>: {gloss.join('; ')}.</li>{/if}
     <li>
       <strong>No record</strong>: this gate has not run yet. <strong>Not reported</strong>: the gate ran but did not record this value.
     </li>
   </ul>
   {#if battle.note}<p class="av-small bp-note">{battle.note}</p>{/if}
-  <p class="av-small bp-hint" aria-hidden="true">Scroll sideways for more →</p>
+  {#if mounted}<p class="av-small bp-hint" aria-hidden="true">Scroll sideways for more →</p>{/if}
   <!-- The table scrolls sideways on a phone: while it does, its wrapper is a named, focusable region (web-shared/scroll-region.js). -->
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div class="bp-scroll" role="region" aria-label={title} tabindex="0" use:scrollRegion={{ label: title }}>
@@ -172,6 +185,9 @@
   }
   .bp-qual {
     display: block;
+    font-family: var(--font-sans);
+    letter-spacing: normal;
+    text-transform: none;
     max-width: 11rem;
     white-space: normal;
     font-size: 0.75rem;

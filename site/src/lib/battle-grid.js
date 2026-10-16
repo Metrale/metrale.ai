@@ -185,11 +185,13 @@ function gridOf(battle, cells, notes) {
   };
 }
 
-/** A column head: `C=8` for a concurrency rung (`c{n}_…`), else the prompt length. */
+/** Whether a battle's columns are concurrency rungs (`c{n}_…`) rather than prompt lengths. */
+export const perRung = (battle) => battle.metrics.some((m) => m.pattern.startsWith('c{n}'));
+
+/** A column head: `C=8` for a concurrency rung, else the prompt length. */
 export function columnLabel(battle, column) {
   if (typeof column !== 'number') return String(column);
-  const perRung = battle.metrics.some((m) => m.pattern.startsWith('c{n}'));
-  if (perRung) return `C=${column}`;
+  if (perRung(battle)) return `C=${column}`;
   return `${column % 1024 === 0 ? `${column / 1024}k` : column}-token prompt`;
 }
 

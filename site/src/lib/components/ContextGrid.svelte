@@ -3,6 +3,7 @@
   // the gate's own limit and the vLLM figure BENCH.toml declares beside it.
   // Which models, rows and columns appear is decided in context-grid.js; this
   // component renders what it is handed and adds nothing.
+  import { onMount } from 'svelte';
   import { limitText, metricLabel, withUnit } from '$lib/context-grid.js';
   import { contextLabel, vllmLabel } from '$lib/reference-serve.js';
   import { receiptDay, shortModel } from '$lib/gates.js';
@@ -14,6 +15,11 @@
 
   const versusText = (v) =>
     v.side === 'level' ? 'margin vs vLLM 0.0%' : `margin vs vLLM ${v.side === 'ahead' ? '+' : '−'}${Math.abs(v.pct).toFixed(1)}%`;
+  // The scroll hint is a script-time affordance: without JS no scroll check runs, so it stays hidden.
+  let mounted = $state(false);
+  onMount(() => {
+    mounted = true;
+  });
 </script>
 
 <article class="cg" aria-labelledby="cg-{section.model}">
@@ -25,7 +31,7 @@
   {#each section.tables as t (t.key)}
     {@const name = `${t.label}, ${shortModel(section.checkpoint)}`}
     {@const scope = `cg-${section.model}-${t.key}`}
-    <p class="av-small cg-hint" aria-hidden="true">Scroll sideways for more →</p>
+    {#if mounted}<p class="av-small cg-hint" aria-hidden="true">Scroll sideways for more →</p>{/if}
     <!-- The table scrolls sideways on a phone: while it does, its wrapper is a named, focusable region (web-shared/scroll-region.js). -->
     <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
     <div class="cg-scroll" role="region" aria-label={name} tabindex="0" use:scrollRegion={{ label: name }}>
@@ -127,6 +133,9 @@
   }
   .cg-qual {
     display: block;
+    font-family: var(--font-sans);
+    letter-spacing: normal;
+    text-transform: none;
     max-width: 11rem;
     white-space: normal;
     font-size: 0.75rem;

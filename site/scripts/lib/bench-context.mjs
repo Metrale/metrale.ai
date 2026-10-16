@@ -3,7 +3,7 @@
 // bench-context.mjs — what a BENCH.toml entry says about the context it is
 // measured at and the vLLM figure it is read against.
 //
-//   gate_context[gate][checkpoint] = { model, label, max_model_len, targets, target_context, note, caveats }
+//   gate_context[gate][checkpoint] = { model, label, max_model_len, targets, target_context, target_note, caveats }
 //
 //   model          the kernels/gb10/<model>/ directory that declares the entry
 //   label          the entry's `label`, or null
@@ -15,12 +15,13 @@
 //                  targets, or null. The page qualifies a row served at another
 //                  context; no verdict reads it. Refused without targets or when
 //                  not a positive integer.
-//   note           the entry's `note` when it carries caveats (the account a mark
-//                  links to), else null: other notes stay out of the page bundle
+//   target_note    `target_note`: the account of the targets written for this page,
+//                  or null. Refused without targets. The entry's engineering `note`
+//                  is never read: it is written for the engine, not for this page.
 //   caveats        `target_caveats = { <metric> = "<text>" }`: a target that is not a
 //                  clean bar. The page marks it beside the target and links the mark
-//                  to the note, so a caveat on an entry with no note is refused, as is
-//                  one naming no target or with no text.
+//                  to the target_note, so a caveat on an entry with no target_note is
+//                  refused, as is one naming no target or with no text.
 //
 // Only the CURRENT files are read: a target is a reference for today's page,
 // not a limit a past record was judged against, so it has no dated ledger.
@@ -45,7 +46,7 @@ export function declaredContextOf(parsed, model, source = 'BENCH.toml') {
       gate,
       checkpoint,
       label,
-      note,
+      target_note: account,
       serve_overrides: serve,
       targets,
       target_caveats: caveats,
@@ -55,7 +56,7 @@ export function declaredContextOf(parsed, model, source = 'BENCH.toml') {
       throw new TypeError(`${source}: a [[benchmarks]] entry lacks a string gate or checkpoint`);
     }
     if (label !== undefined && typeof label !== 'string') throw new TypeError(`${source}: ${gate} label is not a string`);
-    if (note !== undefined && typeof note !== 'string') throw new TypeError(`${source}: ${gate} note is not a string`);
+    if (account !== undefined && typeof account !== 'string') throw new TypeError(`${source}: ${gate} target_note is not a string`);
     let maxModelLen = null;
     if (isTable(serve) && serve.max_model_len !== undefined) {
       if (typeof serve.max_model_len !== 'string' || !DIGITS.test(serve.max_model_len)) {
@@ -91,9 +92,12 @@ export function declaredContextOf(parsed, model, source = 'BENCH.toml') {
         }
         flagged[metric] = text;
       }
-      if (Object.keys(flagged).length > 0 && !note?.trim()) {
-        throw new TypeError(`${source}: ${gate} has target caveats but no note for them to point to`);
+      if (Object.keys(flagged).length > 0 && !account?.trim()) {
+        throw new TypeError(`${source}: ${gate} has target caveats but no target_note for them to point to`);
       }
+    }
+    if (account && Object.keys(bars).length === 0) {
+      throw new TypeError(`${source}: ${gate} declares target_note with no targets for it to describe`);
     }
     const byCheckpoint = (out[gate] ??= {});
     if (byCheckpoint[checkpoint]) throw new TypeError(`${source}: ${gate} is declared for ${checkpoint} twice`);
@@ -103,7 +107,7 @@ export function declaredContextOf(parsed, model, source = 'BENCH.toml') {
       max_model_len: maxModelLen,
       targets: bars,
       target_context: refContext ?? null,
-      note: Object.keys(flagged).length > 0 ? note : null,
+      target_note: account?.trim() ? account : null,
       caveats: flagged,
     };
   }

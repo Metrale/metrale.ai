@@ -4,7 +4,8 @@
 // entry may flag one of its targets (`target_caveats`), for a reference figure
 // that is not a clean bar, such as a single sample of a run that most likely
 // stalled. Wherever the page prints that target, it prints the caveat beside it
-// as a mark, and the mark links to the entry's note in an "About these targets"
+// as a mark, and the mark links to the entry's target_note (the account written for
+// this page; the engineering `note` never reaches it) in an "About these targets"
 // disclosure under the same table. A flagged target is never printed bare.
 //
 // Pure: the grids call it with what gen-gates.mjs#gate_context declares.
@@ -13,9 +14,9 @@
 export function caveatNotes(entries) {
   const byGate = new Map();
   for (const e of entries) {
-    if (e.note && Object.keys(e.caveats ?? {}).length > 0) byGate.set(e.gate, e.note);
+    if (e.target_note && Object.keys(e.caveats ?? {}).length > 0) byGate.set(e.gate, e.target_note);
   }
-  return [...byGate].sort(([a], [b]) => a.localeCompare(b)).map(([gate, note]) => ({ gate, note }));
+  return [...byGate].sort(([a], [b]) => a.localeCompare(b)).map(([gate, target_note]) => ({ gate, target_note }));
 }
 
 /** The element id of `gate`'s note inside the disclosure of table `scope`. */
