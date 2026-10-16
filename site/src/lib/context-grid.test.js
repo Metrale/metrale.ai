@@ -6,7 +6,9 @@
 // no record is never a number, and "ahead of vLLM" reads in the direction the
 // gate's own limit says is better.
 import { describe, expect, test } from 'bun:test';
-import { againstTarget, contextLabel, contextSections, metricLabel, metricUnit } from './context-grid.js';
+import { unitOf } from './battle-grid.js';
+import { againstTarget, contextSections, limitText, metricLabel, withUnit } from './context-grid.js';
+import { contextLabel } from './reference-serve.js';
 import { declaredLimit, limitFor, violationOf } from './gate-limits.js';
 import { benchesOf, familyOf, kindOf, panelsFor } from './gates.js';
 
@@ -156,12 +158,17 @@ describe('labels', () => {
     expect(contextLabel(40000)).toBe('40000');
     expect(metricLabel('median_ms_4096')).toBe('4096-token prompt');
     expect(metricLabel('s_per_turn')).toBe('s per turn');
-    expect([metricUnit('median_ms_256'), metricUnit('sum_wall_s'), metricUnit('s_per_turn'), metricUnit('webserver_ok')]).toEqual([
-      'ms',
-      's',
-      's',
-      '',
-    ]);
+    expect([unitOf('median_ms_256'), unitOf('sum_wall_s'), unitOf('s_per_turn'), unitOf('webserver_ok')]).toEqual(['ms', 's', 's', '']);
+  });
+
+  test('a throughput is tok/s and its rung reads C=n, never a seconds figure', () => {
+    expect(unitOf('c1_aggregate_tok_s')).toBe('tok/s');
+    expect(withUnit(43.2, 'c1_aggregate_tok_s')).toBe('43.2 tok/s');
+    expect(metricLabel('c1_aggregate_tok_s')).toBe('C=1');
+    expect(metricLabel('c16_j_per_tok')).toBe('C=16 j per tok');
+    expect(limitText({ min: 40, max: null }, 'c1_aggregate_tok_s')).toBe('≥ 40 tok/s');
+    expect(limitText({ min: null, max: 449 }, 'median_ms_256')).toBe('≤ 449 ms');
+    expect(limitText({ min: null, max: null }, 'median_ms_256')).toBe('');
   });
 });
 

@@ -16,34 +16,44 @@
 // metric another gate of the same table declares but this one does not is
 // "not gated": neither is drawn as a number.
 //
-// The vLLM figure is the BENCH.toml `targets` value as declared. No verdict
-// reads it, and the page says it is a declared reference, not a vLLM run
-// committed beside the record.
+// The vLLM figure is the BENCH.toml `targets` value as declared. The gate's
+// own limit decides pass or fail; the battles compare against this figure.
+//
+// A target its entry flags (`target_caveats`) carries the caveat on its cell,
+// and each table carries the notes those caveats point to (target-notes.js).
+// Each row carries the context of the vLLM serve behind its targets and the
+// qualifier that context implies for the row (reference-serve.js).
 //
 // Pure: everything is passed in, so the tests can hand it any shape.
+
+import { unitOf } from './battle-grid.js';
+import { fmtLimit } from './gate-limits.js';
+import { rowQualifier } from './reference-serve.js';
+import { caveatNotes } from './target-notes.js';
 
 /** The newest declaration of a bound, whatever date it took effect. */
 const NEWEST = Number.MAX_SAFE_INTEGER;
 
 const byNumericKey = (a, b) => a.localeCompare(b, 'en', { numeric: true });
 
-/** "64k" for 65536: the context as people say it. */
-export const contextLabel = (tokens) => (tokens % 1024 === 0 ? `${tokens / 1024}k` : String(tokens));
-
 /** How a metric is named in a column head. */
 export function metricLabel(key) {
   const perLength = /^median_ms_(\d+)$/.exec(key);
   if (perLength) return `${perLength[1]}-token prompt`;
+  const rung = /^c(\d+)_(.+)$/.exec(key);
+  if (rung) return rung[2] === 'aggregate_tok_s' ? `C=${rung[1]}` : `C=${rung[1]} ${rung[2].replaceAll('_', ' ')}`;
   if (key === 'median_ms') return 'median';
   return key.replaceAll('_', ' ');
 }
 
-/** The unit a metric's value is printed in, from its key. */
-export function metricUnit(key) {
-  if (/(^|_)ms(_|$)/.test(key)) return 'ms';
-  if (/(^|_)s(_|$)/.test(key)) return 's';
-  return '';
-}
+/** A value with its unit (battle-grid.js#unitOf). */
+export const withUnit = (v, metric) => `${fmtLimit(v)}${unitOf(metric) ? ` ${unitOf(metric)}` : ''}`;
+
+/** A limit as both grids print it: `≤ 449 ms`, `≥ 10`, or empty when unbounded. */
+export const limitText = (limit, metric) =>
+  [limit.max !== null ? `≤ ${withUnit(limit.max, metric)}` : null, limit.min !== null ? `≥ ${withUnit(limit.min, metric)}` : null]
+    .filter(Boolean)
+    .join(', ');
 
 /**
  * How the value stands against the vLLM figure, read in the direction the
@@ -114,25 +124,29 @@ function tableOf({ key, label, entries }, checkpoint, { limits, limitFor, declar
       return {
         gate: e.gate,
         context: e.max_model_len,
+        qualifier: rowQualifier(e.max_model_len, e.target_context ?? null),
+        target_context: e.target_context ?? null,
         record: e.record,
         cells: metrics.map((metric) => {
           if (!own.has(metric)) return { metric, state: 'not-gated' };
           const target = e.targets[metric] ?? null;
+          const caveat = e.caveats?.[metric] ?? null;
           const limit = e.record ? limitFor(e.record, metric) : declaredLimit(e.gate, checkpoint, metric, NEWEST);
           const raw = e.record?.metrics?.[metric];
           const value = Number.isFinite(raw) ? raw : null;
-          if (!e.record) return { metric, state: 'no-record', value: null, limit, target, versus: null, violation: null };
+          if (!e.record) return { metric, state: 'no-record', value: null, limit, target, caveat, versus: null, violation: null };
           return {
             metric,
             state: value === null ? 'not-reported' : 'measured',
             value,
             limit,
             target,
+            caveat,
             versus: againstTarget(value, target, limit),
             violation: value === null ? null : violationOf(value, limit),
           };
         }),
       };
     });
-  return { key, label, metrics, rows };
+  return { key, label, metrics, rows, notes: caveatNotes(entries) };
 }

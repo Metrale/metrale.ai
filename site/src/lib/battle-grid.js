@@ -26,7 +26,17 @@
 // rule context-grid.js uses: vLLM figures with nothing of ours beside them
 // would read as a result.
 //
+// A target its entry flags (`target_caveats`) carries the caveat on its cell,
+// and the grid carries the notes those caveats point to (target-notes.js).
+// Neither moves a verdict, a margin or a count.
+// Each cell carries the context of the vLLM serve behind its target, and each
+// row the qualifiers that context implies for it (reference-serve.js); they too
+// move nothing.
+//
 // Pure: everything is passed in, so the tests can hand it any shape.
+
+import { rowQualifiers } from './reference-serve.js';
+import { caveatNotes } from './target-notes.js';
 
 /** The `{n}` a pattern captures from `metric`: a number, `true` for a pattern with no `{n}` that matches, or null. */
 export function captureOf(pattern, metric) {
@@ -78,20 +88,31 @@ export function battleSections({ battles, context, recordsFor, limitFor, declare
         if (!rule) continue;
         const column = rule.n === true ? (declaredLimit(gate, checkpoint, 'prompt_tokens').min ?? metric) : rule.n;
         const key = `${checkpoint}\u0000${battle.id}`;
-        if (!cellsBy.has(key)) cellsBy.set(key, { checkpoint, battle, cells: [] });
-        cellsBy
-          .get(key)
-          .cells.push({ gate, metric, target, better: rule.better, mode: modeOf(gate), context: declared.max_model_len, column });
+        if (!cellsBy.has(key)) cellsBy.set(key, { checkpoint, battle, cells: [], declared: new Map() });
+        const group = cellsBy.get(key);
+        group.declared.set(gate, declared);
+        group.cells.push({
+          gate,
+          metric,
+          target,
+          caveat: declared.caveats?.[metric] ?? null,
+          target_context: declared.target_context ?? null,
+          better: rule.better,
+          mode: modeOf(gate),
+          context: declared.max_model_len,
+          column,
+        });
       }
     }
   }
   const out = new Map();
   for (const b of battles) {
-    for (const { checkpoint, battle, cells } of [...cellsBy.values()].filter((v) => v.battle.id === b.id)) {
+    for (const { checkpoint, battle, cells, declared } of [...cellsBy.values()].filter((v) => v.battle.id === b.id)) {
       const judged = cells.map((c) => cellOf(c, checkpoint, { recordsFor, limitFor, declaredLimit, violationOf }));
       if (!judged.some((c) => c.record)) continue;
       if (!out.has(checkpoint)) out.set(checkpoint, []);
-      out.get(checkpoint).push(gridOf(battle, judged));
+      const notes = caveatNotes([...declared].map(([gate, d]) => ({ gate, ...d })));
+      out.get(checkpoint).push(gridOf(battle, judged, notes));
     }
   }
   return new Map([...out].sort(([a], [b]) => a.localeCompare(b)));
@@ -125,7 +146,7 @@ function cellOf(c, checkpoint, { recordsFor, limitFor, declaredLimit, violationO
   };
 }
 
-function gridOf(battle, cells) {
+function gridOf(battle, cells, notes) {
   const rowKey = (c) => `${c.mode ?? ''}\u0000${c.context ?? ''}`;
   const rows = [...new Map(cells.map((c) => [rowKey(c), { mode: c.mode, context: c.context }])).values()].sort(
     (a, b) => (MODE_ORDER[a.mode] ?? -1) - (MODE_ORDER[b.mode] ?? -1) || (a.context ?? 0) - (b.context ?? 0)
@@ -138,13 +159,21 @@ function gridOf(battle, cells) {
     id: battle.id,
     name: battle.name,
     note: battle.note,
+    notes,
     metrics: battle.metrics,
     better: [...new Set(cells.map((c) => c.better))],
     columns,
-    rows: rows.map((r) => ({
-      ...r,
-      cells: columns.map((column) => cells.find((c) => rowKey(c) === rowKey(r) && c.column === column) ?? null),
-    })),
+    rows: rows.map((r) => {
+      const own = cells.filter((c) => rowKey(c) === rowKey(r));
+      return {
+        ...r,
+        qualifiers: rowQualifiers(
+          r.context,
+          own.map((c) => c.target_context)
+        ),
+        cells: columns.map((column) => own.find((c) => c.column === column) ?? null),
+      };
+    }),
     counts: {
       cells: cells.length,
       win: count('win'),
@@ -164,8 +193,13 @@ export function columnLabel(battle, column) {
   return `${column % 1024 === 0 ? `${column / 1024}k` : column}-token prompt`;
 }
 
-/** The unit a battle metric is printed in, from its key. */
-export const unitOf = (metric) => (/tok_s$/.test(metric) ? 'tok/s' : /(^|_)ms(_|$)/.test(metric) ? 'ms' : '');
+/** The unit a metric is printed in, from its key: the one reader for both grids. */
+export function unitOf(metric) {
+  if (/(^|_)tok_s$/.test(metric)) return 'tok/s';
+  if (/(^|_)ms(_|$)/.test(metric)) return 'ms';
+  if (/(^|_)s(_|$)/.test(metric)) return 's';
+  return '';
+}
 
 /**
  * One block per checkpoint that has a context section or a battle, sorted:
@@ -180,4 +214,21 @@ export function modelBlocks(contextSections, battleSections) {
       context: contextSections.find((s) => s.checkpoint === checkpoint) ?? null,
       battles: battleSections.get(checkpoint) ?? [],
     }));
+}
+
+/**
+ * The chip beside a battle's name: won only when every cell wins; with no loss,
+ * what keeps it open; else how many cells lose.
+ *
+ * @returns {{text: string, won: boolean}}
+ */
+export function battleChip({ all_cells_win, counts }) {
+  if (all_cells_win) return { text: 'Every cell wins', won: true };
+  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  if (counts.loss > 0) return { text: `${plural(counts.loss, 'cell loses', 'cells lose')} to vLLM`, won: false };
+  const open = [
+    counts.open > 0 ? `${plural(counts.open, 'cell', 'cells')} not yet measured` : null,
+    counts.tie > 0 ? plural(counts.tie, 'tie', 'ties') : null,
+  ].filter(Boolean);
+  return { text: `No losses; ${open.join(', ')}`, won: false };
 }

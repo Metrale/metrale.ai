@@ -3,7 +3,7 @@
 // bench-context.mjs — what a BENCH.toml entry says about the context it is
 // measured at and the vLLM figure it is read against.
 //
-//   gate_context[gate][checkpoint] = { model, label, max_model_len, targets }
+//   gate_context[gate][checkpoint] = { model, label, max_model_len, targets, target_context, note, caveats }
 //
 //   model          the kernels/gb10/<model>/ directory that declares the entry
 //   label          the entry's `label`, or null
@@ -11,6 +11,16 @@
 //                  null when the entry serves the recipe's own context
 //   targets        `targets = { <metric> = <number> }`: the vLLM reference per
 //                  metric. No verdict reads it; the page draws it as a bar.
+//   target_context `target_max_model_len`: the context of the vLLM serve behind the
+//                  targets, or null. The page qualifies a row served at another
+//                  context; no verdict reads it. Refused without targets or when
+//                  not a positive integer.
+//   note           the entry's `note` when it carries caveats (the account a mark
+//                  links to), else null: other notes stay out of the page bundle
+//   caveats        `target_caveats = { <metric> = "<text>" }`: a target that is not a
+//                  clean bar. The page marks it beside the target and links the mark
+//                  to the note, so a caveat on an entry with no note is refused, as is
+//                  one naming no target or with no text.
 //
 // Only the CURRENT files are read: a target is a reference for today's page,
 // not a limit a past record was judged against, so it has no dated ledger.
@@ -31,11 +41,21 @@ const DIGITS = /^[1-9][0-9]*$/;
 export function declaredContextOf(parsed, model, source = 'BENCH.toml') {
   const out = {};
   for (const entry of parsed.benchmarks ?? []) {
-    const { gate, checkpoint, label, serve_overrides: serve, targets } = entry;
+    const {
+      gate,
+      checkpoint,
+      label,
+      note,
+      serve_overrides: serve,
+      targets,
+      target_caveats: caveats,
+      target_max_model_len: refContext,
+    } = entry;
     if (typeof gate !== 'string' || typeof checkpoint !== 'string') {
       throw new TypeError(`${source}: a [[benchmarks]] entry lacks a string gate or checkpoint`);
     }
     if (label !== undefined && typeof label !== 'string') throw new TypeError(`${source}: ${gate} label is not a string`);
+    if (note !== undefined && typeof note !== 'string') throw new TypeError(`${source}: ${gate} note is not a string`);
     let maxModelLen = null;
     if (isTable(serve) && serve.max_model_len !== undefined) {
       if (typeof serve.max_model_len !== 'string' || !DIGITS.test(serve.max_model_len)) {
@@ -53,9 +73,39 @@ export function declaredContextOf(parsed, model, source = 'BENCH.toml') {
         bars[metric] = value;
       }
     }
+    if (refContext !== undefined) {
+      if (!Number.isSafeInteger(refContext) || refContext <= 0) {
+        throw new TypeError(`${source}: ${gate} target_max_model_len is not a positive integer`);
+      }
+      if (Object.keys(bars).length === 0) {
+        throw new TypeError(`${source}: ${gate} declares target_max_model_len with no targets for it to describe`);
+      }
+    }
+    const flagged = {};
+    if (caveats !== undefined) {
+      if (!isTable(caveats)) throw new TypeError(`${source}: ${gate} target_caveats is not a table`);
+      for (const [metric, text] of Object.entries(caveats)) {
+        if (!Object.hasOwn(bars, metric)) throw new TypeError(`${source}: ${gate} target_caveats.${metric} names no target`);
+        if (typeof text !== 'string' || text.trim() === '') {
+          throw new TypeError(`${source}: ${gate} target_caveats.${metric} is not a non-empty string`);
+        }
+        flagged[metric] = text;
+      }
+      if (Object.keys(flagged).length > 0 && !note?.trim()) {
+        throw new TypeError(`${source}: ${gate} has target caveats but no note for them to point to`);
+      }
+    }
     const byCheckpoint = (out[gate] ??= {});
     if (byCheckpoint[checkpoint]) throw new TypeError(`${source}: ${gate} is declared for ${checkpoint} twice`);
-    byCheckpoint[checkpoint] = { model, label: label ?? null, max_model_len: maxModelLen, targets: bars };
+    byCheckpoint[checkpoint] = {
+      model,
+      label: label ?? null,
+      max_model_len: maxModelLen,
+      targets: bars,
+      target_context: refContext ?? null,
+      note: Object.keys(flagged).length > 0 ? note : null,
+      caveats: flagged,
+    };
   }
   return out;
 }

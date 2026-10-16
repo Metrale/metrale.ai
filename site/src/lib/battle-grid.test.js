@@ -6,7 +6,7 @@
 // no value keeps the battle open; a record of another checkpoint is not ours;
 // and a cell inside its own regression limit can still lose.
 import { describe, expect, test } from 'bun:test';
-import { battleOf, battleSections, captureOf, columnLabel, judge, modelBlocks, unitOf } from './battle-grid.js';
+import { battleChip, battleOf, battleSections, captureOf, columnLabel, judge, modelBlocks, unitOf } from './battle-grid.js';
 import { declaredLimit, limitFor, violationOf } from './gate-limits.js';
 
 const GLM = 'org/GLM-Flash';
@@ -255,5 +255,57 @@ describe('model blocks', () => {
       ['a/y', null, ['ttft-battle']],
       ['b/x', 'b/x', ['decode-battle']],
     ]);
+  });
+});
+
+describe('the chip', () => {
+  const chip = (counts, all_cells_win = false) =>
+    battleChip({ all_cells_win, counts: { cells: 4, win: 0, loss: 0, tie: 0, open: 0, ...counts } });
+  test('won only when every cell wins', () => {
+    expect(chip({ win: 4 }, true)).toEqual({ text: 'Every cell wins', won: true });
+  });
+  test('with no loss it says what keeps the battle open, never "not every cell wins"', () => {
+    expect(chip({ win: 2, open: 2 })).toEqual({ text: 'No losses; 2 cells not yet measured', won: false });
+    expect(chip({ win: 3, open: 1 }).text).toBe('No losses; 1 cell not yet measured');
+    expect(chip({ win: 2, open: 1, tie: 1 }).text).toBe('No losses; 1 cell not yet measured, 1 tie');
+  });
+  test('CONTROL: one loss is named as a loss', () => {
+    expect(chip({ win: 2, loss: 1, open: 1 })).toEqual({ text: '1 cell loses to vLLM', won: false });
+  });
+});
+
+describe('the reference serve', () => {
+  const served = {
+    ...CONTEXT,
+    'ttft-cold-glm-64k': { [GLM]: { ...CONTEXT['ttft-cold-glm-64k'][GLM], target_context: 262144 } },
+    'ttft-cold-glm-256k': { [GLM]: { ...CONTEXT['ttft-cold-glm-256k'][GLM], target_context: 262144 } },
+  };
+  const grid = (records) =>
+    battleSections({
+      battles: BATTLES,
+      context: served,
+      recordsFor: (gate) => records.filter((r) => r.benchmark_id === gate),
+      limitFor: (r, m) => limitFor(r, m, LIMITS),
+      declaredLimit: (g, c, m) => declaredLimit(LIMITS, g, c, m, Number.MAX_SAFE_INTEGER),
+      violationOf,
+    })
+      .get(GLM)
+      .find((b) => b.id === 'ttft-battle');
+  test('a cell carries its serve, and a row below it is qualified; CONTROL: the row at the serve is not', () => {
+    const g = grid(ALL_TTFT_WIN);
+    expect(cell(g, 'cold', 65536, 256).target_context).toBe(262144);
+    const row = (mode, context) => g.rows.find((r) => r.mode === mode && r.context === context);
+    expect(row('cold', 65536).qualifiers).toEqual(['vLLM not run at 64k; bar is its 256k serve']);
+    expect(row('cold', 262144).qualifiers).toEqual([]);
+    // A gate that declares no serve says nothing.
+    expect(row('warm', 65536).qualifiers).toEqual([]);
+  });
+  test('the serve moves no verdict, margin or count', () => {
+    const plain = sections(ALL_TTFT_WIN)
+      .get(GLM)
+      .find((b) => b.id === 'ttft-battle');
+    const g = grid(ALL_TTFT_WIN);
+    const strip = (b) => ({ ...b, rows: b.rows.map((r) => r.cells.map((c) => c && { ...c, target_context: null })) });
+    expect(strip(g)).toEqual(strip(plain));
   });
 });

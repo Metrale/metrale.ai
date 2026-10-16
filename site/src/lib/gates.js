@@ -301,6 +301,11 @@ export const withheldFor = (benchId) => folded(benchId).partial;
 export const benchName = (benchId) => gates.benchmarks[benchId]?.name ?? benchId;
 export const fmtDate = (unix) => new Date(unix * 1000).toISOString().slice(0, 10);
 export const fmtDateTime = (unix) => new Date(unix * 1000).toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
+/** A receipt's date in two parts: `14 Oct` to show, `2026` for its accessible name. */
+export function receiptDay(unix) {
+  const d = new Date(unix * 1000);
+  return { day: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }), year: d.getUTCFullYear() };
+}
 export const sampleCount = (r) => r.metrics?.samples ?? r.metrics?.iterations ?? null;
 
 // ---- model sections ---------------------------------------------------------
