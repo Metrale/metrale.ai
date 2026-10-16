@@ -1,7 +1,7 @@
 # What a build reads from outside this repository, all public:
 #   the engine (ENGINE_SLUG in web-shared/sources.mjs), at site/engine.ref
 #                            benchmark records, gate descriptors and limits, the
-#                            ladders, the changelog, the baselines, the
+#                            ladders, the battles, the changelog, the baselines, the
 #                            recipes, which are the model list, and each
 #                            hardware target's HARDWARE.toml and MODEL.toml files,
 #                            which tell the guide what is built for what
@@ -73,6 +73,7 @@ runs:
           /docs/ROBUSTNESS.md
           /bench/ladder38/
           /bench/baselines/
+          /bench/battles.toml
           /.benchmarks/
           /crates/bench/src/benchmarks/
           /crates/bench/src/hardware/energy.rs

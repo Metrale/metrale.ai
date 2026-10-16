@@ -89,7 +89,9 @@
     display: grid;
     gap: 1rem;
   }
+  /* Relative, so the visually hidden labels inside are clipped with the table and never widen the page. */
   .cg-scroll {
+    position: relative;
     overflow-x: auto;
   }
   .cg-table caption {

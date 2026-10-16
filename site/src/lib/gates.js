@@ -11,6 +11,7 @@ import { splitByVariant } from './gate-variants.js';
 import { foldPartitions } from './bfcl-partition.js';
 import { declaredLimit, latestDeclaredSince, limitFor as limitForRecord, rungFloors as rungFloorsOf, violationOf } from './gate-limits.js';
 import { contextSections as contextSectionsOf } from './context-grid.js';
+import { battleSections as battleSectionsOf, modelBlocks } from './battle-grid.js';
 import { TTFT_STATS, modeOf } from './ttft-baselines.js';
 
 export const gateData = gates;
@@ -329,3 +330,22 @@ export const contextSections = contextSectionsOf({
   kindOf,
   violationOf,
 });
+
+// ---- battles ------------------------------------------------------------------
+// The engine's named battles (bench/battles.toml), carried by gen-gates.mjs; an
+// engine ref that predates the file carries an empty list. Absent means a
+// generated file older than the generator.
+if (!Array.isArray(gates.battles)) throw new Error('gates.generated.json has no battles — run node site/scripts/gen-gates.mjs');
+
+/** Per checkpoint, its battles as grids (battle-grid.js), over the generated data. */
+export const battleSections = battleSectionsOf({
+  battles: gates.battles,
+  context: gateContext,
+  recordsFor,
+  limitFor,
+  declaredLimit: (gate, checkpoint, metric) => declaredLimit(gateLimits, gate, checkpoint, metric, Number.MAX_SAFE_INTEGER),
+  violationOf,
+});
+
+/** The page's model blocks: each checkpoint's context grid and battles. */
+export const modelSections = modelBlocks(contextSections, battleSections);
