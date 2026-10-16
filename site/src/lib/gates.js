@@ -9,7 +9,8 @@ import gates from '$lib/gates.generated.json';
 import { recordFileUrl } from './receipt.js';
 import { splitByVariant } from './gate-variants.js';
 import { foldPartitions } from './bfcl-partition.js';
-import { latestDeclaredSince, limitFor as limitForRecord, rungFloors as rungFloorsOf } from './gate-limits.js';
+import { declaredLimit, latestDeclaredSince, limitFor as limitForRecord, rungFloors as rungFloorsOf, violationOf } from './gate-limits.js';
+import { contextSections as contextSectionsOf } from './context-grid.js';
 import { TTFT_STATS, modeOf } from './ttft-baselines.js';
 
 export const gateData = gates;
@@ -39,15 +40,22 @@ export { shortModel } from './series-colors.js';
 
 // ---- tab taxonomy -----------------------------------------------------------
 // One tab per benchmark family; a family only earns a tab when it has records.
+// Which gates a tab holds is a rule on the gate id (`member`), applied to every
+// id the generated data knows — the registered descriptors and every bench with
+// records — so a gate the engine adds (a model's own id, `ttft-cold-glm-64k`)
+// lands on its family's tab with no edit here. `order` is display order only:
+// the ids it names come first, as listed, and every other member follows,
+// sorted. An id in `order` that its own rule does not admit fails the build.
 // ttft warm+cold share a tab (same metric, same model, two conditions).
 // Both TTFT tabs carry a Median | p90 strip (BenchmarkDashboard).
 // The two BFCL draws stay SEPARATE panels: different models AND different
 // sample draws — overlaying them on one axis would let a 27B number read as a
 // 35B one, or one draw's score read as comparable to another's.
-const TAB_DEFS = [
-  { id: 'agentic', label: 'Agentic', benches: ['agentic-webserver'] },
-  { id: 'bfcl', label: 'BFCL', benches: ['bfcl-subset', 'bfcl-subset-echolp'] },
-  { id: 'ttft', label: 'TTFT', benches: ['ttft-warm-gate', 'ttft-cold-gate'] },
+const CONCURRENCY_FAMILY = /^concurrency-sweep(-|$)/;
+const TAB_RULES = [
+  { id: 'agentic', label: 'Agentic', member: /^agentic-webserver(-|$)/, order: ['agentic-webserver'] },
+  { id: 'bfcl', label: 'BFCL', member: /^bfcl-subset(-|$)/, order: ['bfcl-subset', 'bfcl-subset-echolp'] },
+  { id: 'ttft', label: 'TTFT', member: /^ttft-(cold|warm)-/, order: ['ttft-warm-gate', 'ttft-cold-gate'] },
   // The 32k-token prompt, cold and warm, on both subjects: its own tab because
   // it is its own instrument (one committed prompt, one-shot) and its numbers
   // are two orders of magnitude above the synthetic gates'. The dense and MoE
@@ -56,13 +64,14 @@ const TAB_DEFS = [
   {
     id: 'ttft-long',
     label: 'High-ISL TTFT',
-    benches: ['high-isl-ttft-cold', 'high-isl-ttft-warm', 'high-isl-ttft-cold-moe', 'high-isl-ttft-warm-moe'],
+    member: /^high-isl-ttft-(cold|warm)(-|$)/,
+    order: ['high-isl-ttft-cold', 'high-isl-ttft-warm', 'high-isl-ttft-cold-moe', 'high-isl-ttft-warm-moe'],
   },
   // Wired ahead of data: records for these land only after calibration on
   // the fixed instrument (2026-08-15 concurrency re-scope). Until then the
   // records-filter below keeps the tabs hidden, and the footer counts how
   // many registered benchmarks have a record — nothing renders empty.
-  { id: 'decode', label: 'Decode', benches: ['decode-floor'] },
+  { id: 'decode', label: 'Decode', member: /^decode-floor(-|$)/, order: ['decode-floor'] },
   // The two dense concurrency gates share this tab AND one set of charts —
   // see gate-variants.js. They run the same fixture at the same rungs on the
   // same checkpoint and differ only in whether the engine speculates, so
@@ -74,7 +83,8 @@ const TAB_DEFS = [
   {
     id: 'concurrency',
     label: 'Concurrency',
-    benches: ['concurrency-sweep', 'concurrency-sweep-dflash2', 'concurrency-sweep-moe'],
+    member: CONCURRENCY_FAMILY,
+    order: ['concurrency-sweep', 'concurrency-sweep-dflash2', 'concurrency-sweep-moe'],
   },
   // Cost reads the SAME records as Concurrency — the GPU-rail joules and the
   // token count of the window they span ride in each sweep record's metrics
@@ -88,10 +98,29 @@ const TAB_DEFS = [
     // The MoE rides BOTH tabs. Its records carry the same ladder shape and the
     // same GPU-rail joules as the dense ones, so a gate id listed on
     // Concurrency but not on Cost would render a throughput curve for a subject
-    // whose energy is sitting unread in the very same record.
-    benches: ['concurrency-sweep', 'concurrency-sweep-dflash2', 'concurrency-sweep-moe'],
+    // whose energy is sitting unread in the very same record. One rule, so the
+    // two tabs cannot disagree.
+    member: CONCURRENCY_FAMILY,
+    order: ['concurrency-sweep', 'concurrency-sweep-dflash2', 'concurrency-sweep-moe'],
   },
 ];
+
+/**
+ * A tab's benches from its rule over the ids the data knows.
+ *
+ * @param {{id: string, label: string, member: RegExp, order: string[]}} rule
+ * @param {Iterable<string>} known every gate id the generated data names
+ */
+export function benchesOf(rule, known) {
+  const stray = rule.order.filter((id) => !rule.member.test(id));
+  if (stray.length > 0) throw new Error(`gates.js: tab ${rule.id} orders ${stray.join(', ')}, which its rule does not admit`);
+  const rest = [...new Set(known)].filter((id) => rule.member.test(id) && !rule.order.includes(id)).sort();
+  return [...rule.order, ...rest];
+}
+const KNOWN_GATES = [...(gates.registered ?? []), ...Object.keys(gates.benchmarks)];
+const TAB_DEFS = TAB_RULES.map((rule) => ({ id: rule.id, label: rule.label, benches: benchesOf(rule, KNOWN_GATES) }));
+/** The tab rule that admits a gate id, or null: one family per id (Cost shares Concurrency's). */
+export const familyOf = (benchId) => TAB_RULES.find((rule) => rule.member.test(benchId))?.id ?? null;
 // Every bench whose metrics map is a concurrency ladder (c{C}_aggregate_tok_s
 // + peak_aggregate_tok_s), read from the tab definition so a bench added there
 // gets the ladder panels without a second edit.
@@ -122,7 +151,7 @@ export const models = [...new Set(Object.values(gates.benchmarks).flatMap((b) =>
 export function panelsFor(benchId, records, opts = {}) {
   if (records.length === 0) return [];
   const latest = records[records.length - 1];
-  if (benchId === 'agentic-webserver') {
+  if (familyOf(benchId) === 'agentic') {
     return [
       {
         title: 'Σ wall time',
@@ -272,3 +301,31 @@ export const benchName = (benchId) => gates.benchmarks[benchId]?.name ?? benchId
 export const fmtDate = (unix) => new Date(unix * 1000).toISOString().slice(0, 10);
 export const fmtDateTime = (unix) => new Date(unix * 1000).toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
 export const sampleCount = (r) => r.metrics?.samples ?? r.metrics?.iterations ?? null;
+
+// ---- model sections ---------------------------------------------------------
+// What each BENCH.toml entry declares about its context and its vLLM figure —
+// carried by gen-gates.mjs. Absent means a generated file older than the
+// generator, a stale build like a missing gate_limits.
+if (!gates.gate_context) throw new Error('gates.generated.json has no gate_context — run node site/scripts/gen-gates.mjs');
+export const gateContext = gates.gate_context;
+
+/** The table a gate sits in within its model's section: its tab, and for TTFT its mode. */
+export function kindOf(benchId) {
+  const family = familyOf(benchId);
+  if (family === null) return null;
+  const label = TAB_RULES.find((rule) => rule.id === family).label;
+  if (!isTtftTab(family)) return { key: family, label };
+  const mode = modeOf(benchId);
+  return { key: `${family}:${mode}`, label: `${label} · ${mode}` };
+}
+
+/** The per-model context grids (context-grid.js), over the generated data. */
+export const contextSections = contextSectionsOf({
+  context: gateContext,
+  limits: gateLimits,
+  recordsFor,
+  limitFor,
+  declaredLimit: (gate, checkpoint, metric, at) => declaredLimit(gateLimits, gate, checkpoint, metric, at),
+  kindOf,
+  violationOf,
+});

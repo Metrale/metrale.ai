@@ -4,7 +4,7 @@
   // must never be readable as a 35B one.
   import GateChart from './GateChart.svelte';
   import GateLadderChart from './GateLadderChart.svelte';
-  import { panelsFor, colorFor, shortModel, fmtDate, sampleCount, ladderPoints, isTtftBench } from '$lib/gates.js';
+  import { panelsFor, colorFor, shortModel, fmtDate, sampleCount, ladderPoints, isTtftBench, familyOf } from '$lib/gates.js';
   import { variantLabel } from '$lib/gate-variants.js';
   import { baselineValue, describeTtftDiffers, speedup, ttftBaselineFor } from '$lib/ttft-baselines.js';
   import ttftData from '$lib/ttft-baselines.generated.json';
@@ -31,7 +31,7 @@
     b.method === 'one-shot' ? `one-shot, ${b.runs} steady requests` : `gate run, ${b.runs} runs of ${b.instrument.reps} samples`;
   const headline = $derived.by(() => {
     const m = latest?.metrics ?? {};
-    if (benchId === 'agentic-webserver')
+    if (familyOf(benchId) === 'agentic')
       return [
         { label: 'webserver_ok', value: `${m.webserver_ok}/${m.iterations}` },
         { label: 'Σ wall', value: `${Math.round(m.sum_wall_s).toLocaleString('en-US')} s` },

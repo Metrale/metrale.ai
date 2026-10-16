@@ -12,7 +12,8 @@
   import ConcurrencyLadder from '$lib/components/ConcurrencyLadder.svelte';
   import GateBenchSection from '$lib/components/GateBenchSection.svelte';
   import GatePointCard from '$lib/components/GatePointCard.svelte';
-  import { gateData, tabs, recordsFor, benchName } from '$lib/gates.js';
+  import ContextGrid from '$lib/components/ContextGrid.svelte';
+  import { gateData, tabs, recordsFor, benchName, contextSections } from '$lib/gates.js';
   import { groupFor, groupRecords } from '$lib/gate-variants.js';
   import { faqFor } from '$lib/content/faq.js';
   import { routes, links } from '$lib/content/brand.js';
@@ -118,6 +119,26 @@
       </p>
     </div>
   </section>
+
+  {#if contextSections.length > 0}
+    <section class="av-section" id="by-context">
+      <div class="av-container">
+        <div class="av-head av-reveal">
+          <p class="av-eyebrow">By context</p>
+          <h2 class="av-h2">Each served context, against vLLM.</h2>
+          <p class="av-lede">
+            A model whose BENCH.toml declares vLLM figures, its gates laid out by the context each one serves. It appears once that model
+            has a gate record, and every cell is that record or says there is none.
+          </p>
+        </div>
+        <div class="av-reveal av-gates">
+          {#each contextSections as s (s.checkpoint)}
+            <ContextGrid section={s} onselect={(r) => (selected = r)} />
+          {/each}
+        </div>
+      </div>
+    </section>
+  {/if}
 
   <section class="av-section av-section-alt" id="hardware">
     <div class="av-container">
